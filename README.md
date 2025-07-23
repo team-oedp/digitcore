@@ -1,29 +1,33 @@
-# Create T3 App
+# DIGITCORE Toolkit Codebase Project Description
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+The DIGITCORE Toolkit is a comprehensive digital platform and codebase designed to address the challenges and best practices in developing community-centered open infrastructure for environmental research. This software project provides an interactive toolkit that emerges from real-world experiences working with frontline communities on environmental issues and offers practical digital tools and guidance for creating more equitable collaborative relationships between researchers, technology developers, and affected communities.
 
-## What's next? How do I make an app with this?
+## Project Purpose
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+The codebase powers a digital toolkit that addresses a critical gap in how open source environmental tools and research projects engage with frontline communities. Rather than treating communities as data sources or end-users, this software platform advocates for genuine partnership models that prioritize community ownership, data sovereignty, and meaningful collaboration. The digital toolkit recognizes that traditional academic and technology development approaches often fail to serve the needs of the communities most affected by environmental challenges.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Core Problem
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+Many well-intentioned environmental research and open source projects inadvertently replicate extractive dynamics, where communities provide data or participate in research but receive limited benefit or control over outcomes. This codebase builds software tools that identify common patterns where projects fail—from inadequate metadata and isolated data repositories to mismatched timelines between academic research cycles and urgent community needs.
 
-## Learn More
+## Technical Implementation
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+The codebase takes a pattern-based approach, implementing 22 recurring challenges organized into six thematic areas within a digital platform. Each pattern includes interactive features with detailed problem descriptions, practical solutions tailored to different audiences (researchers, developers, community organizations, institutions, and funders), and access to concrete digital resources including downloadable templates, integration tools, and real-world case study databases.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+The software architecture progresses users through fundamental issues of community benefit and harm reduction, through technical challenges around data quality and openness, to systemic issues in academic culture and long-term sustainability. This structure allows the platform to address both immediate tactical challenges and deeper structural issues through its user interface and functionality.
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## Target Impact
 
-## How do I deploy this?
+This software project aims to shift the paradigm of environmental open infrastructure development toward truly collaborative models through digital tools and platforms. Rather than communities being consulted or included, the codebase enables approaches where communities co-lead research questions, retain control over their data, and benefit meaningfully from outcomes. It provides digital pathways for researchers and developers to move beyond extractive practices toward reciprocal partnerships.
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## Key Technical Innovations
+
+The codebase's strength lies in its specificity and practical digital orientation. Rather than abstract principles, it implements concrete software solutions like co-ownership agreement generators, community review board management systems, and secure approaches for handling sensitive environmental data. It also addresses often-overlooked technical challenges like building APIs that respect community data sovereignty or creating user interfaces that work across different levels of technical capacity.
+
+## Software Implementation Approach
+
+The codebase is designed as a modular, extensible platform that practitioners can adapt and deploy for their specific contexts. It includes configurable assessment frameworks for understanding community technology ecosystems, customizable templates for data sharing agreements that respect indigenous protocols, and integrated tools for building sustainable funding models that don't compromise community interests.
+
+The software recognizes that effective community-centered infrastructure requires not just better individual tools, but transformed digital relationships, governance structures, and institutional practices. The codebase provides both tactical software improvements and platforms for systemic change, making it valuable for both individual project implementations and institutional digital reform efforts.
+
+This software project represents a significant technical contribution to the growing movement toward more equitable and community-controlled approaches to environmental research and technology development.
