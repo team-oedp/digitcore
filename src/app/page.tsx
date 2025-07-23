@@ -1,53 +1,60 @@
 import Link from "next/link";
+import { Button } from "~/components/ui/button";
 
-import { LatestPost } from "~/app/_components/post";
-import { HydrateClient, api } from "~/trpc/server";
+import type { Metadata } from "next";
 
-export default async function Home() {
-	const hello = await api.post.hello({ text: "from tRPC" });
+export const metadata: Metadata = {
+  title: "DIGITCORE Toolkit | Home",
+  description:
+    "Community-centered open infrastructure empowering equitable collaboration between researchers, developers, and frontline communities.",
+};
 
-	void api.post.getLatest.prefetch();
+export default function Home() {
+  return (
+    <section className="space-y-16">
+      {/* Hero section */}
+      <header className="space-y-6 text-center">
+        <h1 className="mx-auto max-w-4xl text-4xl font-extrabold md:text-6xl">
+          Welcome to the <span className="text-primary">DIGITCORE Toolkit</span>
+        </h1>
+        <p className="mx-auto max-w-2xl text-lg md:text-xl">
+          Building community-centered, open infrastructure for environmental and
+          social justice.
+        </p>
+        {/* Navigation pathways */}
+        <div className="flex flex-wrap justify-center gap-4">
+          <Button asChild>
+            <Link href="/onboarding">Get Started</Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="/carrier-bag">View Carrier Bag</Link>
+          </Button>
+        </div>
+      </header>
 
-	return (
-		<HydrateClient>
-			<main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-				<div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-					<h1 className="font-extrabold text-5xl tracking-tight sm:text-[5rem]">
-						Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-					</h1>
-					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-						<Link
-							className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-							href="https://create.t3.gg/en/usage/first-steps"
-							target="_blank"
-						>
-							<h3 className="font-bold text-2xl">First Steps →</h3>
-							<div className="text-lg">
-								Just the basics - Everything you need to know to set up your
-								database and authentication.
-							</div>
-						</Link>
-						<Link
-							className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-							href="https://create.t3.gg/en/introduction"
-							target="_blank"
-						>
-							<h3 className="font-bold text-2xl">Documentation →</h3>
-							<div className="text-lg">
-								Learn more about Create T3 App, the libraries it uses, and how
-								to deploy it.
-							</div>
-						</Link>
-					</div>
-					<div className="flex flex-col items-center gap-2">
-						<p className="text-2xl text-white">
-							{hello ? hello.greeting : "Loading tRPC query..."}
-						</p>
-					</div>
+      {/* Overview section */}
+      <section
+        aria-labelledby="overview"
+        className="mx-auto max-w-3xl space-y-4"
+      >
+        <h2 id="overview" className="text-2xl font-semibold">
+          Our Mission
+        </h2>
+        <p>
+          The DIGITCORE Toolkit facilitates equitable collaboration between
+          researchers, developers, and frontline communities by providing
+          reusable patterns, shared vocabulary, and practical guidance for
+          community-driven technology projects.
+        </p>
+      </section>
 
-					<LatestPost />
-				</div>
-			</main>
-		</HydrateClient>
-	);
+      {/* Recent updates placeholder */}
+      <section aria-labelledby="recent-updates" className="space-y-4">
+        <h2 id="recent-updates" className="text-2xl font-semibold">
+          Recent Updates
+        </h2>
+        <p className="text-muted-foreground">No updates yet — stay tuned!</p>
+      </section>
+    </section>
+  );
 }
