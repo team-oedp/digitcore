@@ -1,0 +1,25 @@
+# Zustand Rules
+
+## Store Setup
+
+```ts
+import { create } from "zustand";
+
+type CounterStore = {
+  count: number;
+  inc(): void;
+};
+
+export const useCounterStore = create<CounterStore>((set) => ({
+  count: 0,
+  inc: () => set((s) => ({ count: s.count + 1 })),
+}));
+```
+
+## Guidelines
+
+- One store per domain (auth, ui, cart)—do not create a monolithic global store.
+- Always type the store shape; avoid generic `Record<string, unknown>`.
+- Use `immer` middleware for immutable updates if state becomes complex.
+
+---

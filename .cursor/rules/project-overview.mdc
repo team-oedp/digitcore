@@ -1,0 +1,14 @@
+# Project Overview
+
+## Structure
+
+
+## Key Tech
+
+- TypeScript strict, functional style.
+- Next.js (App Router, Server Components).
+- Zustand for small client-side state islands.
+- Sanity CMS for content.
+- tRPC for type-safe backend calls.
+
+---

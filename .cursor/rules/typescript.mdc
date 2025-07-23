@@ -1,0 +1,26 @@
+# TypeScript Rules
+
+## General
+
+- No `any`; use precise types or generics.
+- Prefer `type` aliases over `interface` unless you need declaration merging.
+- Use functional programming patterns; avoid classes and inheritance.
+
+## Naming
+
+- Variables: `isLoading`, `hasError`, `userId`.
+- Types: `User`, `PostData`, `FetchResult<T>`.
+
+## Style
+
+- Always enable `strict` mode in `tsconfig.json`.
+- Enable `noUncheckedIndexedAccess` for safer indexed access.
+- Use explicit return types for exported functions.
+
+## Patterns
+
+- Never mutate function parameters.
+- Favor immutability (`const` + object spread) over mutation.
+- Wrap asynchronous calls in `try / catch` and return typed errors.
+
+---
