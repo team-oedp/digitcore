@@ -1,0 +1,28 @@
+# Sanity Rules
+
+## Schema
+
+- Define schemas in `schemas/` and co-locate GROQ queries with features.
+- Name schema types in PascalCase (`Post`, `Author`).
+
+## Queries
+
+```ts
+export const postBySlugQuery = groq`
+  *[_type == "post" && slug.current == $slug][0]{
+    title,
+    body,
+    author->{
+      name,
+      image
+    }
+  }
+`;
+```
+
+## Client Usage
+
+- Use `@sanity/client` inside server components or API routes only.
+- Memoize the Sanity client; do not create a new client per request.
+
+---

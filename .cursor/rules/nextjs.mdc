@@ -1,0 +1,23 @@
+# Next.js Rules
+
+## Routing
+
+- Use the App Router (`src/app`) exclusively; avoid the Pages Router.
+- Co-locate route handlers under `route.ts` or `route.tsx`.
+
+## Components
+
+- Default to React Server Components (RSC).
+- If a component needs browser-only APIs, add `"use client"` at the top.
+
+## Data Fetching
+
+- Use `fetch`, `getServerSideProps`, or `server actions` inside server components.
+- Cache responses with `revalidate` or `ISR` when appropriate.
+
+## Performance
+
+- Wrap client components in `<Suspense>` with fast fallbacks.
+- Use the `next/image` component with `loading="lazy"` and WebP formats.
+
+---
