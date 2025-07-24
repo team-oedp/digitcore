@@ -2,21 +2,23 @@ import type { Metadata } from "next";
 import { Button } from "~/components/ui/button";
 
 export type PatternPageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateMetadata({
   params,
 }: PatternPageProps): Promise<Metadata> {
-  const readable = params.slug.replace(/-/g, " ");
+  const { slug } = await params;
+  const readable = slug.replace(/-/g, " ");
   return {
     title: `${readable} | Pattern | DIGITCORE Toolkit`,
     description: `Learn how the ${readable} pattern can support community-centered projects.`,
   };
 }
 
-export default function PatternPage({ params }: PatternPageProps) {
-  const readable = params.slug.replace(/-/g, " ");
+export default async function PatternPage({ params }: PatternPageProps) {
+  const { slug } = await params;
+  const readable = slug.replace(/-/g, " ");
   return (
     <article className="space-y-12">
       {/* Pattern title */}

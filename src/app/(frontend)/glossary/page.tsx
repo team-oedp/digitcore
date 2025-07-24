@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Input } from "~/components/ui/input";
 import { Card, CardContent } from "~/components/ui/card";
+import { GlossaryScroll } from "./glossary-scroll";
 
 export const metadata: Metadata = {
   title: "Glossary | DIGITCORE Toolkit",
@@ -8,9 +9,15 @@ export const metadata: Metadata = {
     "Searchable reference for key terms and concepts used in the toolkit.",
 };
 
-export default function GlossaryPage() {
+interface GlossaryPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function GlossaryPage({ searchParams }: GlossaryPageProps) {
+  const resolvedSearchParams = await searchParams;
   return (
     <section className="space-y-10">
+      <GlossaryScroll searchParams={resolvedSearchParams} />
       <header className="space-y-2">
         <h1 className="text-3xl font-bold">Glossary</h1>
         <p className="text-muted-foreground">

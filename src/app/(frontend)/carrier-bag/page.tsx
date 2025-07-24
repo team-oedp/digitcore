@@ -1,13 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
+import { CarrierBagContent } from "./carrier-bag-content";
 
 export const metadata: Metadata = {
   title: "Carrier Bag | DIGITCORE Toolkit",
@@ -22,26 +14,14 @@ export default function CarrierBag() {
       <header className="space-y-4">
         <h1 className="text-3xl font-bold">Your Carrier Bag</h1>
         <p className="max-w-2xl">
-          Inspired by Ursula K. Le Guin’s “carrier bag theory,” this space lets
+          Inspired by Ursula K. Le Guin's "carrier bag theory," this space lets
           you gather, annotate, and export patterns relevant to your projects.
+          Your patterns are automatically saved to your browser's local storage
+          and will persist between sessions.
         </p>
       </header>
 
-      {/* Empty-state placeholder */}
-      <Card role="status" aria-live="polite" className="text-center">
-        <CardHeader>
-          <CardTitle>No patterns saved yet</CardTitle>
-          <CardDescription>
-            Browse patterns and select “Save to carrier bag” to build your
-            collection.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button variant="link" asChild>
-            <Link href="/tags">Browse patterns</Link>
-          </Button>
-        </CardContent>
-      </Card>
+      <CarrierBagContent />
     </section>
   );
 }

@@ -7,6 +7,7 @@ import { ModeToggle } from "~/components/mode-toggle";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "~/components/theme-provider";
+import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -82,8 +83,10 @@ export default function Layout({
             </nav>
           </header>
           <TRPCReactProvider>
-            {/* Main content wrapper */}
-            <main className="container mx-auto px-4 py-8">{children}</main>
+            <CarrierBagStoreProvider>
+              {/* Main content wrapper */}
+              <main className="container mx-auto px-4 py-8">{children}</main>
+            </CarrierBagStoreProvider>
           </TRPCReactProvider>
         </ThemeProvider>
       </div>
