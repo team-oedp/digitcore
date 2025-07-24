@@ -20,14 +20,31 @@ export const pageType = defineType({
     }),
     defineField({
       name: 'description',
-      type: 'text',
+      type: 'blockContent',
     }),
     defineField({
-      name: 'body',
+      name: 'content',
       type: 'array',
       of: [
         defineArrayMember({
-          type: 'block',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'heading',
+              type: 'string',
+              title: 'Heading',
+            }),
+            defineField({
+              name: 'body',
+              type: 'blockContent',
+              title: 'Body',
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'heading',
+            },
+          },
         }),
       ],
     }),

@@ -9,7 +9,7 @@ export const patternType = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'title',
+      title: 'Title',
       type: 'string',
     }),
     defineField({
