@@ -1,62 +1,62 @@
 import { toast } from "sonner";
 
 export interface ScrollToAnchorOptions {
-  behavior?: ScrollBehavior;
-  block?: ScrollLogicalPosition;
-  inline?: ScrollLogicalPosition;
-  fallbackMessage?: string;
+	behavior?: ScrollBehavior;
+	block?: ScrollLogicalPosition;
+	inline?: ScrollLogicalPosition;
+	fallbackMessage?: string;
 }
 
 export function scrollToAnchor(
-  anchorId: string,
-  options: ScrollToAnchorOptions = {}
+	anchorId: string,
+	options: ScrollToAnchorOptions = {},
 ): boolean {
-  const {
-    behavior = "smooth",
-    block = "start",
-    inline = "nearest",
-    fallbackMessage = "Item not found on page",
-  } = options;
+	const {
+		behavior = "smooth",
+		block = "start",
+		inline = "nearest",
+		fallbackMessage = "Item not found on page",
+	} = options;
 
-  const element = document.getElementById(anchorId);
-  
-  if (!element) {
-    toast.error(fallbackMessage);
-    return false;
-  }
+	const element = document.getElementById(anchorId);
 
-  element.scrollIntoView({
-    behavior,
-    block,
-    inline,
-  });
+	if (!element) {
+		toast.error(fallbackMessage);
+		return false;
+	}
 
-  return true;
+	element.scrollIntoView({
+		behavior,
+		block,
+		inline,
+	});
+
+	return true;
 }
 
 export function scrollToAnchorFromSearchParams(
-  searchParams: URLSearchParams,
-  paramName: string = "word",
-  options: ScrollToAnchorOptions = {}
+	searchParams: URLSearchParams,
+	paramName = "word",
+	options: ScrollToAnchorOptions = {},
 ): boolean {
-  const anchorId = searchParams.get(paramName);
-  
-  if (!anchorId) {
-    return false;
-  }
+	const anchorId = searchParams.get(paramName);
 
-  return scrollToAnchor(anchorId, options);
+	if (!anchorId) {
+		return false;
+	}
+
+	return scrollToAnchor(anchorId, options);
 }
 
 export function useGlossaryScroll() {
-  return {
-    scrollToWord: (word: string) => 
-      scrollToAnchor(word, { 
-        fallbackMessage: "Word is not in glossary" 
-      }),
-    scrollToWordFromParams: (searchParams: URLSearchParams) =>
-      scrollToAnchorFromSearchParams(searchParams, "word", {
-        fallbackMessage: "Word is not in glossary"
-      })
-  };
+	return {
+		scrollToWord: (word: string) =>
+			scrollToAnchor(word, {
+				fallbackMessage: "Word is not in glossary",
+			}),
+		scrollToWordFromParams: (searchParams: URLSearchParams) =>
+			scrollToAnchorFromSearchParams(searchParams, "word", {
+				fallbackMessage: "Word is not in glossary",
+			}),
+	};
 }
