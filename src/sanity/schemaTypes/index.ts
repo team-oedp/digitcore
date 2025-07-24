@@ -7,6 +7,8 @@ import {audienceType} from './audienceType'
 import {themeType} from './themeType'
 import {solutionType} from './solutionType'
 import {resourceType} from './resourceType'
+import {pageType} from './pageType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-types: [blockContentType, tagType, patternType, audienceType, themeType, resourceType, solutionType],}
+  types: [blockContentType, tagType, patternType, audienceType, themeType, resourceType, solutionType, pageType],
+}

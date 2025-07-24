@@ -22,6 +22,22 @@ export const resourceType = defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'solution',
+      type: 'array',
+      of: [defineArrayMember({type: 'reference', to: {type: 'solution'}})],
+    }),
+    defineField({
+      name: 'externalLinks',
+      title: 'External Links',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'url',
+          title: 'URL',
+        }),
+      ],
+    }),
   ],
   preview: {
     select: {

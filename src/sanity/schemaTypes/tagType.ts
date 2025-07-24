@@ -12,4 +12,15 @@ export const tagType = defineType({
       type: 'string',
     }),
   ],
+  preview: {
+    select: {
+      title: 'title',
+    },
+    prepare(selection) {
+      const {title} = selection
+      return {
+        title: title ? title.charAt(0).toUpperCase() + title.slice(1).toLowerCase() : 'Untitled',
+      }
+    },
+  },
 })

@@ -9,6 +9,7 @@ export const patternType = defineType({
   fields: [
     defineField({
       name: 'title',
+      title: 'title',
       type: 'string',
     }),
     defineField({
@@ -32,17 +33,70 @@ export const patternType = defineType({
     defineField({
       name: 'tags',
       type: 'array',
-      of: [defineArrayMember({type: 'reference', to: {type: 'tag'}})],
+      of: [defineArrayMember({ type: 'reference', to: { type: 'tag' } })],
+      options: {
+        layout: 'list'
+      },
     }),
     defineField({
       name: 'audiences',
       type: 'array',
       of: [defineArrayMember({type: 'reference', to: {type: 'audience'}})],
+      options: {
+        layout: 'list'
+      },
     }),
     defineField({
       name: 'themes',
       type: 'array',
       of: [defineArrayMember({type: 'reference', to: {type: 'theme'}})],
+      options: {
+        layout: 'list'
+      },
+    }),
+    defineField({
+      name: 'solutions',
+      type: 'array',
+      of: [defineArrayMember({type: 'reference', to: {type: 'solution'}})],
+      options: {
+        layout: 'list'
+      },
+    }),
+    defineField({
+      name: 'resources',
+      type: 'array',
+      of: [defineArrayMember({type: 'reference', to: {type: 'resource'}})],
+      options: {
+        layout: 'list'
+      },
+    }),
+    defineField({
+      name: 'externalLinks',
+      title: 'External Links',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'label',
+              type: 'string',
+              title: 'Label',
+            }),
+            defineField({
+              name: 'url',
+              type: 'url',
+              title: 'URL',
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'label',
+              subtitle: 'url',
+            },
+          },
+        }),
+      ],
     }),
     defineField({
       name: 'publishedAt',
@@ -52,13 +106,11 @@ export const patternType = defineType({
   preview: {
     select: {
       title: 'title',
-      tagTitles: 'tags[].title',
     },
     prepare(selection) {
-      const {title, tagTitles} = selection
+      const {title} = selection
       return {
         title,
-        subtitle: Array.isArray(tagTitles) && tagTitles.length > 0 ? tagTitles.join(', ') : '',
       }
     },
   },

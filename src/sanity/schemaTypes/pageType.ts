@@ -1,31 +1,35 @@
-import {BulbOutlineIcon} from '@sanity/icons'
+import {DesktopIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
-export const solutionType = defineType({
-  name: 'solution',
-  title: 'Solution',
+export const pageType = defineType({
+  name: 'page',
+  title: 'Page',
   type: 'document',
-  icon: BulbOutlineIcon,
+  icon: DesktopIcon,
   fields: [
     defineField({
       name: 'title',
       type: 'string',
     }),
     defineField({
+      name: 'slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+      },
+    }),
+    defineField({
       name: 'description',
+      type: 'text',
+    }),
+    defineField({
+      name: 'body',
       type: 'array',
       of: [
         defineArrayMember({
           type: 'block',
-          styles: [{title: 'Normal', value: 'normal'}],
-          lists: [],
         }),
       ],
-    }),
-    defineField({
-      name: 'audiences',
-      type: 'array',
-      of: [defineArrayMember({type: 'reference', to: {type: 'audience'}})],
     }),
   ],
   preview: {
