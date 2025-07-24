@@ -1,25 +1,62 @@
 # Zustand Rules
 
-## Store Setup
+## SSR-Safe Store Setup for NextJS
 
 ```ts
-import { create } from "zustand";
+import { createStore } from "zustand";
+import { useRef, createContext, useContext } from "react";
 
 type CounterStore = {
   count: number;
   inc(): void;
 };
 
-export const useCounterStore = create<CounterStore>((set) => ({
+// Store factory function
+export const createCounterStore = () => createStore<CounterStore>((set) => ({
   count: 0,
   inc: () => set((s) => ({ count: s.count + 1 })),
 }));
+
+// Context setup
+const CounterStoreContext = createContext<ReturnType<typeof createCounterStore> | null>(null);
+
+export const CounterStoreProvider = ({ children }: { children: React.ReactNode }) => {
+  const storeRef = useRef<ReturnType<typeof createCounterStore>>();
+  if (!storeRef.current) {
+    storeRef.current = createCounterStore();
+  }
+  
+  return (
+    <CounterStoreContext.Provider value={storeRef.current}>
+      {children}
+    </CounterStoreContext.Provider>
+  );
+};
+
+// Hook for accessing store
+export const useCounterStore = () => {
+  const store = useContext(CounterStoreContext);
+  if (!store) {
+    throw new Error('useCounterStore must be used within CounterStoreProvider');
+  }
+  return store;
+};
 ```
 
-## Guidelines
+## SSR & Client-Side Guidelines
 
-- One store per domain (auth, ui, cart)—do not create a monolithic global store.
-- Always type the store shape; avoid generic `Record<string, unknown>`.
-- Use `immer` middleware for immutable updates if state becomes complex.
+- **Never use `create()` directly** - always use `createStore()` with factory functions
+- **Create Context Providers** - wrap stores in Context to prevent server/client state sharing
+- **Use `useRef`** - ensure store is created only once per request
+- **Mark client components** - use `"use client"` directive when using stores
+- **Handle hydration** - implement loading states during hydration for persisted stores
+- **Consistent initialization** - ensure server and client have same initial state
+
+## General Guidelines
+
+- One store per domain (auth, ui, cart)—do not create a monolithic global store
+- Always type the store shape; avoid generic `Record<string, unknown>`
+- Use `immer` middleware for immutable updates if state becomes complex
+- Avoid using stores in React Server Components
 
 ---

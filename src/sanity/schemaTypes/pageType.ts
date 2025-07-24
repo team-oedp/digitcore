@@ -1,5 +1,5 @@
-import {DesktopIcon} from '@sanity/icons'
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import { DesktopIcon } from "@sanity/icons";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const pageType = defineType({
   name: 'page',
