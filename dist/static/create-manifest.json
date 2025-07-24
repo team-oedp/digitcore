@@ -1,18 +1,18 @@
 {
   "version": 2,
-  "createdAt": "2025-07-24T01:07:19.740Z",
+  "createdAt": "2025-07-24T11:55:11.885Z",
   "workspaces": [
     {
-      "name": "default",
-      "title": "Default",
+      "name": "digitcore",
+      "title": "Digitcore",
       "basePath": "/studio",
       "projectId": "q0v6uag1",
       "dataset": "production",
-      "icon": "<style data-styled=\"true\" data-styled-version=\"6.1.19\">.jZxHoD{font-family:Inter,-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",\"Liberation Sans\",Helvetica,Arial,system-ui,sans-serif;font-weight:500;font-size:13px;transform:translateY(1px);}/*!sc*/\ndata-styled.g106[id=\"sc-eqYatC\"]{content:\"jZxHoD,\"}/*!sc*/\n</style><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><rect width=\"32\" height=\"32\" rx=\"2\" fill=\"#0ff0a1\"></rect><text x=\"50%\" y=\"50%\" text-anchor=\"middle\" alignment-baseline=\"middle\" fill=\"hsla(159, 88%, 10%, 1)\" class=\"sc-eqYatC jZxHoD\">D</text></svg>",
+      "icon": "<style data-styled=\"true\" data-styled-version=\"6.1.19\">.jZxHoD{font-family:Inter,-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",\"Liberation Sans\",Helvetica,Arial,system-ui,sans-serif;font-weight:500;font-size:13px;transform:translateY(1px);}/*!sc*/\ndata-styled.g106[id=\"sc-eqYatC\"]{content:\"jZxHoD,\"}/*!sc*/\n</style><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><rect width=\"32\" height=\"32\" rx=\"2\" fill=\"#01794f\"></rect><text x=\"50%\" y=\"50%\" text-anchor=\"middle\" alignment-baseline=\"middle\" fill=\"hsla(159, 98%, 0%, 1)\" class=\"sc-eqYatC jZxHoD\">D</text></svg>",
       "mediaLibrary": {
         "enabled": false
       },
-      "schema": "ffc2afdc.create-schema.json",
+      "schema": "b0f252fd.create-schema.json",
       "tools": "1d4f7a33.create-tools.json"
     }
   ]

@@ -8,7 +8,9 @@ import {themeType} from './themeType'
 import {solutionType} from './solutionType'
 import {resourceType} from './resourceType'
 import {pageType} from './pageType'
+import {glossaryType} from './glossaryType'
+import {faqType} from './faqType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType, tagType, patternType, audienceType, themeType, resourceType, solutionType, pageType],
+  types: [blockContentType, tagType, patternType, audienceType, themeType, resourceType, solutionType, pageType, glossaryType, faqType],
 }

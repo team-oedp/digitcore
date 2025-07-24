@@ -13,7 +13,9 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('resource').title('Resources'),
       S.divider(),
       S.documentTypeListItem('page').title('Pages'),
+      S.documentTypeListItem('glossary').title('Glossary'),
+      S.documentTypeListItem('faq').title('FAQ'),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['pattern', 'tag', 'audience', 'theme', 'resource', 'solution', 'page'].includes(item.getId()!),
+        (item) => item.getId() && !['pattern', 'tag', 'audience', 'theme', 'resource', 'solution', 'page', 'glossary', 'faq'].includes(item.getId()!),
       ),
     ])
