@@ -3,7 +3,7 @@ import type {StructureResolver} from 'sanity/structure'
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title('Digitcore')
+    .title('Content')
     .items([
       S.documentTypeListItem('pattern').title('Patterns'),
       S.documentTypeListItem('tag').title('Tags'),

@@ -15,6 +15,8 @@ import {structure} from './src/sanity/structure'
 
 export default defineConfig({   
   basePath: '/studio',
+  name: 'digitcore',
+  title: 'Digitcore',
   projectId,
   dataset,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
