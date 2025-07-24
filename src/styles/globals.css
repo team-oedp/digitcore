@@ -119,7 +119,17 @@
   * {
     @apply border-border outline-ring/50;
 	}
+  html {
+	@apply antialiased;
+	}
   body {
     @apply bg-background text-foreground;
 	}
+  #app {
+    height: 100vh;
+    max-height: 100dvh;
+    overscroll-behavior: none;
+    -webkit-font-smoothing: antialiased;
+    overflow: auto;
+  }
 }
