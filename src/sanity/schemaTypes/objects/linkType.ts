@@ -7,12 +7,18 @@ import { defineField, defineType } from "sanity";
  * Learn more: https://www.sanity.io/docs/object-type
  */
 
-export const dynamicLinkType = defineType({
-	name: "dynamicLink",
-	title: "Dynamic Link",
+export const linkType = defineType({
+	name: "link",
+	title: "Link",
 	type: "object",
 	icon: LinkIcon,
 	fields: [
+		defineField({
+			name: "label",
+			title: "Link Label",
+			type: "string",
+			description: "Text to display for this link",
+		}),
 		defineField({
 			name: "linkType",
 			title: "Link Type",
@@ -31,11 +37,13 @@ export const dynamicLinkType = defineType({
 			name: "href",
 			title: "URL",
 			type: "url",
-			hidden: ({ parent }) => parent?.linkType !== "href",
+			hidden: ({ parent }: { parent?: { linkType?: string } }) =>
+				parent?.linkType !== "href",
 			validation: (Rule) =>
 				// Custom validation to ensure URL is provided if the link type is 'href'
 				Rule.custom((value, context) => {
-					if (context.parent?.linkType === "href" && !value) {
+					const parent = context.parent as { linkType?: string };
+					if (parent?.linkType === "href" && !value) {
 						return "URL is required when Link Type is URL";
 					}
 					return true;
@@ -50,7 +58,8 @@ export const dynamicLinkType = defineType({
 			validation: (Rule) =>
 				// Custom validation to ensure page reference is provided if the link type is 'page'
 				Rule.custom((value, context) => {
-					if (context.parent?.linkType === "page" && !value) {
+					const parent = context.parent as { linkType?: string };
+					if (parent?.linkType === "page" && !value) {
 						return "Page reference is required when Link Type is Page";
 					}
 					return true;
@@ -65,17 +74,12 @@ export const dynamicLinkType = defineType({
 			validation: (Rule) =>
 				// Custom validation to ensure pattern reference is provided if the link type is 'pattern'
 				Rule.custom((value, context) => {
-					if (context.parent?.linkType === "pattern" && !value) {
+					const parent = context.parent as { linkType?: string };
+					if (parent?.linkType === "pattern" && !value) {
 						return "Pattern reference is required when Link Type is Pattern";
 					}
 					return true;
 				}),
-		}),
-		defineField({
-			name: "openInNewTab",
-			title: "Open in new tab",
-			type: "boolean",
-			initialValue: false,
 		}),
 	],
 });
