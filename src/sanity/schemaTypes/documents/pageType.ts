@@ -27,24 +27,7 @@ export const pageType = defineType({
 			type: "array",
 			of: [
 				defineArrayMember({
-					type: "object",
-					fields: [
-						defineField({
-							name: "heading",
-							type: "string",
-							title: "Heading",
-						}),
-						defineField({
-							name: "body",
-							type: "blockContent",
-							title: "Body",
-						}),
-					],
-					preview: {
-						select: {
-							title: "heading",
-						},
-					},
+					type: "content",
 				}),
 			],
 		}),
