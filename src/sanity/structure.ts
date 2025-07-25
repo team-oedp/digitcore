@@ -26,7 +26,9 @@ export const structure: StructureResolver = (S) =>
 				.icon(PresentationIcon),
 			S.listItem()
 				.title("Site Settings")
-				.child(S.document().schemaType("siteSettings").documentId("siteSettings"))
+				.child(
+					S.document().schemaType("siteSettings").documentId("siteSettings"),
+				)
 				.icon(CogIcon),
 			...S.documentTypeListItems().filter(
 				(item) =>

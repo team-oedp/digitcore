@@ -78,7 +78,7 @@ export function CarrierBagContent() {
 
 	if (!hydrated) {
 		return (
-			<Card role="status" aria-live="polite" className="text-center">
+			<Card aria-live="polite" className="text-center">
 				<CardHeader>
 					<CardTitle>Loading your carrier bag...</CardTitle>
 					<CardDescription>
@@ -91,7 +91,7 @@ export function CarrierBagContent() {
 
 	if (items.length === 0) {
 		return (
-			<Card role="status" aria-live="polite" className="text-center">
+			<Card aria-live="polite" className="text-center">
 				<CardHeader>
 					<CardTitle>No patterns saved yet</CardTitle>
 					<CardDescription>
