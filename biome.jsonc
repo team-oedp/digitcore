@@ -22,5 +22,17 @@
 			},
 			"recommended": true
 		}
-	}
+	},
+	"overrides": [
+		{
+			"include": ["./src/sanity/sanity.types.ts"],
+			"linter": {
+				"rules": {
+					"correctness": {
+						"noInvalidUseBeforeDeclaration": "off"
+					}
+				}
+			}
+		}
+	]
 }
