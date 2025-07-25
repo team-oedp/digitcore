@@ -7,5 +7,12 @@ export const PATTERNS_QUERY =
 
 export const PATTERN_QUERY =
 	defineQuery(`*[_type == "pattern" && slug.current == $slug][0]{
-  title, body, slug
+  title,
+  description,
+  slug,
+  tags[]->,
+  audiences[]->,
+  themes[]->,
+  solutions[]->,
+  resources[]->,
 }`);

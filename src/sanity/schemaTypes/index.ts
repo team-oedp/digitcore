@@ -3,6 +3,7 @@ import type { SchemaTypeDefinition } from "sanity";
 import { audienceType } from "./audienceType";
 import { blockContentType } from "./blockContentType";
 import { carrierBagType } from "./carrierBagType";
+import { externalLinkType } from "./externalLinkType";
 import { faqType } from "./faqType";
 import { glossaryType } from "./glossaryType";
 import { onboardingType } from "./onboardingType";
@@ -17,6 +18,7 @@ import { themeType } from "./themeType";
 export const schema: { types: SchemaTypeDefinition[] } = {
 	types: [
 		blockContentType,
+		externalLinkType,
 		tagType,
 		patternType,
 		audienceType,

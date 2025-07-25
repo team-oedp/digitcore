@@ -1,4 +1,4 @@
-import { BasketIcon, PresentationIcon } from "@sanity/icons";
+import { BasketIcon, CogIcon, PresentationIcon } from "@sanity/icons";
 import type { StructureResolver } from "sanity/structure";
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
@@ -24,6 +24,10 @@ export const structure: StructureResolver = (S) =>
 				.title("Onboarding")
 				.child(S.document().schemaType("onboarding").documentId("onboarding"))
 				.icon(PresentationIcon),
+			S.listItem()
+				.title("Site Settings")
+				.child(S.document().schemaType("siteSettings").documentId("siteSettings"))
+				.icon(CogIcon),
 			...S.documentTypeListItems().filter(
 				(item) =>
 					item.getId() &&
@@ -39,6 +43,7 @@ export const structure: StructureResolver = (S) =>
 						"faq",
 						"carrierBag",
 						"onboarding",
+						"siteSettings",
 					].includes(item.getId() ?? ""),
 			),
 		]);

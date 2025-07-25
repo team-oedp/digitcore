@@ -33,8 +33,7 @@ export const resourceType = defineType({
 			type: "array",
 			of: [
 				defineArrayMember({
-					type: "url",
-					title: "URL",
+					type: "externalLink",
 				}),
 			],
 		}),

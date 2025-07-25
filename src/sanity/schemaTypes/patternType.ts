@@ -71,34 +71,6 @@ export const patternType = defineType({
 			},
 		}),
 		defineField({
-			name: "externalLinks",
-			title: "External Links",
-			type: "array",
-			of: [
-				defineArrayMember({
-					type: "object",
-					fields: [
-						defineField({
-							name: "label",
-							type: "string",
-							title: "Label",
-						}),
-						defineField({
-							name: "url",
-							type: "url",
-							title: "URL",
-						}),
-					],
-					preview: {
-						select: {
-							title: "label",
-							subtitle: "url",
-						},
-					},
-				}),
-			],
-		}),
-		defineField({
 			name: "publishedAt",
 			type: "datetime",
 		}),
