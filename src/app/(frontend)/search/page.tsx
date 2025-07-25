@@ -37,7 +37,7 @@ export default function SearchPage() {
 					<Input type="search" placeholder="Search the toolkit…" />
 
 					{/* Results placeholder */}
-					<Card role="status" aria-live="polite">
+					<Card aria-live="polite">
 						<CardContent>
 							<p className="text-muted-foreground">
 								Enter a query to see results.
