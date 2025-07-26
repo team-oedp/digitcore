@@ -71,7 +71,7 @@
 	--secondary: var(--color-neutral-100);
 	--secondary-foreground: var(--color-neutral-900);
 	--muted: var(--color-neutral-100);
-	--muted-foreground: oklch(0.556 0 0);
+	--muted-foreground: var(--color-neutral-300);
 	--accent: var(--color-neutral-100);
 	--accent-foreground: var(--color-neutral-900);
 	--destructive: oklch(0.577 0.245 27.325);
@@ -123,8 +123,8 @@
 	--sidebar-primary-foreground: var(--color-neutral-50);
 	--sidebar-accent: var(--color-neutral-600);
 	--sidebar-accent-foreground: var(--color-neutral-50);
-	--sidebar-border: oklch(1 0 0 / 10%);
-	--sidebar-ring: oklch(0.556 0 0);
+	--sidebar-border: var(--color-neutral-700);
+	--sidebar-ring: var(--color-neutral-500);
 }
 
 @layer base {
@@ -135,7 +135,7 @@
 		@apply antialiased;
 	}
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-background text-foreground text-sm font-normal;
 	}
 	#app {
 		height: 100vh;
@@ -143,5 +143,19 @@
 		overscroll-behavior: none;
 		-webkit-font-smoothing: antialiased;
 		overflow: auto;
+	}
+	button:not([disabled]),
+	[role="button"]:not([disabled]) {
+		cursor: pointer;
+	}
+}
+
+@layer utilities {
+	.scrollbar-hidden::-webkit-scrollbar {
+		display: none;
+	}
+	.scrollbar-hidden {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
 	}
 }
