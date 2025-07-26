@@ -5,6 +5,11 @@
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+	experimental: {
+		viewTransition: true,
+		browserDebugInfoInTerminal: true,
+	},
+};
 
 export default config;
