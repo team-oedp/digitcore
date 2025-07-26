@@ -1,8 +1,8 @@
 import "~/styles/globals.css";
 
 import type { Metadata } from "next";
-import { Header } from "~/components/global/header";
 import { sans } from "~/app/(frontend)/fonts";
+import { Header } from "~/components/global/header";
 import { ThemeProvider } from "~/components/theme-provider";
 import { cn } from "~/lib/utils";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
@@ -28,10 +28,12 @@ export default function Layout({
 				>
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
-              <>
-					      <Header />
-							  <main className="container mx-auto px-4 py-8">{children}</main>
-              </>
+							<>
+								<Header />
+								<main className="mx-2 mb-2 h-full rounded-md bg-primary-foreground">
+									{children}
+								</main>
+							</>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>
 				</ThemeProvider>
