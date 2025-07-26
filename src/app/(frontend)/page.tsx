@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
 	return (
-		<div className="space-y-16 px-6 py-8">
+		<div className="space-y-16 p-5">
 			{/* Hero Section */}
 			<section className="max-w-4xl space-y-8 ">
 				<h1 className="font-light text-4xl text-neutral-500 leading-tight">

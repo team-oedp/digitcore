@@ -30,7 +30,7 @@ export default function Layout({
 						<CarrierBagStoreProvider>
 							<>
 								<Header />
-								<main className="mx-2 mb-2 h-full rounded-md bg-primary-foreground">
+								<main className="mx-2 mb-2 min-h-full rounded-md bg-primary-foreground">
 									{children}
 								</main>
 							</>

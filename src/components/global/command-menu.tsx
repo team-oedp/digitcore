@@ -1,7 +1,7 @@
 "use client";
 
 import { Command } from "cmdk";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 
@@ -62,7 +62,7 @@ export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
 						/>
 					</div>
 					<Command.List className="min-h-[200px] p-0">
-						<Command.Empty className="flex flex-col items-center justify-center h-[200px] text-center">
+						<Command.Empty className="flex h-[200px] flex-col items-center justify-center text-center">
 							<div className="text-muted-foreground text-sm">
 								No recent searches
 							</div>
@@ -70,7 +70,7 @@ export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
 					</Command.List>
 					<div className="border-border border-t px-4 py-3">
 						<div className="flex items-center justify-between text-muted-foreground text-xs">
-							<div className="inline-flex items-center rounded-md bg-secondary px-2.5 py-0.5 text-xs font-medium capitalize text-secondary-foreground">
+							<div className="inline-flex items-center rounded-md bg-secondary px-2.5 py-0.5 font-medium text-secondary-foreground text-xs capitalize">
 								{getCurrentPageLabel()}
 							</div>
 							<div className="flex items-center gap-4">
