@@ -5,8 +5,10 @@ import { sans } from "~/app/(frontend)/fonts";
 import { Header } from "~/components/global/header";
 import { ThemeProvider } from "~/components/theme-provider";
 import { cn } from "~/lib/utils";
+import { SanityLive } from "~/sanity/lib/live";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { TRPCReactProvider } from "~/trpc/react";
+import { handleError } from "./client-utils";
 
 export const metadata: Metadata = {
 	title: "Digitcore",
@@ -26,6 +28,8 @@ export default function Layout({
 					enableSystem
 					disableTransitionOnChange
 				>
+					{/* The <SanityLive> component is responsible for making all sanityFetch calls in your application live, so should always be rendered. */}
+					<SanityLive onError={handleError} />
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
 							<>

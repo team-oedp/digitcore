@@ -10,6 +10,11 @@ const config = {
 		viewTransition: true,
 		browserDebugInfoInTerminal: true,
 	},
+	logging: {
+		fetches: {
+			fullUrl: true,
+		},
+	},
 };
 
 export default config;
