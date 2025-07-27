@@ -25,10 +25,11 @@ export default function ResolvedLink({
 
 	if (typeof resolvedLink === "string") {
 		// Check if the link is external (starts with http:// or https://)
-		const isExternal = resolvedLink.startsWith("http://") || resolvedLink.startsWith("https://");
+		const isExternal =
+			resolvedLink.startsWith("http://") || resolvedLink.startsWith("https://");
 		// Open in new tab if external OR if forceNewTab is true
 		const shouldOpenInNewTab = isExternal || forceNewTab;
-		
+
 		return (
 			<Link
 				href={resolvedLink}

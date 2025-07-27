@@ -27,8 +27,11 @@ export function SearchResultItem({
 	source = "PATTERN",
 	category = "Open Tools Need Ongoing Maintenance",
 	audiences = [
-		{ id: "79750DD5-566C-4E21-A722-F917F691251C", name: "Open source technologists" },
-		{ id: "7445C1BE-8E22-4D9C-9510-0ACFC13B9BB5", name: "Researchers" }
+		{
+			id: "79750DD5-566C-4E21-A722-F917F691251C",
+			name: "Open source technologists",
+		},
+		{ id: "7445C1BE-8E22-4D9C-9510-0ACFC13B9BB5", name: "Researchers" },
 	],
 	url = "#",
 	description = "Default pattern description",
@@ -61,8 +64,11 @@ export function SearchResultItem({
 								/>
 							</div>
 
-							<SearchResultPreview description={description} patternTitle={category}>
-								<div className="flex h-6 items-center gap-2.5 rounded-lg border border-zinc-300 px-2 py-1.5 cursor-pointer">
+							<SearchResultPreview
+								description={description}
+								patternTitle={category}
+							>
+								<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-zinc-300 px-2 py-1.5">
 									<span className="whitespace-nowrap text-[14px] text-zinc-500 capitalize tracking-[-0.28px]">
 										{category}
 									</span>

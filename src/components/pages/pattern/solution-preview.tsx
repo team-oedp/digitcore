@@ -29,7 +29,7 @@ export function SolutionPreview({
 						<h3 className="font-normal text-lg text-primary leading-[22px]">
 							{solutionTitle}
 						</h3>
-						<span className="bg-neutral-200 text-xs text-neutral-600 px-2 py-1 rounded-md w-fit">
+						<span className="w-fit rounded-md bg-neutral-200 px-2 py-1 text-neutral-600 text-xs">
 							Solution {solutionNumber}
 						</span>
 					</div>

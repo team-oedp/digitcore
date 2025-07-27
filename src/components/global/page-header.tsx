@@ -2,8 +2,8 @@
 
 import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { usePathname } from "next/navigation";
 import type { PortableTextBlock } from "next-sanity";
+import { usePathname } from "next/navigation";
 
 import CustomPortableText from "./portable-text";
 
@@ -58,9 +58,9 @@ export function PageHeader({ title, description, slug }: PageHeaderProps) {
 					{typeof description === "string" ? (
 						<p>{description}</p>
 					) : (
-						<CustomPortableText 
-							value={description} 
-							className="prose-sm prose-p:text-primary prose-p:text-sm" 
+						<CustomPortableText
+							value={description}
+							className="prose-sm prose-p:text-primary prose-p:text-sm"
 						/>
 					)}
 				</div>

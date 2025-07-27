@@ -18,7 +18,10 @@ const audienceOptions: Option[] = [
 ];
 
 const themeOptions: Option[] = [
-	{ value: "frontline-communities", label: "Ensuring benefit to frontline communities" },
+	{
+		value: "frontline-communities",
+		label: "Ensuring benefit to frontline communities",
+	},
 	{ value: "data-sovereignty", label: "Data sovereignty" },
 	{ value: "community-engagement", label: "Community engagement" },
 	{ value: "ethical-technology", label: "Ethical technology" },
@@ -80,12 +83,21 @@ export function SearchInterface() {
 			{/* Filter Tools */}
 			<div className="flex w-full max-w-4xl gap-3 p-0.5">
 				{/* Audience Multiselect */}
-				<div className="flex-1 min-w-0">
-					<div className="text-xs text-primary mb-1">Audiences</div>
+				<div className="min-w-0 flex-1">
+					<div className="mb-1 text-primary text-xs">Audiences</div>
 					<MultipleSelector
-						value={filters.audience.map(value => audienceOptions.find(opt => opt.value === value) || { value, label: value })}
+						value={filters.audience.map(
+							(value) =>
+								audienceOptions.find((opt) => opt.value === value) || {
+									value,
+									label: value,
+								},
+						)}
 						onChange={(selected) => {
-							setFilters(prev => ({ ...prev, audience: selected.map(opt => opt.value) }));
+							setFilters((prev) => ({
+								...prev,
+								audience: selected.map((opt) => opt.value),
+							}));
 						}}
 						defaultOptions={audienceOptions}
 						placeholder="Select audiences"
@@ -96,12 +108,21 @@ export function SearchInterface() {
 				</div>
 
 				{/* Theme Multiselect */}
-				<div className="flex-1 min-w-0">
-					<div className="text-xs text-primary mb-1">Themes</div>
+				<div className="min-w-0 flex-1">
+					<div className="mb-1 text-primary text-xs">Themes</div>
 					<MultipleSelector
-						value={filters.theme.map(value => themeOptions.find(opt => opt.value === value) || { value, label: value })}
+						value={filters.theme.map(
+							(value) =>
+								themeOptions.find((opt) => opt.value === value) || {
+									value,
+									label: value,
+								},
+						)}
 						onChange={(selected) => {
-							setFilters(prev => ({ ...prev, theme: selected.map(opt => opt.value) }));
+							setFilters((prev) => ({
+								...prev,
+								theme: selected.map((opt) => opt.value),
+							}));
 						}}
 						defaultOptions={themeOptions}
 						placeholder="Select themes"
@@ -112,12 +133,21 @@ export function SearchInterface() {
 				</div>
 
 				{/* Tags Multiselect */}
-				<div className="flex-1 min-w-0">
-					<div className="text-xs text-primary mb-1">Tags</div>
+				<div className="min-w-0 flex-1">
+					<div className="mb-1 text-primary text-xs">Tags</div>
 					<MultipleSelector
-						value={filters.tags.map(value => tagOptions.find(opt => opt.value === value) || { value, label: value })}
+						value={filters.tags.map(
+							(value) =>
+								tagOptions.find((opt) => opt.value === value) || {
+									value,
+									label: value,
+								},
+						)}
 						onChange={(selected) => {
-							setFilters(prev => ({ ...prev, tags: selected.map(opt => opt.value) }));
+							setFilters((prev) => ({
+								...prev,
+								tags: selected.map((opt) => opt.value),
+							}));
 						}}
 						defaultOptions={tagOptions}
 						placeholder="Select tags"

@@ -46,9 +46,9 @@ const defaultSolutions: Solution[] = [
 export function Solutions({ solutions = defaultSolutions }: SolutionsProps) {
 	return (
 		<section className="flex flex-col gap-5">
-			<header className="flex flex-row gap-2.5 items-center">
+			<header className="flex flex-row items-center gap-2.5">
 				<h2 className="font-light text-[32px] text-primary">Solutions</h2>
-				<div className="bg-[#f7f7f7] flex items-center justify-center w-8 h-8 rounded-full px-4 py-1.5">
+				<div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f7f7f7] px-4 py-1.5">
 					<HugeiconsIcon
 						icon={ChartRelationshipIcon}
 						size={20}
@@ -57,31 +57,31 @@ export function Solutions({ solutions = defaultSolutions }: SolutionsProps) {
 					/>
 				</div>
 			</header>
-			
+
 			<div className="flex flex-col gap-[13px]">
 				{solutions.map((solution) => (
-					<div key={solution.title} className="flex gap-8 pb-9 items-start">
-						<div className="flex flex-col gap-2.5 items-start min-w-10 w-10">
+					<div key={solution.title} className="flex items-start gap-8 pb-9">
+						<div className="flex w-10 min-w-10 flex-col items-start gap-2.5">
 							<span className="font-normal text-[18px] text-primary leading-[22px]">
 								{solution.number}
 							</span>
 						</div>
-						
-						<div className="flex-1 flex flex-col gap-2.5">
+
+						<div className="flex flex-1 flex-col gap-2.5">
 							<h3 className="font-normal text-[18px] text-primary leading-[22px]">
 								{solution.title}
 							</h3>
 							<p className="font-normal text-[14px] text-zinc-500 leading-normal">
 								{solution.description}
 							</p>
-							
+
 							<div className="flex gap-2">
 								{solution.audiences.map((audience) => (
 									<div
 										key={audience}
-										className="bg-blue-100 border border-blue-200 rounded-lg h-6 flex items-center gap-2.5 px-[9px] py-2"
+										className="flex h-6 items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-100 px-[9px] py-2"
 									>
-										<span className="font-normal text-[14px] text-[#1e40ae] text-nowrap">
+										<span className="text-nowrap font-normal text-[#1e40ae] text-[14px]">
 											{audience}
 										</span>
 										<HugeiconsIcon

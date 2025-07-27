@@ -11,22 +11,22 @@ const defaultAudiences = ["Open Source Developers", "Researchers"];
 const defaultTags = ["Strategy", "Workflow", "Data", "Tool", "Communication"];
 const defaultTheme = "Ensuring benefit to frontline communities";
 
-export function PatternConnections({ 
-	audiences = defaultAudiences, 
-	tags = defaultTags, 
-	theme = defaultTheme 
+export function PatternConnections({
+	audiences = defaultAudiences,
+	tags = defaultTags,
+	theme = defaultTheme,
 }: PatternConnectionsProps) {
 	return (
 		<section className="flex flex-col gap-4 pt-8">
 			{/* Audiences */}
-			<div className="flex flex-row gap-4 items-center">
-				<div className="flex flex-row gap-2 items-center">
+			<div className="flex flex-row items-center gap-4">
+				<div className="flex flex-row items-center gap-2">
 					{audiences.map((audience) => (
 						<div
 							key={audience}
-							className="bg-blue-100 border border-blue-200 rounded-lg h-6 flex items-center gap-2.5 pl-[9px] pr-3 py-2"
+							className="flex h-6 items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-100 py-2 pr-3 pl-[9px]"
 						>
-							<span className="font-normal text-[14px] text-[#1e40ae] text-nowrap">
+							<span className="text-nowrap font-normal text-[#1e40ae] text-[14px]">
 								{audience}
 							</span>
 							<HugeiconsIcon
@@ -41,14 +41,14 @@ export function PatternConnections({
 			</div>
 
 			{/* Tags */}
-			<div className="flex flex-row gap-4 items-center">
-				<div className="flex flex-row gap-2 items-center">
+			<div className="flex flex-row items-center gap-4">
+				<div className="flex flex-row items-center gap-2">
 					{tags.map((tag) => (
 						<div
 							key={tag}
-							className="bg-violet-100 border border-violet-200 rounded-lg h-6 flex items-center gap-2.5 pl-[9px] pr-3 py-2"
+							className="flex h-6 items-center gap-2.5 rounded-lg border border-violet-200 bg-violet-100 py-2 pr-3 pl-[9px]"
 						>
-							<span className="font-normal text-[14px] text-[#5b20b6] text-nowrap">
+							<span className="text-nowrap font-normal text-[#5b20b6] text-[14px]">
 								{tag}
 							</span>
 							<HugeiconsIcon
@@ -63,11 +63,11 @@ export function PatternConnections({
 			</div>
 
 			{/* Theme */}
-			<div className="bg-orange-100 border border-orange-200 rounded-lg h-6 flex items-center gap-2.5 pl-[9px] pr-[3px] py-2 self-start">
-				<span className="font-normal text-[14px] text-orange-800 text-nowrap">
+			<div className="flex h-6 items-center gap-2.5 self-start rounded-lg border border-orange-200 bg-orange-100 py-2 pr-[3px] pl-[9px]">
+				<span className="text-nowrap font-normal text-[14px] text-orange-800">
 					{theme}
 				</span>
-				<div className="h-[18px] rounded border border-orange-200 flex items-center justify-center px-1.5 py-0">
+				<div className="flex h-[18px] items-center justify-center rounded border border-orange-200 px-1.5 py-0">
 					<span className="font-normal text-[12px] text-orange-800 tracking-[-0.14px]">
 						Theme
 					</span>

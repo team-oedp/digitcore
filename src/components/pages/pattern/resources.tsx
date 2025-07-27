@@ -30,36 +30,45 @@ const defaultResources: Resource[] = [
 		description:
 			"Animikii's Pathfinding process supports co-design of technology specifically with Indigenous communities.",
 		url: "https://example.com",
-		solutions: [{
-			name: "Iterative co-creation",
-			number: "i.",
-			title: "Iterative co-creation",
-			description: "A collaborative approach that involves iterative cycles of design, feedback, and refinement with community stakeholders to ensure technology solutions meet real needs and respect cultural values."
-		}],
+		solutions: [
+			{
+				name: "Iterative co-creation",
+				number: "i.",
+				title: "Iterative co-creation",
+				description:
+					"A collaborative approach that involves iterative cycles of design, feedback, and refinement with community stakeholders to ensure technology solutions meet real needs and respect cultural values.",
+			},
+		],
 	},
 	{
 		title: "LiteFarm's Informed Consent Form and Privacy Policy",
 		description:
 			"LiteFarm's Informed Consent Form and Privacy Policy is a good example of a mechanism for obtaining informed consent to share environmental data collected by individual community members—in this case, farmers using the open source LiteFarm app to record information about their farm management practices, which includesing potentially sensitive data.",
 		url: "https://example.com",
-		solutions: [{
-			name: "Iterative co-creation",
-			number: "i.",
-			title: "Iterative co-creation",
-			description: "A collaborative approach that involves iterative cycles of design, feedback, and refinement with community stakeholders to ensure technology solutions meet real needs and respect cultural values."
-		}],
+		solutions: [
+			{
+				name: "Iterative co-creation",
+				number: "i.",
+				title: "Iterative co-creation",
+				description:
+					"A collaborative approach that involves iterative cycles of design, feedback, and refinement with community stakeholders to ensure technology solutions meet real needs and respect cultural values.",
+			},
+		],
 	},
 	{
 		title: "OpenTEAM's Data Use Documents",
 		description:
 			"OpenTEAM's Data Use Documents include good examples of tools to request and manage consent to share or use data. In particular, see the Agriculturalists' Bill of Data Rights and the Data Hosting and Storage Agreement.",
 		url: "https://example.com",
-		solutions: [{
-			name: "Iterative co-creation",
-			number: "i.",
-			title: "Iterative co-creation",
-			description: "A collaborative approach that involves iterative cycles of design, feedback, and refinement with community stakeholders to ensure technology solutions meet real needs and respect cultural values."
-		}],
+		solutions: [
+			{
+				name: "Iterative co-creation",
+				number: "i.",
+				title: "Iterative co-creation",
+				description:
+					"A collaborative approach that involves iterative cycles of design, feedback, and refinement with community stakeholders to ensure technology solutions meet real needs and respect cultural values.",
+			},
+		],
 	},
 	{
 		title: "Local Contexts' Data Labels",
@@ -71,13 +80,15 @@ const defaultResources: Resource[] = [
 				name: "Secure consent before sharing",
 				number: "ii.",
 				title: "Consent to share",
-				description: "Establish clear protocols for obtaining explicit consent before sharing any community data, ensuring transparency about how the data will be used and stored."
+				description:
+					"Establish clear protocols for obtaining explicit consent before sharing any community data, ensuring transparency about how the data will be used and stored.",
 			},
 			{
 				name: "Let communities own their data",
 				number: "iii.",
 				title: "Community data co-/ownership",
-				description: "Implement systems that give communities full control and ownership over their data, including the right to access, modify, or delete their information at any time."
+				description:
+					"Implement systems that give communities full control and ownership over their data, including the right to access, modify, or delete their information at any time.",
 			},
 		],
 	},
@@ -150,7 +161,7 @@ export function Resources({ resources = defaultResources }: ResourcesProps) {
 											solutionTitle={solution.title}
 											solutionDescription={solution.description}
 										>
-											<div className="flex h-6 items-center gap-2.5 rounded-lg border border-[#a2e636] bg-[#e6fbc5] px-2 py-1.5 cursor-pointer">
+											<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-[#a2e636] bg-[#e6fbc5] px-2 py-1.5">
 												<span className="font-normal text-[#95b661] text-[14px] tracking-[-0.14px]">
 													{solution.name}
 												</span>
