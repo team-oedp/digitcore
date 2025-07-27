@@ -13,7 +13,7 @@ interface PageHeaderProps {
 export function PageHeader({ title, description, slug }: PageHeaderProps) {
 	const pathname = usePathname();
 
-	const getPageTitle = () => {
+	const pageTitle = (() => {
 		if (title) return title;
 		if (slug) return slug.replace(/-/g, " ");
 		if (pathname === "/") return "Home";
@@ -24,22 +24,22 @@ export function PageHeader({ title, description, slug }: PageHeaderProps) {
 		if (pathname === "/glossary") return "Glossary";
 		if (pathname === "/onboarding") return "Onboarding";
 		if (pathname === "/carrier-bag") return "Carrier Bag";
-		return pathname.split("/").pop() || "Unknown";
-	};
+		return pathname.split("/").pop() || "";
+	})();
 
 	const isPatternPage = pathname.startsWith("/pattern/");
 
 	return (
 		<header className="max-w-4xl space-y-5">
 			<h1 className="font-light text-[32px] text-primary capitalize">
-				{getPageTitle()}
+				{pageTitle}
 			</h1>
 			{isPatternPage && (
 				<button
 					type="button"
 					className="flex items-center gap-2.5 rounded-lg border border-border bg-white px-[7px] py-1 transition-colors hover:bg-secondary"
 				>
-					<span className="font-normal text-[14px] text-zinc-500 uppercase leading-[20px]">
+					<span className="font-normal text-[12px] text-primary uppercase leading-[20px]">
 						Add to Carrier Bag
 					</span>
 					<HugeiconsIcon
@@ -50,9 +50,7 @@ export function PageHeader({ title, description, slug }: PageHeaderProps) {
 					/>
 				</button>
 			)}
-			{description && (
-				<p className="text-muted-foreground text-sm">{description}</p>
-			)}
+			{description && <p className="text-primary text-sm">{description}</p>}
 		</header>
 	);
 }
