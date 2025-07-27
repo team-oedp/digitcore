@@ -2,58 +2,43 @@
 
 import { useState } from "react";
 import { Input } from "~/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "~/components/ui/select";
+import MultipleSelector, { type Option } from "~/components/ui/multiselect";
 
 type SearchFilters = {
 	audience: string[];
-	theme: string;
+	theme: string[];
 	tags: string[];
-	sortBy: string;
 };
 
-const audienceOptions = [
-	"Researchers",
-	"Open source technologists",
-	"Community leaders",
-	"Policy makers",
+const audienceOptions: Option[] = [
+	{ value: "researchers", label: "Researchers" },
+	{ value: "open-source-technologists", label: "Open source technologists" },
+	{ value: "community-leaders", label: "Community leaders" },
+	{ value: "policy-makers", label: "Policy makers" },
 ];
 
-const themeOptions = [
-	"Ensuring benefit to frontline communities",
-	"Data sovereignty",
-	"Community engagement",
-	"Ethical technology",
+const themeOptions: Option[] = [
+	{ value: "frontline-communities", label: "Ensuring benefit to frontline communities" },
+	{ value: "data-sovereignty", label: "Data sovereignty" },
+	{ value: "community-engagement", label: "Community engagement" },
+	{ value: "ethical-technology", label: "Ethical technology" },
 ];
 
-const tagOptions = [
-	"Tools",
-	"Strategy",
-	"Workflow",
-	"Data",
-	"Communication",
-	"Assessment",
-];
-
-const sortOptions = [
-	{ value: "relevance", label: "Relevance" },
-	{ value: "alphabetical", label: "Alphabetical" },
-	{ value: "recent", label: "Most Recent" },
-	{ value: "popular", label: "Most Popular" },
+const tagOptions: Option[] = [
+	{ value: "tools", label: "Tools" },
+	{ value: "strategy", label: "Strategy" },
+	{ value: "workflow", label: "Workflow" },
+	{ value: "data", label: "Data" },
+	{ value: "communication", label: "Communication" },
+	{ value: "assessment", label: "Assessment" },
 ];
 
 export function SearchInterface() {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [filters, setFilters] = useState<SearchFilters>({
-		audience: ["Researchers", "Open source technologists"],
-		theme: "Ensuring benefit to frontline communities",
-		tags: ["Tools", "Strategy"],
-		sortBy: "None selected",
+		audience: [],
+		theme: [],
+		tags: [],
 	});
 
 	const handleSearch = () => {
@@ -72,21 +57,19 @@ export function SearchInterface() {
 			{/* Search Input */}
 			<div className="relative w-full">
 				<div className="flex w-full items-center justify-start px-0 py-3">
-					<div className="flex flex-1 items-center justify-start gap-2 p-0">
+					<div className="relative flex flex-1 items-center justify-start gap-2 p-0">
 						<Input
 							type="text"
 							value={searchQuery}
 							onChange={(e) => setSearchQuery(e.target.value)}
 							onKeyDown={handleKeyDown}
 							placeholder="Start typing to search"
-							className="h-8 rounded-none border-0 border-zinc-300 border-b bg-transparent px-0 py-1 text-sm text-zinc-500 shadow-none placeholder:text-zinc-500 focus-visible:border-zinc-300 focus-visible:ring-0 focus-visible:ring-offset-0"
+							className="h-8 rounded-none border-0 border-zinc-300 border-b bg-transparent px-0 py-1 pr-16 text-sm text-zinc-500 shadow-none placeholder:text-zinc-500 focus-visible:border-zinc-300 focus-visible:ring-0 focus-visible:ring-offset-0"
 						/>
-					</div>
-					<div className="flex h-7 items-center justify-start gap-2 p-0">
 						<button
 							onClick={handleSearch}
 							type="button"
-							className="cursor-pointer text-primary text-sm transition-colors hover:text-primary/50"
+							className="absolute right-0 cursor-pointer text-primary text-sm transition-colors hover:text-primary/50"
 						>
 							Search
 						</button>
@@ -95,64 +78,54 @@ export function SearchInterface() {
 			</div>
 
 			{/* Filter Tools */}
-			<div className="flex w-full flex-wrap items-start gap-3 p-0.5">
-				{/* Audience Dropdown */}
-				<div className="flex flex-col items-start justify-center gap-3 p-0">
-					<Select>
-						<SelectTrigger className="h-[34px] w-[255px] gap-2 rounded-md border-0 bg-background px-[11px] py-[7px] text-[14px] text-primary shadow-none data-[placeholder]:text-primary">
-							<SelectValue placeholder="Audience: Researchers, Open source technologists" />
-						</SelectTrigger>
-						<SelectContent>
-							{audienceOptions.map((option) => (
-								<SelectItem key={option} value={option}>
-									{option}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
+			<div className="flex w-full max-w-4xl gap-3 p-0.5">
+				{/* Audience Multiselect */}
+				<div className="flex-1 min-w-0">
+					<div className="text-xs text-primary mb-1">Audiences</div>
+					<MultipleSelector
+						value={filters.audience.map(value => audienceOptions.find(opt => opt.value === value) || { value, label: value })}
+						onChange={(selected) => {
+							setFilters(prev => ({ ...prev, audience: selected.map(opt => opt.value) }));
+						}}
+						defaultOptions={audienceOptions}
+						placeholder="Select audiences"
+						className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none"
+						emptyIndicator="No options found."
+						hidePlaceholderWhenSelected
+					/>
 				</div>
 
-				{/* Theme Dropdown */}
-				<Select>
-					<SelectTrigger className="h-[34px] w-[255px] max-w-[255px] gap-2 rounded-md border-0 bg-background px-2 py-1.5 text-[14px] text-primary shadow-none data-[placeholder]:text-primary">
-						<SelectValue placeholder="Theme: Ensuring benefit to frontline communities" />
-					</SelectTrigger>
-					<SelectContent>
-						{themeOptions.map((option) => (
-							<SelectItem key={option} value={option}>
-								{option}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
+				{/* Theme Multiselect */}
+				<div className="flex-1 min-w-0">
+					<div className="text-xs text-primary mb-1">Themes</div>
+					<MultipleSelector
+						value={filters.theme.map(value => themeOptions.find(opt => opt.value === value) || { value, label: value })}
+						onChange={(selected) => {
+							setFilters(prev => ({ ...prev, theme: selected.map(opt => opt.value) }));
+						}}
+						defaultOptions={themeOptions}
+						placeholder="Select themes"
+						className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none"
+						emptyIndicator="No options found."
+						hidePlaceholderWhenSelected
+					/>
+				</div>
 
-				{/* Tags Dropdown */}
-				<Select>
-					<SelectTrigger className="h-[34px] w-[255px] gap-2 rounded-md border-0 bg-background px-2 py-1.5 text-[14px] text-primary shadow-none data-[placeholder]:text-primary">
-						<SelectValue placeholder="Tags: Tools, Strategy" />
-					</SelectTrigger>
-					<SelectContent>
-						{tagOptions.map((option) => (
-							<SelectItem key={option} value={option}>
-								{option}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
-
-				{/* Sort By Dropdown */}
-				<Select>
-					<SelectTrigger className="h-[34px] w-[255px] gap-2 rounded-md border-0 bg-background px-2 py-1.5 text-[14px] text-primary shadow-none data-[placeholder]:text-primary">
-						<SelectValue placeholder="Sort by: None selected" />
-					</SelectTrigger>
-					<SelectContent>
-						{sortOptions.map((option) => (
-							<SelectItem key={option.value} value={option.value}>
-								{option.label}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
+				{/* Tags Multiselect */}
+				<div className="flex-1 min-w-0">
+					<div className="text-xs text-primary mb-1">Tags</div>
+					<MultipleSelector
+						value={filters.tags.map(value => tagOptions.find(opt => opt.value === value) || { value, label: value })}
+						onChange={(selected) => {
+							setFilters(prev => ({ ...prev, tags: selected.map(opt => opt.value) }));
+						}}
+						defaultOptions={tagOptions}
+						placeholder="Select tags"
+						className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none"
+						emptyIndicator="No options found."
+						hidePlaceholderWhenSelected
+					/>
+				</div>
 			</div>
 		</div>
 	);

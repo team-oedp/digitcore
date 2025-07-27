@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import type { Metadata } from "next";
 import { sans } from "~/app/(frontend)/fonts";
 import { Header } from "~/components/global/header";
-import { ThemeProvider } from "~/components/theme-provider";
+import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
 import { SanityLive } from "~/sanity/lib/live";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";

@@ -3,10 +3,13 @@
 import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { usePathname } from "next/navigation";
+import type { PortableTextBlock } from "next-sanity";
+
+import CustomPortableText from "./portable-text";
 
 interface PageHeaderProps {
 	title?: string;
-	description?: string;
+	description?: string | PortableTextBlock[];
 	slug?: string;
 }
 
@@ -50,7 +53,18 @@ export function PageHeader({ title, description, slug }: PageHeaderProps) {
 					/>
 				</button>
 			)}
-			{description && <p className="text-primary text-sm">{description}</p>}
+			{description && (
+				<div className="text-primary text-sm">
+					{typeof description === "string" ? (
+						<p>{description}</p>
+					) : (
+						<CustomPortableText 
+							value={description} 
+							className="prose-sm prose-p:text-primary prose-p:text-sm" 
+						/>
+					)}
+				</div>
+			)}
 		</header>
 	);
 }

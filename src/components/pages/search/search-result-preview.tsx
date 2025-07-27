@@ -21,7 +21,7 @@ export function SearchResultPreview({
 	patternTitle,
 }: SearchResultPreviewProps) {
 	return (
-		<HoverCard>
+		<HoverCard openDelay={100}>
 			<HoverCardTrigger asChild>{children}</HoverCardTrigger>
 			<HoverCardContent className="w-80 p-0" align="start" sideOffset={8}>
 				<div className="flex flex-col gap-3.5 rounded-lg bg-neutral-100 p-3.5">
