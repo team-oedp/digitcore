@@ -1,5 +1,10 @@
-import type { IconSvgObject } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+
+type IconSvgObject = ([string, {
+	[key: string]: string | number;
+}])[] | readonly (readonly [string, {
+	readonly [key: string]: string | number;
+}])[];
 
 type IconProps = {
 	icon: IconSvgObject;
