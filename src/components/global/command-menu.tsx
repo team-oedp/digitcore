@@ -1,17 +1,16 @@
 "use client";
 
 import { Command } from "cmdk";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 
-interface CommandMenuProps {
+type CommandMenuProps = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-}
+};
 
 export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
-	const router = useRouter();
 	const pathname = usePathname();
 	const [search, setSearch] = useState("");
 
@@ -24,10 +23,7 @@ export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
 		if (pathname === "/glossary") return "Glossary";
 		if (pathname === "/onboarding") return "Onboarding";
 		if (pathname === "/carrier-bag") return "Carrier Bag";
-		if (pathname.startsWith("/pattern/")) {
-			const slug = pathname.split("/pattern/")[1];
-			return slug?.replace(/-/g, " ");
-		}
+		if (pathname.startsWith("/pattern/")) return "Pattern";
 		return pathname.split("/").pop() || "Unknown";
 	};
 
