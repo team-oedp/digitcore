@@ -82,13 +82,14 @@ export function Resources({ resources = defaultResources }: ResourcesProps) {
 											href={resource.url}
 											target="_blank"
 											rel="noopener noreferrer"
-											className="flex h-8 w-8 items-center justify-center rounded-full bg-background px-4 py-1.5 text-primary transition-colors hover:bg-secondary"
+											className="flex h-8 w-8 items-center justify-center rounded-full bg-background transition-colors hover:bg-secondary"
 										>
 											<HugeiconsIcon
 												icon={Link02Icon}
 												size={20}
-												color="#3D3D3D"
+												color="currentColor"
 												strokeWidth={1.5}
+												className="z-10"
 											/>
 										</a>
 									)}
