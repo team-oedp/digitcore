@@ -17,7 +17,7 @@ export function PatternConnections({
 	theme = defaultTheme 
 }: PatternConnectionsProps) {
 	return (
-		<section className="flex flex-col gap-4 pt-3">
+		<section className="flex flex-col gap-4 pt-8">
 			{/* Audiences */}
 			<div className="flex flex-row gap-4 items-center">
 				<div className="flex flex-row gap-2 items-center">

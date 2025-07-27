@@ -55,18 +55,11 @@ export default async function PatternPage({ params }: PatternPageProps) {
 		return notFound();
 	}
 
-	console.log({ pattern });
-
 	return (
 		<PageWrapper>
 			<div className="space-y-12">
 				<div className="ml-18">
-					<PageHeader
-						slug={slug}
-						description={
-							"Agency emerges when frontline communities lead or co-lead in decision-making. When researchers or technology developers set goals without community input, they risk overlooking local knowledge and undermining self-determination. For example, analysis of monitoring or sensor data without input from or discussion with communities risks the sharing of incomplete knowledge that can demotivate further collaboration or intervention as analytical assumptions might not reflect the communities' lived experience. Achieving this level of input from communities may demand forms of communication that go beyond typical research or technology development activities, such as participating in community organizing activities, storytelling, or simply one-on-one or in-person conversations."
-						}
-					/>
+					<PageHeader slug={slug} description={pattern.description} />
 					<PatternConnections />
 				</div>
 				<Solutions />
