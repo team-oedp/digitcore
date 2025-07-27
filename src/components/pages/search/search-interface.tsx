@@ -86,7 +86,7 @@ export function SearchInterface() {
 						<button
 							onClick={handleSearch}
 							type="button"
-							className="cursor-pointer text-sm text-zinc-500 transition-colors hover:text-zinc-700"
+							className="cursor-pointer text-primary text-sm transition-colors hover:text-primary/50"
 						>
 							Search
 						</button>
@@ -95,11 +95,11 @@ export function SearchInterface() {
 			</div>
 
 			{/* Filter Tools */}
-			<div className="flex w-full flex-wrap items-start gap-3 p-[2px]">
+			<div className="flex w-full flex-wrap items-start gap-3 p-0.5">
 				{/* Audience Dropdown */}
 				<div className="flex flex-col items-start justify-center gap-3 p-0">
 					<Select>
-						<SelectTrigger className="h-[34px] w-[255px] gap-2 rounded-md border-0 bg-neutral-50 px-[11px] py-[7px] text-[14px] text-zinc-500">
+						<SelectTrigger className="h-[34px] w-[255px] gap-2 rounded-md border-0 bg-background px-[11px] py-[7px] text-[14px] text-primary shadow-none data-[placeholder]:text-primary">
 							<SelectValue placeholder="Audience: Researchers, Open source technologists" />
 						</SelectTrigger>
 						<SelectContent>
@@ -114,7 +114,7 @@ export function SearchInterface() {
 
 				{/* Theme Dropdown */}
 				<Select>
-					<SelectTrigger className="h-[34px] w-[255px] max-w-[255px] gap-2 rounded-md border-0 bg-neutral-200 px-2 py-1.5 text-[14px] text-zinc-500">
+					<SelectTrigger className="h-[34px] w-[255px] max-w-[255px] gap-2 rounded-md border-0 bg-background px-2 py-1.5 text-[14px] text-primary shadow-none data-[placeholder]:text-primary">
 						<SelectValue placeholder="Theme: Ensuring benefit to frontline communities" />
 					</SelectTrigger>
 					<SelectContent>
@@ -128,7 +128,7 @@ export function SearchInterface() {
 
 				{/* Tags Dropdown */}
 				<Select>
-					<SelectTrigger className="h-[34px] w-[255px] gap-2 rounded-md border-0 bg-neutral-200 px-2 py-1.5 text-[14px] text-zinc-500">
+					<SelectTrigger className="h-[34px] w-[255px] gap-2 rounded-md border-0 bg-background px-2 py-1.5 text-[14px] text-primary shadow-none data-[placeholder]:text-primary">
 						<SelectValue placeholder="Tags: Tools, Strategy" />
 					</SelectTrigger>
 					<SelectContent>
@@ -142,7 +142,7 @@ export function SearchInterface() {
 
 				{/* Sort By Dropdown */}
 				<Select>
-					<SelectTrigger className="h-[34px] w-[255px] gap-2 rounded-md border-0 bg-neutral-200 px-2 py-1.5 text-[14px] text-zinc-500">
+					<SelectTrigger className="h-[34px] w-[255px] gap-2 rounded-md border-0 bg-background px-2 py-1.5 text-[14px] text-primary shadow-none data-[placeholder]:text-primary">
 						<SelectValue placeholder="Sort by: None selected" />
 					</SelectTrigger>
 					<SelectContent>
