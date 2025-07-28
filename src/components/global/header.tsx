@@ -138,18 +138,10 @@ export function Header() {
 							strokeWidth={1.5}
 						/>
 					</Button>
-					<Button
-						variant="outline"
-						size="icon"
-						className="h-6 w-11"
-						onClick={() => setCommandOpen(true)}
-					>
-						<span className="px-2 py-0.5 text-sm">⌘K</span>
-					</Button>
+					<CommandMenu />
 					<SidebarTrigger className="-ml-1" />
 				</div>
 			</nav>
-			<CommandMenu open={commandOpen} onOpenChange={setCommandOpen} />
 		</header>
 	);
 }
