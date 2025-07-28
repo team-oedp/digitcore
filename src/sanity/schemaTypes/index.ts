@@ -1,24 +1,26 @@
 import type { SchemaTypeDefinition } from "sanity";
 
-import { audienceType } from "./audienceType";
-import { blockContentType } from "./blockContentType";
-import { carrierBagType } from "./carrierBagType";
-import { externalLinkType } from "./externalLinkType";
-import { faqType } from "./faqType";
-import { glossaryType } from "./glossaryType";
-import { onboardingType } from "./onboardingType";
-import { pageType } from "./pageType";
-import { patternType } from "./patternType";
-import { resourceType } from "./resourceType";
-import { siteSettingsType } from "./siteSettingsType";
-import { solutionType } from "./solutionType";
-import { tagType } from "./tagType";
-import { themeType } from "./themeType";
+import { audienceType } from "./documents/audienceType";
+import { faqType } from "./documents/faqType";
+import { glossaryType } from "./documents/glossaryType";
+import { pageType } from "./documents/pageType";
+import { patternType } from "./documents/patternType";
+import { resourceType } from "./documents/resourceType";
+import { solutionType } from "./documents/solutionType";
+import { tagType } from "./documents/tagType";
+import { themeType } from "./documents/themeType";
+import { blockContentType } from "./objects/blockContentType";
+import { contentType } from "./objects/contentType";
+import { linkType } from "./objects/linkType";
+import { carrierBagType } from "./singletons/carrierBagType";
+import { onboardingType } from "./singletons/onboardingType";
+import { siteSettingsType } from "./singletons/siteSettingsType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
 	types: [
+		linkType,
 		blockContentType,
-		externalLinkType,
+		contentType,
 		tagType,
 		patternType,
 		audienceType,

@@ -28,12 +28,12 @@ export const resourceType = defineType({
 			of: [defineArrayMember({ type: "reference", to: { type: "solution" } })],
 		}),
 		defineField({
-			name: "externalLinks",
-			title: "External Links",
+			name: "links",
+			title: "Links",
 			type: "array",
 			of: [
 				defineArrayMember({
-					type: "externalLink",
+					type: "link",
 				}),
 			],
 		}),
