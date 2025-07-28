@@ -16,6 +16,7 @@ import {
 	SidebarGroup,
 	SidebarHeader,
 } from "~/components/ui/sidebar";
+import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { Button } from "../../ui/button";
 import { Icon } from "../icon";
 
@@ -78,6 +79,7 @@ const dummyCarrierBagItems: CarrierBagItemData[] = [
 export function CarrierBagSidebar({
 	...props
 }: React.ComponentProps<typeof Sidebar>) {
+	const { isPinned, togglePin, setOpen } = useCarrierBagStore();
 	const handleRemoveItem = (id: string) => {
 		console.log("Remove item:", id);
 	};
@@ -89,7 +91,9 @@ export function CarrierBagSidebar({
 	return (
 		<Sidebar
 			variant="floating"
-			className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
+			className={`top-(--header-height) h-[calc(100svh-var(--header-height))]! ${
+				isPinned ? "fixed right-0 z-50 shadow-2xl" : ""
+			}`}
 			{...props}
 		>
 			<SidebarHeader>
@@ -101,7 +105,8 @@ export function CarrierBagSidebar({
 							size="sm"
 							className="h-8 w-8 p-0"
 							type="button"
-							aria-label="Collapse Sidebar"
+							aria-label="Pin Sidebar to Page"
+							onClick={togglePin}
 						>
 							<Icon icon={SidebarRightIcon} size={16} />
 						</Button>
@@ -120,6 +125,7 @@ export function CarrierBagSidebar({
 							className="h-8 w-8 p-0"
 							type="button"
 							aria-label="Close Sidebar"
+							onClick={() => setOpen(false)}
 						>
 							<Icon icon={Cancel01Icon} size={16} />
 						</Button>
