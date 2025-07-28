@@ -1,6 +1,6 @@
 import "~/styles/globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { sans } from "~/app/(frontend)/fonts";
 import { FloatingSidebar } from "~/components/global/floating-sidebar";
 import { Header } from "~/components/global/header";
@@ -16,6 +16,14 @@ export const metadata: Metadata = {
 	title: "Digitcore",
 	description: "Digital Toolkit for Collaborative Environmental Research",
 	icons: [{ rel: "icon", url: "/icon.png" }],
+};
+
+export const viewport: Viewport = {
+	colorScheme: "light",
+	themeColor: [
+		{ media: "(prefers-color-scheme: light)", color: "white" },
+		{ media: "(prefers-color-scheme: dark)", color: "black" },
+	],
 };
 
 export default function Layout({
@@ -38,7 +46,7 @@ export default function Layout({
 								className="flex flex-col"
 								style={
 									{
-										"--sidebar-width": "19rem",
+										"--sidebar-width": "28rem",
 									} as React.CSSProperties
 								}
 							>
