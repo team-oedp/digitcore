@@ -17,7 +17,7 @@ import {
 const data = {
 	navMain: [
 		{
-			title: "Getting Started",
+			title: "Carrier Bag",
 			url: "#",
 			items: [
 				{
@@ -154,9 +154,15 @@ const data = {
 	],
 };
 
-export function FloatingSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function FloatingSidebar({
+	...props
+}: React.ComponentProps<typeof Sidebar>) {
 	return (
-		<Sidebar variant="floating" {...props}>
+		<Sidebar
+			variant="floating"
+			className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
+			{...props}
+		>
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
@@ -166,8 +172,8 @@ export function FloatingSidebar({ ...props }: React.ComponentProps<typeof Sideba
 									<GalleryVerticalEnd className="size-4" />
 								</div>
 								<div className="flex flex-col gap-0.5 leading-none">
-									<span className="font-medium">Documentation</span>
-									<span className="">v1.0.0</span>
+									<span className="font-medium">Carrier Bag</span>
+									<span className="">15 items</span>
 								</div>
 							</a>
 						</SidebarMenuButton>

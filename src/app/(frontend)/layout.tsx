@@ -23,7 +23,7 @@ export default function Layout({
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<section className={cn(sans.variable)}>
-			<div className="min-h-screen bg-background text-foreground antialiased">
+			<div className="min-h-screen bg-background text-foreground antialiased [--header-height:calc(--spacing(14))]">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"
@@ -35,19 +35,22 @@ export default function Layout({
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
 							<SidebarProvider
+								className="flex flex-col"
 								style={
 									{
 										"--sidebar-width": "19rem",
 									} as React.CSSProperties
 								}
 							>
-								<SidebarInset>
-									<Header />
-									<main className="mx-2 mb-2 min-h-full rounded-md bg-primary-foreground">
-										{children}
-									</main>
-								</SidebarInset>
-								<FloatingSidebar />
+								<Header />
+								<div className="flex flex-1">
+									<SidebarInset>
+										<main className="mx-2 mb-2 flex min-h-full flex-1 flex-col rounded-md bg-primary-foreground">
+											{children}
+										</main>
+									</SidebarInset>
+									<FloatingSidebar />
+								</div>
 							</SidebarProvider>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>

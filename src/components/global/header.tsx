@@ -1,13 +1,12 @@
 "use client";
 
-import { Backpack01Icon, Globe02Icon } from "@hugeicons/core-free-icons";
+import { Globe02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { cn } from "~/lib/utils";
-import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { Button } from "../ui/button";
 import { SidebarTrigger } from "../ui/sidebar";
 import { CommandMenu } from "./command-menu";
@@ -15,7 +14,6 @@ import { CommandMenu } from "./command-menu";
 export function Header() {
 	const pathname = usePathname();
 	const [commandOpen, setCommandOpen] = useState(false);
-	const { toggleOpen, items } = useCarrierBagStore();
 	return (
 		<header className="sticky top-2 z-50 mx-2 my-2 rounded-md bg-primary-foreground">
 			<nav className="flex w-full items-center justify-between gap-3.5 px-3.5 py-1.5">
@@ -149,24 +147,6 @@ export function Header() {
 						<span className="px-2 py-0.5 text-sm">⌘K</span>
 					</Button>
 					<SidebarTrigger className="-ml-1" />
-					{/* <Button
-						variant="ghost"
-						size="icon"
-						className="relative h-6 w-8"
-						onClick={toggleOpen}
-					>
-						<HugeiconsIcon
-							icon={Backpack01Icon}
-							size={16}
-							color="currentColor"
-							strokeWidth={1.5}
-						/>
-						{items.length > 0 && (
-							<span className="-top-1 -right-1 absolute flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">
-								{items.length}
-							</span>
-						)}
-					</Button> */}
 				</div>
 			</nav>
 			<CommandMenu open={commandOpen} onOpenChange={setCommandOpen} />
