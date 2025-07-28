@@ -67,10 +67,14 @@ export default async function PatternPage({ params }: PatternPageProps) {
 		<PageWrapper>
 			<div className="space-y-12">
 				<div className="ml-18">
-					<PageHeader slug={slug} description={pattern.description} />
-					<PatternConnections />
+					<PageHeader slug={pattern.title} description={pattern.description} />
+					<PatternConnections
+						tags={pattern.tags}
+						audiences={pattern.audiences}
+						themes={pattern.themes}
+					/>
 				</div>
-				<Solutions />
+				<Solutions solutions={pattern.solutions || []} />
 				<Resources />
 			</div>
 		</PageWrapper>
