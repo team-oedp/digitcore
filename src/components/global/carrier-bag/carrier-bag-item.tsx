@@ -27,9 +27,9 @@ export function CarrierBagItem({
 	onExpand,
 }: CarrierBagItemProps) {
 	return (
-		<div className="group flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2.5 transition-colors hover:bg-muted/50">
+		<div className="flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2.5 transition-colors hover:bg-muted/50 [&:hover_.actions]:opacity-100">
 			{/* Drag handle */}
-			<div className="flex-shrink-0 cursor-grab opacity-60 transition-opacity active:cursor-grabbing group-hover:opacity-100">
+			<div className="flex-shrink-0 cursor-grab opacity-60 transition-opacity hover:opacity-100 active:cursor-grabbing">
 				<Icon icon={DragDropVerticalIcon} size={16} strokeWidth={3} />
 			</div>
 
@@ -40,13 +40,13 @@ export function CarrierBagItem({
 
 			{/* Item content */}
 			<div className="min-w-0 flex-1">
-				<p className="truncate font-medium text-foreground text-sm">
+				<p className="truncate font-normal text-foreground text-sm">
 					{item.title}
 				</p>
 			</div>
 
 			{/* Actions */}
-			<div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+			<div className="actions flex items-center gap-1 opacity-0 transition-opacity">
 				<Button
 					variant="ghost"
 					size="sm"

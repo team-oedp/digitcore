@@ -1,5 +1,5 @@
 import React from "react";
 
 export function CarrierBagExpanded() {
-	return <div>Carrier bag expanded</div>;
+	return <s>Carrier bag expanded</s>;
 }
