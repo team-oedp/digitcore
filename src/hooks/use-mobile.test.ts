@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useIsMobile } from "./use-mobile";
 
 // Mock window.matchMedia
@@ -58,7 +58,10 @@ describe("useIsMobile hook", () => {
 		renderHook(() => useIsMobile());
 
 		expect(mockMatchMedia).toHaveBeenCalledWith("(max-width: 767px)");
-		expect(mockMql.addEventListener).toHaveBeenCalledWith("change", expect.any(Function));
+		expect(mockMql.addEventListener).toHaveBeenCalledWith(
+			"change",
+			expect.any(Function),
+		);
 	});
 
 	it("should clean up event listener on unmount", () => {
@@ -66,7 +69,10 @@ describe("useIsMobile hook", () => {
 
 		unmount();
 
-		expect(mockMql.removeEventListener).toHaveBeenCalledWith("change", expect.any(Function));
+		expect(mockMql.removeEventListener).toHaveBeenCalledWith(
+			"change",
+			expect.any(Function),
+		);
 	});
 
 	it("should handle breakpoint transition", () => {

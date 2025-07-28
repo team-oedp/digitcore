@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { cn } from "./utils";
 
 describe("cn utility function", () => {
@@ -29,8 +29,10 @@ describe("cn utility function", () => {
 				"conditional-class": true,
 				"hidden-class": false,
 			},
-			["array-class-1", "array-class-2"]
+			["array-class-1", "array-class-2"],
 		);
-		expect(result).toBe("base-class conditional-class array-class-1 array-class-2");
+		expect(result).toBe(
+			"base-class conditional-class array-class-1 array-class-2",
+		);
 	});
 });
