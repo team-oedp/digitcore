@@ -8,7 +8,7 @@ import {
 import {
 	CarrierBagItem,
 	type CarrierBagItemData,
-} from "~/components/pages/carrier-bag/carrier-bag-item";
+} from "~/components/global/carrier-bag/carrier-bag-item";
 import {
 	Sidebar,
 	SidebarContent,
@@ -16,66 +16,66 @@ import {
 	SidebarGroup,
 	SidebarHeader,
 } from "~/components/ui/sidebar";
-import { Button } from "../ui/button";
-import { Icon } from "./icon";
+import { Button } from "../../ui/button";
+import { Icon } from "../icon";
 
 // Dummy data for carrier bag items
 const dummyCarrierBagItems: CarrierBagItemData[] = [
 	{
-		id: "1",
+		id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
 		title: "Enhancing frontline communities' agency",
 	},
 	{
-		id: "2",
+		id: "b2c3d4e5-f6g7-8901-bcde-f23456789012",
 		title: "Respecting frontline communities' time and effort",
 	},
 	{
-		id: "3",
+		id: "c3d4e5f6-g7h8-9012-cdef-345678901234",
 		title: "Reducing harm to communities",
 	},
 	{
-		id: "4",
+		id: "d4e5f6g7-h8i9-0123-defa-456789012345",
 		title: "Holding outsiders accountable",
 	},
 	{
-		id: "5",
+		id: "e5f6g7h8-i9j0-1234-efab-567890123456",
 		title: "Open means different things to different people",
 	},
 	{
-		id: "6",
+		id: "f6g7h8i9-j0k1-2345-fabc-678901234567",
 		title: "Mandated vs. meaningful openness",
 	},
 	{
-		id: "7",
+		id: "g7h8i9j0-k1l2-3456-abcd-789012345678",
 		title: "Pressure to commercialize",
 	},
 	{
-		id: "8",
+		id: "h8i9j0k1-l2m3-4567-bcde-890123456789",
 		title: "Meaning-making takes resources",
 	},
 	{
-		id: "9",
+		id: "i9j0k1l2-m3n4-5678-cdef-901234567890",
 		title: "Openness as a daily practice",
 	},
 	{
-		id: "10",
+		id: "j0k1l2m3-n4o5-6789-defa-012345678901",
 		title: "Open tools may not be fully usable for frontline communities",
 	},
 	{
-		id: "11",
+		id: "k1l2m3n4-o5p6-7890-efab-123456789012",
 		title: "Adequate metadata requires capacity",
 	},
 	{
-		id: "12",
+		id: "l2m3n4o5-p6q7-8901-fabc-234567890123",
 		title: "Data quality standards remain to be developed",
 	},
 	{
-		id: "13",
+		id: "m3n4o5p6-q7r8-9012-abcd-345678901234",
 		title: "Isolated open data repositories",
 	},
 ];
 
-export function FloatingSidebar({
+export function CarrierBagSidebar({
 	...props
 }: React.ComponentProps<typeof Sidebar>) {
 	const handleRemoveItem = (id: string) => {
@@ -94,7 +94,7 @@ export function FloatingSidebar({
 		>
 			<SidebarHeader>
 				<div className="flex items-center justify-between p-5">
-					<h3 className="font-semibold text-lg text-primary">Carrier Bag</h3>
+					<h3 className="font-normal text-lg text-primary">Carrier Bag</h3>
 					<div className="flex items-center gap-1">
 						<Button
 							variant="ghost"
