@@ -9,6 +9,7 @@ type CarrierBagState = {
 	items: CarrierBagItem[];
 	isHydrated: boolean;
 	isOpen: boolean;
+	isPinned: boolean;
 	addPattern: (pattern: Pattern, notes?: string) => void;
 	removePattern: (patternId: string) => void;
 	updateNotes: (patternId: string, notes: string) => void;
@@ -18,6 +19,8 @@ type CarrierBagState = {
 	setHydrated: (hydrated: boolean) => void;
 	toggleOpen: () => void;
 	setOpen: (open: boolean) => void;
+	togglePin: () => void;
+	setPin: (pinned: boolean) => void;
 };
 
 export const createCarrierBagStore = () =>
@@ -27,6 +30,7 @@ export const createCarrierBagStore = () =>
 				items: [],
 				isHydrated: false,
 				isOpen: false,
+				isPinned: false,
 
 				addPattern: (pattern: Pattern, notes?: string) => {
 					const { items } = get();
@@ -85,6 +89,15 @@ export const createCarrierBagStore = () =>
 
 				setOpen: (open: boolean) => {
 					set({ isOpen: open });
+				},
+
+				togglePin: () => {
+					const { isPinned } = get();
+					set({ isPinned: !isPinned });
+				},
+
+				setPin: (pinned: boolean) => {
+					set({ isPinned: pinned });
 				},
 			}),
 			{
