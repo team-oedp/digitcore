@@ -1,9 +1,29 @@
 import type { Metadata } from "next";
-import { Button } from "~/components/ui/button";
+import { notFound } from "next/navigation";
+import { PageHeader } from "~/components/global/page-header";
+import { PageWrapper } from "~/components/global/page-wrapper";
+import { PatternConnections } from "~/components/pages/pattern/pattern-connections";
+import { Resources } from "~/components/pages/pattern/resources";
+import { Solutions } from "~/components/pages/pattern/solutions";
+import { sanityFetch } from "~/sanity/lib/live";
+import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
 
 export type PatternPageProps = {
 	params: Promise<{ slug: string }>;
 };
+
+/**
+ * Generate the static params for the page.
+ * Learn more: https://nextjs.org/docs/app/api-reference/functions/generate-static-params
+ */
+export async function generateStaticParams() {
+	const { data } = await sanityFetch({
+		query: PATTERN_PAGES_SLUGS_QUERY,
+		stega: false,
+		perspective: "published",
+	});
+	return data;
+}
 
 export async function generateMetadata({
 	params,
@@ -19,53 +39,32 @@ export async function generateMetadata({
 export default async function PatternPage({ params }: PatternPageProps) {
 	const { slug } = await params;
 	const readable = slug.replace(/-/g, " ");
+
+	// Promise.all because we may want to add other fetches for glossary data later for example
+	const [{ data: pattern }] = await Promise.all([
+		sanityFetch({
+			query: PATTERN_QUERY,
+			params: { slug },
+			// Metadata should never contain stega
+			stega: false,
+		}),
+	]);
+
+	if (!pattern) {
+		console.log("No pattern found, returning 404");
+		return notFound();
+	}
+
 	return (
-		<article className="space-y-12">
-			{/* Pattern title */}
-			<header className="space-y-2">
-				<h1 className="font-bold text-3xl capitalize">{readable}</h1>
-				<p className="text-muted-foreground">
-					Short description of the pattern’s problem and context.
-				</p>
-			</header>
-
-			{/* Problem description */}
-			<section>
-				<h2 className="font-semibold text-2xl">Problem Description</h2>
-				<p>Describe the problem this pattern addresses.</p>
-			</section>
-
-			{/* Audience-specific solutions */}
-			<section>
-				<h2 className="font-semibold text-2xl">Audience-Specific Solutions</h2>
-				<p>Detail solutions tailored to different stakeholders.</p>
-			</section>
-
-			{/* Related tags */}
-			<section>
-				<h3 className="font-semibold text-xl">Related Tags</h3>
-				<div className="flex flex-wrap gap-2">
-					{/* Placeholder tag */}
-					<span className="rounded bg-gray-200 px-2 py-1 text-sm">Tag</span>
+		<PageWrapper>
+			<div className="space-y-12">
+				<div className="ml-18">
+					<PageHeader slug={slug} description={pattern.description} />
+					<PatternConnections />
 				</div>
-			</section>
-
-			{/* Resources */}
-			<section>
-				<h3 className="font-semibold text-xl">Resources</h3>
-				<p>Downloadable files and assets will appear here.</p>
-			</section>
-
-			{/* Real-world examples */}
-			<section>
-				<h3 className="font-semibold text-xl">Real-World Examples</h3>
-				<p>Showcase implementations from the field.</p>
-			</section>
-
-			{/* Save to carrier bag action */}
-			<div className="text-right">
-				<Button>Save to Carrier Bag</Button>
+				<Solutions />
+				<Resources />
 			</div>
-		</article>
+		</PageWrapper>
 	);
 }

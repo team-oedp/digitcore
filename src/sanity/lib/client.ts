@@ -1,30 +1,25 @@
-import { type QueryParams, createClient } from "next-sanity";
+import { createClient } from "next-sanity";
 
-import { apiVersion, dataset, projectId } from "../env";
+import { apiVersion, dataset, projectId, studioUrl } from "~/sanity/env";
+import { token } from "./token";
 
 export const client = createClient({
 	projectId,
 	dataset,
 	apiVersion,
 	useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
-});
+	perspective: "published",
+	token, // Required if you have a private dataset
+	stega: {
+		studioUrl,
+		// Set logger to 'console' for more verbose logging
+		// logger: console,
+		filter: (props) => {
+			if (props.sourcePath.at(-1) === "title") {
+				return true;
+			}
 
-export async function sanityFetch<const QueryString extends string>({
-	query,
-	params = {},
-	revalidate = 60, // default revalidation time in seconds
-	tags = [],
-}: {
-	query: QueryString;
-	params?: QueryParams;
-	revalidate?: number | false;
-	tags?: string[];
-}) {
-	return client.fetch(query, params, {
-		cache: "force-cache", // on next v14 it's force-cache by default, in v15 it has to be set explicitly
-		next: {
-			revalidate: tags.length ? false : revalidate, // for simple, time-based revalidation
-			tags, // for tag-based revalidation
+			return props.filterDefault(props);
 		},
-	});
-}
+	},
+});

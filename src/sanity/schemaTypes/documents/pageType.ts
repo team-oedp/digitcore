@@ -9,10 +9,12 @@ export const pageType = defineType({
 	fields: [
 		defineField({
 			name: "title",
+			title: "Title",
 			type: "string",
 		}),
 		defineField({
 			name: "slug",
+			title: "Slug",
 			type: "slug",
 			options: {
 				source: "title",
@@ -20,31 +22,16 @@ export const pageType = defineType({
 		}),
 		defineField({
 			name: "description",
+			title: "Description",
 			type: "blockContent",
 		}),
 		defineField({
 			name: "content",
+			title: "Content",
 			type: "array",
 			of: [
 				defineArrayMember({
-					type: "object",
-					fields: [
-						defineField({
-							name: "heading",
-							type: "string",
-							title: "Heading",
-						}),
-						defineField({
-							name: "body",
-							type: "blockContent",
-							title: "Body",
-						}),
-					],
-					preview: {
-						select: {
-							title: "heading",
-						},
-					},
+					type: "content",
 				}),
 			],
 		}),
