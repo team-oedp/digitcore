@@ -37,29 +37,29 @@ const originalDocument = global.document;
 
 // Helper to mock SSR environment
 function mockSSREnvironment() {
-	Object.defineProperty(global, 'window', {
+	Object.defineProperty(global, "window", {
 		value: undefined,
 		writable: true,
-		configurable: true
+		configurable: true,
 	});
-	Object.defineProperty(global, 'document', {
+	Object.defineProperty(global, "document", {
 		value: undefined,
 		writable: true,
-		configurable: true
+		configurable: true,
 	});
 }
 
 // Helper to restore browser environment
 function restoreBrowserEnvironment() {
-	Object.defineProperty(global, 'window', {
+	Object.defineProperty(global, "window", {
 		value: originalWindow,
 		writable: true,
-		configurable: true
+		configurable: true,
 	});
-	Object.defineProperty(global, 'document', {
+	Object.defineProperty(global, "document", {
 		value: originalDocument,
 		writable: true,
-		configurable: true
+		configurable: true,
 	});
 }
 
@@ -108,17 +108,17 @@ describe("scroll utilities", () => {
 		});
 
 		it("should handle invalid anchor IDs", () => {
-			const testCases = ["", "   ", null as any, undefined as any, 123 as any];
+			const testCases: Array<unknown> = ["", "   ", null, undefined, 123];
 
-			testCases.forEach((invalidId) => {
-				const result = scrollToAnchor(invalidId);
+			for (const invalidId of testCases) {
+				const result = scrollToAnchor(invalidId as unknown as string);
 
 				expect(result).toBe(false);
 				expect(toast.error as Mock).toHaveBeenCalledWith(
 					"Invalid anchor ID provided",
 				);
 				vi.clearAllMocks();
-			});
+			}
 		});
 
 		it("should use custom error handler when provided", () => {
