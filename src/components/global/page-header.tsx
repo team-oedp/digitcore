@@ -1,17 +1,17 @@
 "use client";
 
 import { Backpack03Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
 import { usePathname } from "next/navigation";
 
+import { Icon } from "./icon";
 import CustomPortableText from "./portable-text";
 
-interface PageHeaderProps {
+type PageHeaderProps = {
 	title?: string;
 	description?: string | PortableTextBlock[];
 	slug?: string;
-}
+};
 
 export function PageHeader({ title, description, slug }: PageHeaderProps) {
 	const pathname = usePathname();
@@ -43,9 +43,9 @@ export function PageHeader({ title, description, slug }: PageHeaderProps) {
 					className="flex items-center gap-2.5 rounded-lg border border-border bg-white px-[7px] py-1 transition-colors hover:bg-secondary"
 				>
 					<span className="font-normal text-[12px] text-primary uppercase leading-[20px]">
-						Add to Carrier Bag
+						Save to Carrier Bag
 					</span>
-					<HugeiconsIcon
+					<Icon
 						icon={Backpack03Icon}
 						size={14}
 						color="#71717a"

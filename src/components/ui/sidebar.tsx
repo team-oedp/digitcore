@@ -1,8 +1,8 @@
 "use client";
 
+import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
-import { PanelLeftIcon } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "~/components/ui/button";
@@ -24,6 +24,7 @@ import {
 } from "~/components/ui/tooltip";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { cn } from "~/lib/utils";
+import { Icon } from "../global/icon";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -152,7 +153,7 @@ function SidebarProvider({
 }
 
 function Sidebar({
-	side = "left",
+	side = "right",
 	variant = "sidebar",
 	collapsible = "offcanvas",
 	className,
@@ -261,19 +262,39 @@ function SidebarTrigger({
 	const { toggleSidebar } = useSidebar();
 
 	return (
+		// <Button
+		// 	data-sidebar="trigger"
+		// 	data-slot="sidebar-trigger"
+		// 	variant="ghost"
+		// 	size="icon"
+		// className={cn("size-7", className)}
+		// onClick={(event) => {
+		// 	onClick?.(event);
+		// 	toggleSidebar();
+		// }}
+		// {...props}
+		// >
+		// 	<PanelLeftIcon />
+		// 	<span className="sr-only">Toggle Sidebar</span>
+		// </Button>
 		<Button
 			data-sidebar="trigger"
 			data-slot="sidebar-trigger"
 			variant="ghost"
 			size="icon"
-			className={cn("size-7", className)}
+			className={cn("size-6", className)}
 			onClick={(event) => {
 				onClick?.(event);
 				toggleSidebar();
 			}}
 			{...props}
 		>
-			<PanelLeftIcon />
+			<Icon
+				icon={Backpack03Icon}
+				size={16}
+				color="currentColor"
+				strokeWidth={1.5}
+			/>
 			<span className="sr-only">Toggle Sidebar</span>
 		</Button>
 	);

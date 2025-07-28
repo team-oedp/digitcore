@@ -2,8 +2,10 @@ import "~/styles/globals.css";
 
 import type { Metadata } from "next";
 import { sans } from "~/app/(frontend)/fonts";
+import { AppSidebar } from "~/components/global/app-sidebar";
 import { Header } from "~/components/global/header";
 import { ThemeProvider } from "~/components/theme/theme-provider";
+import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
 import { SanityLive } from "~/sanity/lib/live";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
@@ -32,12 +34,21 @@ export default function Layout({
 					<SanityLive onError={handleError} />
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
-							<>
-								<Header />
-								<main className="mx-2 mb-2 min-h-full rounded-md bg-primary-foreground">
-									{children}
-								</main>
-							</>
+							<SidebarProvider
+								style={
+									{
+										"--sidebar-width": "19rem",
+									} as React.CSSProperties
+								}
+							>
+								<SidebarInset>
+									<Header />
+									<main className="mx-2 mb-2 min-h-full rounded-md bg-primary-foreground">
+										{children}
+									</main>
+								</SidebarInset>
+								<AppSidebar />
+							</SidebarProvider>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>
 				</ThemeProvider>
