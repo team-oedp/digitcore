@@ -5,7 +5,16 @@
 		"clientKind": "git",
 		"useIgnoreFile": true
 	},
-	"files": { "ignoreUnknown": false, "ignore": [] },
+	"files": {
+		"ignoreUnknown": false,
+		"ignore": [
+			// Ignore the generated Sanity artefacts
+			".sanity/**",
+			"src/sanity/schema.json",
+			"src/sanity/**/*.types.ts",
+			"sanity.types.ts"
+		]
+	},
 	"formatter": { "enabled": true },
 	"organizeImports": { "enabled": true },
 	"linter": {
@@ -22,5 +31,17 @@
 			},
 			"recommended": true
 		}
-	}
+	},
+	"overrides": [
+		{
+			"include": ["./src/sanity/sanity.types.ts"],
+			"linter": {
+				"rules": {
+					"correctness": {
+						"noInvalidUseBeforeDeclaration": "off"
+					}
+				}
+			}
+		}
+	]
 }

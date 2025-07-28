@@ -1,14 +1,37 @@
-import { type SchemaTypeDefinition } from 'sanity'
+import type { SchemaTypeDefinition } from "sanity";
 
-import {blockContentType} from './blockContentType'
-import {tagType} from './tagType'
-import {patternType} from './patternType'
-import {audienceType} from './audienceType'
-import {themeType} from './themeType'
-import {solutionType} from './solutionType'
-import {resourceType} from './resourceType'
-import {pageType} from './pageType'
+import { audienceType } from "./documents/audienceType";
+import { faqType } from "./documents/faqType";
+import { glossaryType } from "./documents/glossaryType";
+import { pageType } from "./documents/pageType";
+import { patternType } from "./documents/patternType";
+import { resourceType } from "./documents/resourceType";
+import { solutionType } from "./documents/solutionType";
+import { tagType } from "./documents/tagType";
+import { themeType } from "./documents/themeType";
+import { blockContentType } from "./objects/blockContentType";
+import { contentType } from "./objects/contentType";
+import { linkType } from "./objects/linkType";
+import { carrierBagType } from "./singletons/carrierBagType";
+import { onboardingType } from "./singletons/onboardingType";
+import { siteSettingsType } from "./singletons/siteSettingsType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType, tagType, patternType, audienceType, themeType, resourceType, solutionType, pageType],
-}
+	types: [
+		linkType,
+		blockContentType,
+		contentType,
+		tagType,
+		patternType,
+		audienceType,
+		themeType,
+		resourceType,
+		solutionType,
+		pageType,
+		glossaryType,
+		faqType,
+		carrierBagType,
+		onboardingType,
+		siteSettingsType,
+	],
+};

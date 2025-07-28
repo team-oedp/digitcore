@@ -1,69 +1,70 @@
 import type { Metadata } from "next";
-import { Button } from "~/components/ui/button";
+import { notFound } from "next/navigation";
+import { PageHeader } from "~/components/global/page-header";
+import { PageWrapper } from "~/components/global/page-wrapper";
+import { PatternConnections } from "~/components/pages/pattern/pattern-connections";
+import { Resources } from "~/components/pages/pattern/resources";
+import { Solutions } from "~/components/pages/pattern/solutions";
+import { sanityFetch } from "~/sanity/lib/live";
+import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
 
 export type PatternPageProps = {
-  params: { slug: string };
+	params: Promise<{ slug: string }>;
 };
 
-export async function generateMetadata({
-  params,
-}: PatternPageProps): Promise<Metadata> {
-  const readable = params.slug.replace(/-/g, " ");
-  return {
-    title: `${readable} | Pattern | DIGITCORE Toolkit`,
-    description: `Learn how the ${readable} pattern can support community-centered projects.`,
-  };
+/**
+ * Generate the static params for the page.
+ * Learn more: https://nextjs.org/docs/app/api-reference/functions/generate-static-params
+ */
+export async function generateStaticParams() {
+	const { data } = await sanityFetch({
+		query: PATTERN_PAGES_SLUGS_QUERY,
+		stega: false,
+		perspective: "published",
+	});
+	return data;
 }
 
-export default function PatternPage({ params }: PatternPageProps) {
-  const readable = params.slug.replace(/-/g, " ");
-  return (
-    <article className="space-y-12">
-      {/* Pattern title */}
-      <header className="space-y-2">
-        <h1 className="capitalize text-3xl font-bold">{readable}</h1>
-        <p className="text-muted-foreground">
-          Short description of the pattern’s problem and context.
-        </p>
-      </header>
+export async function generateMetadata({
+	params,
+}: PatternPageProps): Promise<Metadata> {
+	const { slug } = await params;
+	const readable = slug.replace(/-/g, " ");
+	return {
+		title: `${readable} | Pattern | DIGITCORE Toolkit`,
+		description: `Learn how the ${readable} pattern can support community-centered projects.`,
+	};
+}
 
-      {/* Problem description */}
-      <section>
-        <h2 className="text-2xl font-semibold">Problem Description</h2>
-        <p>Describe the problem this pattern addresses.</p>
-      </section>
+export default async function PatternPage({ params }: PatternPageProps) {
+	const { slug } = await params;
+	const readable = slug.replace(/-/g, " ");
 
-      {/* Audience-specific solutions */}
-      <section>
-        <h2 className="text-2xl font-semibold">Audience-Specific Solutions</h2>
-        <p>Detail solutions tailored to different stakeholders.</p>
-      </section>
+	// Promise.all because we may want to add other fetches for glossary data later for example
+	const [{ data: pattern }] = await Promise.all([
+		sanityFetch({
+			query: PATTERN_QUERY,
+			params: { slug },
+			// Metadata should never contain stega
+			stega: false,
+		}),
+	]);
 
-      {/* Related tags */}
-      <section>
-        <h3 className="text-xl font-semibold">Related Tags</h3>
-        <div className="flex flex-wrap gap-2">
-          {/* Placeholder tag */}
-          <span className="rounded bg-gray-200 px-2 py-1 text-sm">Tag</span>
-        </div>
-      </section>
+	if (!pattern) {
+		console.log("No pattern found, returning 404");
+		return notFound();
+	}
 
-      {/* Resources */}
-      <section>
-        <h3 className="text-xl font-semibold">Resources</h3>
-        <p>Downloadable files and assets will appear here.</p>
-      </section>
-
-      {/* Real-world examples */}
-      <section>
-        <h3 className="text-xl font-semibold">Real-World Examples</h3>
-        <p>Showcase implementations from the field.</p>
-      </section>
-
-      {/* Save to carrier bag action */}
-      <div className="text-right">
-        <Button>Save to Carrier Bag</Button>
-      </div>
-    </article>
-  );
+	return (
+		<PageWrapper>
+			<div className="space-y-12">
+				<div className="ml-18">
+					<PageHeader slug={slug} description={pattern.description} />
+					<PatternConnections />
+				</div>
+				<Solutions />
+				<Resources />
+			</div>
+		</PageWrapper>
+	);
 }
