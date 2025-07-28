@@ -2,7 +2,7 @@ import "~/styles/globals.css";
 
 import type { Metadata } from "next";
 import { sans } from "~/app/(frontend)/fonts";
-import { AppSidebar } from "~/components/global/app-sidebar";
+import { FloatingSidebar } from "~/components/global/floating-sidebar";
 import { Header } from "~/components/global/header";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
@@ -47,7 +47,7 @@ export default function Layout({
 										{children}
 									</main>
 								</SidebarInset>
-								<AppSidebar />
+								<FloatingSidebar />
 							</SidebarProvider>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>
