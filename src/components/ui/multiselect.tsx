@@ -1,3 +1,5 @@
+// TODO Implement this better multi select: https://wds-shadcn-registry.netlify.app/components/multi-select
+
 "use client";
 
 import { Command as CommandPrimitive, useCommandState } from "cmdk";

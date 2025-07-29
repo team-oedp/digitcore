@@ -29,7 +29,11 @@ export async function generateMetadata({
 	params,
 }: PatternPageProps): Promise<Metadata> {
 	const { slug } = await params;
-	const readable = slug.replace(/-/g, " ");
+	const readable = slug
+		.replace(/-/g, " ")
+		.split(" ")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+		.join(" ");
 	return {
 		title: `${readable} | Pattern | DIGITCORE Toolkit`,
 		description: `Learn how the ${readable} pattern can support community-centered projects.`,
@@ -38,7 +42,11 @@ export async function generateMetadata({
 
 export default async function PatternPage({ params }: PatternPageProps) {
 	const { slug } = await params;
-	const readable = slug.replace(/-/g, " ");
+	const readable = slug
+		.replace(/-/g, " ")
+		.split(" ")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+		.join(" ");
 
 	// Promise.all because we may want to add other fetches for glossary data later for example
 	const [{ data: pattern }] = await Promise.all([
@@ -59,10 +67,14 @@ export default async function PatternPage({ params }: PatternPageProps) {
 		<PageWrapper>
 			<div className="space-y-12">
 				<div className="ml-18">
-					<PageHeader slug={slug} description={pattern.description} />
-					<PatternConnections />
+					<PageHeader slug={pattern.title} description={pattern.description} />
+					<PatternConnections
+						tags={pattern.tags}
+						audiences={pattern.audiences}
+						themes={pattern.themes}
+					/>
 				</div>
-				<Solutions />
+				<Solutions solutions={pattern.solutions || []} />
 				<Resources />
 			</div>
 		</PageWrapper>

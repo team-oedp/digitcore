@@ -1,6 +1,6 @@
 "use client";
 
-import { Backpack01Icon, Globe02Icon } from "@hugeicons/core-free-icons";
+import { Globe02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { cn } from "~/lib/utils";
 import { Button } from "../ui/button";
+import { SidebarTrigger } from "../ui/sidebar";
 import { CommandMenu } from "./command-menu";
 
 export function Header() {
@@ -137,25 +138,10 @@ export function Header() {
 							strokeWidth={1.5}
 						/>
 					</Button>
-					<Button
-						variant="outline"
-						size="icon"
-						className="h-6 w-11"
-						onClick={() => setCommandOpen(true)}
-					>
-						<span className="px-2 py-0.5 text-sm">⌘K</span>
-					</Button>
-					<Button variant="ghost" size="icon" className="h-6 w-8">
-						<HugeiconsIcon
-							icon={Backpack01Icon}
-							size={16}
-							color="currentColor"
-							strokeWidth={1.5}
-						/>
-					</Button>
+					<CommandMenu />
+					<SidebarTrigger className="-ml-1" />
 				</div>
 			</nav>
-			<CommandMenu open={commandOpen} onOpenChange={setCommandOpen} />
 		</header>
 	);
 }

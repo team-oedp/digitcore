@@ -5,9 +5,11 @@ import { createStore, useStore } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import type { CarrierBagItem, Pattern } from "~/types/pattern";
 
-interface CarrierBagState {
+type CarrierBagState = {
 	items: CarrierBagItem[];
 	isHydrated: boolean;
+	isOpen: boolean;
+	isPinned: boolean;
 	addPattern: (pattern: Pattern, notes?: string) => void;
 	removePattern: (patternId: string) => void;
 	updateNotes: (patternId: string, notes: string) => void;
@@ -15,7 +17,11 @@ interface CarrierBagState {
 	hasPattern: (patternId: string) => boolean;
 	getPattern: (patternId: string) => CarrierBagItem | undefined;
 	setHydrated: (hydrated: boolean) => void;
-}
+	toggleOpen: () => void;
+	setOpen: (open: boolean) => void;
+	togglePin: () => void;
+	setPin: (pinned: boolean) => void;
+};
 
 export const createCarrierBagStore = () =>
 	createStore<CarrierBagState>()(
@@ -23,6 +29,8 @@ export const createCarrierBagStore = () =>
 			(set, get) => ({
 				items: [],
 				isHydrated: false,
+				isOpen: false,
+				isPinned: false,
 
 				addPattern: (pattern: Pattern, notes?: string) => {
 					const { items } = get();
@@ -72,6 +80,24 @@ export const createCarrierBagStore = () =>
 
 				setHydrated: (hydrated: boolean) => {
 					set({ isHydrated: hydrated });
+				},
+
+				toggleOpen: () => {
+					const { isOpen } = get();
+					set({ isOpen: !isOpen });
+				},
+
+				setOpen: (open: boolean) => {
+					set({ isOpen: open });
+				},
+
+				togglePin: () => {
+					const { isPinned } = get();
+					set({ isPinned: !isPinned });
+				},
+
+				setPin: (pinned: boolean) => {
+					set({ isPinned: pinned });
 				},
 			}),
 			{
