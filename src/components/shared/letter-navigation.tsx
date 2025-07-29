@@ -7,12 +7,12 @@ interface LetterNavigationProps<T> {
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-export function LetterNavigation<T>({ 
-	itemsByLetter, 
-	contentId = 'content' 
+export function LetterNavigation<T>({
+	itemsByLetter,
+	contentId = "content",
 }: LetterNavigationProps<T>) {
 	return (
-		<div className="fixed left-8 top-1/2 -translate-y-1/2 z-20 hidden lg:block">
+		<div className="-translate-y-1/2 fixed top-1/2 left-8 z-20 hidden lg:block">
 			<div className="flex flex-col">
 				{ALPHABET.map((letter) => {
 					const hasItems = (itemsByLetter[letter]?.length ?? 0) > 0;
@@ -36,7 +36,7 @@ export function LetterNavigation<T>({
 									if (element && container) {
 										container.scrollTo({
 											top: element.offsetTop - 20,
-											behavior: 'smooth'
+											behavior: "smooth",
 										});
 									}
 								}

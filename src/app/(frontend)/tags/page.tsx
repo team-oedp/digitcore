@@ -5,7 +5,8 @@ import { LetterNavigation } from "~/components/shared/letter-navigation";
 
 export const metadata: Metadata = {
 	title: "Tags | DIGITCORE Toolkit",
-	description: "Explore tags to discover new pathways through the toolkit's patterns.",
+	description:
+		"Explore tags to discover new pathways through the toolkit's patterns.",
 };
 
 // Mock data that would typically come from a GROQ query like:
@@ -27,14 +28,14 @@ const TAGS_DATA = [
 			{
 				id: "enhancing-frontline-communities",
 				title: "Enhancing Frontline Communities' Agency",
-				slug: "enhancing-frontline-communities-agency"
+				slug: "enhancing-frontline-communities-agency",
 			},
 			{
 				id: "respecting-frontline-communities",
 				title: "Respecting Frontline Communities' Time And Effort",
-				slug: "respecting-frontline-communities-time-effort"
-			}
-		]
+				slug: "respecting-frontline-communities-time-effort",
+			},
+		],
 	},
 	{
 		id: "civil-society-organizations",
@@ -44,14 +45,14 @@ const TAGS_DATA = [
 			{
 				id: "enhancing-frontline-communities-2",
 				title: "Enhancing Frontline Communities' Agency",
-				slug: "enhancing-frontline-communities-agency"
+				slug: "enhancing-frontline-communities-agency",
 			},
 			{
 				id: "open-means-different",
 				title: "Open Means Different Things To Different People",
-				slug: "open-means-different-things"
-			}
-		]
+				slug: "open-means-different-things",
+			},
+		],
 	},
 	{
 		id: "community-groups",
@@ -61,9 +62,9 @@ const TAGS_DATA = [
 			{
 				id: "enhancing-frontline-communities-3",
 				title: "Enhancing Frontline Communities' Agency",
-				slug: "enhancing-frontline-communities-agency"
-			}
-		]
+				slug: "enhancing-frontline-communities-agency",
+			},
+		],
 	},
 	{
 		id: "grassroots-organizations",
@@ -73,19 +74,19 @@ const TAGS_DATA = [
 			{
 				id: "enhancing-frontline-communities-4",
 				title: "Enhancing Frontline Communities' Agency",
-				slug: "enhancing-frontline-communities-agency"
+				slug: "enhancing-frontline-communities-agency",
 			},
 			{
 				id: "open-means-different-2",
 				title: "Open Means Different Things To Different People",
-				slug: "open-means-different-things"
+				slug: "open-means-different-things",
 			},
 			{
 				id: "respecting-frontline-communities-2",
 				title: "Respecting Frontline Communities' Time And Effort",
-				slug: "respecting-frontline-communities-time-effort"
-			}
-		]
+				slug: "respecting-frontline-communities-time-effort",
+			},
+		],
 	},
 	{
 		id: "nonprofit-entities",
@@ -95,29 +96,29 @@ const TAGS_DATA = [
 			{
 				id: "enhancing-frontline-communities-5",
 				title: "Enhancing Frontline Communities' Agency",
-				slug: "enhancing-frontline-communities-agency"
+				slug: "enhancing-frontline-communities-agency",
 			},
 			{
 				id: "open-means-different-3",
 				title: "Open Means Different Things To Different People",
-				slug: "open-means-different-things"
+				slug: "open-means-different-things",
 			},
 			{
 				id: "respecting-frontline-communities-3",
 				title: "Respecting Frontline Communities' Time And Effort",
-				slug: "respecting-frontline-communities-time-effort"
+				slug: "respecting-frontline-communities-time-effort",
 			},
 			{
 				id: "data-quality-standards",
 				title: "Data Quality Standards Remain To Be Developed",
-				slug: "data-quality-standards-remain-developed"
+				slug: "data-quality-standards-remain-developed",
 			},
 			{
 				id: "adequate-metadata",
 				title: "Adequate Metadata Requires Capacity",
-				slug: "adequate-metadata-requires-capacity"
-			}
-		]
+				slug: "adequate-metadata-requires-capacity",
+			},
+		],
 	},
 	{
 		id: "public-interest-groups",
@@ -127,15 +128,15 @@ const TAGS_DATA = [
 			{
 				id: "enhancing-frontline-communities-6",
 				title: "Enhancing Frontline Communities' Agency",
-				slug: "enhancing-frontline-communities-agency"
+				slug: "enhancing-frontline-communities-agency",
 			},
 			{
 				id: "open-means-different-4",
 				title: "Open Means Different Things To Different People",
-				slug: "open-means-different-things"
-			}
-		]
-	}
+				slug: "open-means-different-things",
+			},
+		],
+	},
 ] as const;
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -154,12 +155,12 @@ export default function TagsPage() {
 	}, {});
 
 	return (
-		<div className="relative h-screen flex flex-col">
+		<div className="relative flex h-screen flex-col">
 			{/* Letter Navigation Sidebar - Fixed positioning */}
 			<LetterNavigation itemsByLetter={tagsByLetter} contentId="tags-content" />
 
 			{/* Fixed Header Content */}
-			<div className="flex-shrink-0 p-5 lg:pl-20 space-y-8">
+			<div className="flex-shrink-0 space-y-8 p-5 lg:pl-20">
 				{/* Header */}
 				<section className="max-w-4xl">
 					<h1 className="font-light text-4xl text-neutral-500 leading-tight">
@@ -170,18 +171,22 @@ export default function TagsPage() {
 				{/* Introduction */}
 				<section className="max-w-4xl">
 					<p className="text-base text-neutral-500 leading-relaxed">
-						Explore tags to discover new pathways through the toolkit's patterns.
+						Explore tags to discover new pathways through the toolkit's
+						patterns.
 					</p>
 				</section>
 
 				{/* Current Letter Indicator */}
-				<CurrentLetterIndicator availableLetters={Object.keys(tagsByLetter)} contentId="tags-content" />
+				<CurrentLetterIndicator
+					availableLetters={Object.keys(tagsByLetter)}
+					contentId="tags-content"
+				/>
 			</div>
 
 			{/* Scrollable Content - Tags only */}
-			<div 
+			<div
 				id="tags-content"
-				className="flex-1 overflow-y-auto scrollbar-hide p-5 lg:pl-20 space-y-16"
+				className="scrollbar-hide flex-1 space-y-16 overflow-y-auto p-5 lg:pl-20"
 			>
 				{/* Tags by Letter */}
 				{ALPHABET.map((letter) => {
@@ -200,12 +205,13 @@ export default function TagsPage() {
 
 							{tags.map((tag) => (
 								<div key={tag.id} className="space-y-4">
-									<h3 className="font-normal text-xl text-neutral-500">
+									<h3 className="font-normal text-neutral-500 text-xl">
 										{tag.name}
 									</h3>
-									
-									<p className="text-base text-neutral-500 leading-relaxed mb-4">
-										Tagged to the following pages. Showing first {Math.min(tag.resources.length, 10)} links.
+
+									<p className="mb-4 text-base text-neutral-500 leading-relaxed">
+										Tagged to the following pages. Showing first{" "}
+										{Math.min(tag.resources.length, 10)} links.
 									</p>
 
 									<div className="flex flex-wrap gap-2">

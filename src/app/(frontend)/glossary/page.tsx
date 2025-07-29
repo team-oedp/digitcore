@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
+import { LetterNavigation } from "~/components/shared/letter-navigation";
 import {
 	Accordion,
 	AccordionContent,
@@ -6,8 +8,6 @@ import {
 	AccordionTrigger,
 } from "~/components/ui/accordion";
 import { GlossaryScroll } from "./glossary-scroll";
-import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
-import { LetterNavigation } from "~/components/shared/letter-navigation";
 
 export const metadata: Metadata = {
 	title: "Glossary | DIGITCORE Toolkit",
@@ -196,14 +196,17 @@ export default async function GlossaryPage({
 	}, {});
 
 	return (
-		<div className="relative h-screen flex flex-col">
+		<div className="relative flex h-screen flex-col">
 			<GlossaryScroll searchParams={resolvedSearchParams} />
 
 			{/* Letter Navigation Sidebar - Fixed positioning */}
-			<LetterNavigation itemsByLetter={termsByLetter} contentId="glossary-content" />
+			<LetterNavigation
+				itemsByLetter={termsByLetter}
+				contentId="glossary-content"
+			/>
 
 			{/* Fixed Header Content */}
-			<div className="flex-shrink-0 p-5 lg:pl-20 space-y-8">
+			<div className="flex-shrink-0 space-y-8 p-5 lg:pl-20">
 				{/* Header */}
 				<section className="max-w-4xl">
 					<h1 className="font-light text-4xl text-neutral-500 leading-tight">
@@ -214,18 +217,30 @@ export default async function GlossaryPage({
 				{/* Introduction */}
 				<section className="max-w-4xl">
 					<p className="text-base text-neutral-500 leading-relaxed">
-						Building equitable open digital infrastructure requires a shared understanding of key concepts that bridge technology, environmental justice, and <a href="/values" className="underline">community collaboration</a>. This glossary defines essential terms from the DIGITCORE Toolkit, helping researchers, developers, community organizations, and advocates navigate the complex landscape of participatory science and open infrastructure development.
+						Building equitable open digital infrastructure requires a shared
+						understanding of key concepts that bridge technology, environmental
+						justice, and{" "}
+						<a href="/values" className="underline">
+							community collaboration
+						</a>
+						. This glossary defines essential terms from the DIGITCORE Toolkit,
+						helping researchers, developers, community organizations, and
+						advocates navigate the complex landscape of participatory science
+						and open infrastructure development.
 					</p>
 				</section>
 
 				{/* Current Letter Indicator */}
-				<CurrentLetterIndicator availableLetters={Object.keys(termsByLetter)} contentId="glossary-content" />
+				<CurrentLetterIndicator
+					availableLetters={Object.keys(termsByLetter)}
+					contentId="glossary-content"
+				/>
 			</div>
 
 			{/* Scrollable Content - Terms only */}
-			<div 
+			<div
 				id="glossary-content"
-				className="flex-1 overflow-y-auto scrollbar-hide p-5 lg:pl-20 space-y-16"
+				className="scrollbar-hide flex-1 space-y-16 overflow-y-auto p-5 lg:pl-20"
 			>
 				{/* Terms by Letter */}
 				{ALPHABET.map((letter) => {
@@ -256,7 +271,7 @@ export default async function GlossaryPage({
 										>
 											<span className="text-left">{term.term}</span>
 										</AccordionTrigger>
-										<AccordionContent className="pt-2 pb-4 text-neutral-500 text-base leading-relaxed">
+										<AccordionContent className="pt-2 pb-4 text-base text-neutral-500 leading-relaxed">
 											{term.definition}
 										</AccordionContent>
 									</AccordionItem>

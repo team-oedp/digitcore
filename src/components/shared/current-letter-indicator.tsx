@@ -7,11 +7,13 @@ interface CurrentLetterIndicatorProps {
 	contentId?: string;
 }
 
-export function CurrentLetterIndicator({ 
-	availableLetters, 
-	contentId = 'content' 
+export function CurrentLetterIndicator({
+	availableLetters,
+	contentId = "content",
 }: CurrentLetterIndicatorProps) {
-	const [currentLetter, setCurrentLetter] = useState(availableLetters[0] || "A");
+	const [currentLetter, setCurrentLetter] = useState(
+		availableLetters[0] || "A",
+	);
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -29,8 +31,11 @@ export function CurrentLetterIndicator({
 						top: element.offsetTop,
 					};
 				})
-				.filter((section): section is { letter: string; element: HTMLElement; top: number } => 
-					section !== null
+				.filter(
+					(
+						section,
+					): section is { letter: string; element: HTMLElement; top: number } =>
+						section !== null,
 				);
 
 			if (letterSections.length === 0) return;
@@ -69,7 +74,7 @@ export function CurrentLetterIndicator({
 
 	return (
 		<div className="max-w-4xl">
-			<div className="text-8xl font-light text-neutral-300 leading-none mb-8">
+			<div className="mb-8 font-light text-8xl text-neutral-300 leading-none">
 				{currentLetter}
 			</div>
 		</div>
