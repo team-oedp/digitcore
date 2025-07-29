@@ -75,60 +75,60 @@ const PATTERNS_FAQS = [
 
 export default function FAQPage() {
 	return (
-		<div className="bg-[#f2f2f2] min-h-screen py-5 px-3.5">
-			<div className="max-w-[874px] mx-auto bg-white rounded-lg p-6">
-				<section className="space-y-12">
-					{/* Header */}
-					<header className="space-y-5">
-						<h1 className="text-[32px] font-normal text-[#323232] capitalize">
-							Frequently Asked Questions
-						</h1>
-						<p className="text-[14px] text-[#323232] leading-[19px]">
-							Welcome to our FAQ page. Here, we aim to clarify important concepts that connect technology, environmental justice, and community collaboration in the context of using the Digital Toolkit for Collaborative Environmental Research. This glossary serves as a helpful resource for researchers, developers, community organizations, and advocates, guiding you through the intricate world of participatory science and the development of open infrastructure.
-						</p>
-					</header>
+		<div className="space-y-16 p-5">
+			{/* Header */}
+			<section className="max-w-4xl space-y-8">
+				<h1 className="font-light text-4xl text-neutral-500 leading-tight">
+					Frequently Asked Questions
+				</h1>
+			</section>
 
-					{/* Themes Section */}
-					<section className="space-y-6">
-						<h2 className="text-[22px] font-normal text-[#323232] uppercase tracking-[-0.44px]">
-							Themes
-						</h2>
-						
-						<Accordion type="single" collapsible defaultValue="theme-4" className="w-full">
-							{THEMES_FAQS.map((faq) => (
-								<AccordionItem key={faq.id} value={faq.id} className="border-b border-dashed border-zinc-300 last:border-b">
-									<AccordionTrigger showPlusMinus className="text-[22px] font-normal text-[#323232] tracking-[0.281px] leading-[30.99px] hover:no-underline py-2 text-left justify-between items-center">
-										<span className="text-left">{faq.question}</span>
-									</AccordionTrigger>
-									<AccordionContent className="text-[14px] text-[#323232] leading-[19.01px] tracking-[0.225px] pb-4 pt-2">
-										{faq.answer}
-									</AccordionContent>
-								</AccordionItem>
-							))}
-						</Accordion>
-					</section>
+			{/* Introduction */}
+			<section className="max-w-4xl space-y-4">
+				<p className="text-2xl text-neutral-500 leading-snug">
+					Welcome to our FAQ page. Here, we aim to clarify important concepts that connect technology, environmental justice, and community collaboration in the context of using the Digital Toolkit for Collaborative Environmental Research. This glossary serves as a helpful resource for researchers, developers, community organizations, and advocates, guiding you through the intricate world of participatory science and the development of open infrastructure.
+				</p>
+			</section>
 
-					{/* Patterns Section */}
-					<section className="space-y-6">
-						<h2 className="text-[24px] font-normal text-[#323232] uppercase tracking-[-0.48px]">
-							Patterns
-						</h2>
-						
-						<Accordion type="single" collapsible className="w-full">
-							{PATTERNS_FAQS.map((faq) => (
-								<AccordionItem key={faq.id} value={faq.id} className="border-b border-dashed border-zinc-300 last:border-b">
-									<AccordionTrigger showPlusMinus className="text-[22px] font-normal text-[#323232] tracking-[0.281px] leading-[30.99px] hover:no-underline py-2 text-left justify-between items-center">
-										<span className="text-left">{faq.question}</span>
-									</AccordionTrigger>
-									<AccordionContent className="text-[14px] text-[#323232] leading-[19.01px] tracking-[0.225px] pb-4 pt-2">
-										{faq.answer}
-									</AccordionContent>
-								</AccordionItem>
-							))}
-						</Accordion>
-					</section>
-				</section>
-			</div>
+			{/* Themes Section */}
+			<section className="max-w-4xl space-y-4">
+				<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
+					Themes
+				</h2>
+				
+				<Accordion type="single" collapsible defaultValue="theme-4" className="w-full">
+					{THEMES_FAQS.map((faq) => (
+						<AccordionItem key={faq.id} value={faq.id} className="border-b border-dashed border-zinc-300 last:border-b">
+							<AccordionTrigger showPlusMinus className="text-xl font-normal text-neutral-500 hover:no-underline py-4 text-left justify-between items-center">
+								<span className="text-left">{faq.question}</span>
+							</AccordionTrigger>
+							<AccordionContent className="text-base text-neutral-500 leading-relaxed pb-4 pt-2">
+								{faq.answer}
+							</AccordionContent>
+						</AccordionItem>
+					))}
+				</Accordion>
+			</section>
+
+			{/* Patterns Section */}
+			<section className="max-w-4xl space-y-4">
+				<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
+					Patterns
+				</h2>
+				
+				<Accordion type="single" collapsible className="w-full">
+					{PATTERNS_FAQS.map((faq) => (
+						<AccordionItem key={faq.id} value={faq.id} className="border-b border-dashed border-zinc-300 last:border-b">
+							<AccordionTrigger showPlusMinus className="text-xl font-normal text-neutral-500 hover:no-underline py-4 text-left justify-between items-center">
+								<span className="text-left">{faq.question}</span>
+							</AccordionTrigger>
+							<AccordionContent className="text-base text-neutral-500 leading-relaxed pb-4 pt-2">
+								{faq.answer}
+							</AccordionContent>
+						</AccordionItem>
+					))}
+				</Accordion>
+			</section>
 		</div>
 	);
 }
