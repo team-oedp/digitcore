@@ -83,8 +83,9 @@ export default async function PatternPage({ params }: PatternPageProps) {
 			<div className="space-y-12">
 				<div className="ml-18">
 					<PageHeader
-						slug={pattern.title || ""}
+						title={pattern.title || ""}
 						description={pattern.description as PortableTextBlock[] | undefined}
+						slug={pattern.slug || ""}
 					/>
 					<PatternConnections
 						tags={pattern.tags || undefined}
