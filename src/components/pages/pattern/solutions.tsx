@@ -1,7 +1,7 @@
 import { ChartRelationshipIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "@portabletext/types";
-import CustomPortableText from "~/components/global/portable-text";
+import { CustomPortableText } from "~/components/global/portable-text";
 import type { Solution } from "~/sanity/sanity.types";
 
 type SolutionsProps = {

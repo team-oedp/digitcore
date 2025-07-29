@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { PortableTextBlock } from "next-sanity";
 import { notFound } from "next/navigation";
 import { PageHeader } from "~/components/global/page-header";
 import { PageWrapper } from "~/components/global/page-wrapper";
@@ -7,6 +8,22 @@ import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
 import { sanityFetch } from "~/sanity/lib/live";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
+
+// Type for expanded pattern data from Sanity queries that use []->{...} syntax
+// type PopulatedPattern = Omit<
+// 	Pattern,
+// 	"resources" | "solutions" | "tags" | "audiences" | "themes"
+// > & {
+// 	resources?: Array<
+// 		Omit<Resource, "solution"> & {
+// 			solution?: Solution[];
+// 		}
+// 	>;
+// 	solutions?: Solution[];
+// 	tags?: Tag[];
+// 	audiences?: Audience[];
+// 	themes?: Theme[];
+// };
 
 export type PatternPageProps = {
 	params: Promise<{ slug: string }>;
@@ -42,11 +59,6 @@ export async function generateMetadata({
 
 export default async function PatternPage({ params }: PatternPageProps) {
 	const { slug } = await params;
-	const readable = slug
-		.replace(/-/g, " ")
-		.split(" ")
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-		.join(" ");
 
 	// Promise.all because we may want to add other fetches for glossary data later for example
 	const [{ data: pattern }] = await Promise.all([
@@ -58,6 +70,9 @@ export default async function PatternPage({ params }: PatternPageProps) {
 		}),
 	]);
 
+	// Cast to PopulatedPattern since the query expands references
+	// const populatedPattern = pattern as unknown as PopulatedPattern;
+
 	if (!pattern) {
 		console.log("No pattern found, returning 404");
 		return notFound();
@@ -67,15 +82,18 @@ export default async function PatternPage({ params }: PatternPageProps) {
 		<PageWrapper>
 			<div className="space-y-12">
 				<div className="ml-18">
-					<PageHeader slug={pattern.title} description={pattern.description} />
+					<PageHeader
+						slug={pattern.title || ""}
+						description={pattern.description as PortableTextBlock[] | undefined}
+					/>
 					<PatternConnections
-						tags={pattern.tags}
-						audiences={pattern.audiences}
-						themes={pattern.themes}
+						tags={pattern.tags || undefined}
+						audiences={pattern.audiences || undefined}
+						themes={pattern.themes || undefined}
 					/>
 				</div>
 				<Solutions solutions={pattern.solutions || []} />
-				<Resources />
+				<Resources resources={pattern.resources || []} />
 			</div>
 		</PageWrapper>
 	);

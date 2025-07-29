@@ -16,7 +16,7 @@ import {
 
 import ResolvedLink from "./resolved-link";
 
-export default function CustomPortableText({
+export function CustomPortableText({
 	className,
 	value,
 }: {

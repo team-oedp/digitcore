@@ -1935,7 +1935,7 @@
         },
         "optional": true
       },
-      "externalLinks": {
+      "links": {
         "type": "objectAttribute",
         "value": {
           "type": "array",

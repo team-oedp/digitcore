@@ -10,7 +10,10 @@ export const PATTERNS_QUERY =
     audiences[]->,
     themes[]->,
     solutions[]->,
-    resources[]->,
+    resources[]->{
+      ...,
+      solution[]->{...},
+    },
   }`);
 
 export const PATTERN_QUERY =
@@ -23,7 +26,10 @@ export const PATTERN_QUERY =
     audiences[]->{...},
     themes[]->{...},
     solutions[]->{...},
-    resources[]->{...},
+    resources[]->{
+      ...,
+      solution[]->{...},
+    },
   }`);
 
 export const PATTERN_PAGES_SLUGS_QUERY =

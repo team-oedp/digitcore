@@ -5,7 +5,7 @@ import type { PortableTextBlock } from "next-sanity";
 import { usePathname } from "next/navigation";
 
 import { Icon } from "./icon";
-import CustomPortableText from "./portable-text";
+import { CustomPortableText } from "./portable-text";
 
 type PageHeaderProps = {
 	title?: string;
