@@ -1,7 +1,7 @@
 import { ChartRelationshipIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "@portabletext/types";
-import CustomPortableText from "~/components/global/portable-text";
+import { CustomPortableText } from "~/components/global/portable-text";
 import type { Solution } from "~/sanity/sanity.types";
 
 type SolutionsProps = {
@@ -58,11 +58,10 @@ export function Solutions({ solutions }: SolutionsProps) {
 								{solution.title}
 							</h3>
 							{solution.description && (
-								<div className="font-normal text-[14px] text-zinc-500 leading-normal">
-									<CustomPortableText
-										value={solution.description as PortableTextBlock[]}
-									/>
-								</div>
+								<CustomPortableText
+									value={solution.description as PortableTextBlock[]}
+									className="prose-sm prose-p:font-normal prose-p:text-[14px] prose-p:text-zinc-500 prose-p:leading-normal"
+								/>
 							)}
 
 							{solution.audiences && solution.audiences.length > 0 && (

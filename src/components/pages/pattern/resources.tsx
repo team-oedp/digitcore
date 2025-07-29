@@ -4,97 +4,19 @@ import {
 	Link02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import type { PortableTextBlock } from "next-sanity";
+import { CustomPortableText } from "~/components/global/portable-text";
+import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
 import { SolutionPreview } from "./solution-preview";
 
-type Solution = {
-	name: string;
-	number: string;
-	title: string;
-	description: string;
-};
-
-type Resource = {
-	title: string;
-	description: string;
-	url?: string;
-	solutions: Solution[];
-};
-
+// Because references in Sanity have to be derefenced in order to get access to the fields of the referenced type, we are keying the Pattern query result by "resources"
+// Another approach would be to manually create a type with all of the necessary fields
 type ResourcesProps = {
-	resources?: Resource[];
+	resources: NonNullable<NonNullable<PATTERN_QUERYResult>["resources"]>;
 };
 
-const defaultResources: Resource[] = [
-	{
-		title: "Animikii's Pathfinding process",
-		description:
-			"Animikii's Pathfinding process supports co-design of technology specifically with Indigenous communities.",
-		url: "https://example.com",
-		solutions: [
-			{
-				name: "Iterative co-creation",
-				number: "i.",
-				title: "Iterative co-creation",
-				description:
-					"A collaborative approach that involves iterative cycles of design, feedback, and refinement with community stakeholders to ensure technology solutions meet real needs and respect cultural values.",
-			},
-		],
-	},
-	{
-		title: "LiteFarm's Informed Consent Form and Privacy Policy",
-		description:
-			"LiteFarm's Informed Consent Form and Privacy Policy is a good example of a mechanism for obtaining informed consent to share environmental data collected by individual community members—in this case, farmers using the open source LiteFarm app to record information about their farm management practices, which includesing potentially sensitive data.",
-		url: "https://example.com",
-		solutions: [
-			{
-				name: "Iterative co-creation",
-				number: "i.",
-				title: "Iterative co-creation",
-				description:
-					"A collaborative approach that involves iterative cycles of design, feedback, and refinement with community stakeholders to ensure technology solutions meet real needs and respect cultural values.",
-			},
-		],
-	},
-	{
-		title: "OpenTEAM's Data Use Documents",
-		description:
-			"OpenTEAM's Data Use Documents include good examples of tools to request and manage consent to share or use data. In particular, see the Agriculturalists' Bill of Data Rights and the Data Hosting and Storage Agreement.",
-		url: "https://example.com",
-		solutions: [
-			{
-				name: "Iterative co-creation",
-				number: "i.",
-				title: "Iterative co-creation",
-				description:
-					"A collaborative approach that involves iterative cycles of design, feedback, and refinement with community stakeholders to ensure technology solutions meet real needs and respect cultural values.",
-			},
-		],
-	},
-	{
-		title: "Local Contexts' Data Labels",
-		description:
-			"Local Contexts' Data Labels identify and clarify indigenous communities' rules, expectations, and responsibilities for Traditional Knowledge and Biocultural information.",
-		url: "https://example.com",
-		solutions: [
-			{
-				name: "Secure consent before sharing",
-				number: "ii.",
-				title: "Consent to share",
-				description:
-					"Establish clear protocols for obtaining explicit consent before sharing any community data, ensuring transparency about how the data will be used and stored.",
-			},
-			{
-				name: "Let communities own their data",
-				number: "iii.",
-				title: "Community data co-/ownership",
-				description:
-					"Implement systems that give communities full control and ownership over their data, including the right to access, modify, or delete their information at any time.",
-			},
-		],
-	},
-];
-
-export function Resources({ resources = defaultResources }: ResourcesProps) {
+export function Resources({ resources }: ResourcesProps) {
+	if (!resources) return null;
 	return (
 		<section className="flex flex-col gap-5">
 			<header className="flex flex-row items-center gap-2.5">
@@ -121,9 +43,9 @@ export function Resources({ resources = defaultResources }: ResourcesProps) {
 											{resource.title}
 										</h3>
 									</div>
-									{resource.url && (
+									{resource.links?.[0]?.href && (
 										<a
-											href={resource.url}
+											href={resource.links?.[0]?.href}
 											target="_blank"
 											rel="noopener noreferrer"
 											className="flex h-8 w-8 items-center justify-center rounded-full bg-background transition-colors hover:bg-secondary"
@@ -138,9 +60,12 @@ export function Resources({ resources = defaultResources }: ResourcesProps) {
 										</a>
 									)}
 								</div>
-								<p className="font-normal text-[14px] text-zinc-500 leading-normal">
-									{resource.description}
-								</p>
+								{resource.description && (
+									<CustomPortableText
+										value={resource.description as PortableTextBlock[]}
+										className="prose-sm prose-p:font-normal prose-p:text-[14px] prose-p:text-zinc-500 prose-p:leading-normal"
+									/>
+								)}
 							</div>
 
 							<div className="flex flex-row items-center gap-2.5">
@@ -154,16 +79,20 @@ export function Resources({ resources = defaultResources }: ResourcesProps) {
 									strokeWidth={1.5}
 								/>
 								<div className="flex gap-2.5">
-									{resource.solutions.map((solution) => (
+									{resource.solution?.map((solution, index) => (
 										<SolutionPreview
-											key={solution.name}
-											solutionNumber={solution.number}
-											solutionTitle={solution.title}
-											solutionDescription={solution.description}
+											key={solution._id}
+											solutionNumber={String(index + 1)}
+											solutionTitle={solution.title || "Solution"}
+											solutionDescription={
+												solution.description
+													? "Solution description"
+													: "No description available"
+											}
 										>
 											<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-[#a2e636] bg-[#e6fbc5] px-2 py-1.5">
 												<span className="font-normal text-[#95b661] text-[14px] tracking-[-0.14px]">
-													{solution.name}
+													{solution.title || `Solution ${index + 1}`}
 												</span>
 												<HugeiconsIcon
 													icon={ChartRelationshipIcon}

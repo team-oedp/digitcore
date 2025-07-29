@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { PortableTextBlock } from "next-sanity";
 import { notFound } from "next/navigation";
 import { PageHeader } from "~/components/global/page-header";
 import { PageWrapper } from "~/components/global/page-wrapper";
@@ -25,7 +26,9 @@ export default async function SearchPage() {
 	return (
 		<PageWrapper>
 			<div className="space-y-12">
-				<PageHeader description={data.description} />
+				{data.description && (
+					<PageHeader description={data.description as PortableTextBlock[]} />
+				)}
 				<div className="space-y-6">
 					<SearchInterface />
 					<SearchResultsHeader resultCount={5} searchQuery="maintenance" />

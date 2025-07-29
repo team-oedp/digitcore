@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "createdAt": "2025-07-25T10:48:57.497Z",
+  "createdAt": "2025-07-29T08:23:23.918Z",
   "workspaces": [
     {
       "name": "digitcore",
@@ -12,7 +12,7 @@
       "mediaLibrary": {
         "enabled": false
       },
-      "schema": "beb35ac7.create-schema.json",
+      "schema": "0eb659cb.create-schema.json",
       "tools": "7cd9a0d5.create-tools.json"
     }
   ]

@@ -3,7 +3,8 @@
 import { createContext, useContext, useRef } from "react";
 import { createStore, useStore } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { CarrierBagItem, Pattern } from "~/types/pattern";
+import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
+import type { Pattern } from "~/sanity/sanity.types";
 
 type CarrierBagState = {
 	items: CarrierBagItem[];

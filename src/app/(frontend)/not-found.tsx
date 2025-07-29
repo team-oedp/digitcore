@@ -1,43 +1,50 @@
+import { ComputerRemoveIcon } from "@hugeicons/core-free-icons";
+import { Home } from "lucide-react";
 import Link from "next/link";
+import { Icon } from "~/components/global/icon";
 import { Button } from "~/components/ui/button";
 
 export default function NotFound() {
 	return (
-		<section className="flex flex-col items-center space-y-6 py-20 text-center">
-			<h1 className="font-extrabold text-5xl">404</h1>
-			<p className="max-w-md text-lg">
-				We couldn’t find the page you were looking for. It might have been moved
-				or removed.
-			</p>
-			<div className="space-y-2">
-				<p>Here are some helpful links:</p>
-				<ul className="flex flex-wrap justify-center gap-2">
-					<li>
-						<Button variant="link" asChild>
-							<Link href="/">Home</Link>
-						</Button>
-					</li>
-					<li>
-						<Button variant="link" asChild>
-							<Link href="/tags">Browse Tags</Link>
-						</Button>
-					</li>
-					<li>
-						<Button variant="link" asChild>
-							<Link href="/search">Search</Link>
-						</Button>
-					</li>
-				</ul>
+		<div className="flex min-h-screen flex-col bg-background">
+			<div className="relative flex-1 rounded-lg bg-card">
+				<div className="absolute p-5 font-normal text-3xl text-neutral-600 uppercase tracking-[-0.64px]">
+					404
+				</div>
+
+				<div className="mx-auto flex max-w-[834px] flex-col items-start justify-start px-4 pt-52">
+					<div className="mb-10">
+						<div className="space-y-6">
+							<Icon icon={ComputerRemoveIcon} size={44} color={"#7C7C7C"} />
+							<div className="font-mono text-neutral-600 text-sm uppercase">
+								Page not found
+							</div>
+
+							<div className="space-y-4 text-neutral-600 text-xl leading-normal">
+								<p>
+									Unfortunately, the page you were looking for cannot be found
+									or may not exist.
+								</p>
+								<p>
+									Return to the Digitcore toolkit using your browser's back
+									button or click the link below to go to the homepage.
+								</p>
+							</div>
+
+							<Button
+								variant="outline"
+								asChild
+								className="rounded-md border-border bg-card px-3 py-2 text-neutral-500 text-sm uppercase hover:bg-secondary"
+							>
+								<Link href="/" className="flex items-center gap-3">
+									Go to Digitcore homepage
+									<Home className="h-3.5 w-3.5" />
+								</Link>
+							</Button>
+						</div>
+					</div>
+				</div>
 			</div>
-			<p className="text-muted-foreground text-sm">
-				If you believe this is an error, please contact us at
-				<Button variant="link" asChild className="p-0">
-					<Link href="mailto:support@digitcore.example">
-						support@digitcore.example
-					</Link>
-				</Button>
-				.
-			</p>
-		</section>
+		</div>
 	);
 }

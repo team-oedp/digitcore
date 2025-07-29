@@ -284,7 +284,7 @@ export type Resource = {
     _key: string;
     [internalGroqTypeReferenceTo]?: "solution";
   }>;
-  externalLinks?: Array<{
+  links?: Array<{
     _key: string;
   } & Link>;
 };
@@ -611,3 +611,416 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes = SiteSettings | Onboarding | CarrierBag | Faq | Glossary | Solution | Resource | Theme | Audience | Tag | Content | BlockContent | Link | Pattern | Page | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: lib/queries.ts
+// Variable: PATTERNS_QUERY
+// Query: *[_type == "pattern" && defined(slug.current)][]{    _id,    title,    description,    "slug": slug.current,    tags[]->,    audiences[]->,    themes[]->,    solutions[]->,    resources[]->{      ...,      solution[]->{...},    },  }
+export type PATTERNS_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  description: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  slug: string | null;
+  tags: Array<{
+    _id: string;
+    _type: "tag";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+  }> | null;
+  audiences: Array<{
+    _id: string;
+    _type: "audience";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+  }> | null;
+  themes: Array<{
+    _id: string;
+    _type: "theme";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+  }> | null;
+  solutions: Array<{
+    _id: string;
+    _type: "solution";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+    audiences?: Array<{
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      _key: string;
+      [internalGroqTypeReferenceTo]?: "audience";
+    }>;
+  }> | null;
+  resources: Array<{
+    _id: string;
+    _type: "resource";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+    solution: Array<{
+      _id: string;
+      _type: "solution";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      title?: string;
+      description?: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "normal";
+        listItem?: never;
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }>;
+      audiences?: Array<{
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        _key: string;
+        [internalGroqTypeReferenceTo]?: "audience";
+      }>;
+    }> | null;
+    links?: Array<{
+      _key: string;
+    } & Link>;
+  }> | null;
+}>;
+// Variable: PATTERN_QUERY
+// Query: *[_type == "pattern" && slug.current == $slug][0]{    ...,    title,    description,    "slug": slug.current,    tags[]->{...},    audiences[]->{...},    themes[]->{...},    solutions[]->{...},    resources[]->{      ...,      solution[]->{...},    },  }
+export type PATTERN_QUERYResult = {
+  _id: string;
+  _type: "pattern";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string | null;
+  slug: string | null;
+  description: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  tags: Array<{
+    _id: string;
+    _type: "tag";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+  }> | null;
+  audiences: Array<{
+    _id: string;
+    _type: "audience";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+  }> | null;
+  themes: Array<{
+    _id: string;
+    _type: "theme";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+  }> | null;
+  solutions: Array<{
+    _id: string;
+    _type: "solution";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+    audiences?: Array<{
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      _key: string;
+      [internalGroqTypeReferenceTo]?: "audience";
+    }>;
+  }> | null;
+  resources: Array<{
+    _id: string;
+    _type: "resource";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+    solution: Array<{
+      _id: string;
+      _type: "solution";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      title?: string;
+      description?: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "normal";
+        listItem?: never;
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }>;
+      audiences?: Array<{
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        _key: string;
+        [internalGroqTypeReferenceTo]?: "audience";
+      }>;
+    }> | null;
+    links?: Array<{
+      _key: string;
+    } & Link>;
+  }> | null;
+  publishedAt?: string;
+} | null;
+// Variable: PATTERN_PAGES_SLUGS_QUERY
+// Query: *[_type == "pattern" && defined(slug.current)]{    "slug": slug.current  }
+export type PATTERN_PAGES_SLUGS_QUERYResult = Array<{
+  slug: string | null;
+}>;
+// Variable: SLUGS_BY_TYPE_QUERY
+// Query: *[_type == $type && defined(slug.current)]{    "slug": slug.current  }
+export type SLUGS_BY_TYPE_QUERYResult = Array<{
+  slug: string | null;
+}>;
+// Variable: PAGES_SLUGS_QUERY
+// Query: *[_type == "page" && defined(slug.current)]{    "slug": slug.current  }
+export type PAGES_SLUGS_QUERYResult = Array<{
+  slug: string | null;
+}>;
+// Variable: PAGE_BY_SLUG_QUERY
+// Query: *[_type == 'page' && slug.current == $slug][0]{    _id,    _type,    title,    "slug": slug.current,    description,  }
+export type PAGE_BY_SLUG_QUERYResult = {
+  _id: string;
+  _type: "page";
+  title: string | null;
+  slug: string | null;
+  description: BlockContent | null;
+} | null;
+// Variable: SEARCH_PAGE_QUERY
+// Query: *[_type == 'page' && slug.current == 'search'][0]{    _id,    _type,    title,    "slug": slug.current,    description,  }
+export type SEARCH_PAGE_QUERYResult = {
+  _id: string;
+  _type: "page";
+  title: string | null;
+  slug: string | null;
+  description: BlockContent | null;
+} | null;
+
+// Query TypeMap
+import "@sanity/client";
+declare module "@sanity/client" {
+  interface SanityQueries {
+    "*[_type == \"pattern\" && defined(slug.current)][]{\n    _id,\n    title,\n    description,\n    \"slug\": slug.current,\n    tags[]->,\n    audiences[]->,\n    themes[]->,\n    solutions[]->,\n    resources[]->{\n      ...,\n      solution[]->{...},\n    },\n  }": PATTERNS_QUERYResult;
+    "*[_type == \"pattern\" && slug.current == $slug][0]{\n    ...,\n    title,\n    description,\n    \"slug\": slug.current,\n    tags[]->{...},\n    audiences[]->{...},\n    themes[]->{...},\n    solutions[]->{...},\n    resources[]->{\n      ...,\n      solution[]->{...},\n    },\n  }": PATTERN_QUERYResult;
+    "*[_type == \"pattern\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }": PATTERN_PAGES_SLUGS_QUERYResult;
+    "*[_type == $type && defined(slug.current)]{\n    \"slug\": slug.current\n  }": SLUGS_BY_TYPE_QUERYResult;
+    "*[_type == \"page\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }": PAGES_SLUGS_QUERYResult;
+    "\n  *[_type == 'page' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n  }": PAGE_BY_SLUG_QUERYResult;
+    "\n  *[_type == 'page' && slug.current == 'search'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n  }": SEARCH_PAGE_QUERYResult;
+  }
+}
