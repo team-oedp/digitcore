@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
 import { Button } from "~/components/ui/button";
 import {
 	Card,
@@ -11,7 +12,6 @@ import {
 } from "~/components/ui/card";
 import { useHydration } from "~/hooks/use-hydration";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
-import type { CarrierBagItem } from "~/types/pattern";
 
 interface PatternCardProps {
 	item: CarrierBagItem;
@@ -28,7 +28,7 @@ function PatternCard({ item, onRemove }: PatternCardProps) {
 					<div>
 						<CardTitle className="capitalize">
 							<Link
-								href={`/pattern/${pattern.slug.current}`}
+								href={`/pattern/${pattern.slug?.current || ""}`}
 								className="hover:underline"
 							>
 								{pattern.title}
@@ -49,17 +49,17 @@ function PatternCard({ item, onRemove }: PatternCardProps) {
 			</CardHeader>
 			<CardContent>
 				<div className="space-y-3">
-					{pattern.tags.length > 0 && (
+					{pattern.tags && pattern.tags.length > 0 && (
 						<div className="flex flex-wrap gap-1">
 							{pattern.tags.slice(0, 3).map((tag) => (
 								<span
-									key={tag._id}
+									key={tag._key || tag._ref}
 									className="rounded bg-gray-200 px-2 py-1 text-xs"
 								>
-									{tag.title}
+									{"title" in tag ? tag.title : tag._ref || "Untitled Tag"}
 								</span>
 							))}
-							{pattern.tags.length > 3 && (
+							{pattern.tags && pattern.tags.length > 3 && (
 								<span className="text-muted-foreground text-xs">
 									+{pattern.tags.length - 3} more
 								</span>

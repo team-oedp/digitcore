@@ -8,6 +8,7 @@ import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
 import { sanityFetch } from "~/sanity/lib/live";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
+import type { Pattern, Slug } from "~/sanity/sanity.types";
 
 // Type for expanded pattern data from Sanity queries that use []->{...} syntax
 // type PopulatedPattern = Omit<
@@ -85,7 +86,12 @@ export default async function PatternPage({ params }: PatternPageProps) {
 					<PageHeader
 						title={pattern.title || ""}
 						description={pattern.description as PortableTextBlock[] | undefined}
-						slug={pattern.slug || ""}
+						slug={
+							typeof pattern.slug === "string"
+								? pattern.slug
+								: (pattern.slug as Slug | null)?.current || ""
+						}
+						pattern={pattern as unknown as Pattern}
 					/>
 					<PatternConnections
 						tags={pattern.tags || undefined}

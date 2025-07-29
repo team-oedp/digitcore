@@ -19,9 +19,11 @@ import ResolvedLink from "./resolved-link";
 export function CustomPortableText({
 	className,
 	value,
+	as: Component = "div",
 }: {
 	className?: string;
 	value: PortableTextBlock[];
+	as?: React.ElementType;
 }) {
 	const components: PortableTextComponents = {
 		block: {
@@ -88,12 +90,12 @@ export function CustomPortableText({
 	};
 
 	return (
-		<div
+		<Component
 			className={["prose prose-a:text-brand", className]
 				.filter(Boolean)
 				.join(" ")}
 		>
 			<PortableText components={components} value={value} />
-		</div>
+		</Component>
 	);
 }

@@ -3,6 +3,8 @@
 import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
 import { usePathname } from "next/navigation";
+import type { Pattern } from "~/sanity/sanity.types";
+import { useCarrierBagStore } from "~/stores/carrier-bag";
 
 import { Icon } from "./icon";
 import { CustomPortableText } from "./portable-text";
@@ -11,10 +13,17 @@ type PageHeaderProps = {
 	title?: string;
 	description?: string | PortableTextBlock[];
 	slug?: string;
+	pattern?: Pattern;
 };
 
-export function PageHeader({ title, description, slug }: PageHeaderProps) {
+export function PageHeader({
+	title,
+	description,
+	slug,
+	pattern,
+}: PageHeaderProps) {
 	const pathname = usePathname();
+	const { addPattern, hasPattern, setOpen, isHydrated } = useCarrierBagStore();
 
 	const pageTitle = (() => {
 		if (title) return title;
@@ -32,18 +41,41 @@ export function PageHeader({ title, description, slug }: PageHeaderProps) {
 
 	const isPatternPage = pathname.startsWith("/pattern/");
 
+	const handleSaveToCarrierBag = () => {
+		if (pattern) {
+			addPattern(pattern);
+			setOpen(true); // Open the carrier bag sidebar to show the added item
+		}
+	};
+
+	// Only check if pattern is in bag after hydration to avoid server/client mismatch
+	const isPatternInBag =
+		isHydrated && pattern ? hasPattern(pattern._id) : false;
+
 	return (
 		<header className="max-w-4xl space-y-5">
 			<h1 className="font-light text-[32px] text-primary capitalize">
 				{pageTitle}
 			</h1>
-			{isPatternPage && (
+			{isPatternPage && pattern && (
 				<button
 					type="button"
-					className="flex items-center gap-2.5 rounded-lg border border-border bg-white px-[7px] py-1 transition-colors hover:bg-secondary"
+					className={`flex items-center gap-2.5 rounded-lg border border-border px-[7px] py-1 transition-colors ${
+						!isHydrated
+							? "cursor-pointer bg-white hover:bg-secondary"
+							: isPatternInBag
+								? "cursor-default border-green-200 bg-green-50"
+								: "cursor-pointer bg-white hover:bg-secondary"
+					}`}
+					onClick={isPatternInBag ? undefined : handleSaveToCarrierBag}
+					disabled={isPatternInBag}
 				>
 					<span className="font-normal text-[12px] text-primary uppercase leading-[20px]">
-						Save to Carrier Bag
+						{!isHydrated
+							? "Save to Carrier Bag"
+							: isPatternInBag
+								? "Saved to Carrier Bag"
+								: "Save to Carrier Bag"}
 					</span>
 					<Icon
 						icon={Backpack03Icon}
