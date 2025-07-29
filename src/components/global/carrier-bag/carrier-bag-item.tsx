@@ -8,6 +8,13 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Icon } from "~/components/global/icon";
 import { Button } from "~/components/ui/button";
+import type { Pattern } from "~/sanity/sanity.types";
+
+export type CarrierBagItem = {
+	pattern: Pattern;
+	dateAdded: string;
+	notes?: string;
+};
 
 export type CarrierBagItemData = {
 	id: string;
@@ -15,7 +22,7 @@ export type CarrierBagItemData = {
 	icon?: React.ComponentType;
 };
 
-type CarrierBagItemProps = {
+export type CarrierBagItemProps = {
 	item: CarrierBagItemData;
 	onRemove?: (id: string) => void;
 	onExpand?: (id: string) => void;
