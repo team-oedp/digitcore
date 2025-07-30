@@ -60,6 +60,20 @@ export function Header() {
 									asChild
 									className={cn(
 										"h-auto px-3 py-2",
+										pathname === "/patterns"
+											? "text-foreground"
+											: "text-muted-foreground",
+									)}
+								>
+									<Link href="/patterns">Patterns</Link>
+								</Button>
+							</li>
+							<li>
+								<Button
+									variant="link"
+									asChild
+									className={cn(
+										"h-auto px-3 py-2",
 										pathname === "/onboarding"
 											? "text-foreground"
 											: "text-muted-foreground",

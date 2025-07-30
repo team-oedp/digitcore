@@ -47,12 +47,10 @@ export const patternType = defineType({
 			},
 		}),
 		defineField({
-			name: "themes",
-			type: "array",
-			of: [defineArrayMember({ type: "reference", to: { type: "theme" } })],
-			options: {
-				layout: "list",
-			},
+			name: "theme",
+			title: "Theme",
+			type: "reference",
+			to: [{ type: "theme" }],
 		}),
 		defineField({
 			name: "solutions",
