@@ -56,9 +56,15 @@ function PatternCard({ item, onRemove }: PatternCardProps) {
 									key={tag._key || tag._ref}
 									className="rounded bg-gray-200 px-2 py-1 text-xs"
 								>
-									{typeof tag === "object" && tag !== null && "title" in tag && typeof tag.title === "string"
+									{typeof tag === "object" &&
+									tag !== null &&
+									"title" in tag &&
+									typeof tag.title === "string"
 										? tag.title
-										: typeof tag === "object" && tag !== null && "_ref" in tag && typeof tag._ref === "string"
+										: typeof tag === "object" &&
+												tag !== null &&
+												"_ref" in tag &&
+												typeof tag._ref === "string"
 											? tag._ref
 											: "Untitled Tag"}
 								</span>

@@ -7,11 +7,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { cn } from "~/lib/utils";
+import { LanguageSelector } from "../theme/language-selector";
+import { ModeToggle } from "../theme/mode-toggle";
 import { Button } from "../ui/button";
 import { SidebarTrigger } from "../ui/sidebar";
 import { CommandMenu } from "./command-menu";
-import { ModeToggle } from "../theme/mode-toggle";
-import { LanguageSelector } from "../theme/language-selector";
 
 export function Header() {
 	const pathname = usePathname();
