@@ -66,7 +66,7 @@ export function LanguageSelector() {
 							<span
 								className={cn(
 									"mt-0.5 min-w-[24px] font-medium text-xs",
-									selectedLanguage.code === language.code
+									selectedLanguage?.code === language.code
 										? "text-foreground"
 										: "text-muted-foreground",
 								)}
@@ -76,7 +76,7 @@ export function LanguageSelector() {
 							<span
 								className={cn(
 									"text-sm leading-5",
-									selectedLanguage.code === language.code
+									selectedLanguage?.code === language.code
 										? "font-medium text-foreground"
 										: "text-muted-foreground",
 								)}
