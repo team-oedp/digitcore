@@ -23,17 +23,6 @@ import {
 	CommandList,
 } from "~/components/ui/command";
 
-type ItemProps = {
-	heading: string;
-	group: {
-		title: string;
-		icon: React.ReactNode;
-		slug: string;
-		isNew?: boolean;
-		shortcut?: string;
-	}[];
-};
-
 type CommandMenuItemProps = {
 	shortcut?: string;
 	icon: React.ReactNode;
@@ -122,54 +111,6 @@ export function CommandMenu() {
 		collectionName: "patterns",
 		patternSlug,
 	});
-
-	// Debug logging
-	console.log("CommandMenu Debug:", {
-		query,
-		searchResultsCount: searchResults.length,
-		searchResults: searchResults.slice(0, 3), // Log first 3 results
-		isLoading,
-		error,
-		patternSlug,
-	});
-
-	// Structure to emulate for styling grouped results inside the command menu
-	// const ITEMS: ItemProps[] = [
-	// 	{
-	// 		heading: "Suggestions",
-	// 		group: [
-	// 			{
-	// 				title: "Home",
-	// 				icon: <div style={{ width: 22, height: 22 }} />,
-	// 				slug: "/",
-	// 				shortcut: "h",
-	// 			},
-	// 			{
-	// 				title: "Updates",
-	// 				icon: <div style={{ width: 22, height: 22 }} />,
-	// 				slug: "/updates",
-	// 				shortcut: "u",
-	// 			},
-	// 		],
-	// 	},
-	// 	{
-	// 		heading: "Get Started",
-	// 		group: [
-	// 			{
-	// 				title: "Installation",
-	// 				icon: <div style={{ width: 22, height: 22 }} />,
-	// 				slug: "/ui/installation",
-	// 				shortcut: "i",
-	// 			},
-	// 			{
-	// 				title: "CLI",
-	// 				icon: <div style={{ width: 22, height: 22 }} />,
-	// 				slug: "/ui/cli",
-	// 				shortcut: "j",
-	// 			},
-	// 		],
-	// 	},
-	// ];
 
 	const getCurrentPageTitle = () => {
 		if (pathname === "/") return "Home";
