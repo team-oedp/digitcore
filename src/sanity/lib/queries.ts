@@ -3,6 +3,7 @@ import { defineQuery } from "next-sanity";
 export const PATTERNS_QUERY =
 	defineQuery(`*[_type == "pattern" && defined(slug.current)][]{
     _id,
+    _type,
     title,
     description,
     "slug": slug.current,
@@ -64,3 +65,161 @@ export const SEARCH_PAGE_QUERY = defineQuery(`
     "slug": slug.current,
     description,
   }`);
+
+export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
+  *[_type == "pattern" && defined(slug.current)][]{
+    _id,
+    _type,
+    title,
+    description,
+    "slug": slug.current,
+    tags[]->,
+    audiences[]->{
+      _id,
+      title
+    },
+    themes[]->{
+      _id,
+      title,
+      description
+    },
+    solutions[]->,
+    resources[]->{
+      ...,
+      solution[]->{...},
+    },
+  }`);
+
+export const PATTERNS_GROUPED_BY_THEME_QUERY = defineQuery(`
+  *[_type == "theme" && defined(_id)] | order(title asc) {
+    _id,
+    title,
+    description,
+    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id)] {
+      _id,
+      _type,
+      title,
+      description,
+      "slug": slug.current,
+      tags[]->,
+      audiences[]->{
+        _id,
+        title
+      },
+      themes[]->{
+        _id,
+        title,
+        description
+      },
+      solutions[]->,
+      resources[]->{
+        ...,
+        solution[]->{...},
+      },
+    }
+  }[count(patterns) > 0]
+`);
+
+// Search query with scoring and filtering
+export const PATTERN_SEARCH_QUERY = defineQuery(`
+  *[_type == "pattern" && defined(slug.current)
+    // Apply audience filter if provided
+    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
+    // Apply theme filter if provided  
+    && (!defined($themes) || count($themes) == 0 || count((themes[]._ref)[@ in $themes]) > 0)
+    // Apply tags filter if provided
+    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
+  ]
+  // Apply search scoring if search term is provided
+  | score(
+      boost(title match $searchTerm + "*", 5),
+      boost(title match $searchTerm, 4), 
+      boost(pt::text(description) match $searchTerm + "*", 3),
+      boost(pt::text(description) match $searchTerm, 2)
+    )
+  // Order by relevance score, then by title
+  | order(_score desc, title asc)
+  {
+    _id,
+    _type,
+    _score,
+    title,
+    description,
+    "slug": slug.current,
+    tags[]->{
+      _id,
+      title
+    },
+    audiences[]->{
+      _id,
+      title
+    },
+    themes[]->{
+      _id,
+      title,
+      description
+    },
+    solutions[]->{
+      _id,
+      title,
+      description
+    },
+    resources[]->{
+      _id,
+      title,
+      description,
+      solution[]->{
+        _id,
+        title
+      }
+    }
+  }
+`);
+
+// Simple query without scoring for when there's no search term
+export const PATTERN_FILTER_QUERY = defineQuery(`
+  *[_type == "pattern" && defined(slug.current)
+    // Apply audience filter if provided
+    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
+    // Apply theme filter if provided  
+    && (!defined($themes) || count($themes) == 0 || count((themes[]._ref)[@ in $themes]) > 0)
+    // Apply tags filter if provided
+    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
+  ]
+  // Order by title only
+  | order(title asc)
+  {
+    _id,
+    _type,
+    title,
+    description,
+    "slug": slug.current,
+    tags[]->{
+      _id,
+      title
+    },
+    audiences[]->{
+      _id,
+      title
+    },
+    themes[]->{
+      _id,
+      title,
+      description
+    },
+    solutions[]->{
+      _id,
+      title,
+      description
+    },
+    resources[]->{
+      _id,
+      title,
+      description,
+      solution[]->{
+        _id,
+        title
+      }
+    }
+  }
+`);

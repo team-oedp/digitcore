@@ -277,7 +277,7 @@ export type Resource = {
     _type: "block";
     _key: string;
   }>;
-  solution?: Array<{
+  solutions?: Array<{
     _ref: string;
     _type: "reference";
     _weak?: boolean;
@@ -287,33 +287,6 @@ export type Resource = {
   links?: Array<{
     _key: string;
   } & Link>;
-};
-
-export type Theme = {
-  _id: string;
-  _type: "theme";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
 };
 
 export type Audience = {
@@ -453,13 +426,12 @@ export type Pattern = {
     _key: string;
     [internalGroqTypeReferenceTo]?: "audience";
   }>;
-  themes?: Array<{
+  theme?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
-    _key: string;
     [internalGroqTypeReferenceTo]?: "theme";
-  }>;
+  };
   solutions?: Array<{
     _ref: string;
     _type: "reference";
@@ -475,6 +447,33 @@ export type Pattern = {
     [internalGroqTypeReferenceTo]?: "resource";
   }>;
   publishedAt?: string;
+};
+
+export type Theme = {
+  _id: string;
+  _type: "theme";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  description?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
 };
 
 export type Page = {
@@ -609,13 +608,62 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = SiteSettings | Onboarding | CarrierBag | Faq | Glossary | Solution | Resource | Theme | Audience | Tag | Content | BlockContent | Link | Pattern | Page | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = SiteSettings | Onboarding | CarrierBag | Faq | Glossary | Solution | Resource | Audience | Tag | Content | BlockContent | Link | Pattern | Theme | Page | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: lib/filter-options.ts
+// Variable: AUDIENCES_QUERY
+// Query: *[_type == "audience"] | order(title asc) {    _id,    title,    "value": _id,    "label": title  }
+export type AUDIENCES_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  value: string;
+  label: string | null;
+}>;
+// Variable: THEMES_QUERY
+// Query: *[_type == "theme"] | order(title asc) {    _id,    title,    "value": _id,    "label": title  }
+export type THEMES_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  value: string;
+  label: string | null;
+}>;
+// Variable: TAGS_QUERY
+// Query: *[_type == "tag"] | order(title asc) {    _id,    title,    "value": _id,    "label": title  }
+export type TAGS_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  value: string;
+  label: string | null;
+}>;
+// Variable: FILTER_OPTIONS_QUERY
+// Query: {    "audiences": *[_type == "audience"] | order(title asc) {      _id,      title,      "value": _id,      "label": title    },    "themes": *[_type == "theme"] | order(title asc) {      _id,      title,      "value": _id,      "label": title    },    "tags": *[_type == "tag"] | order(title asc) {      _id,      title,      "value": _id,      "label": title    }  }
+export type FILTER_OPTIONS_QUERYResult = {
+  audiences: Array<{
+    _id: string;
+    title: string | null;
+    value: string;
+    label: string | null;
+  }>;
+  themes: Array<{
+    _id: string;
+    title: string | null;
+    value: string;
+    label: string | null;
+  }>;
+  tags: Array<{
+    _id: string;
+    title: string | null;
+    value: string;
+    label: string | null;
+  }>;
+};
+
 // Source: lib/queries.ts
 // Variable: PATTERNS_QUERY
-// Query: *[_type == "pattern" && defined(slug.current)][]{    _id,    title,    description,    "slug": slug.current,    tags[]->,    audiences[]->,    themes[]->,    solutions[]->,    resources[]->{      ...,      solution[]->{...},    },  }
+// Query: *[_type == "pattern" && defined(slug.current)][]{    _id,    _type,    title,    description,    "slug": slug.current,    tags[]->,    audiences[]->,    themes[]->,    solutions[]->,    resources[]->{      ...,      solution[]->{...},    },  }
 export type PATTERNS_QUERYResult = Array<{
   _id: string;
+  _type: "pattern";
   title: string | null;
   description: Array<{
     children?: Array<{
@@ -670,32 +718,7 @@ export type PATTERNS_QUERYResult = Array<{
       _key: string;
     }>;
   }> | null;
-  themes: Array<{
-    _id: string;
-    _type: "theme";
-    _createdAt: string;
-    _updatedAt: string;
-    _rev: string;
-    title?: string;
-    description?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "normal";
-      listItem?: never;
-      markDefs?: Array<{
-        href?: string;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }>;
-  }> | null;
+  themes: null;
   solutions: Array<{
     _id: string;
     _type: "solution";
@@ -754,42 +777,17 @@ export type PATTERNS_QUERYResult = Array<{
       _type: "block";
       _key: string;
     }>;
-    solution: Array<{
-      _id: string;
-      _type: "solution";
-      _createdAt: string;
-      _updatedAt: string;
-      _rev: string;
-      title?: string;
-      description?: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "normal";
-        listItem?: never;
-        markDefs?: Array<{
-          href?: string;
-          _type: "link";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      }>;
-      audiences?: Array<{
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        _key: string;
-        [internalGroqTypeReferenceTo]?: "audience";
-      }>;
-    }> | null;
+    solutions?: Array<{
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      _key: string;
+      [internalGroqTypeReferenceTo]?: "solution";
+    }>;
     links?: Array<{
       _key: string;
     } & Link>;
+    solution: null;
   }> | null;
 }>;
 // Variable: PATTERN_QUERY
@@ -854,32 +852,12 @@ export type PATTERN_QUERYResult = {
       _key: string;
     }>;
   }> | null;
-  themes: Array<{
-    _id: string;
-    _type: "theme";
-    _createdAt: string;
-    _updatedAt: string;
-    _rev: string;
-    title?: string;
-    description?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "normal";
-      listItem?: never;
-      markDefs?: Array<{
-        href?: string;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }>;
-  }> | null;
+  theme?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "theme";
+  };
   solutions: Array<{
     _id: string;
     _type: "solution";
@@ -938,44 +916,20 @@ export type PATTERN_QUERYResult = {
       _type: "block";
       _key: string;
     }>;
-    solution: Array<{
-      _id: string;
-      _type: "solution";
-      _createdAt: string;
-      _updatedAt: string;
-      _rev: string;
-      title?: string;
-      description?: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "normal";
-        listItem?: never;
-        markDefs?: Array<{
-          href?: string;
-          _type: "link";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      }>;
-      audiences?: Array<{
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        _key: string;
-        [internalGroqTypeReferenceTo]?: "audience";
-      }>;
-    }> | null;
+    solutions?: Array<{
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      _key: string;
+      [internalGroqTypeReferenceTo]?: "solution";
+    }>;
     links?: Array<{
       _key: string;
     } & Link>;
+    solution: null;
   }> | null;
   publishedAt?: string;
+  themes: null;
 } | null;
 // Variable: PATTERN_PAGES_SLUGS_QUERY
 // Query: *[_type == "pattern" && defined(slug.current)]{    "slug": slug.current  }
@@ -1010,17 +964,426 @@ export type SEARCH_PAGE_QUERYResult = {
   slug: string | null;
   description: BlockContent | null;
 } | null;
+// Variable: PATTERNS_WITH_THEMES_QUERY
+// Query: *[_type == "pattern" && defined(slug.current)][]{    _id,    _type,    title,    description,    "slug": slug.current,    tags[]->,    audiences[]->{      _id,      title    },    themes[]->{      _id,      title,      description    },    solutions[]->,    resources[]->{      ...,      solution[]->{...},    },  }
+export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
+  _id: string;
+  _type: "pattern";
+  title: string | null;
+  description: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  slug: string | null;
+  tags: Array<{
+    _id: string;
+    _type: "tag";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+  }> | null;
+  audiences: Array<{
+    _id: string;
+    title: string | null;
+  }> | null;
+  themes: null;
+  solutions: Array<{
+    _id: string;
+    _type: "solution";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+    audiences?: Array<{
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      _key: string;
+      [internalGroqTypeReferenceTo]?: "audience";
+    }>;
+  }> | null;
+  resources: Array<{
+    _id: string;
+    _type: "resource";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: string;
+    description?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+    solutions?: Array<{
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      _key: string;
+      [internalGroqTypeReferenceTo]?: "solution";
+    }>;
+    links?: Array<{
+      _key: string;
+    } & Link>;
+    solution: null;
+  }> | null;
+}>;
+// Variable: PATTERNS_GROUPED_BY_THEME_QUERY
+// Query: *[_type == "theme" && defined(_id)] | order(title asc) {    _id,    title,    description,    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id)] {      _id,      _type,      title,      description,      "slug": slug.current,      tags[]->,      audiences[]->{        _id,        title      },      themes[]->{        _id,        title,        description      },      solutions[]->,      resources[]->{        ...,        solution[]->{...},      },    }  }[count(patterns) > 0]
+export type PATTERNS_GROUPED_BY_THEME_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  description: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  patterns: Array<{
+    _id: string;
+    _type: "pattern";
+    title: string | null;
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }> | null;
+    slug: string | null;
+    tags: Array<{
+      _id: string;
+      _type: "tag";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      title?: string;
+    }> | null;
+    audiences: Array<{
+      _id: string;
+      title: string | null;
+    }> | null;
+    themes: null;
+    solutions: Array<{
+      _id: string;
+      _type: "solution";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      title?: string;
+      description?: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "normal";
+        listItem?: never;
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }>;
+      audiences?: Array<{
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        _key: string;
+        [internalGroqTypeReferenceTo]?: "audience";
+      }>;
+    }> | null;
+    resources: Array<{
+      _id: string;
+      _type: "resource";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      title?: string;
+      description?: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "normal";
+        listItem?: never;
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }>;
+      solutions?: Array<{
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        _key: string;
+        [internalGroqTypeReferenceTo]?: "solution";
+      }>;
+      links?: Array<{
+        _key: string;
+      } & Link>;
+      solution: null;
+    }> | null;
+  }>;
+}>;
+// Variable: PATTERN_SEARCH_QUERY
+// Query: *[_type == "pattern" && defined(slug.current)    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || count((themes[]._ref)[@ in $themes]) > 0)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Apply search scoring if search term is provided  | score(      boost(title match $searchTerm + "*", 5),      boost(title match $searchTerm, 4),       boost(pt::text(description) match $searchTerm + "*", 3),      boost(pt::text(description) match $searchTerm, 2)    )  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    themes[]->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solution[]->{        _id,        title      }    }  }
+export type PATTERN_SEARCH_QUERYResult = Array<{
+  _id: string;
+  _type: "pattern";
+  _score: null;
+  title: string | null;
+  description: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  slug: string | null;
+  tags: Array<{
+    _id: string;
+    title: string | null;
+  }> | null;
+  audiences: Array<{
+    _id: string;
+    title: string | null;
+  }> | null;
+  themes: null;
+  solutions: Array<{
+    _id: string;
+    title: string | null;
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }> | null;
+  }> | null;
+  resources: Array<{
+    _id: string;
+    title: string | null;
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }> | null;
+    solution: null;
+  }> | null;
+}>;
+// Variable: PATTERN_FILTER_QUERY
+// Query: *[_type == "pattern" && defined(slug.current)    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || count((themes[]._ref)[@ in $themes]) > 0)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Order by title only  | order(title asc)  {    _id,    _type,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    themes[]->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solution[]->{        _id,        title      }    }  }
+export type PATTERN_FILTER_QUERYResult = Array<{
+  _id: string;
+  _type: "pattern";
+  title: string | null;
+  description: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  slug: string | null;
+  tags: Array<{
+    _id: string;
+    title: string | null;
+  }> | null;
+  audiences: Array<{
+    _id: string;
+    title: string | null;
+  }> | null;
+  themes: null;
+  solutions: Array<{
+    _id: string;
+    title: string | null;
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }> | null;
+  }> | null;
+  resources: Array<{
+    _id: string;
+    title: string | null;
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }> | null;
+    solution: null;
+  }> | null;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[_type == \"pattern\" && defined(slug.current)][]{\n    _id,\n    title,\n    description,\n    \"slug\": slug.current,\n    tags[]->,\n    audiences[]->,\n    themes[]->,\n    solutions[]->,\n    resources[]->{\n      ...,\n      solution[]->{...},\n    },\n  }": PATTERNS_QUERYResult;
+    "\n  *[_type == \"audience\"] | order(title asc) {\n    _id,\n    title,\n    \"value\": _id,\n    \"label\": title\n  }\n": AUDIENCES_QUERYResult;
+    "\n  *[_type == \"theme\"] | order(title asc) {\n    _id,\n    title,\n    \"value\": _id,\n    \"label\": title\n  }\n": THEMES_QUERYResult;
+    "\n  *[_type == \"tag\"] | order(title asc) {\n    _id,\n    title,\n    \"value\": _id,\n    \"label\": title\n  }\n": TAGS_QUERYResult;
+    "\n  {\n    \"audiences\": *[_type == \"audience\"] | order(title asc) {\n      _id,\n      title,\n      \"value\": _id,\n      \"label\": title\n    },\n    \"themes\": *[_type == \"theme\"] | order(title asc) {\n      _id,\n      title,\n      \"value\": _id,\n      \"label\": title\n    },\n    \"tags\": *[_type == \"tag\"] | order(title asc) {\n      _id,\n      title,\n      \"value\": _id,\n      \"label\": title\n    }\n  }\n": FILTER_OPTIONS_QUERYResult;
+    "*[_type == \"pattern\" && defined(slug.current)][]{\n    _id,\n    _type,\n    title,\n    description,\n    \"slug\": slug.current,\n    tags[]->,\n    audiences[]->,\n    themes[]->,\n    solutions[]->,\n    resources[]->{\n      ...,\n      solution[]->{...},\n    },\n  }": PATTERNS_QUERYResult;
     "*[_type == \"pattern\" && slug.current == $slug][0]{\n    ...,\n    title,\n    description,\n    \"slug\": slug.current,\n    tags[]->{...},\n    audiences[]->{...},\n    themes[]->{...},\n    solutions[]->{...},\n    resources[]->{\n      ...,\n      solution[]->{...},\n    },\n  }": PATTERN_QUERYResult;
     "*[_type == \"pattern\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }": PATTERN_PAGES_SLUGS_QUERYResult;
     "*[_type == $type && defined(slug.current)]{\n    \"slug\": slug.current\n  }": SLUGS_BY_TYPE_QUERYResult;
     "*[_type == \"page\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }": PAGES_SLUGS_QUERYResult;
     "\n  *[_type == 'page' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n  }": PAGE_BY_SLUG_QUERYResult;
     "\n  *[_type == 'page' && slug.current == 'search'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n  }": SEARCH_PAGE_QUERYResult;
+    "\n  *[_type == \"pattern\" && defined(slug.current)][]{\n    _id,\n    _type,\n    title,\n    description,\n    \"slug\": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    themes[]->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->,\n    resources[]->{\n      ...,\n      solution[]->{...},\n    },\n  }": PATTERNS_WITH_THEMES_QUERYResult;
+    "\n  *[_type == \"theme\" && defined(_id)] | order(title asc) {\n    _id,\n    title,\n    description,\n    \"patterns\": *[_type == \"pattern\" && defined(slug.current) && references(^._id)] {\n      _id,\n      _type,\n      title,\n      description,\n      \"slug\": slug.current,\n      tags[]->,\n      audiences[]->{\n        _id,\n        title\n      },\n      themes[]->{\n        _id,\n        title,\n        description\n      },\n      solutions[]->,\n      resources[]->{\n        ...,\n        solution[]->{...},\n      },\n    }\n  }[count(patterns) > 0]\n": PATTERNS_GROUPED_BY_THEME_QUERYResult;
+    "\n  *[_type == \"pattern\" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || count((themes[]._ref)[@ in $themes]) > 0)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Apply search scoring if search term is provided\n  | score(\n      boost(title match $searchTerm + \"*\", 5),\n      boost(title match $searchTerm, 4), \n      boost(pt::text(description) match $searchTerm + \"*\", 3),\n      boost(pt::text(description) match $searchTerm, 2)\n    )\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    \"slug\": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    themes[]->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n": PATTERN_SEARCH_QUERYResult;
+    "\n  *[_type == \"pattern\" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || count((themes[]._ref)[@ in $themes]) > 0)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Order by title only\n  | order(title asc)\n  {\n    _id,\n    _type,\n    title,\n    description,\n    \"slug\": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    themes[]->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n": PATTERN_FILTER_QUERYResult;
   }
 }
