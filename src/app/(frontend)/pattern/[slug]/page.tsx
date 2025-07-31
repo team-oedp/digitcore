@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "~/components/global/page-header";
 import { PageWrapper } from "~/components/global/page-wrapper";
 import { PatternConnections } from "~/components/pages/pattern/pattern-connections";
+import { PatternContentProvider } from "~/components/pages/pattern/pattern-content-provider";
 import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
 import { sanityFetch } from "~/sanity/lib/live";
@@ -61,28 +62,32 @@ export default async function PatternPage({ params }: PatternPageProps) {
 	}
 
 	return (
-		<PageWrapper>
-			<div className="space-y-12">
-				<div className="ml-18">
-					<PageHeader
-						title={pattern.title || ""}
-						description={pattern.description as PortableTextBlock[] | undefined}
-						slug={
-							typeof pattern.slug === "string"
-								? pattern.slug
-								: (pattern.slug as Slug | null)?.current || ""
-						}
-						pattern={pattern as unknown as Pattern}
-					/>
-					<PatternConnections
-						tags={pattern.tags || undefined}
-						audiences={pattern.audiences || undefined}
-						themes={pattern.themes || undefined}
-					/>
+		<PatternContentProvider pattern={pattern}>
+			<PageWrapper>
+				<div className="space-y-12">
+					<div className="ml-18">
+						<PageHeader
+							title={pattern.title || ""}
+							description={
+								pattern.description as PortableTextBlock[] | undefined
+							}
+							slug={
+								typeof pattern.slug === "string"
+									? pattern.slug
+									: (pattern.slug as Slug | null)?.current || ""
+							}
+							pattern={pattern as unknown as Pattern}
+						/>
+						<PatternConnections
+							tags={pattern.tags || undefined}
+							audiences={pattern.audiences || undefined}
+							themes={pattern.themes || undefined}
+						/>
+					</div>
+					<Solutions solutions={pattern.solutions || []} />
+					<Resources resources={pattern.resources || []} />
 				</div>
-				<Solutions solutions={pattern.solutions || []} />
-				<Resources resources={pattern.resources || []} />
-			</div>
-		</PageWrapper>
+			</PageWrapper>
+		</PatternContentProvider>
 	);
 }

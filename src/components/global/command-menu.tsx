@@ -3,6 +3,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { useTheme } from "next-themes";
+import { useTypesenseSearch } from "~/hooks/use-typesense-search";
 
 import {
 	ArrowDownIcon,
@@ -106,135 +107,71 @@ export function CommandMenu() {
 	const pathname = usePathname();
 
 	const { resolvedTheme: theme } = useTheme();
+	const patternSlug = pathname.startsWith("/pattern/")
+		? pathname.split("/").pop()
+		: undefined;
 
-	const ITEMS: ItemProps[] = [
-		{
-			heading: "Suggestions",
-			group: [
-				{
-					title: "Home",
-					icon: <div style={{ width: 22, height: 22 }} />,
-					slug: "/",
-					shortcut: "h",
-				},
-				{
-					title: "Updates",
-					icon: <div style={{ width: 22, height: 22 }} />,
-					slug: "/updates",
-					shortcut: "u",
-				},
-			],
-		},
-		{
-			heading: "Get Started",
-			group: [
-				{
-					title: "Installation",
-					icon: <div style={{ width: 22, height: 22 }} />,
-					slug: "/ui/installation",
-					shortcut: "i",
-				},
-				{
-					title: "CLI",
-					icon: <div style={{ width: 22, height: 22 }} />,
-					slug: "/ui/cli",
-					shortcut: "j",
-				},
-			],
-		},
-		{
-			heading: "Components",
-			group: [
-				{
-					title: "Accordion",
-					slug: "/ui/accordion",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Animated Tabs",
-					slug: "/ui/animated-tabs",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Avatar",
-					slug: "/ui/avatar",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Badge",
-					slug: "/ui/badge",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Button",
-					slug: "/ui/button",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Card",
-					slug: "/ui/card",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Checkbox",
-					slug: "/ui/checkbox",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Dialog",
-					slug: "/ui/dialog",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Dropdown Menu",
-					slug: "/ui/dropdown-menu",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Input",
-					slug: "/ui/input",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Input OTP",
-					slug: "/ui/input-otp",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Multi Step Modal",
-					slug: "/ui/multi-step-modal",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Navigation Menu",
-					slug: "/ui/navigation-menu",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Spinner",
-					slug: "/ui/spinner",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Switch",
-					slug: "/ui/switch",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Text",
-					slug: "/ui/text",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-				{
-					title: "Tooltip",
-					slug: "/ui/tooltip",
-					icon: <div style={{ width: 22, height: 22 }} />,
-				},
-			],
-		},
-	];
+	const {
+		query,
+		setQuery,
+		results: searchResults,
+		isLoading,
+		error,
+		clearSearch,
+	} = useTypesenseSearch({
+		collectionName: "patterns",
+		patternSlug,
+	});
 
-	const getCurrentPageLabel = () => {
+	// Debug logging
+	console.log("CommandMenu Debug:", {
+		query,
+		searchResultsCount: searchResults.length,
+		searchResults: searchResults.slice(0, 3), // Log first 3 results
+		isLoading,
+		error,
+		patternSlug,
+	});
+
+	// Structure to emulate for styling grouped results inside the command menu
+	// const ITEMS: ItemProps[] = [
+	// 	{
+	// 		heading: "Suggestions",
+	// 		group: [
+	// 			{
+	// 				title: "Home",
+	// 				icon: <div style={{ width: 22, height: 22 }} />,
+	// 				slug: "/",
+	// 				shortcut: "h",
+	// 			},
+	// 			{
+	// 				title: "Updates",
+	// 				icon: <div style={{ width: 22, height: 22 }} />,
+	// 				slug: "/updates",
+	// 				shortcut: "u",
+	// 			},
+	// 		],
+	// 	},
+	// 	{
+	// 		heading: "Get Started",
+	// 		group: [
+	// 			{
+	// 				title: "Installation",
+	// 				icon: <div style={{ width: 22, height: 22 }} />,
+	// 				slug: "/ui/installation",
+	// 				shortcut: "i",
+	// 			},
+	// 			{
+	// 				title: "CLI",
+	// 				icon: <div style={{ width: 22, height: 22 }} />,
+	// 				slug: "/ui/cli",
+	// 				shortcut: "j",
+	// 			},
+	// 		],
+	// 	},
+	// ];
+
+	const getCurrentPageTitle = () => {
 		if (pathname === "/") return "Home";
 		if (pathname === "/faq") return "FAQ";
 		if (pathname === "/search") return "Search";
@@ -244,51 +181,10 @@ export function CommandMenu() {
 		if (pathname === "/onboarding") return "Onboarding";
 		if (pathname === "/carrier-bag") return "Carrier Bag";
 		if (pathname.startsWith("/pattern/")) return "Pattern";
-		return pathname.split("/").pop() || "Unknown";
+		return pathname.split("/").pop()?.replace(/-/g, " ") || "Unknown";
 	};
 
-	const isApp = pathname === "/" || pathname.startsWith("/updates");
-	const isHomePage = pathname === "/";
-	const uiPage = pathname.startsWith("/ui");
-
-	const category = isApp ? "App" : "Docs";
-
-	let currentPage = "";
-	let subCategory = "";
-
-	if (uiPage) {
-		const pathParts = pathname.split("/").filter(Boolean);
-
-		if (pathParts.length >= 2) {
-			const isComponentPage = ITEMS.some(
-				(item) =>
-					item.heading === "Components" &&
-					item.group.some((group) => group.slug === pathname),
-			);
-
-			if (isComponentPage) {
-				subCategory = "Components";
-				currentPage = pathParts[1]?.replace(/-/g, " ") ?? "";
-			}
-
-			if (pathParts[1] === "installation") {
-				subCategory = "Installation";
-				currentPage = pathParts[2] ? pathParts[2].replace(/-/g, " ") : "";
-			}
-
-			if (!isComponentPage && pathParts[1] !== "installation") {
-				currentPage = pathParts[1]?.replace(/-/g, " ") ?? "";
-			}
-		}
-	}
-
-	if (isHomePage) {
-		currentPage = "Home";
-	}
-
-	if (!uiPage && !isHomePage) {
-		currentPage = pathname.split("/")[1] ?? "";
-	}
+	const currentPage = getCurrentPageTitle();
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -320,53 +216,131 @@ export function CommandMenu() {
 				<div className="flex items-center gap-1.5 pt-3 pl-4">
 					<div className="flex h-6 w-fit items-center justify-center rounded-md bg-neutral-200 px-2 dark:bg-neutral-900">
 						<span className="font-[460] text-[13px] text-foreground capitalize">
-							{category}
+							{currentPage}
 						</span>
 					</div>
-					{subCategory && (
-						<div className="flex h-6 w-fit items-center justify-center rounded-md bg-neutral-200 px-2 dark:bg-neutral-900">
-							<span className="font-[460] text-[13px] text-foreground capitalize">
-								{subCategory}
-							</span>
-						</div>
-					)}
-					{currentPage && (
-						<div className="flex h-6 w-fit items-center justify-center rounded-md bg-neutral-200 px-2 dark:bg-neutral-900">
-							<span
-								className={cn(
-									"font-[460] text-[13px] text-foreground",
-									currentPage === "cli" ? "uppercase" : "capitalize",
-								)}
-							>
-								{currentPage}
-							</span>
-						</div>
-					)}
 				</div>
-				<CommandInput placeholder="What are you searching for?" />
-				<CommandList>
-					<CommandEmpty>No results found.</CommandEmpty>
-					<div className="space-y-1.5 pt-1 pb-1.5">
-						{ITEMS.map(({ heading, group }) => (
-							<CommandGroup key={heading} heading={heading}>
-								{group.map(({ title, slug, icon, shortcut }) => (
-									<CommandMenuItem
-										key={title}
-										icon={icon}
-										setIsOpen={setIsOpen}
-										onSelect={() => {
-											router.push(slug);
-											setIsOpen(false);
-										}}
-										onAction={() => router.push(slug)}
-										shortcut={shortcut}
-									>
-										{title}
-									</CommandMenuItem>
-								))}
-							</CommandGroup>
-						))}
-					</div>
+				<CommandInput
+					placeholder="What are you searching for?"
+					onValueChange={setQuery}
+				/>
+				<CommandList className="min-h-[200px]">
+					{isLoading ? (
+						<div className="flex items-center justify-center py-8">
+							<div className="text-muted-foreground text-sm">Searching...</div>
+						</div>
+					) : (
+						<>
+							<CommandEmpty>No results found.</CommandEmpty>
+							{searchResults.length > 0 && (
+								<div className="space-y-1.5 pt-1 pb-1.5">
+									{/* Group results by type */}
+									{["pattern", "solution", "resource", "tag", "audience"].map(
+										(type) => {
+											const resultsOfType = searchResults.filter(
+												(result) => result.type === type,
+											);
+											if (resultsOfType.length === 0) return null;
+
+											return (
+												<CommandGroup
+													key={type}
+													heading={
+														type === "pattern"
+															? "Patterns"
+															: type === "solution"
+																? "Solutions"
+																: type === "resource"
+																	? "Resources"
+																	: type === "tag"
+																		? "Tags"
+																		: "Audiences"
+													}
+												>
+													{resultsOfType.map((result) => {
+														return (
+															<CommandMenuItem
+																key={`${result.type}-${result.id}`}
+																icon={<div style={{ width: 22, height: 22 }} />}
+																setIsOpen={setIsOpen}
+																onSelect={() => {
+																	// Navigate based on type
+																	if (
+																		result.type === "pattern" &&
+																		result.slug
+																	) {
+																		router.push(`/pattern/${result.slug}`);
+																	} else if (
+																		result.type === "solution" ||
+																		result.type === "resource"
+																	) {
+																		// For solutions and resources, scroll to their section on the current page
+																		const sectionId =
+																			result.type === "solution"
+																				? "solutions"
+																				: "resources";
+																		const element =
+																			document.getElementById(sectionId);
+																		if (element) {
+																			element.scrollIntoView({
+																				behavior: "smooth",
+																				block: "start",
+																			});
+																		}
+																	} else if (result.type === "pattern") {
+																		// If searching within the current pattern, scroll to top
+																		window.scrollTo({
+																			top: 0,
+																			behavior: "smooth",
+																		});
+																	}
+																	// Add navigation logic for other types as needed
+																	setIsOpen(false);
+																}}
+																onAction={() => {
+																	if (
+																		result.type === "pattern" &&
+																		result.slug
+																	) {
+																		router.push(`/pattern/${result.slug}`);
+																	} else if (
+																		result.type === "solution" ||
+																		result.type === "resource"
+																	) {
+																		// For solutions and resources, scroll to their section on the current page
+																		const sectionId =
+																			result.type === "solution"
+																				? "solutions"
+																				: "resources";
+																		const element =
+																			document.getElementById(sectionId);
+																		if (element) {
+																			element.scrollIntoView({
+																				behavior: "smooth",
+																				block: "start",
+																			});
+																		}
+																	} else if (result.type === "pattern") {
+																		// If searching within the current pattern, scroll to top
+																		window.scrollTo({
+																			top: 0,
+																			behavior: "smooth",
+																		});
+																	}
+																}}
+															>
+																{result.title || "Untitled"}
+															</CommandMenuItem>
+														);
+													})}
+												</CommandGroup>
+											);
+										},
+									)}
+								</div>
+							)}
+						</>
+					)}
 				</CommandList>
 				<div className="flex items-center justify-between border-border border-t bg-background p-4">
 					<div className="flex items-center gap-4">
