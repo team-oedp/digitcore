@@ -10,6 +10,7 @@ import {
 	CarrierBagItem,
 	type CarrierBagItemData,
 } from "~/components/global/carrier-bag/carrier-bag-item";
+import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import {
 	Sidebar,
 	SidebarContent,
@@ -17,6 +18,7 @@ import {
 	SidebarGroup,
 	SidebarHeader,
 } from "~/components/ui/sidebar";
+import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { Button } from "../../ui/button";
 import { Icon } from "../icon";
@@ -26,6 +28,7 @@ export function CarrierBagSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
 	const { isPinned, togglePin, setOpen, items, removePattern, clearBag } =
 		useCarrierBagStore();
+	const documentData = useCarrierBagDocument(items);
 
 	const handleRemoveItem = (patternId: string) => {
 		removePattern(patternId);
@@ -114,26 +117,43 @@ export function CarrierBagSidebar({
 			<SidebarFooter>
 				<div className="flex flex-col gap-2.5 p-2">
 					<div className="flex flex-col items-end justify-end gap-2 px-6 py-4">
-						<div className="flex flex-row items-end justify-end gap-2">
-							<Button
-								variant="outline"
-								size="sm"
-								className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
-								type="button"
-								onClick={clearBag}
+						<div className="flex flex-col items-end justify-end gap-2">
+							<div className="flex flex-row items-end justify-end gap-2">
+								<Button
+									variant="outline"
+									size="sm"
+									className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+									type="button"
+									onClick={clearBag}
+									disabled={items.length === 0}
+								>
+									Clear all items
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+									type="button"
+									onClick={() => console.log("Download list as JSON")}
+									disabled={items.length === 0}
+								>
+									Download list as JSON
+								</Button>
+							</div>
+							<PDFPreviewModal
+								documentData={documentData}
 								disabled={items.length === 0}
 							>
-								Clear all items
-							</Button>
-							<Button
-								variant="outline"
-								size="sm"
-								className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
-								type="button"
-								onClick={() => console.log("Download list as JSON")}
-							>
-								Download list as JSON
-							</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									className="flex h-auto items-center gap-2 border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+									type="button"
+									disabled={items.length === 0}
+								>
+									Download as PDF
+								</Button>
+							</PDFPreviewModal>
 						</div>
 					</div>
 				</div>

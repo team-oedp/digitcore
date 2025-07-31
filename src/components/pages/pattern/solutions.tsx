@@ -3,12 +3,14 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import { CustomPortableText } from "~/components/global/portable-text";
 import type { Solution } from "~/sanity/sanity.types";
+import { SuggestSolutionButton } from "./suggest-solution-button";
 
 type SolutionsProps = {
 	solutions?: Solution[];
+	patternName?: string;
 };
 
-export function Solutions({ solutions }: SolutionsProps) {
+export function Solutions({ solutions, patternName }: SolutionsProps) {
 	// Generate numbering for solutions (i., ii., iii., etc.)
 	const getSolutionNumber = (index: number): string => {
 		const romanNumerals = [
@@ -88,6 +90,12 @@ export function Solutions({ solutions }: SolutionsProps) {
 					</div>
 				))}
 			</div>
+
+			{patternName && (
+				<div className="mt-8">
+					<SuggestSolutionButton patternName={patternName} />
+				</div>
+			)}
 		</section>
 	);
 }

@@ -99,7 +99,10 @@ export default async function PatternPage({ params }: PatternPageProps) {
 						themes={pattern.themes || undefined}
 					/>
 				</div>
-				<Solutions solutions={pattern.solutions || []} />
+				<Solutions
+					solutions={pattern.solutions || []}
+					patternName={pattern.title || ""}
+				/>
 				<Resources resources={pattern.resources || []} />
 			</div>
 		</PageWrapper>
