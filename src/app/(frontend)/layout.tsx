@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import type { Metadata, Viewport } from "next";
 import { sans } from "~/app/(frontend)/fonts";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
+import Footer from "~/components/global/footer";
 import { Header } from "~/components/global/header";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
@@ -59,6 +60,7 @@ export default function Layout({
 									</SidebarInset>
 									<CarrierBagSidebar />
 								</div>
+								<Footer />
 							</SidebarProvider>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>
