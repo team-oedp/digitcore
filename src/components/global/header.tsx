@@ -7,6 +7,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { cn } from "~/lib/utils";
+import { LanguageSelector } from "../theme/language-selector";
+import { ModeToggle } from "../theme/mode-toggle";
 import { Button } from "../ui/button";
 import { SidebarTrigger } from "../ui/sidebar";
 import { CommandMenu } from "./command-menu";
@@ -143,15 +145,8 @@ export function Header() {
 				</div>
 
 				<div className="flex items-center gap-3.5">
-					<Button variant="link" size="icon" className="flex h-4 w-fit gap-1.5">
-						<span className="font-normal text-sm">LANG</span>
-						<HugeiconsIcon
-							icon={Globe02Icon}
-							size={16}
-							color="currentColor"
-							strokeWidth={1.5}
-						/>
-					</Button>
+					<LanguageSelector />
+					<ModeToggle />
 					<CommandMenu />
 					<SidebarTrigger className="-ml-1" />
 				</div>
