@@ -1,35 +1,90 @@
-import React from 'react';
+import Image from "next/image";
+
+type SocialLink = {
+	name: string;
+	href: string;
+	isExternal: boolean;
+};
+
+const SOCIAL_LINKS: SocialLink[] = [
+	{
+		name: "Instagram",
+		href: "https://www.instagram.com/openenvirodata/",
+		isExternal: true,
+	},
+	{
+		name: "LinkedIn",
+		href: "https://www.linkedin.com/company/open-environmental-data-project/",
+		isExternal: true,
+	},
+	{
+		name: "GitHub",
+		href: "https://github.com/oedp",
+		isExternal: true,
+	},
+	{
+		name: "Medium",
+		href: "https://openenvironmentaldata.medium.com/",
+		isExternal: true,
+	},
+	{
+		name: "Substack",
+		href: "https://substack.com/@openenvironmentaldataproject",
+		isExternal: true,
+	},
+	{
+		name: "Email",
+		href: "mailto:info@openenvironmentaldata.org",
+		isExternal: false,
+	},
+];
+
+const CURRENT_YEAR = new Date().getFullYear();
 
 export default function Content() {
-  return (
-    <div className="h-full bg-neutral-50 flex flex-col justify-between px-8 py-6">
-      <div className="flex-1">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            <div>
-              <div className="flex items-center mb-6 lg:mb-0">
-                <img src="/icon.png" alt="Digital Toolkit" className="w-6 h-6 mr-3" />
-                <h2 className="text-xl font-normal">Digital Toolkit for Open Environmental Research</h2>
-              </div>
-            </div>
-            
-            <div className="space-y-2 lg:justify-self-end">
-              <div><a href="#" className="text-base hover:underline">Instagram</a></div>
-              <div><a href="#" className="text-base hover:underline">LinkedIn</a></div>
-              <div><a href="#" className="text-base hover:underline">GitHub</a></div>
-              <div><a href="#" className="text-base hover:underline">Medium</a></div>
-              <div><a href="#" className="text-base hover:underline">Substack</a></div>
-              <div><a href="#" className="text-base hover:underline">Email</a></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="max-w-6xl mx-auto">
-        <div className="text-left text-sm text-gray-600 mt-6">
-          <p>Copyright 2025 © Open Environmental Data Project</p>
-        </div>
-      </div>
-    </div>
-  );
+	return (
+		<div className="mx-auto grid h-full max-w-6xl grid-cols-12 gap-8 px-8 py-6">
+			<div className="col-span-12 flex h-full flex-col justify-between lg:col-span-6">
+				<div className="flex items-center">
+					<Image
+						src="/icon.png"
+						alt="Digital Toolkit logo"
+						width={24}
+						height={24}
+						className="mr-3"
+						priority
+					/>
+					<h2 className="font-normal text-xl">
+						Digital Toolkit for Open Environmental Research
+					</h2>
+				</div>
+				<p className="mt-auto text-left text-gray-600 text-sm">
+					Copyright {CURRENT_YEAR} © Open Environmental Data Project
+				</p>
+			</div>
+
+			<nav
+				className="col-span-12 lg:col-span-2 lg:col-start-10"
+				aria-label="Social media links"
+			>
+				<ul className="space-y-2">
+					{SOCIAL_LINKS.map((link) => (
+						<li key={link.name}>
+							<a
+								href={link.href}
+								className="text-base hover:underline focus:underline focus:outline-none"
+								{...(link.isExternal && {
+									target: "_blank",
+									rel: "noopener noreferrer",
+									"aria-label": `${link.name} (opens in new tab)`,
+								})}
+							>
+								{link.name}
+							</a>
+						</li>
+					))}
+				</ul>
+			</nav>
+		</div>
+	);
 }
