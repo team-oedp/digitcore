@@ -10,22 +10,6 @@ import { sanityFetch } from "~/sanity/lib/live";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
 import type { Pattern, Slug } from "~/sanity/sanity.types";
 
-// Type for expanded pattern data from Sanity queries that use []->{...} syntax
-// type PopulatedPattern = Omit<
-// 	Pattern,
-// 	"resources" | "solutions" | "tags" | "audiences" | "themes"
-// > & {
-// 	resources?: Array<
-// 		Omit<Resource, "solution"> & {
-// 			solution?: Solution[];
-// 		}
-// 	>;
-// 	solutions?: Solution[];
-// 	tags?: Tag[];
-// 	audiences?: Audience[];
-// 	themes?: Theme[];
-// };
-
 export type PatternPageProps = {
 	params: Promise<{ slug: string }>;
 };
@@ -70,9 +54,6 @@ export default async function PatternPage({ params }: PatternPageProps) {
 			stega: false,
 		}),
 	]);
-
-	// Cast to PopulatedPattern since the query expands references
-	// const populatedPattern = pattern as unknown as PopulatedPattern;
 
 	if (!pattern) {
 		console.log("No pattern found, returning 404");

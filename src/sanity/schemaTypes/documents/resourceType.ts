@@ -23,13 +23,16 @@ export const resourceType = defineType({
 			],
 		}),
 		defineField({
-			name: "solution",
+			name: "solutions",
+			title: "Solutions",
+			description: "Select the solutions that this resource references.",
 			type: "array",
 			of: [defineArrayMember({ type: "reference", to: { type: "solution" } })],
 		}),
 		defineField({
 			name: "links",
 			title: "Links",
+			description: "(Optional) Add any links to the resource.",
 			type: "array",
 			of: [
 				defineArrayMember({

@@ -4,38 +4,104 @@ import {
 	ArrowRight02Icon,
 	ChartRelationshipIcon,
 	Share02Icon,
+	Tag01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { SearchResultPreview } from "./search-result-preview";
 
-type Audience = {
-	id: string;
-	name: string;
+// Base search result type
+type BaseSearchResultData = {
+	_id: string;
+	_type: string;
+	title?: string | null;
+	slug?: string | null;
+	description?: Array<{
+		children?: Array<{
+			text?: string;
+			_type: string;
+			_key: string;
+		}>;
+		_type: string;
+		_key: string;
+	}> | null;
 };
+
+// Pattern-specific type - Updated to handle both search results and patterns page
+type PatternSearchResultData = BaseSearchResultData & {
+	_type: "pattern";
+	themes?: Array<{
+		_id: string;
+		title?: string;
+		description?: Array<unknown>;
+	}> | null;
+	tags?: Array<{
+		_id: string;
+		title?: string;
+	}> | null;
+	audiences?: Array<{
+		_id: string;
+		title: string | null;
+	}> | null;
+	solutions?: Array<{
+		_id: string;
+		title?: string;
+		description?: Array<unknown>;
+	}> | null;
+	resources?: Array<{
+		_id: string;
+		title?: string;
+		description?: Array<unknown>;
+		solution?: unknown;
+	}> | null;
+};
+
+// Resource-specific type
+type ResourceSearchResultData = BaseSearchResultData & {
+	_type: "resource";
+	solutions?: Array<{
+		_id: string;
+		title?: string;
+	}> | null;
+	pattern?: {
+		_id: string;
+		title?: string;
+		slug?: string;
+	} | null;
+};
+
+// Solution-specific type
+type SolutionSearchResultData = BaseSearchResultData & {
+	_type: "solution";
+	audiences?: Array<{
+		_id: string;
+		title?: string;
+	}> | null;
+	pattern?: {
+		_id: string;
+		title?: string;
+		slug?: string;
+	} | null;
+};
+
+type SearchResultData =
+	| PatternSearchResultData
+	| ResourceSearchResultData
+	| SolutionSearchResultData;
 
 type SearchResultItemProps = {
-	title: string;
-	source: string;
-	category: string;
-	audiences: Audience[];
-	url?: string;
-	description: string;
+	pattern: SearchResultData;
 };
 
-export function SearchResultItem({
-	title = "Explore financially sustainable models",
-	source = "PATTERN",
-	category = "Open Tools Need Ongoing Maintenance",
-	audiences = [
-		{
-			id: "79750DD5-566C-4E21-A722-F917F691251C",
-			name: "Open source technologists",
-		},
-		{ id: "7445C1BE-8E22-4D9C-9510-0ACFC13B9BB5", name: "Researchers" },
-	],
-	url = "#",
-	description = "Default pattern description",
-}: SearchResultItemProps) {
+// Shared base layout component
+function SearchResultBase({
+	children,
+	title,
+	buttonElement,
+}: {
+	children: React.ReactNode;
+	title: string;
+	buttonElement: React.ReactNode;
+}) {
 	return (
 		<div className="relative w-full pb-9">
 			{/* Dashed border at bottom */}
@@ -50,72 +116,282 @@ export function SearchResultItem({
 							{title}
 						</h3>
 
-						{/* Pattern Badge */}
-						<div className="mb-4 flex w-full items-center gap-2.5 overflow-hidden">
-							<div className="whitespace-nowrap text-[14px] text-zinc-500 tracking-[-0.14px]">
-								<span>From </span>
-								<span className="uppercase">{source}</span>
-							</div>
-
-							<div className="flex h-6 w-6 items-center justify-center">
-								<HugeiconsIcon
-									icon={ArrowRight02Icon}
-									className="h-4 w-4 text-zinc-500"
-								/>
-							</div>
-
-							<SearchResultPreview
-								description={description}
-								patternTitle={category}
-							>
-								<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-zinc-300 px-2 py-1.5">
-									<span className="whitespace-nowrap text-[14px] text-zinc-500 capitalize tracking-[-0.28px]">
-										{category}
-									</span>
-									<HugeiconsIcon
-										icon={Share02Icon}
-										className="h-3.5 w-3.5 text-zinc-500"
-									/>
-								</div>
-							</SearchResultPreview>
-						</div>
-
-						{/* Audiences Badges */}
-						<div className="flex items-center gap-2">
-							{audiences.map((audience) => (
-								<div
-									key={audience.id}
-									className="flex h-6 items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-100 py-2 pr-3 pl-[9px]"
-								>
-									<span className="whitespace-nowrap text-[#1e40ae] text-[14px]">
-										{audience.name}
-									</span>
-									<HugeiconsIcon
-										icon={ChartRelationshipIcon}
-										className="h-3.5 w-3.5 text-[#1e40ae]"
-									/>
-								</div>
-							))}
-						</div>
+						{children}
 					</div>
 
 					{/* Right Button */}
-					<div className="flex-shrink-0 pt-0.5">
-						<a
-							href={url}
-							className="flex items-center gap-2 rounded-md border border-[#d1a7f3] bg-[#ead1fa] px-[9px] py-[5px] transition-opacity hover:opacity-80"
-						>
-							<span className="font-normal text-[#4f065f] text-[14px] uppercase leading-[20px]">
-								Visit Solution
-							</span>
-							<HugeiconsIcon
-								icon={Share02Icon}
-								className="h-3.5 w-3.5 text-[#4f065f]"
-							/>
-						</a>
-					</div>
+					<div className="flex-shrink-0 pt-0.5">{buttonElement}</div>
 				</div>
 			</div>
 		</div>
 	);
+}
+
+// Pattern Search Result Component
+function PatternSearchResult({
+	pattern,
+}: { pattern: PatternSearchResultData }) {
+	const title = pattern.title || "Untitled Pattern";
+	const theme = pattern.themes?.[0];
+	const tags = pattern.tags || [];
+	const audiences = pattern.audiences || [];
+	const description =
+		pattern.description?.[0]?.children?.[0]?.text || "No description available";
+
+	const buttonElement = (
+		<a
+			href={`/pattern/${pattern.slug}`}
+			className="flex items-center gap-2 rounded-md border border-[#d1a7f3] bg-[#ead1fa] px-[9px] py-[5px] text-[#4f065f] transition-opacity hover:opacity-80"
+		>
+			<span className="font-normal text-[14px] uppercase leading-[20px]">
+				Visit Pattern
+			</span>
+			<HugeiconsIcon
+				icon={Share02Icon}
+				className="h-3.5 w-3.5 text-[#4f065f]"
+			/>
+		</a>
+	);
+
+	return (
+		<SearchResultPreview description={description} patternTitle={title}>
+			<SearchResultBase title={title} buttonElement={buttonElement}>
+				{/* Theme Badge */}
+				{theme && (
+					<div className="mb-4 flex w-full items-center gap-2.5 overflow-hidden">
+						<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-zinc-300 px-2 py-1.5">
+							<span className="whitespace-nowrap text-[14px] text-zinc-500 capitalize tracking-[-0.28px]">
+								{theme.title}
+							</span>
+							<HugeiconsIcon
+								icon={Share02Icon}
+								className="h-3.5 w-3.5 text-zinc-500"
+							/>
+						</div>
+					</div>
+				)}
+
+				{/* Tags */}
+				{tags.length > 0 && (
+					<div className="mb-4 flex items-center gap-2">
+						{tags.map((tag) => (
+							<div
+								key={tag._id}
+								className="flex h-6 items-center gap-2.5 rounded-lg border border-green-200 bg-green-100 py-2 pr-3 pl-[9px]"
+							>
+								<span className="whitespace-nowrap text-[#166534] text-[14px]">
+									{tag.title}
+								</span>
+								<HugeiconsIcon
+									icon={Tag01Icon}
+									className="h-3.5 w-3.5 text-[#166534]"
+								/>
+							</div>
+						))}
+					</div>
+				)}
+
+				{/* Audiences */}
+				{audiences.length > 0 && (
+					<div className="flex items-center gap-2">
+						{audiences.map((audience) => (
+							<div
+								key={audience._id}
+								className="flex h-6 items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-100 py-2 pr-3 pl-[9px]"
+							>
+								<span className="whitespace-nowrap text-[#1e40ae] text-[14px]">
+									{audience.title}
+								</span>
+								<HugeiconsIcon
+									icon={ChartRelationshipIcon}
+									className="h-3.5 w-3.5 text-[#1e40ae]"
+								/>
+							</div>
+						))}
+					</div>
+				)}
+			</SearchResultBase>
+		</SearchResultPreview>
+	);
+}
+
+// Resource Search Result Component
+function ResourceSearchResult({
+	pattern,
+}: { pattern: ResourceSearchResultData }) {
+	const title = pattern.title || "Untitled Resource";
+	const solutions = pattern.solutions || [];
+	const patternInfo = pattern.pattern;
+	const description =
+		pattern.description?.[0]?.children?.[0]?.text || "No description available";
+
+	const buttonElement = (
+		<a
+			href={`/pattern/${patternInfo?.slug}/#resource-${pattern.slug}`}
+			className="flex items-center gap-2 rounded-md border border-[#bfdbfe] bg-[#dbeafe] px-[9px] py-[5px] text-[#1e40af] transition-opacity hover:opacity-80"
+		>
+			<span className="font-normal text-[14px] uppercase leading-[20px]">
+				Visit Resource
+			</span>
+			<HugeiconsIcon
+				icon={Share02Icon}
+				className="h-3.5 w-3.5 text-[#1e40af]"
+			/>
+		</a>
+	);
+
+	return (
+		<SearchResultBase title={title} buttonElement={buttonElement}>
+			{/* Solutions */}
+			{solutions.length > 0 && (
+				<div className="mb-4 flex items-center gap-2">
+					{solutions.map((solution) => (
+						<div
+							key={solution._id}
+							className="flex h-6 items-center gap-2.5 rounded-lg border border-green-200 bg-green-100 py-2 pr-3 pl-[9px]"
+						>
+							<span className="whitespace-nowrap text-[#166534] text-[14px]">
+								{solution.title}
+							</span>
+							<HugeiconsIcon
+								icon={ChartRelationshipIcon}
+								className="h-3.5 w-3.5 text-[#166534]"
+							/>
+						</div>
+					))}
+				</div>
+			)}
+
+			{/* From Pattern Line */}
+			{patternInfo && (
+				<div className="mb-4 flex w-full items-center gap-2.5 overflow-hidden">
+					<div className="whitespace-nowrap text-[14px] text-zinc-500 tracking-[-0.14px]">
+						<span>From </span>
+						<span className="uppercase">PATTERN</span>
+					</div>
+
+					<div className="flex h-6 w-6 items-center justify-center">
+						<HugeiconsIcon
+							icon={ArrowRight02Icon}
+							className="h-4 w-4 text-zinc-500"
+						/>
+					</div>
+
+					<SearchResultPreview
+						description={description}
+						patternTitle={patternInfo.title || "Pattern"}
+					>
+						<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-zinc-300 px-2 py-1.5">
+							<span className="whitespace-nowrap text-[14px] text-zinc-500 capitalize tracking-[-0.28px]">
+								{patternInfo.title}
+							</span>
+							<HugeiconsIcon
+								icon={Share02Icon}
+								className="h-3.5 w-3.5 text-zinc-500"
+							/>
+						</div>
+					</SearchResultPreview>
+				</div>
+			)}
+		</SearchResultBase>
+	);
+}
+
+// Solution Search Result Component
+function SolutionSearchResult({
+	pattern,
+}: { pattern: SolutionSearchResultData }) {
+	const title = pattern.title || "Untitled Solution";
+	const audiences = pattern.audiences || [];
+	const patternInfo = pattern.pattern;
+	const description =
+		pattern.description?.[0]?.children?.[0]?.text || "No description available";
+
+	const buttonElement = (
+		<a
+			href={`/pattern/${patternInfo?.slug}/#solution-${pattern.slug}`}
+			className="flex items-center gap-2 rounded-md border border-[#bbf7d0] bg-[#dcfce7] px-[9px] py-[5px] text-[#166534] transition-opacity hover:opacity-80"
+		>
+			<span className="font-normal text-[14px] uppercase leading-[20px]">
+				Visit Solution
+			</span>
+			<HugeiconsIcon
+				icon={Share02Icon}
+				className="h-3.5 w-3.5 text-[#166534]"
+			/>
+		</a>
+	);
+
+	return (
+		<SearchResultBase title={title} buttonElement={buttonElement}>
+			{/* Audiences */}
+			{audiences.length > 0 && (
+				<div className="mb-4 flex items-center gap-2">
+					{audiences.map((audience) => (
+						<div
+							key={audience._id}
+							className="flex h-6 items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-100 py-2 pr-3 pl-[9px]"
+						>
+							<span className="whitespace-nowrap text-[#1e40ae] text-[14px]">
+								{audience.title}
+							</span>
+							<HugeiconsIcon
+								icon={ChartRelationshipIcon}
+								className="h-3.5 w-3.5 text-[#1e40ae]"
+							/>
+						</div>
+					))}
+				</div>
+			)}
+
+			{/* From Pattern Line */}
+			{patternInfo && (
+				<div className="mb-4 flex w-full items-center gap-2.5 overflow-hidden">
+					<div className="whitespace-nowrap text-[14px] text-zinc-500 tracking-[-0.14px]">
+						<span>From </span>
+						<span className="uppercase">PATTERN</span>
+					</div>
+
+					<div className="flex h-6 w-6 items-center justify-center">
+						<HugeiconsIcon
+							icon={ArrowRight02Icon}
+							className="h-4 w-4 text-zinc-500"
+						/>
+					</div>
+
+					<SearchResultPreview
+						description={description}
+						patternTitle={patternInfo.title || "Pattern"}
+					>
+						<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-zinc-300 px-2 py-1.5">
+							<span className="whitespace-nowrap text-[14px] text-zinc-500 capitalize tracking-[-0.28px]">
+								{patternInfo.title}
+							</span>
+							<HugeiconsIcon
+								icon={Share02Icon}
+								className="h-3.5 w-3.5 text-zinc-500"
+							/>
+						</div>
+					</SearchResultPreview>
+				</div>
+			)}
+		</SearchResultBase>
+	);
+}
+
+// Main component that routes to the appropriate sub-component
+export function SearchResultItem({ pattern }: SearchResultItemProps) {
+	switch (pattern._type) {
+		case "pattern":
+			return <PatternSearchResult pattern={pattern} />;
+		case "resource":
+			return <ResourceSearchResult pattern={pattern} />;
+		case "solution":
+			return <SolutionSearchResult pattern={pattern} />;
+		default:
+			// Fallback for unknown types
+			return (
+				<PatternSearchResult pattern={pattern as PatternSearchResultData} />
+			);
+	}
 }
