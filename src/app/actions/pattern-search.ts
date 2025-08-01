@@ -93,7 +93,7 @@ export async function searchPatternContent(
       _type,
       title,
       description,
-      "nestedSolutions": solution[]->{
+      "nestedSolutions": solutions[]->{
         _id,
         _type,
         title,

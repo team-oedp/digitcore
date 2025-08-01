@@ -79,30 +79,34 @@ export function Resources({ resources }: ResourcesProps) {
 									strokeWidth={1.5}
 								/>
 								<div className="flex gap-2.5">
-									{resource.solution?.map((solution, index) => (
-										<SolutionPreview
-											key={solution._id}
-											solutionNumber={String(index + 1)}
-											solutionTitle={solution.title || "Solution"}
-											solutionDescription={
-												solution.description
-													? "Solution description"
-													: "No description available"
-											}
-										>
-											<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-[#a2e636] bg-[#e6fbc5] px-2 py-1.5">
-												<span className="font-normal text-[#95b661] text-[14px] tracking-[-0.14px]">
-													{solution.title || `Solution ${index + 1}`}
-												</span>
-												<HugeiconsIcon
-													icon={ChartRelationshipIcon}
-													size={14}
-													color="#95b661"
-													strokeWidth={1.5}
-												/>
-											</div>
-										</SolutionPreview>
-									))}
+									{resource.solutionRefs?.map((solutionRef, index: number) => {
+										// solutionRefs are now just reference objects, not full solutions
+										const solutionKey =
+											(solutionRef as { _ref?: string; _key?: string })?._ref ||
+											(solutionRef as { _ref?: string; _key?: string })?._key ||
+											index;
+
+										return (
+											<SolutionPreview
+												key={solutionKey}
+												solutionNumber={String(index + 1)}
+												solutionTitle={`Solution ${index + 1}`}
+												solutionDescription="Referenced solution"
+											>
+												<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-[#a2e636] bg-[#e6fbc5] px-2 py-1.5">
+													<span className="font-normal text-[#95b661] text-[14px] tracking-[-0.14px]">
+														Solution {index + 1}
+													</span>
+													<HugeiconsIcon
+														icon={ChartRelationshipIcon}
+														size={14}
+														color="#95b661"
+														strokeWidth={1.5}
+													/>
+												</div>
+											</SolutionPreview>
+										);
+									})}
 								</div>
 							</div>
 						</div>

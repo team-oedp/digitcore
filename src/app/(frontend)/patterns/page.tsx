@@ -1,13 +1,17 @@
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
 import { sanityFetch } from "~/sanity/lib/live";
 import { PATTERNS_GROUPED_BY_THEME_QUERY } from "~/sanity/lib/queries";
-import type { Theme } from "~/sanity/sanity.types";
+import type {
+	PATTERNS_GROUPED_BY_THEME_QUERYResult,
+	Theme,
+} from "~/sanity/sanity.types";
 
 export default async function PatternsPage() {
-	const { data: themeGroups } = await sanityFetch({
-		query: PATTERNS_GROUPED_BY_THEME_QUERY,
-		stega: false,
-	});
+	const { data: themeGroups }: { data: PATTERNS_GROUPED_BY_THEME_QUERYResult } =
+		await sanityFetch({
+			query: PATTERNS_GROUPED_BY_THEME_QUERY,
+			stega: false,
+		});
 
 	return (
 		<div className="relative size-full overflow-clip rounded-lg bg-white">

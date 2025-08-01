@@ -13,29 +13,124 @@ export const PATTERNS_QUERY =
     solutions[]->,
     resources[]->{
       ...,
-      solution[]->{...},
+      solutions[]->{...},
     },
   }`);
 
 export const PATTERN_QUERY =
 	defineQuery(`*[_type == "pattern" && slug.current == $slug][0]{
-    ...,
+    _id,
+    _type,
+    _createdAt,
+    _updatedAt,
+    _rev,
     title,
     description,
     "slug": slug.current,
-    tags[]->{...},
-    audiences[]->{...},
-    themes[]->{...},
-    solutions[]->{...},
-    resources[]->{
-      ...,
-      solution[]->{...},
+    tags[]->{
+      _id,
+      _type,
+      title
     },
+    audiences[]->{
+      _id,
+      _type,
+      title,
+      description
+    },
+    theme->{
+      _id,
+      _type,
+      title
+    },
+    solutions[]->{
+      _id,
+      _type,
+      title,
+      description,
+      audiences[]
+    },
+    resources[]->{
+      _id,
+      _type,
+      title,
+      description,
+      links,
+      "solutionRefs": solutions[]
+    }
   }`);
 
 export const PATTERN_PAGES_SLUGS_QUERY =
 	defineQuery(`*[_type == "pattern" && defined(slug.current)]{
     "slug": slug.current
+  }`);
+
+// Separate queries to avoid nested reference issues
+export const PATTERN_BASE_QUERY =
+	defineQuery(`*[_type == "pattern" && slug.current == $slug][0]{
+    _id,
+    _type,
+    _createdAt,
+    _updatedAt,
+    _rev,
+    title,
+    description,
+    "slug": slug.current,
+    "tagIds": tags[]._ref,
+    "audienceIds": audiences[]._ref,
+    "themeId": theme._ref,
+    "solutionIds": solutions[]._ref,
+    "resourceIds": resources[]._ref
+  }`);
+
+export const SOLUTIONS_BY_IDS_QUERY =
+	defineQuery(`*[_type == "solution" && _id in $ids]{
+    _id,
+    _type,
+    _createdAt,
+    _updatedAt,
+    _rev,
+    title,
+    description,
+    audiences[]->{
+      _id,
+      _type,
+      title
+    }
+  }`);
+
+export const RESOURCES_BY_IDS_QUERY =
+	defineQuery(`*[_type == "resource" && _id in $ids]{
+    _id,
+    _type,
+    _createdAt,
+    _updatedAt,
+    _rev,
+    title,
+    description,
+    links,
+    "solutionIds": solutions[]._ref
+  }`);
+
+export const TAGS_BY_IDS_QUERY = defineQuery(`*[_type == "tag" && _id in $ids]{
+    _id,
+    _type,
+    title
+  }`);
+
+export const AUDIENCES_BY_IDS_QUERY =
+	defineQuery(`*[_type == "audience" && _id in $ids]{
+    _id,
+    _type,
+    title,
+    description
+  }`);
+
+export const THEME_BY_ID_QUERY =
+	defineQuery(`*[_type == "theme" && _id == $id][0]{
+    _id,
+    _type,
+    title
   }`);
 
 export const SLUGS_BY_TYPE_QUERY =
@@ -78,7 +173,7 @@ export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
       _id,
       title
     },
-    themes[]->{
+    theme->{
       _id,
       title,
       description
@@ -86,7 +181,7 @@ export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
     solutions[]->,
     resources[]->{
       ...,
-      solution[]->{...},
+      solutions[]->{...},
     },
   }`);
 
@@ -106,7 +201,7 @@ export const PATTERNS_GROUPED_BY_THEME_QUERY = defineQuery(`
         _id,
         title
       },
-      themes[]->{
+      theme->{
         _id,
         title,
         description
@@ -114,7 +209,7 @@ export const PATTERNS_GROUPED_BY_THEME_QUERY = defineQuery(`
       solutions[]->,
       resources[]->{
         ...,
-        solution[]->{...},
+        solutions[]->{...},
       },
     }
   }[count(patterns) > 0]

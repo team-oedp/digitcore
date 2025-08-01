@@ -9,7 +9,15 @@ import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
 import { sanityFetch } from "~/sanity/lib/live";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
-import type { Pattern, Slug } from "~/sanity/sanity.types";
+import type {
+	Audience,
+	PATTERN_QUERYResult,
+	Pattern,
+	Slug,
+	Solution,
+	Tag,
+	Theme,
+} from "~/sanity/sanity.types";
 
 export type PatternPageProps = {
 	params: Promise<{ slug: string }>;
@@ -46,15 +54,23 @@ export async function generateMetadata({
 export default async function PatternPage({ params }: PatternPageProps) {
 	const { slug } = await params;
 
-	// Promise.all because we may want to add other fetches for glossary data later for example
-	const [{ data: pattern }] = await Promise.all([
-		sanityFetch({
-			query: PATTERN_QUERY,
-			params: { slug },
-			// Metadata should never contain stega
-			stega: false,
-		}),
-	]);
+	// Option 1: Use the improved single query (recommended for simplicity)
+	const { data: pattern }: { data: PATTERN_QUERYResult } = await sanityFetch({
+		query: PATTERN_QUERY,
+		params: { slug },
+		// Metadata should never contain stega
+		stega: false,
+		perspective: "published",
+	});
+
+	// Option 2: Use separate queries for better performance and type safety
+	// Uncomment this block and comment out the above if you want to use the fetcher approach
+	/*
+	import { client } from "~/sanity/lib/client"
+	import { fetchPatternWithRelations } from "~/sanity/lib/pattern-fetcher"
+	
+	const pattern = await fetchPatternWithRelations(client, slug)
+	*/
 
 	if (!pattern) {
 		console.log("No pattern found, returning 404");
@@ -79,12 +95,12 @@ export default async function PatternPage({ params }: PatternPageProps) {
 							pattern={pattern as unknown as Pattern}
 						/>
 						<PatternConnections
-							tags={pattern.tags || undefined}
-							audiences={pattern.audiences || undefined}
-							themes={pattern.themes || undefined}
+							tags={(pattern.tags as Tag[]) || undefined}
+							audiences={(pattern.audiences as Audience[]) || undefined}
+							theme={(pattern.theme as unknown as Theme) || undefined}
 						/>
 					</div>
-					<Solutions solutions={pattern.solutions || []} />
+					<Solutions solutions={(pattern.solutions as Solution[]) || []} />
 					<Resources resources={pattern.resources || []} />
 				</div>
 			</PageWrapper>

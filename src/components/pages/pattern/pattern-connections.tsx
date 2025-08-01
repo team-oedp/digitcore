@@ -5,13 +5,13 @@ import type { Audience, Tag, Theme } from "~/sanity/sanity.types";
 type PatternConnectionsProps = {
 	audiences?: Audience[];
 	tags?: Tag[];
-	themes?: Theme[];
+	theme?: Theme;
 };
 
 export function PatternConnections({
 	audiences,
 	tags,
-	themes,
+	theme,
 }: PatternConnectionsProps) {
 	return (
 		<section className="flex flex-col gap-4 pt-8">
@@ -60,16 +60,18 @@ export function PatternConnections({
 			</div>
 
 			{/* Theme */}
-			<div className="flex h-6 items-center gap-2.5 self-start rounded-lg border border-orange-200 bg-orange-100 py-2 pr-[3px] pl-[9px]">
-				<span className="text-nowrap font-normal text-[14px] text-orange-800">
-					{themes?.[0]?.title}
-				</span>
-				<div className="flex h-[18px] items-center justify-center rounded border border-orange-200 px-1.5 py-0">
-					<span className="font-normal text-[12px] text-orange-800 tracking-[-0.14px]">
-						Theme
+			{theme && (
+				<div className="flex h-6 items-center gap-2.5 self-start rounded-lg border border-orange-200 bg-orange-100 py-2 pr-[3px] pl-[9px]">
+					<span className="text-nowrap font-normal text-[14px] text-orange-800">
+						{theme.title}
 					</span>
+					<div className="flex h-[18px] items-center justify-center rounded border border-orange-200 px-1.5 py-0">
+						<span className="font-normal text-[12px] text-orange-800 tracking-[-0.14px]">
+							Theme
+						</span>
+					</div>
 				</div>
-			</div>
+			)}
 		</section>
 	);
 }

@@ -19,7 +19,7 @@ export type SearchResult = {
 
 export type SearchPattern = {
 	_id: string;
-	_type: string;
+	_type: "pattern";
 	_score?: number;
 	title: string | null;
 	description: Array<{
