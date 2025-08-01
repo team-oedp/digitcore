@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { PageHeader } from "~/components/global/page-header";
 import { PageWrapper } from "~/components/global/page-wrapper";
@@ -7,8 +8,9 @@ import { PatternConnections } from "~/components/pages/pattern/pattern-connectio
 import { PatternContentProvider } from "~/components/pages/pattern/pattern-content-provider";
 import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
-import { sanityFetch } from "~/sanity/lib/live";
+import { client } from "~/sanity/lib/client";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
+import { token } from "~/sanity/lib/token";
 import type {
 	Audience,
 	PATTERN_QUERYResult,
@@ -28,11 +30,14 @@ export type PatternPageProps = {
  * Learn more: https://nextjs.org/docs/app/api-reference/functions/generate-static-params
  */
 export async function generateStaticParams() {
-	const { data } = await sanityFetch({
-		query: PATTERN_PAGES_SLUGS_QUERY,
-		stega: false,
-		perspective: "published",
-	});
+	const data = await client.fetch(
+		PATTERN_PAGES_SLUGS_QUERY,
+		{},
+		{
+			perspective: "published",
+			useCdn: true,
+		},
+	);
 	return data;
 }
 
@@ -53,15 +58,24 @@ export async function generateMetadata({
 
 export default async function PatternPage({ params }: PatternPageProps) {
 	const { slug } = await params;
+	const isDraftMode = (await draftMode()).isEnabled;
 
 	// Option 1: Use the improved single query (recommended for simplicity)
-	const { data: pattern }: { data: PATTERN_QUERYResult } = await sanityFetch({
-		query: PATTERN_QUERY,
-		params: { slug },
-		// Metadata should never contain stega
-		stega: false,
-		perspective: "published",
-	});
+	const pattern: PATTERN_QUERYResult = await client.fetch(
+		PATTERN_QUERY,
+		{ slug },
+		isDraftMode
+			? {
+					perspective: "previewDrafts",
+					useCdn: false,
+					stega: true,
+					token,
+				}
+			: {
+					perspective: "published",
+					useCdn: true,
+				},
+	);
 
 	// Option 2: Use separate queries for better performance and type safety
 	// Uncomment this block and comment out the above if you want to use the fetcher approach

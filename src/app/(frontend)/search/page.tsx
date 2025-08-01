@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import {
 	type SearchResult,
@@ -12,8 +13,9 @@ import { SearchResults } from "~/components/pages/search/search-results";
 import { SearchResultsHeader } from "~/components/pages/search/search-results-header";
 import { Separator } from "~/components/ui/separator";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
-import { sanityFetch } from "~/sanity/lib/live";
+import { client } from "~/sanity/lib/client";
 import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
+import { token } from "~/sanity/lib/token";
 
 export const metadata: Metadata = {
 	title: "Search | DIGITCORE Toolkit",
@@ -25,8 +27,24 @@ type SearchPageProps = {
 };
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
+	const isDraftMode = (await draftMode()).isEnabled;
+
 	// Fetch page data
-	const { data: pageData } = await sanityFetch({ query: SEARCH_PAGE_QUERY });
+	const pageData = await client.fetch(
+		SEARCH_PAGE_QUERY,
+		{},
+		isDraftMode
+			? {
+					perspective: "previewDrafts",
+					useCdn: false,
+					stega: true,
+					token,
+				}
+			: {
+					perspective: "published",
+					useCdn: true,
+				},
+	);
 
 	if (!pageData) {
 		console.log("No page found, returning 404");
