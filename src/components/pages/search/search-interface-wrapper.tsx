@@ -1,12 +1,28 @@
+import { draftMode } from "next/headers";
+import { client } from "~/sanity/lib/client";
 import { FILTER_OPTIONS_QUERY } from "~/sanity/lib/filter-options";
-import { sanityFetch } from "~/sanity/lib/live";
+import { token } from "~/sanity/lib/token";
 import { SearchInterface } from "./search-interface";
 
 export async function SearchInterfaceWrapper() {
+	const isDraftMode = (await draftMode()).isEnabled;
+
 	// Fetch filter options from Sanity
-	const { data: filterOptions } = await sanityFetch({
-		query: FILTER_OPTIONS_QUERY,
-	});
+	const filterOptions = await client.fetch(
+		FILTER_OPTIONS_QUERY,
+		{},
+		isDraftMode
+			? {
+					perspective: "previewDrafts",
+					useCdn: false,
+					stega: true,
+					token,
+				}
+			: {
+					perspective: "published",
+					useCdn: true,
+				},
+	);
 
 	// Provide default options if fetch fails and filter out null labels
 	const audiences = (filterOptions?.audiences || []).filter(

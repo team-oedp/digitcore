@@ -1,18 +1,19 @@
 import "~/styles/globals.css";
 
 import type { Metadata, Viewport } from "next";
+import { VisualEditing } from "next-sanity";
+import { draftMode } from "next/headers";
 import { sans } from "~/app/(frontend)/fonts";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
+import { DisableDraftMode } from "~/components/global/disable-draft-mode";
 import Footer from "~/components/global/footer";
 import { Header } from "~/components/global/header";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
-import { SanityLive } from "~/sanity/lib/live";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
-import { handleError } from "./client-utils";
 
 export const metadata: Metadata = {
 	title: "Digitcore",
@@ -28,9 +29,11 @@ export const viewport: Viewport = {
 	],
 };
 
-export default function Layout({
+export default async function Layout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
+	const isDraftMode = (await draftMode()).isEnabled;
+
 	return (
 		<section className={cn(sans.variable)}>
 			<div className="min-h-screen bg-background text-foreground antialiased [--header-height:calc(--spacing(14))]">
@@ -40,8 +43,6 @@ export default function Layout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					{/* The <SanityLive> component is responsible for making all sanityFetch calls in your application live, so should always be rendered. */}
-					<SanityLive onError={handleError} />
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
 							<PageContentStoreProvider>
@@ -67,6 +68,12 @@ export default function Layout({
 							</PageContentStoreProvider>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>
+					{isDraftMode && (
+						<>
+							<VisualEditing />
+							<DisableDraftMode />
+						</>
+					)}
 				</ThemeProvider>
 			</div>
 		</section>
