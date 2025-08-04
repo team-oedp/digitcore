@@ -18,7 +18,7 @@ type ResourcesProps = {
 export function Resources({ resources }: ResourcesProps) {
 	if (!resources) return null;
 	return (
-		<section className="flex flex-col gap-5">
+		<section id="resources" className="flex flex-col gap-5">
 			<header className="flex flex-row items-center gap-2.5">
 				<h2 className="font-normal text-[32px] text-primary">Resources</h2>
 			</header>

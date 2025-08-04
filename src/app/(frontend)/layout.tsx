@@ -3,12 +3,14 @@ import "~/styles/globals.css";
 import type { Metadata, Viewport } from "next";
 import { sans } from "~/app/(frontend)/fonts";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
+import Footer from "~/components/global/footer";
 import { Header } from "~/components/global/header";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
 import { SanityLive } from "~/sanity/lib/live";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
+import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
 import { handleError } from "./client-utils";
 
@@ -42,24 +44,27 @@ export default function Layout({
 					<SanityLive onError={handleError} />
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
-							<SidebarProvider
-								className="flex flex-col"
-								style={
-									{
-										"--sidebar-width": "28rem",
-									} as React.CSSProperties
-								}
-							>
-								<Header />
-								<div className="flex flex-1">
-									<SidebarInset>
-										<main className="mx-2 mb-2 flex min-h-full flex-1 flex-col rounded-md bg-primary-foreground">
-											{children}
-										</main>
-									</SidebarInset>
-									<CarrierBagSidebar />
-								</div>
-							</SidebarProvider>
+							<PageContentStoreProvider>
+								<SidebarProvider
+									className="flex flex-col"
+									style={
+										{
+											"--sidebar-width": "28rem",
+										} as React.CSSProperties
+									}
+								>
+									<Header />
+									<div className="flex flex-1">
+										<SidebarInset>
+											<main className="mx-2 mb-2 flex min-h-full flex-1 flex-col rounded-md bg-primary-foreground">
+												{children}
+											</main>
+										</SidebarInset>
+										<CarrierBagSidebar />
+									</div>
+									<Footer />
+								</SidebarProvider>
+							</PageContentStoreProvider>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>
 				</ThemeProvider>
