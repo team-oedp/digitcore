@@ -26,7 +26,10 @@ export const PATTERN_QUERY =
     tags[]->{...},
     audiences[]->{...},
     themes[]->{...},
-    solutions[]->{...},
+    solutions[]->{
+      ...,
+      audiences[]->{ _id, title }
+    },
     resources[]->{
       ...,
       solution[]->{...},

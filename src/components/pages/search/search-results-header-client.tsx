@@ -8,16 +8,16 @@ type SearchResultsHeaderClientProps = {
 	isLoading?: boolean;
 };
 
-export function SearchResultsHeaderClient({ 
-	resultCount = 0, 
-	isLoading = false 
+export function SearchResultsHeaderClient({
+	resultCount = 0,
+	isLoading = false,
 }: SearchResultsHeaderClientProps) {
 	const searchParams = useSearchParams();
-	
+
 	// Parse search term from URL
 	let searchQuery = "";
 	let hasSearchCriteria = false;
-	
+
 	try {
 		const rawParams = {
 			q: searchParams.get("q") ?? undefined,
@@ -30,12 +30,13 @@ export function SearchResultsHeaderClient({
 		const validatedParams = searchParamsSchema.parse(rawParams);
 		const parsedParams = parseSearchParams(validatedParams);
 		searchQuery = parsedParams.searchTerm || "";
-		
+
 		// Check if we have any search criteria
-		hasSearchCriteria = searchQuery.trim() || 
-						   parsedParams.audiences.length > 0 || 
-						   parsedParams.themes.length > 0 || 
-						   parsedParams.tags.length > 0;
+		hasSearchCriteria =
+			searchQuery.trim() ||
+			parsedParams.audiences.length > 0 ||
+			parsedParams.themes.length > 0 ||
+			parsedParams.tags.length > 0;
 	} catch (error) {
 		console.error("Error parsing search params:", error);
 	}
@@ -45,9 +46,7 @@ export function SearchResultsHeaderClient({
 		return (
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
-					<span className="text-zinc-400">
-						Ready to search
-					</span>
+					<span className="text-zinc-400">Ready to search</span>
 				</div>
 			</div>
 		);
@@ -68,9 +67,7 @@ export function SearchResultsHeaderClient({
 					{resultCount} {resultCount === 1 ? "result" : "results"}
 				</span>
 				{searchQuery && (
-					<span className="text-zinc-400">
-						for "{searchQuery}"
-					</span>
+					<span className="text-zinc-400">for "{searchQuery}"</span>
 				)}
 			</div>
 		</div>

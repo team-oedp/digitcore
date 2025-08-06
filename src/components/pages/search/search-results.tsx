@@ -8,7 +8,10 @@ type SearchResultsProps = {
 	searchTerm?: string;
 };
 
-export function SearchResults({ patterns = [], searchTerm = "" }: SearchResultsProps) {
+export function SearchResults({
+	patterns = [],
+	searchTerm = "",
+}: SearchResultsProps) {
 	if (!patterns || patterns.length === 0) {
 		return null; // Empty state is now handled by the search page
 	}
@@ -16,9 +19,9 @@ export function SearchResults({ patterns = [], searchTerm = "" }: SearchResultsP
 	return (
 		<div className="w-full">
 			{patterns.map((pattern) => (
-				<SearchResultItem 
-					key={pattern._id} 
-					pattern={pattern} 
+				<SearchResultItem
+					key={pattern._id}
+					pattern={pattern}
 					searchTerm={searchTerm}
 				/>
 			))}

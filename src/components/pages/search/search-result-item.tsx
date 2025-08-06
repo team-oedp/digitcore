@@ -9,11 +9,12 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
-import { 
-	truncateWithContext, 
-	highlightMatches, 
+import {
+	extractTextFromPortableText,
+	getMatchExplanation,
 	hasMatchInTitle,
-	getMatchExplanation 
+	highlightMatches,
+	truncateWithContext,
 } from "~/lib/search-utils";
 import { SearchResultPreview } from "./search-result-preview";
 
@@ -149,11 +150,21 @@ function PatternSearchResult({
 	const rawDescription = pattern.description || [];
 
 	// Process description for search context
-	const descriptionResult = truncateWithContext(rawDescription, searchTerm, 200);
-	const displayDescription = showFullDescription ? rawDescription : descriptionResult.text;
-	
+	const descriptionResult = truncateWithContext(
+		extractTextFromPortableText(rawDescription),
+		searchTerm,
+		200,
+	);
+	const displayDescription = showFullDescription
+		? extractTextFromPortableText(rawDescription)
+		: descriptionResult.text;
+
 	// Check where matches occur
-	const matchExplanation = getMatchExplanation(title, rawDescription, searchTerm);
+	const matchExplanation = getMatchExplanation(
+		title,
+		rawDescription,
+		searchTerm,
+	);
 	const titleHasMatch = hasMatchInTitle(title, searchTerm);
 
 	const buttonElement = (
@@ -192,36 +203,43 @@ function PatternSearchResult({
 				{/* Description with Search Context */}
 				{descriptionResult.text && (
 					<div className="mb-4">
-						<div 
-							className="text-sm text-zinc-600 leading-relaxed"
-							dangerouslySetInnerHTML={{ 
-								__html: highlightMatches(displayDescription, searchTerm) 
-							}}
-						/>
-						
+						{/* Replace dangerouslySetInnerHTML with React-based rendering */}
+						<span className="text-sm text-zinc-600 leading-relaxed">
+							{renderHighlightedText(displayDescription, searchTerm)}
+						</span>
+
 						{/* Match Indicators */}
-						{searchTerm && (matchExplanation.titleMatch || matchExplanation.descriptionMatch) && (
-							<div className="mt-2 flex items-center gap-2 text-xs text-zinc-500">
-								<span>Match found in:</span>
-								{matchExplanation.titleMatch && (
-									<span className="bg-blue-100 text-blue-700 px-2 py-1 rounded">Title</span>
-								)}
-								{matchExplanation.descriptionMatch && (
-									<span className="bg-green-100 text-green-700 px-2 py-1 rounded">Description</span>
-								)}
-								{descriptionResult.matchCount > 1 && (
-									<span className="text-zinc-400">({descriptionResult.matchCount} matches)</span>
-								)}
-							</div>
-						)}
-						
+						{searchTerm &&
+							(matchExplanation.titleMatch ||
+								matchExplanation.descriptionMatch) && (
+								<div className="mt-2 flex items-center gap-2 text-xs text-zinc-500">
+									<span>Match found in:</span>
+									{matchExplanation.titleMatch && (
+										<span className="rounded bg-blue-100 px-2 py-1 text-blue-700">
+											Title
+										</span>
+									)}
+									{matchExplanation.descriptionMatch && (
+										<span className="rounded bg-green-100 px-2 py-1 text-green-700">
+											Description
+										</span>
+									)}
+									{descriptionResult.matchCount > 1 && (
+										<span className="text-zinc-400">
+											({descriptionResult.matchCount} matches)
+										</span>
+									)}
+								</div>
+							)}
+
 						{/* Expand/Collapse Toggle */}
 						{descriptionResult.isTruncated && (
 							<button
 								onClick={() => setShowFullDescription(!showFullDescription)}
-								className="mt-2 text-xs text-blue-600 hover:text-blue-800"
+								className="mt-2 text-blue-600 text-xs hover:text-blue-800"
+								type="button"
 							>
-								{showFullDescription ? 'Show less' : 'Show more'}
+								{showFullDescription ? "Show less" : "Show more"}
 							</button>
 						)}
 					</div>
@@ -438,18 +456,75 @@ function SolutionSearchResult({
 }
 
 // Main component that routes to the appropriate sub-component
-export function SearchResultItem({ pattern, searchTerm }: SearchResultItemProps) {
+export function SearchResultItem({
+	pattern,
+	searchTerm,
+}: SearchResultItemProps) {
 	switch (pattern._type) {
 		case "pattern":
-			return <PatternSearchResult pattern={pattern as PatternSearchResultData} searchTerm={searchTerm} />;
+			return (
+				<PatternSearchResult
+					pattern={pattern as PatternSearchResultData}
+					searchTerm={searchTerm}
+				/>
+			);
 		case "resource":
-			return <ResourceSearchResult pattern={pattern as ResourceSearchResultData} searchTerm={searchTerm} />;
+			return (
+				<ResourceSearchResult
+					pattern={pattern as ResourceSearchResultData}
+					searchTerm={searchTerm}
+				/>
+			);
 		case "solution":
-			return <SolutionSearchResult pattern={pattern as SolutionSearchResultData} searchTerm={searchTerm} />;
+			return (
+				<SolutionSearchResult
+					pattern={pattern as SolutionSearchResultData}
+					searchTerm={searchTerm}
+				/>
+			);
 		default:
 			// Fallback for unknown types - default to pattern
 			return (
-				<PatternSearchResult pattern={pattern as PatternSearchResultData} searchTerm={searchTerm} />
+				<PatternSearchResult
+					pattern={pattern as PatternSearchResultData}
+					searchTerm={searchTerm}
+				/>
 			);
 	}
+}
+
+function renderHighlightedText(text: string, searchTerm: string) {
+	if (!searchTerm.trim()) return text;
+	const highlighted = highlightMatches(text, searchTerm);
+	const parts = highlighted.split(
+		/(<mark class="bg-yellow-200 rounded-sm">|<\/mark>)/g,
+	);
+	const result: React.ReactNode[] = [];
+	let inMark = false;
+	let markBuffer = "";
+	let markKey = 0;
+	for (const part of parts) {
+		if (part === '<mark class="bg-yellow-200 rounded-sm">') {
+			inMark = true;
+			markBuffer = "";
+		} else if (part === "</mark>") {
+			if (inMark) {
+				result.push(
+					<mark
+						key={`highlight-${markKey++}`}
+						className="rounded-sm bg-yellow-200"
+					>
+						{markBuffer}
+					</mark>,
+				);
+				markBuffer = "";
+				inMark = false;
+			}
+		} else if (inMark) {
+			markBuffer += part;
+		} else {
+			result.push(part);
+		}
+	}
+	return result;
 }

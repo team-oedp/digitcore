@@ -46,6 +46,7 @@ export function SearchResultsSkeleton({ count = 5 }: { count?: number }) {
 	return (
 		<div className="w-full">
 			{Array.from({ length: count }, (_, i) => (
+				// biome-ignore lint/suspicious/noArrayIndexKey: Skeletons are visual only, index is safe
 				<SearchResultSkeleton key={i} />
 			))}
 		</div>

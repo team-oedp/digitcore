@@ -74,27 +74,13 @@ export const toPDFStyle = (styleKey: PatternStyleKey) => {
 	const style = patternStyles[styleKey];
 
 	// Some properties might need transformation for react-pdf
-	const transformedStyle = { ...style };
-
-	// TEMPORARY: Replace UntitledSans with Helvetica for PDF glyph rendering
-	// TODO: Explore making UntitledSans work in PDF exports
-	if (
-		"fontFamily" in transformedStyle &&
-		transformedStyle.fontFamily === "UntitledSans"
-	) {
-		(transformedStyle as any).fontFamily = "Helvetica";
-	}
-
-	// Handle text transform
-	if ("textTransform" in style && style.textTransform) {
-		// react-pdf doesn't support textTransform, we'll handle this in the component
-		delete (transformedStyle as any).textTransform;
-	}
+	const { textTransform, ...transformedStyle }: Record<string, unknown> = {
+		...style,
+	};
 
 	// Handle border style
 	if ("borderStyle" in style && style.borderStyle === "dashed") {
-		// react-pdf uses borderStyle differently
-		(transformedStyle as any).borderStyle = "dashed";
+		transformedStyle.borderStyle = "dashed";
 	}
 
 	return transformedStyle;

@@ -3,7 +3,6 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { logger, createLogLocation } from "~/lib/logger";
 import { Input } from "~/components/ui/input";
 import {
 	MultiSelect,
@@ -13,6 +12,7 @@ import {
 	MultiSelectTrigger,
 	MultiSelectValue,
 } from "~/components/ui/multiselect";
+import { createLogLocation, logger } from "~/lib/logger";
 import {
 	type ParsedSearchParams,
 	parseSearchParams,
@@ -42,12 +42,17 @@ export function SearchInterface({
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	logger.debug("client", "SearchInterface initialized", {
-		componentId,
-		audienceCount: audienceOptions.length,
-		themeCount: themeOptions.length,
-		tagCount: tagOptions.length
-	}, location);
+	logger.debug(
+		"client",
+		"SearchInterface initialized",
+		{
+			componentId,
+			audienceCount: audienceOptions.length,
+			themeCount: themeOptions.length,
+			tagCount: tagOptions.length,
+		},
+		location,
+	);
 
 	// Parse current URL parameters - this is our single source of truth
 	const currentParams: ParsedSearchParams = useMemo(() => {
@@ -82,7 +87,7 @@ export function SearchInterface({
 			setSearchTerm(currentParams.searchTerm || "");
 			isInitialized.current = true;
 		}
-	}, [currentParams.searchTerm]); // Only runs until initialized
+	}, [currentParams]); // Fix: use the whole object, not just searchTerm
 
 	// Add optimistic local state for filters
 	const [optimisticAudiences, setOptimisticAudiences] = useState<string[]>(
@@ -115,23 +120,33 @@ export function SearchInterface({
 	// Update URL with new search parameters
 	const updateSearchParams = useCallback(
 		(updates: Partial<ParsedSearchParams>) => {
-			logger.debug("client", "Updating search parameters", { updates, current: currentParamsRef.current }, location);
-			
+			logger.debug(
+				"client",
+				"Updating search parameters",
+				{ updates, current: currentParamsRef.current },
+				location,
+			);
+
 			const newParams = { ...currentParamsRef.current, ...updates };
 			const urlParams = serializeSearchParams(newParams);
 			const newUrl = urlParams.toString()
 				? `${pathname}?${urlParams.toString()}`
 				: pathname;
-				
-			logger.debug("client", "Navigating to new URL", { 
-				newUrl, 
-				urlParams: urlParams.toString(),
-				newParams 
-			}, location);
-			
+
+			logger.debug(
+				"client",
+				"Navigating to new URL",
+				{
+					newUrl,
+					urlParams: urlParams.toString(),
+					newParams,
+				},
+				location,
+			);
+
 			router.push(newUrl);
 		},
-		[pathname, router],
+		[pathname, router, location],
 	);
 
 	// Handle search input changes
@@ -171,18 +186,31 @@ export function SearchInterface({
 	);
 
 	// Handle Enter key for search
-	const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-		if (e.key === "Enter") {
-			logger.debug("client", "Search triggered by Enter key", { componentId }, location);
-		}
-	}, [componentId]);
+	const handleKeyDown = useCallback(
+		(e: React.KeyboardEvent) => {
+			if (e.key === "Enter") {
+				logger.debug(
+					"client",
+					"Search triggered by Enter key",
+					{ componentId },
+					location,
+				);
+			}
+		},
+		[componentId, location],
+	);
 
 	// Track component lifecycle
 	useEffect(() => {
 		return () => {
-			logger.debug("client", "SearchInterface unmounted", { componentId }, location);
+			logger.debug(
+				"client",
+				"SearchInterface unmounted",
+				{ componentId },
+				location,
+			);
 		};
-	}, [componentId]);
+	}, [componentId, location]);
 
 	return (
 		<div className="flex flex-col gap-4">

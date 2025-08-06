@@ -20,14 +20,69 @@ import type {
 	ResourceData,
 	SolutionData,
 } from "~/hooks/use-pattern-content";
-import { applyTextTransform, toPDFStyle } from "~/lib/style-adapters";
+import { applyTextTransform } from "~/lib/style-adapters";
 
-// TEMPORARY: Use Helvetica for PDF export to ensure glyph rendering
-// TODO: Explore getting UntitledSans working in PDF export to match brand typography
-// - Try converting WOFF2 to TTF format for better react-pdf compatibility
-// - Test with font subsetting tools
-// - Consider base64 embedding fonts
-// - Look into @react-pdf/fontkit integration
+// Register UntitledSans font variants for PDF rendering
+Font.register({
+	family: "UntitledSans",
+	src: "/fonts/UntitledSans/UntitledSans-Light.ttf",
+	fontWeight: 300,
+	fontStyle: "normal",
+});
+Font.register({
+	family: "UntitledSans",
+	src: "/fonts/UntitledSans/UntitledSans-LightItalic.ttf",
+	fontWeight: 300,
+	fontStyle: "italic",
+});
+Font.register({
+	family: "UntitledSans",
+	src: "/fonts/UntitledSans/UntitledSans-Regular.ttf",
+	fontWeight: 400,
+	fontStyle: "normal",
+});
+Font.register({
+	family: "UntitledSans",
+	src: "/fonts/UntitledSans/UntitledSans-RegularItalic.ttf",
+	fontWeight: 400,
+	fontStyle: "italic",
+});
+Font.register({
+	family: "UntitledSans",
+	src: "/fonts/UntitledSans/UntitledSans-Medium.ttf",
+	fontWeight: 500,
+	fontStyle: "normal",
+});
+Font.register({
+	family: "UntitledSans",
+	src: "/fonts/UntitledSans/UntitledSans-MediumItalic.ttf",
+	fontWeight: 500,
+	fontStyle: "italic",
+});
+Font.register({
+	family: "UntitledSans",
+	src: "/fonts/UntitledSans/UntitledSans-Bold.ttf",
+	fontWeight: 700,
+	fontStyle: "normal",
+});
+Font.register({
+	family: "UntitledSans",
+	src: "/fonts/UntitledSans/UntitledSans-BoldItalic.ttf",
+	fontWeight: 700,
+	fontStyle: "italic",
+});
+Font.register({
+	family: "UntitledSans",
+	src: "/fonts/UntitledSans/UntitledSans-Black.ttf",
+	fontWeight: 900,
+	fontStyle: "normal",
+});
+Font.register({
+	family: "UntitledSans",
+	src: "/fonts/UntitledSans/UntitledSans-BlackItalic.ttf",
+	fontWeight: 900,
+	fontStyle: "italic",
+});
 
 // Create StyleSheet optimized for PDF layout
 const styles = StyleSheet.create({
@@ -35,7 +90,7 @@ const styles = StyleSheet.create({
 		flexDirection: "column",
 		backgroundColor: "#ffffff",
 		padding: 40,
-		fontFamily: "Helvetica", // PDF-only fallback for glyph rendering
+		fontFamily: "UntitledSans", // Use UntitledSans for PDF rendering
 		fontSize: 12,
 		lineHeight: 1.6, // Increased for better readability
 		color: "#000000",

@@ -2,17 +2,21 @@
  * Shared content logic for pattern rendering
  * Used by both web and PDF renderers to ensure consistency
  */
+"use client";
 
 import type { PortableTextBlock } from "@portabletext/types";
+import { useEffect } from "react";
 import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
 import type {
 	Audience,
+	PATTERN_QUERYResult,
 	Pattern,
 	Resource,
 	Solution,
 	Tag,
 	Theme,
 } from "~/sanity/sanity.types";
+import { usePageContentStore } from "~/stores/page-content";
 
 // Generic Sanity reference when a relationship is not populated
 export type SanityReference = {
@@ -336,8 +340,3 @@ export const usePatternResources = (pattern: PopulatedPattern) => {
 	const content = usePatternContent(pattern);
 	return content.resources;
 };
-("use client");
-
-import { useEffect } from "react";
-import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
-import { usePageContentStore } from "~/stores/page-content";
