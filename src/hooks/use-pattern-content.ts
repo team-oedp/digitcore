@@ -5,7 +5,28 @@
 
 import type { PortableTextBlock } from "@portabletext/types";
 import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
-import type { Pattern } from "~/sanity/sanity.types";
+import type {
+	Audience,
+	Pattern,
+	Resource,
+	Solution,
+	Tag,
+	Theme,
+} from "~/sanity/sanity.types";
+
+// Generic Sanity reference when a relationship is not populated
+export type SanityReference = {
+	_id?: string;
+	_key?: string;
+	_ref?: string;
+};
+
+// Entities that may arrive either as populated documents or as bare references
+export type TagEntity = Tag & SanityReference;
+export type AudienceEntity = Audience & SanityReference;
+export type ThemeEntity = Theme & SanityReference;
+export type SolutionEntity = Solution & SanityReference;
+export type ResourceEntity = Resource & SanityReference;
 
 // Helper function to convert PortableText to plain text for PDF
 export const portableTextToString = (blocks?: PortableTextBlock[]): string => {
@@ -91,8 +112,16 @@ export interface PatternContentData {
 /**
  * Hook to process pattern data into a consistent structure for rendering
  */
+export type PopulatedPattern = Pattern & {
+	tags?: TagEntity[];
+	audiences?: AudienceEntity[];
+	themes?: ThemeEntity[];
+	solutions?: SolutionEntity[];
+	resources?: ResourceEntity[];
+};
+
 export const usePatternContent = (
-	pattern: Pattern,
+	pattern: PopulatedPattern,
 	carrierBagItem?: CarrierBagItem,
 ): PatternContentData => {
 	// Process header
@@ -112,8 +141,8 @@ export const usePatternContent = (
 		connections.push({
 			type: "tags",
 			title: "Tags",
-			items: pattern.tags.map((tag: any) => ({
-				id: tag._id || tag._key || tag._ref,
+			items: (pattern.tags as TagEntity[]).map((tag) => ({
+				id: tag._id ?? tag._key ?? tag._ref ?? "",
 				title: tag?.title || tag?._ref || "Unknown Tag",
 			})),
 		});
@@ -123,8 +152,8 @@ export const usePatternContent = (
 		connections.push({
 			type: "audiences",
 			title: "Audiences",
-			items: pattern.audiences.map((audience: any) => ({
-				id: audience._id || audience._key || audience._ref,
+			items: (pattern.audiences as AudienceEntity[]).map((audience) => ({
+				id: audience._id ?? audience._key ?? audience._ref ?? "",
 				title: audience?.title || audience?._ref || "Unknown Audience",
 			})),
 		});
@@ -134,38 +163,51 @@ export const usePatternContent = (
 		connections.push({
 			type: "themes",
 			title: "Themes",
-			items: pattern.themes.map((theme: any) => ({
-				id: theme._id || theme._key || theme._ref,
+			items: (pattern.themes as ThemeEntity[]).map((theme) => ({
+				id: theme._id ?? theme._key ?? theme._ref ?? "",
 				title: theme?.title || theme?._ref || "Unknown Theme",
 			})),
 		});
 	}
 
 	// Process solutions
-	const solutions: SolutionData[] = (pattern.solutions || []).map(
-		(solution: any, index: number) => ({
-			id: solution._id || `solution-${index}`,
-			number: getRomanNumeral(index),
-			title: solution.title || "Untitled Solution",
-			description: portableTextToString(solution.description),
-			audiences: (solution.audiences || []).map((audience: any) => ({
-				id: audience._id || audience._key || audience._ref,
+	const solutions: SolutionData[] = (
+		(pattern.solutions as SolutionEntity[]) || []
+	).map((solution: SolutionEntity, index) => ({
+		id: (solution as SolutionEntity)._id ?? `solution-${index}`,
+		number: getRomanNumeral(index),
+		title: solution.title || "Untitled Solution",
+		description: portableTextToString(
+			solution.description as PortableTextBlock[],
+		),
+		audiences: ((solution.audiences ?? []) as unknown as AudienceEntity[]).map(
+			(audience) => ({
+				id: audience._id ?? audience._key ?? audience._ref ?? "",
 				title: audience?.title || audience?._ref || "Unknown Audience",
-			})),
-		}),
-	);
+			}),
+		),
+	}));
 
 	// Process resources
-	const resources: ResourceData[] = (pattern.resources || []).map(
-		(resource: any, index: number) => ({
-			id: resource._id || `resource-${index}`,
-			title: resource.title || "Untitled Resource",
-			description: portableTextToString(resource.description),
-			relatedSolutions: (resource.solution || [])
-				.map((sol: any) => sol.title || "Untitled")
-				.filter(Boolean),
-		}),
-	);
+	const resources: ResourceData[] = (
+		(pattern.resources as ResourceEntity[]) || []
+	).map((resource: ResourceEntity, index) => ({
+		id: resource._id ?? resource._key ?? resource._ref ?? `resource-${index}`,
+		title: resource.title || "Untitled Resource",
+		description: portableTextToString(
+			resource.description as PortableTextBlock[],
+		),
+		relatedSolutions: (
+			(resource.solutions ?? []) as unknown as SolutionEntity[]
+		)
+			.map(
+				(sol) =>
+					(sol as SolutionEntity).title ||
+					(sol as SolutionEntity)._ref ||
+					"Untitled",
+			)
+			.filter(Boolean),
+	}));
 
 	return {
 		header,
@@ -198,7 +240,9 @@ export const useCarrierBagDocument = (
 		day: "numeric",
 	});
 
-	const patterns = items.map((item) => usePatternContent(item.pattern, item));
+	const patterns = items.map((item) =>
+		usePatternContent(item.pattern as PopulatedPattern, item),
+	);
 
 	return {
 		title: "Your Carrier Bag",
@@ -213,22 +257,22 @@ export const useCarrierBagDocument = (
 /**
  * Utility hooks for specific sections
  */
-export const usePatternHeader = (pattern: Pattern) => {
+export const usePatternHeader = (pattern: PopulatedPattern) => {
 	const content = usePatternContent(pattern);
 	return content.header;
 };
 
-export const usePatternConnections = (pattern: Pattern) => {
+export const usePatternConnections = (pattern: PopulatedPattern) => {
 	const content = usePatternContent(pattern);
 	return content.connections;
 };
 
-export const usePatternSolutions = (pattern: Pattern) => {
+export const usePatternSolutions = (pattern: PopulatedPattern) => {
 	const content = usePatternContent(pattern);
 	return content.solutions;
 };
 
-export const usePatternResources = (pattern: Pattern) => {
+export const usePatternResources = (pattern: PopulatedPattern) => {
 	const content = usePatternContent(pattern);
 	return content.resources;
 };

@@ -8,9 +8,14 @@ import { SuggestSolutionButton } from "./suggest-solution-button";
 type SolutionsProps = {
 	solutions?: Solution[];
 	patternName?: string;
+	patternSlug?: string;
 };
 
-export function Solutions({ solutions, patternName }: SolutionsProps) {
+export function Solutions({
+	solutions,
+	patternName,
+	patternSlug,
+}: SolutionsProps) {
 	// Generate numbering for solutions (i., ii., iii., etc.)
 	const getSolutionNumber = (index: number): string => {
 		const romanNumerals = [
@@ -91,9 +96,12 @@ export function Solutions({ solutions, patternName }: SolutionsProps) {
 				))}
 			</div>
 
-			{patternName && (
+			{patternName && patternSlug && (
 				<div className="mt-8">
-					<SuggestSolutionButton patternName={patternName} />
+					<SuggestSolutionButton
+						patternName={patternName}
+						patternSlug={patternSlug}
+					/>
 				</div>
 			)}
 		</section>

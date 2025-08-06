@@ -1,8 +1,9 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { logger, createLogLocation } from "~/lib/logger";
 import { Input } from "~/components/ui/input";
 import {
 	MultiSelect,
@@ -30,71 +31,82 @@ interface SearchInterfaceProps {
 	tagOptions?: FilterOption[];
 }
 
-// Remove once not needed for early development stages
-// Default options for development/fallback
-const defaultAudienceOptions = [
-	{ value: "researchers", label: "Researchers" },
-	{ value: "open-source-technologists", label: "Open source technologists" },
-	{ value: "community-leaders", label: "Community leaders" },
-	{ value: "policy-makers", label: "Policy makers" },
-];
-
-const defaultThemeOptions = [
-	{
-		value: "frontline-communities",
-		label: "Ensuring benefit to frontline communities",
-	},
-	{ value: "data-sovereignty", label: "Data sovereignty" },
-	{ value: "community-engagement", label: "Community engagement" },
-	{ value: "ethical-technology", label: "Ethical technology" },
-];
-
-const defaultTagOptions = [
-	{ value: "tools", label: "Tools" },
-	{ value: "strategy", label: "Strategy" },
-	{ value: "workflow", label: "Workflow" },
-	{ value: "data", label: "Data" },
-	{ value: "communication", label: "Communication" },
-	{ value: "assessment", label: "Assessment" },
-];
-
 export function SearchInterface({
-	audienceOptions = defaultAudienceOptions,
-	themeOptions = defaultThemeOptions,
-	tagOptions = defaultTagOptions,
-}: SearchInterfaceProps = {}) {
+	audienceOptions = [],
+	themeOptions = [],
+	tagOptions = [],
+}: SearchInterfaceProps) {
+	const location = createLogLocation("search-interface.tsx", "SearchInterface");
+	const [componentId] = useState(() => Math.random().toString(36).substring(7));
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	// Parse current URL parameters - this is our single source of truth
-	let currentParams: ParsedSearchParams;
-	try {
-		currentParams = parseSearchParams(
-			searchParamsSchema.parse({
-				q: searchParams.get("q") ?? undefined,
-				audiences: searchParams.get("audiences") ?? undefined,
-				themes: searchParams.get("themes") ?? undefined,
-				tags: searchParams.get("tags") ?? undefined,
-				page: searchParams.get("page") ?? undefined,
-				limit: searchParams.get("limit") ?? undefined,
-			}),
-		);
-	} catch (error) {
-		console.error("Error parsing search params:", error);
-		// Fall back to default params if parsing fails
-		currentParams = parseSearchParams({ page: 1, limit: 20 });
-	}
+	logger.debug("client", "SearchInterface initialized", {
+		componentId,
+		audienceCount: audienceOptions.length,
+		themeCount: themeOptions.length,
+		tagCount: tagOptions.length
+	}, location);
 
-	// Use local state for the search input to prevent controlled component performance issues
-	const [localSearchValue, setLocalSearchValue] = useState(
-		currentParams.searchTerm || "",
+	// Parse current URL parameters - this is our single source of truth
+	const currentParams: ParsedSearchParams = useMemo(() => {
+		try {
+			return parseSearchParams(
+				searchParamsSchema.parse({
+					q: searchParams.get("q") ?? undefined,
+					audiences: searchParams.get("audiences") ?? undefined,
+					themes: searchParams.get("themes") ?? undefined,
+					tags: searchParams.get("tags") ?? undefined,
+					page: searchParams.get("page") ?? undefined,
+					limit: searchParams.get("limit") ?? undefined,
+				}),
+			);
+		} catch (error) {
+			console.error("Error parsing search params:", error);
+			// Fall back to default params if parsing fails
+			return parseSearchParams({ page: 1, limit: 20 });
+		}
+	}, [searchParams]);
+
+	// Completely isolated search input state - no URL sync
+	const [searchTerm, setSearchTerm] = useState("");
+	const debouncedSearchTerm = useDebouncedCallback((value: string) => {
+		updateSearchParams({ searchTerm: value });
+	}, 300);
+
+	// Initialize search term from URL once when currentParams is available
+	const isInitialized = useRef(false);
+	useEffect(() => {
+		if (!isInitialized.current && currentParams) {
+			setSearchTerm(currentParams.searchTerm || "");
+			isInitialized.current = true;
+		}
+	}, [currentParams.searchTerm]); // Only runs until initialized
+
+	// Add optimistic local state for filters
+	const [optimisticAudiences, setOptimisticAudiences] = useState<string[]>(
+		currentParams.audiences,
+	);
+	const [optimisticThemes, setOptimisticThemes] = useState<string[]>(
+		currentParams.themes,
+	);
+	const [optimisticTags, setOptimisticTags] = useState<string[]>(
+		currentParams.tags,
 	);
 
-	// Keep local state in sync with URL params when they change externally
+	// Sync filter states from URL changes
 	useEffect(() => {
-		setLocalSearchValue(currentParams.searchTerm || "");
-	}, [currentParams.searchTerm]);
+		setOptimisticAudiences(currentParams.audiences);
+	}, [currentParams.audiences]);
+
+	useEffect(() => {
+		setOptimisticThemes(currentParams.themes);
+	}, [currentParams.themes]);
+
+	useEffect(() => {
+		setOptimisticTags(currentParams.tags);
+	}, [currentParams.tags]);
 
 	// Use a ref to always have access to the latest params without causing re-renders
 	const currentParamsRef = useRef(currentParams);
@@ -103,49 +115,56 @@ export function SearchInterface({
 	// Update URL with new search parameters
 	const updateSearchParams = useCallback(
 		(updates: Partial<ParsedSearchParams>) => {
+			logger.debug("client", "Updating search parameters", { updates, current: currentParamsRef.current }, location);
+			
 			const newParams = { ...currentParamsRef.current, ...updates };
 			const urlParams = serializeSearchParams(newParams);
 			const newUrl = urlParams.toString()
 				? `${pathname}?${urlParams.toString()}`
 				: pathname;
+				
+			logger.debug("client", "Navigating to new URL", { 
+				newUrl, 
+				urlParams: urlParams.toString(),
+				newParams 
+			}, location);
+			
 			router.push(newUrl);
 		},
 		[pathname, router],
 	);
 
-	// Debounced function to update URL params
-	const debouncedSearchChange = useDebouncedCallback((value: string) => {
-		updateSearchParams({ searchTerm: value });
-	}, 300);
-
 	// Handle search input changes
 	const handleSearchChange = useCallback(
 		(value: string) => {
-			setLocalSearchValue(value);
-			debouncedSearchChange(value);
+			setSearchTerm(value);
+			debouncedSearchTerm(value);
 		},
-		[debouncedSearchChange],
+		[debouncedSearchTerm],
 	);
 
-	// Handle audience filter changes
+	// Handle audience filter changes with optimistic updates
 	const handleAudienceChange = useCallback(
 		(audiences: string[]) => {
+			setOptimisticAudiences(audiences);
 			updateSearchParams({ audiences });
 		},
 		[updateSearchParams],
 	);
 
-	// Handle theme filter changes
+	// Handle theme filter changes with optimistic updates
 	const handleThemeChange = useCallback(
 		(themes: string[]) => {
+			setOptimisticThemes(themes);
 			updateSearchParams({ themes });
 		},
 		[updateSearchParams],
 	);
 
-	// Handle tags filter changes
+	// Handle tags filter changes with optimistic updates
 	const handleTagsChange = useCallback(
 		(tags: string[]) => {
+			setOptimisticTags(tags);
 			updateSearchParams({ tags });
 		},
 		[updateSearchParams],
@@ -154,10 +173,16 @@ export function SearchInterface({
 	// Handle Enter key for search
 	const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
 		if (e.key === "Enter") {
-			// Search is already triggered by URL change, but we could add analytics here
-			console.log("Search triggered by Enter key");
+			logger.debug("client", "Search triggered by Enter key", { componentId }, location);
 		}
-	}, []);
+	}, [componentId]);
+
+	// Track component lifecycle
+	useEffect(() => {
+		return () => {
+			logger.debug("client", "SearchInterface unmounted", { componentId }, location);
+		};
+	}, [componentId]);
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -167,13 +192,13 @@ export function SearchInterface({
 					<div className="relative flex flex-1 items-center justify-start gap-2 p-0">
 						<Input
 							type="text"
-							value={localSearchValue}
+							value={searchTerm}
 							onChange={(e) => handleSearchChange(e.target.value)}
 							onKeyDown={handleKeyDown}
 							placeholder="Start typing to search patterns, solutions, and resources..."
 							className="h-8 rounded-none border-0 border-zinc-300 border-b bg-transparent px-0 py-1 pr-16 text-sm text-zinc-500 shadow-none placeholder:text-zinc-500 focus-visible:border-zinc-300 focus-visible:ring-0 focus-visible:ring-offset-0"
 						/>
-						{localSearchValue && (
+						{searchTerm && (
 							<button
 								onClick={() => handleSearchChange("")}
 								type="button"
@@ -193,7 +218,7 @@ export function SearchInterface({
 				<div className="min-w-0 flex-1">
 					<div className="mb-1 text-primary text-xs">Audiences</div>
 					<MultiSelect
-						values={currentParams.audiences}
+						values={optimisticAudiences}
 						onValuesChange={handleAudienceChange}
 					>
 						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">
@@ -223,7 +248,7 @@ export function SearchInterface({
 				<div className="min-w-0 flex-1">
 					<div className="mb-1 text-primary text-xs">Themes</div>
 					<MultiSelect
-						values={currentParams.themes}
+						values={optimisticThemes}
 						onValuesChange={handleThemeChange}
 					>
 						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">
@@ -253,7 +278,7 @@ export function SearchInterface({
 				<div className="min-w-0 flex-1">
 					<div className="mb-1 text-primary text-xs">Tags</div>
 					<MultiSelect
-						values={currentParams.tags}
+						values={optimisticTags}
 						onValuesChange={handleTagsChange}
 					>
 						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">

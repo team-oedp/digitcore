@@ -1,29 +1,84 @@
-import { FILTER_OPTIONS_QUERY } from "~/sanity/lib/filter-options";
-import { sanityFetch } from "~/sanity/lib/live";
+"use client";
+
+import { useEffect, useState } from "react";
+import { fetchFilterOptions, type FilterOption } from "~/app/actions/filter-options";
+import { logger, createLogLocation } from "~/lib/logger";
 import { SearchInterface } from "./search-interface";
 
-export async function SearchInterfaceWrapper() {
-	// Fetch filter options from Sanity
-	const { data: filterOptions } = await sanityFetch({
-		query: FILTER_OPTIONS_QUERY,
-	});
+interface FilterOptions {
+	audiences: FilterOption[];
+	themes: FilterOption[];
+	tags: FilterOption[];
+}
 
-	// Provide default options if fetch fails and filter out null labels
-	const audiences = (filterOptions?.audiences || []).filter(
-		(item): item is typeof item & { label: string } => item.label !== null,
-	);
-	const themes = (filterOptions?.themes || []).filter(
-		(item): item is typeof item & { label: string } => item.label !== null,
-	);
-	const tags = (filterOptions?.tags || []).filter(
-		(item): item is typeof item & { label: string } => item.label !== null,
-	);
+export function SearchInterfaceWrapper() {
+	const location = createLogLocation("search-interface-wrapper.tsx", "SearchInterfaceWrapper");
+	const [filterOptions, setFilterOptions] = useState<FilterOptions>({
+		audiences: [],
+		themes: [],
+		tags: []
+	});
+	const [isLoading, setIsLoading] = useState(true);
+	const [componentId] = useState(() => Math.random().toString(36).substring(7));
+
+	logger.debug("client", "SearchInterfaceWrapper mounted", { componentId }, location);
+
+	useEffect(() => {
+		const loadFilterOptions = async () => {
+			try {
+				logger.debug("client", "Calling fetchFilterOptions server action", { componentId }, location);
+				
+				const startTime = Date.now();
+				const result = await fetchFilterOptions();
+				const endTime = Date.now();
+				
+				logger.debug("client", "Filter options server action completed", { 
+					componentId,
+					executionTime: `${endTime - startTime}ms`,
+					success: result.success
+				}, location);
+
+				if (result.success && result.data) {
+					setFilterOptions(result.data);
+					
+					logger.debug("client", "Filter options loaded successfully", { 
+						componentId,
+						audienceCount: result.data.audiences.length,
+						themeCount: result.data.themes.length,
+						tagCount: result.data.tags.length
+					}, location);
+				} else {
+					logger.error("client", "Failed to load filter options", result.error, location);
+					// Keep empty arrays as defaults
+				}
+				
+			} catch (error) {
+				logger.error("client", "Filter options server action failed", error, location);
+				// Keep empty arrays as defaults
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		loadFilterOptions();
+	}, [componentId]);
+
+	// Track component lifecycle
+	useEffect(() => {
+		return () => {
+			logger.debug("client", "SearchInterfaceWrapper unmounted", { componentId }, location);
+		};
+	}, [componentId]);
+
+	if (isLoading) {
+		return <div className="animate-pulse h-32 bg-zinc-100 rounded" />;
+	}
 
 	return (
 		<SearchInterface
-			audienceOptions={audiences}
-			themeOptions={themes}
-			tagOptions={tags}
+			audienceOptions={filterOptions.audiences}
+			themeOptions={filterOptions.themes}
+			tagOptions={filterOptions.tags}
 		/>
 	);
 }

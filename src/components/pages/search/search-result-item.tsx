@@ -7,6 +7,14 @@ import {
 	Tag01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useState } from "react";
+import type { SearchPattern } from "~/app/actions/search";
+import { 
+	truncateWithContext, 
+	highlightMatches, 
+	hasMatchInTitle,
+	getMatchExplanation 
+} from "~/lib/search-utils";
 import { SearchResultPreview } from "./search-result-preview";
 
 // Base search result type
@@ -89,7 +97,8 @@ type SearchResultData =
 	| SolutionSearchResultData;
 
 type SearchResultItemProps = {
-	pattern: SearchResultData;
+	pattern: SearchPattern;
+	searchTerm?: string;
 };
 
 // Shared base layout component
@@ -130,13 +139,22 @@ function SearchResultBase({
 // Pattern Search Result Component
 function PatternSearchResult({
 	pattern,
-}: { pattern: PatternSearchResultData }) {
+	searchTerm = "",
+}: { pattern: PatternSearchResultData; searchTerm?: string }) {
+	const [showFullDescription, setShowFullDescription] = useState(false);
 	const title = pattern.title || "Untitled Pattern";
 	const theme = pattern.themes?.[0];
 	const tags = pattern.tags || [];
 	const audiences = pattern.audiences || [];
-	const description =
-		pattern.description?.[0]?.children?.[0]?.text || "No description available";
+	const rawDescription = pattern.description || [];
+
+	// Process description for search context
+	const descriptionResult = truncateWithContext(rawDescription, searchTerm, 200);
+	const displayDescription = showFullDescription ? rawDescription : descriptionResult.text;
+	
+	// Check where matches occur
+	const matchExplanation = getMatchExplanation(title, rawDescription, searchTerm);
+	const titleHasMatch = hasMatchInTitle(title, searchTerm);
 
 	const buttonElement = (
 		<a
@@ -154,7 +172,7 @@ function PatternSearchResult({
 	);
 
 	return (
-		<SearchResultPreview description={description} patternTitle={title}>
+		<SearchResultPreview description={displayDescription} patternTitle={title}>
 			<SearchResultBase title={title} buttonElement={buttonElement}>
 				{/* Theme Badge */}
 				{theme && (
@@ -168,6 +186,44 @@ function PatternSearchResult({
 								className="h-3.5 w-3.5 text-zinc-500"
 							/>
 						</div>
+					</div>
+				)}
+
+				{/* Description with Search Context */}
+				{descriptionResult.text && (
+					<div className="mb-4">
+						<div 
+							className="text-sm text-zinc-600 leading-relaxed"
+							dangerouslySetInnerHTML={{ 
+								__html: highlightMatches(displayDescription, searchTerm) 
+							}}
+						/>
+						
+						{/* Match Indicators */}
+						{searchTerm && (matchExplanation.titleMatch || matchExplanation.descriptionMatch) && (
+							<div className="mt-2 flex items-center gap-2 text-xs text-zinc-500">
+								<span>Match found in:</span>
+								{matchExplanation.titleMatch && (
+									<span className="bg-blue-100 text-blue-700 px-2 py-1 rounded">Title</span>
+								)}
+								{matchExplanation.descriptionMatch && (
+									<span className="bg-green-100 text-green-700 px-2 py-1 rounded">Description</span>
+								)}
+								{descriptionResult.matchCount > 1 && (
+									<span className="text-zinc-400">({descriptionResult.matchCount} matches)</span>
+								)}
+							</div>
+						)}
+						
+						{/* Expand/Collapse Toggle */}
+						{descriptionResult.isTruncated && (
+							<button
+								onClick={() => setShowFullDescription(!showFullDescription)}
+								className="mt-2 text-xs text-blue-600 hover:text-blue-800"
+							>
+								{showFullDescription ? 'Show less' : 'Show more'}
+							</button>
+						)}
 					</div>
 				)}
 
@@ -218,7 +274,8 @@ function PatternSearchResult({
 // Resource Search Result Component
 function ResourceSearchResult({
 	pattern,
-}: { pattern: ResourceSearchResultData }) {
+	searchTerm = "",
+}: { pattern: ResourceSearchResultData; searchTerm?: string }) {
 	const title = pattern.title || "Untitled Resource";
 	const solutions = pattern.solutions || [];
 	const patternInfo = pattern.pattern;
@@ -300,7 +357,8 @@ function ResourceSearchResult({
 // Solution Search Result Component
 function SolutionSearchResult({
 	pattern,
-}: { pattern: SolutionSearchResultData }) {
+	searchTerm = "",
+}: { pattern: SolutionSearchResultData; searchTerm?: string }) {
 	const title = pattern.title || "Untitled Solution";
 	const audiences = pattern.audiences || [];
 	const patternInfo = pattern.pattern;
@@ -380,18 +438,18 @@ function SolutionSearchResult({
 }
 
 // Main component that routes to the appropriate sub-component
-export function SearchResultItem({ pattern }: SearchResultItemProps) {
+export function SearchResultItem({ pattern, searchTerm }: SearchResultItemProps) {
 	switch (pattern._type) {
 		case "pattern":
-			return <PatternSearchResult pattern={pattern} />;
+			return <PatternSearchResult pattern={pattern as PatternSearchResultData} searchTerm={searchTerm} />;
 		case "resource":
-			return <ResourceSearchResult pattern={pattern} />;
+			return <ResourceSearchResult pattern={pattern as ResourceSearchResultData} searchTerm={searchTerm} />;
 		case "solution":
-			return <SolutionSearchResult pattern={pattern} />;
+			return <SolutionSearchResult pattern={pattern as SolutionSearchResultData} searchTerm={searchTerm} />;
 		default:
-			// Fallback for unknown types
+			// Fallback for unknown types - default to pattern
 			return (
-				<PatternSearchResult pattern={pattern as PatternSearchResultData} />
+				<PatternSearchResult pattern={pattern as PatternSearchResultData} searchTerm={searchTerm} />
 			);
 	}
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -13,51 +14,20 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "~/components/ui/select";
 
 type SuggestSolutionModalProps = {
 	patternName: string;
+	patternSlug: string;
 	trigger: React.ReactNode;
 };
 
-const PATTERN_OPTIONS = [
-	"Enhance frontline communities' agency",
-	"Respect frontline communities' time and effort",
-	"Build inclusive collaboration",
-	"Practice transparent communication",
-	"Ensure data sovereignty",
-	"Foster community ownership",
-	"Create accessible tools",
-	"Support local knowledge",
-	"Enable community control",
-	"Promote environmental justice",
-	"Build trust through accountability",
-	"Respect cultural protocols",
-	"Ensure equitable participation",
-	"Support capacity building",
-	"Create sustainable partnerships",
-	"Honor indigenous knowledge",
-	"Enable community-led research",
-	"Support grassroots organizing",
-	"Build solidarity networks",
-	"Create transformative outcomes",
-	"Enable collective action",
-	"Support community resilience",
-];
-
 export function SuggestSolutionModal({
 	patternName,
+	patternSlug,
 	trigger,
 }: SuggestSolutionModalProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [formData, setFormData] = useState({
-		pattern: patternName,
 		newSolutions: "",
 		newResources: "",
 		additionalFeedback: "",
@@ -74,12 +44,11 @@ export function SuggestSolutionModal({
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log("Form submitted:", formData);
+		console.log("Form submitted:", { patternName, patternSlug, ...formData });
 		// Here you would typically send the data to your backend or Google Forms
 		setIsOpen(false);
 		// Reset form
 		setFormData({
-			pattern: patternName,
 			newSolutions: "",
 			newResources: "",
 			additionalFeedback: "",
@@ -101,29 +70,15 @@ export function SuggestSolutionModal({
 				</DialogHeader>
 
 				<form onSubmit={handleSubmit} className="space-y-6">
-					<div className="space-y-2">
-						<Label htmlFor="pattern">
-							Pattern <span className="text-red-500">*</span>
-						</Label>
-						<Select
-							value={formData.pattern}
-							onValueChange={(value) => handleInputChange("pattern", value)}
-						>
-							<SelectTrigger>
-								<SelectValue placeholder="Please select the pattern that you'd like to contribute to" />
-							</SelectTrigger>
-							<SelectContent>
-								{PATTERN_OPTIONS.map((option) => (
-									<SelectItem key={option} value={option}>
-										{option}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
+					<div className="space-y-3">
+						<Label className="block">Pattern</Label>
+						<Badge variant="secondary">{patternName}</Badge>
 					</div>
 
-					<div className="space-y-2">
-						<Label htmlFor="newSolutions">New Solution(s)</Label>
+					<div>
+						<Label htmlFor="newSolutions" className="pb-2">
+							New Solution(s)
+						</Label>
 						<textarea
 							id="newSolutions"
 							className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -135,8 +90,10 @@ export function SuggestSolutionModal({
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<Label htmlFor="newResources">New Resource(s)</Label>
+					<div>
+						<Label htmlFor="newResources" className="pb-2">
+							New Resource(s)
+						</Label>
 						<textarea
 							id="newResources"
 							className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -148,8 +105,10 @@ export function SuggestSolutionModal({
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<Label htmlFor="additionalFeedback">Additional Feedback</Label>
+					<div>
+						<Label htmlFor="additionalFeedback" className="pb-2">
+							Additional Feedback
+						</Label>
 						<textarea
 							id="additionalFeedback"
 							className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -161,8 +120,10 @@ export function SuggestSolutionModal({
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<Label htmlFor="nameAndAffiliation">Name and Affiliation</Label>
+					<div>
+						<Label htmlFor="nameAndAffiliation" className="pb-2">
+							Name and Affiliation
+						</Label>
 						<Input
 							id="nameAndAffiliation"
 							placeholder="If you would like to be credited on the website, how would you like your name and affiliation to be listed? (Full name and max 2 affiliations)"
@@ -173,8 +134,8 @@ export function SuggestSolutionModal({
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<Label htmlFor="email">
+					<div>
+						<Label htmlFor="email" className="pb-2">
 							Email <span className="text-red-500">*</span>
 						</Label>
 						<Input
@@ -187,15 +148,18 @@ export function SuggestSolutionModal({
 						/>
 					</div>
 
-					<DialogFooter>
+					<DialogFooter className="flex w-full gap-2">
 						<Button
+							className="flex-1"
 							type="button"
 							variant="outline"
 							onClick={() => setIsOpen(false)}
 						>
 							Cancel
 						</Button>
-						<Button type="submit">Submit Suggestion</Button>
+						<Button type="submit" className="flex-1">
+							Submit Suggestion
+						</Button>
 					</DialogFooter>
 				</form>
 			</DialogContent>
