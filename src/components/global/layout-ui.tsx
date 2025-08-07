@@ -2,48 +2,54 @@
 
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
 import { SiteHeader } from "~/components/global/site-header";
-import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
+import {
+	SidebarInset,
+	SidebarProvider,
+	useSidebar,
+} from "~/components/ui/sidebar";
+import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
-import { CarrierBagSidebarModal } from "./carrier-bag/carrier-bag-sidebar-modal";
-import SiteFooter from "./site-footer";
 
 type LayoutUIProps = {
 	children: React.ReactNode;
 };
+
+function LayoutElements({ children }: LayoutUIProps) {
+	const { open } = useSidebar();
+
+	return (
+		<>
+			<SiteHeader />
+			<div
+				className={cn(
+					"flex flex-1 overflow-hidden bg-neutral-200 p-2 pt-16.5",
+					open && "gap-2.5",
+				)}
+			>
+				<SidebarInset className="flex flex-1 flex-col overflow-hidden rounded-md">
+					<main className="flex flex-1 flex-col overflow-y-auto rounded-md bg-primary-foreground">
+						{children}
+					</main>
+				</SidebarInset>
+				<CarrierBagSidebar />
+			</div>
+		</>
+	);
+}
 
 export function LayoutUI({ children }: LayoutUIProps) {
 	const isModalMode = useCarrierBagStore((state) => state.isModalMode);
 
 	return (
 		<SidebarProvider
-			className="flex min-h-screen flex-col bg-background pt-[var(--header-height)]"
+			className="flex h-screen flex-col gap-2.5"
 			style={
 				{
 					"--sidebar-width": "22rem",
 				} as React.CSSProperties
 			}
 		>
-			{/* <SiteHeader />
-			<div className="flex flex-1">
-				<SidebarInset className="flex flex-1 flex-col">
-					<main className="m-2 flex flex-1 flex-col rounded-md bg-primary-foreground">
-						{children}
-					</main>
-				</SidebarInset>
-				{!isModalMode && <CarrierBagSidebar />}
-			</div>
-			{isModalMode && <CarrierBagSidebarModal />} */}
-			<SidebarInset className="flex min-h-screen flex-col">
-				<SiteHeader />
-				<main className="sticky inset-x-2 top-[calc(var(--header-height)+var(--spacing(2)))] flex h-full flex-1 flex-col rounded-md bg-primary-foreground">
-					{children}
-				</main>
-				<SiteFooter />
-			</SidebarInset>
-			{!isModalMode && <CarrierBagSidebar />}
-			{isModalMode && <CarrierBagSidebarModal />}
-
-			<SiteFooter />
+			<LayoutElements>{children}</LayoutElements>
 		</SidebarProvider>
 	);
 }

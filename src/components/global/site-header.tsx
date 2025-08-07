@@ -31,7 +31,7 @@ export function SiteHeader() {
 
 	const pathname = usePathname();
 	return (
-		<header className="fixed inset-x-2 top-2 z-50 flex items-center rounded-md border border-black bg-primary-foreground">
+		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-primary-foreground">
 			<nav className="flex w-full items-center justify-between gap-3.5 px-3.5 py-1.5">
 				<div className="flex w-full items-center gap-10">
 					<Button
@@ -42,8 +42,8 @@ export function SiteHeader() {
 							pathname === "/" ? "text-foreground" : "text-muted-foreground",
 						)}
 					>
-						<Link href="/" className="flex items-center gap-3.5">
-							<span className="font-normal text-sm">Digitcore</span>
+						<Link href="/" className="text-sm">
+							Digitcore
 						</Link>
 					</Button>
 
