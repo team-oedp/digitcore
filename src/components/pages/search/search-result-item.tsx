@@ -7,6 +7,15 @@ import {
 	Tag01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useState } from "react";
+import type { SearchPattern } from "~/app/actions/search";
+import {
+	extractTextFromPortableText,
+	getMatchExplanation,
+	hasMatchInTitle,
+	highlightMatches,
+	truncateWithContext,
+} from "~/lib/search-utils";
 import { SearchResultPreview } from "./search-result-preview";
 
 // Base search result type
@@ -89,7 +98,8 @@ type SearchResultData =
 	| SolutionSearchResultData;
 
 type SearchResultItemProps = {
-	pattern: SearchResultData;
+	pattern: SearchPattern;
+	searchTerm?: string;
 };
 
 // Shared base layout component
@@ -130,13 +140,32 @@ function SearchResultBase({
 // Pattern Search Result Component
 function PatternSearchResult({
 	pattern,
-}: { pattern: PatternSearchResultData }) {
+	searchTerm = "",
+}: { pattern: PatternSearchResultData; searchTerm?: string }) {
+	const [showFullDescription, setShowFullDescription] = useState(false);
 	const title = pattern.title || "Untitled Pattern";
 	const theme = pattern.themes?.[0];
 	const tags = pattern.tags || [];
 	const audiences = pattern.audiences || [];
-	const description =
-		pattern.description?.[0]?.children?.[0]?.text || "No description available";
+	const rawDescription = pattern.description || [];
+
+	// Process description for search context
+	const descriptionResult = truncateWithContext(
+		extractTextFromPortableText(rawDescription),
+		searchTerm,
+		200,
+	);
+	const displayDescription = showFullDescription
+		? extractTextFromPortableText(rawDescription)
+		: descriptionResult.text;
+
+	// Check where matches occur
+	const matchExplanation = getMatchExplanation(
+		title,
+		rawDescription,
+		searchTerm,
+	);
+	const titleHasMatch = hasMatchInTitle(title, searchTerm);
 
 	const buttonElement = (
 		<a
@@ -154,7 +183,7 @@ function PatternSearchResult({
 	);
 
 	return (
-		<SearchResultPreview description={description} patternTitle={title}>
+		<SearchResultPreview description={displayDescription} patternTitle={title}>
 			<SearchResultBase title={title} buttonElement={buttonElement}>
 				{/* Theme Badge */}
 				{theme && (
@@ -168,6 +197,51 @@ function PatternSearchResult({
 								className="h-3.5 w-3.5 text-zinc-500"
 							/>
 						</div>
+					</div>
+				)}
+
+				{/* Description with Search Context */}
+				{descriptionResult.text && (
+					<div className="mb-4">
+						{/* Replace dangerouslySetInnerHTML with React-based rendering */}
+						<span className="text-sm text-zinc-600 leading-relaxed">
+							{renderHighlightedText(displayDescription, searchTerm)}
+						</span>
+
+						{/* Match Indicators */}
+						{searchTerm &&
+							(matchExplanation.titleMatch ||
+								matchExplanation.descriptionMatch) && (
+								<div className="mt-2 flex items-center gap-2 text-xs text-zinc-500">
+									<span>Match found in:</span>
+									{matchExplanation.titleMatch && (
+										<span className="rounded bg-blue-100 px-2 py-1 text-blue-700">
+											Title
+										</span>
+									)}
+									{matchExplanation.descriptionMatch && (
+										<span className="rounded bg-green-100 px-2 py-1 text-green-700">
+											Description
+										</span>
+									)}
+									{descriptionResult.matchCount > 1 && (
+										<span className="text-zinc-400">
+											({descriptionResult.matchCount} matches)
+										</span>
+									)}
+								</div>
+							)}
+
+						{/* Expand/Collapse Toggle */}
+						{descriptionResult.isTruncated && (
+							<button
+								onClick={() => setShowFullDescription(!showFullDescription)}
+								className="mt-2 text-blue-600 text-xs hover:text-blue-800"
+								type="button"
+							>
+								{showFullDescription ? "Show less" : "Show more"}
+							</button>
+						)}
 					</div>
 				)}
 
@@ -218,7 +292,8 @@ function PatternSearchResult({
 // Resource Search Result Component
 function ResourceSearchResult({
 	pattern,
-}: { pattern: ResourceSearchResultData }) {
+	searchTerm = "",
+}: { pattern: ResourceSearchResultData; searchTerm?: string }) {
 	const title = pattern.title || "Untitled Resource";
 	const solutions = pattern.solutions || [];
 	const patternInfo = pattern.pattern;
@@ -300,7 +375,8 @@ function ResourceSearchResult({
 // Solution Search Result Component
 function SolutionSearchResult({
 	pattern,
-}: { pattern: SolutionSearchResultData }) {
+	searchTerm = "",
+}: { pattern: SolutionSearchResultData; searchTerm?: string }) {
 	const title = pattern.title || "Untitled Solution";
 	const audiences = pattern.audiences || [];
 	const patternInfo = pattern.pattern;
@@ -380,18 +456,75 @@ function SolutionSearchResult({
 }
 
 // Main component that routes to the appropriate sub-component
-export function SearchResultItem({ pattern }: SearchResultItemProps) {
+export function SearchResultItem({
+	pattern,
+	searchTerm,
+}: SearchResultItemProps) {
 	switch (pattern._type) {
 		case "pattern":
-			return <PatternSearchResult pattern={pattern} />;
-		case "resource":
-			return <ResourceSearchResult pattern={pattern} />;
-		case "solution":
-			return <SolutionSearchResult pattern={pattern} />;
-		default:
-			// Fallback for unknown types
 			return (
-				<PatternSearchResult pattern={pattern as PatternSearchResultData} />
+				<PatternSearchResult
+					pattern={pattern as PatternSearchResultData}
+					searchTerm={searchTerm}
+				/>
+			);
+		case "resource":
+			return (
+				<ResourceSearchResult
+					pattern={pattern as ResourceSearchResultData}
+					searchTerm={searchTerm}
+				/>
+			);
+		case "solution":
+			return (
+				<SolutionSearchResult
+					pattern={pattern as SolutionSearchResultData}
+					searchTerm={searchTerm}
+				/>
+			);
+		default:
+			// Fallback for unknown types - default to pattern
+			return (
+				<PatternSearchResult
+					pattern={pattern as PatternSearchResultData}
+					searchTerm={searchTerm}
+				/>
 			);
 	}
+}
+
+function renderHighlightedText(text: string, searchTerm: string) {
+	if (!searchTerm.trim()) return text;
+	const highlighted = highlightMatches(text, searchTerm);
+	const parts = highlighted.split(
+		/(<mark class="bg-yellow-200 rounded-sm">|<\/mark>)/g,
+	);
+	const result: React.ReactNode[] = [];
+	let inMark = false;
+	let markBuffer = "";
+	let markKey = 0;
+	for (const part of parts) {
+		if (part === '<mark class="bg-yellow-200 rounded-sm">') {
+			inMark = true;
+			markBuffer = "";
+		} else if (part === "</mark>") {
+			if (inMark) {
+				result.push(
+					<mark
+						key={`highlight-${markKey++}`}
+						className="rounded-sm bg-yellow-200"
+					>
+						{markBuffer}
+					</mark>,
+				);
+				markBuffer = "";
+				inMark = false;
+			}
+		} else if (inMark) {
+			markBuffer += part;
+		} else {
+			result.push(part);
+		}
+	}
+	return result;
 }

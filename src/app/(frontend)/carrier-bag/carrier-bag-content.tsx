@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
+import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import { Button } from "~/components/ui/button";
 import {
 	Card,
@@ -11,6 +12,7 @@ import {
 	CardTitle,
 } from "~/components/ui/card";
 import { useHydration } from "~/hooks/use-hydration";
+import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 
 interface PatternCardProps {
@@ -85,6 +87,7 @@ function PatternCard({ item, onRemove }: PatternCardProps) {
 export function CarrierBagContent() {
 	const hydrated = useHydration();
 	const { items, removePattern } = useCarrierBagStore();
+	const documentData = useCarrierBagDocument(items);
 
 	if (!hydrated) {
 		return (
@@ -124,9 +127,15 @@ export function CarrierBagContent() {
 				<p className="text-muted-foreground">
 					{items.length} pattern{items.length !== 1 ? "s" : ""} in your bag
 				</p>
-				<Button variant="outline" size="sm" asChild>
-					<Link href="/tags">Browse more patterns</Link>
-				</Button>
+				<div className="flex items-center gap-3">
+					<PDFPreviewModal
+						documentData={documentData}
+						disabled={items.length === 0}
+					/>
+					<Button variant="outline" size="sm" asChild>
+						<Link href="/tags">Browse more patterns</Link>
+					</Button>
+				</div>
 			</div>
 
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

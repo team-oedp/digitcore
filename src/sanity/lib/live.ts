@@ -2,14 +2,15 @@
 // Before using it, import and render "<SanityLive />" in your layout, see
 // https://github.com/sanity-io/next-sanity#live-content-api for more information.
 import { defineLive } from "next-sanity";
+import { apiVersion } from "~/sanity/env";
 import { client } from "./client";
 import { token } from "./token";
 
 export const { sanityFetch, SanityLive } = defineLive({
 	client: client.withConfig({
-		// Live content is currently only available on the experimental API
-		// https://www.sanity.io/docs/api-versioning
-		apiVersion: "vX",
+		// Live content requires API version v2021-03-25 or later
+		// https://www.sanity.io/docs/live-content-api
+		apiVersion,
 	}),
 	// Required for showing draft content when the Sanity Presentation Tool is used, or to enable the Vercel Toolbar Edit Mode
 	serverToken: token,
