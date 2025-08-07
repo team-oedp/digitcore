@@ -33,7 +33,7 @@ export function SearchResultsHeaderClient({
 
 		// Check if we have any search criteria
 		hasSearchCriteria =
-			searchQuery.trim() ||
+			!!searchQuery.trim() ||
 			parsedParams.audiences.length > 0 ||
 			parsedParams.themes.length > 0 ||
 			parsedParams.tags.length > 0;
