@@ -2,15 +2,14 @@
 
 import { Link, PanelRightOpen, SidebarIcon } from "lucide-react";
 
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { SearchForm } from "~/components/global/search-form";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { useSidebar } from "~/components/ui/sidebar";
+import { useHydration } from "~/hooks/use-hydration";
 import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
-import SiteIcon from "../../../public/oedp-icon.png";
 import { LanguageSelector } from "../theme/language-selector";
 import { ModeToggle } from "../theme/mode-toggle";
 import { CommandMenu } from "./command-menu";
@@ -21,6 +20,7 @@ export function SiteHeader() {
 	const toggleModalMode = useCarrierBagStore((state) => state.toggleModalMode);
 	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
 	const setOpen = useCarrierBagStore((state) => state.setOpen);
+	const hydrated = useHydration();
 
 	const handleModalModeToggle = () => {
 		toggleModalMode();
@@ -32,9 +32,9 @@ export function SiteHeader() {
 
 	const pathname = usePathname();
 	return (
-		<header className="sticky top-2 z-50 flex h-14 w-full items-center rounded-md bg-primary-foreground">
+		<header className="fixed inset-x-2 top-2 z-50 flex items-center rounded-md border border-black bg-primary-foreground">
 			<nav className="flex w-full items-center justify-between gap-3.5 px-3.5 py-1.5">
-				<div className="flex items-center gap-10">
+				<div className="flex w-full items-center gap-10">
 					<Button
 						variant="link"
 						asChild
@@ -44,13 +44,6 @@ export function SiteHeader() {
 						)}
 					>
 						<Link href="/" className="flex items-center gap-3.5">
-							<Image
-								src={SiteIcon}
-								alt="Digitcore Logo"
-								width={24}
-								height={24}
-								className="h-auto w-6"
-							/>
 							<span className="font-normal text-sm">Digitcore</span>
 						</Link>
 					</Button>
@@ -163,24 +156,28 @@ export function SiteHeader() {
 				<LanguageSelector />
 				<ModeToggle />
 				<CommandMenu />
-				<Button
-					className="h-8 w-8"
-					variant={isModalMode ? "default" : "ghost"}
-					size="icon"
-					onClick={handleModalModeToggle}
-					title={isModalMode ? "Switch to Sidebar" : "Switch to Modal"}
-				>
-					<PanelRightOpen />
-				</Button>
-				<Button
-					className="h-8 w-8"
-					variant="ghost"
-					size="icon"
-					onClick={isModalMode ? toggleOpen : toggleSidebar}
-					title="Toggle Sidebar"
-				>
-					<SidebarIcon />
-				</Button>
+				{hydrated && (
+					<Button
+						className="h-8 w-8"
+						variant={isModalMode ? "default" : "ghost"}
+						size="icon"
+						onClick={handleModalModeToggle}
+						title={isModalMode ? "Switch to Sidebar" : "Switch to Modal"}
+					>
+						<PanelRightOpen />
+					</Button>
+				)}
+				{hydrated && (
+					<Button
+						className="h-8 w-8"
+						variant="ghost"
+						size="icon"
+						onClick={isModalMode ? toggleOpen : toggleSidebar}
+						title="Toggle Sidebar"
+					>
+						<SidebarIcon />
+					</Button>
+				)}
 			</nav>
 		</header>
 	);

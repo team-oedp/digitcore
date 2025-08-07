@@ -116,7 +116,7 @@ export const createCarrierBagStore = () =>
 			}),
 			{
 				name: "carrier-bag",
-				storage: createJSONStorage(() => sessionStorage),
+				storage: createJSONStorage(() => localStorage),
 				onRehydrateStorage: () => (state) => {
 					state?.setHydrated(true);
 				},
