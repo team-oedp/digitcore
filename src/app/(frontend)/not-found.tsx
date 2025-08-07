@@ -1,7 +1,7 @@
 import { ComputerRemoveIcon } from "@hugeicons/core-free-icons";
 import { Home } from "lucide-react";
 import Link from "next/link";
-import { Icon } from "~/components/global/icon";
+import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
 
 export default function NotFound() {

@@ -1,23 +1,38 @@
 "use client";
 
-import { Globe02Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { Link, PanelRightOpen, SidebarIcon } from "lucide-react";
+
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { SearchForm } from "~/components/global/search-form";
+import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
+import { useSidebar } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
+import { useCarrierBagStore } from "~/stores/carrier-bag";
+import SiteIcon from "../../../public/oedp-icon.png";
 import { LanguageSelector } from "../theme/language-selector";
 import { ModeToggle } from "../theme/mode-toggle";
-import { Button } from "../ui/button";
-import { SidebarTrigger } from "../ui/sidebar";
 import { CommandMenu } from "./command-menu";
 
-export function Header() {
+export function SiteHeader() {
+	const { toggleSidebar } = useSidebar();
+	const isModalMode = useCarrierBagStore((state) => state.isModalMode);
+	const toggleModalMode = useCarrierBagStore((state) => state.toggleModalMode);
+	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
+	const setOpen = useCarrierBagStore((state) => state.setOpen);
+
+	const handleModalModeToggle = () => {
+		toggleModalMode();
+		// When switching to modal mode, ensure the modal is open
+		if (!isModalMode) {
+			setOpen(true);
+		}
+	};
+
 	const pathname = usePathname();
-	const [commandOpen, setCommandOpen] = useState(false);
 	return (
-		<header className="sticky top-2 z-50 mx-2 my-2 rounded-md bg-primary-foreground">
+		<header className="sticky top-2 z-50 flex h-14 w-full items-center rounded-md bg-primary-foreground">
 			<nav className="flex w-full items-center justify-between gap-3.5 px-3.5 py-1.5">
 				<div className="flex items-center gap-10">
 					<Button
@@ -30,11 +45,11 @@ export function Header() {
 					>
 						<Link href="/" className="flex items-center gap-3.5">
 							<Image
-								src="/icon.png"
+								src={SiteIcon}
 								alt="Digitcore Logo"
-								width={16}
-								height={16}
-								className="h-6 w-6"
+								width={24}
+								height={24}
+								className="h-auto w-6"
 							/>
 							<span className="font-normal text-sm">Digitcore</span>
 						</Link>
@@ -143,13 +158,29 @@ export function Header() {
 						</ul>
 					</nav>
 				</div>
-
-				<div className="flex items-center gap-3.5">
-					<LanguageSelector />
-					<ModeToggle />
-					<CommandMenu />
-					<SidebarTrigger className="-ml-1" />
-				</div>
+				<SearchForm className="w-full sm:ml-auto sm:w-auto" />
+				<Separator orientation="vertical" className="ml-2 h-4" />
+				<LanguageSelector />
+				<ModeToggle />
+				<CommandMenu />
+				<Button
+					className="h-8 w-8"
+					variant={isModalMode ? "default" : "ghost"}
+					size="icon"
+					onClick={handleModalModeToggle}
+					title={isModalMode ? "Switch to Sidebar" : "Switch to Modal"}
+				>
+					<PanelRightOpen />
+				</Button>
+				<Button
+					className="h-8 w-8"
+					variant="ghost"
+					size="icon"
+					onClick={isModalMode ? toggleOpen : toggleSidebar}
+					title="Toggle Sidebar"
+				>
+					<SidebarIcon />
+				</Button>
 			</nav>
 		</header>
 	);
