@@ -78,7 +78,17 @@ export default async function PatternsPage() {
 							<div className="space-y-0">
 								{group.patterns && group.patterns.length > 0 ? (
 									group.patterns.map((pattern) => (
-										<SearchResultItem key={pattern._id} pattern={pattern} />
+										<SearchResultItem
+											key={pattern._id}
+											pattern={{
+												...pattern,
+												audiences:
+													pattern.audiences?.map((aud) => ({
+														...aud,
+														title: aud.title === null ? undefined : aud.title,
+													})) ?? null,
+											}}
+										/>
 									))
 								) : (
 									<div className="p-4 text-gray-500 italic">
