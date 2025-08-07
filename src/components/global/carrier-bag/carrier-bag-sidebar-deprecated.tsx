@@ -1,35 +1,37 @@
 "use client";
 
-import { Command } from "lucide-react";
-import type * as React from "react";
-
-import { Button } from "~/components/ui/button";
+import {
+	ArrowExpand02Icon,
+	Cancel01Icon,
+	SidebarRightIcon,
+} from "@hugeicons/core-free-icons";
+import {
+	CarrierBagItem,
+	type CarrierBagItemData,
+} from "~/components/global/carrier-bag/carrier-bag-item";
 import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
 	SidebarGroup,
 	SidebarHeader,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
 } from "~/components/ui/sidebar";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
-import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
+import { Icon } from "../../shared/icon";
+import { Button } from "../../ui/button";
 
-export const iframeHeight = "800px";
-
-export const description = "A sidebar with a header and a search form.";
-
-export function CarrierBagSidebar({
+export function CarrierBagSidebarDeprecated({
 	...props
 }: React.ComponentProps<typeof Sidebar>) {
-	const isHydrated = useCarrierBagStore((state) => state.isHydrated);
-	const isOpen = useCarrierBagStore((state) => state.isOpen);
-	const setOpen = useCarrierBagStore((state) => state.setOpen);
-	const items = useCarrierBagStore((state) => state.items);
-	const removePattern = useCarrierBagStore((state) => state.removePattern);
-	const clearBag = useCarrierBagStore((state) => state.clearBag);
+	const {
+		isHydrated,
+		isPinned,
+		togglePin,
+		setOpen,
+		items,
+		removePattern,
+		clearBag,
+	} = useCarrierBagStore();
 
 	const handleRemoveItem = (patternId: string) => {
 		removePattern(patternId);
@@ -43,26 +45,47 @@ export function CarrierBagSidebar({
 	return (
 		<Sidebar
 			side="right"
-			variant="inset"
-			className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
+			variant="floating"
+			className={`top-(--header-height) h-[calc(100svh-var(--header-height))]! ${
+				isPinned ? "fixed right-0 z-50 shadow-2xl" : ""
+			}`}
 			{...props}
 		>
 			<SidebarHeader>
-				<SidebarMenu>
-					<SidebarMenuItem>
-						<SidebarMenuButton size="lg" asChild>
-							<a href="www.google.com">
-								<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-									<Command className="size-4" />
-								</div>
-								<div className="grid flex-1 text-left text-sm leading-tight">
-									<span className="truncate font-medium">Carrier Bag</span>
-									<span className="truncate text-xs">Saved Patterns</span>
-								</div>
-							</a>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
-				</SidebarMenu>
+				<div className="flex items-center justify-between p-5">
+					<h3 className="font-normal text-lg text-primary">Carrier Bag</h3>
+					<div className="flex items-center gap-1">
+						<Button
+							variant="ghost"
+							size="sm"
+							className="h-8 w-8 p-0"
+							type="button"
+							aria-label="Pin Sidebar to Page"
+							onClick={togglePin}
+						>
+							<Icon icon={SidebarRightIcon} size={16} />
+						</Button>
+						<Button
+							variant="ghost"
+							size="sm"
+							className="h-8 w-8 p-0"
+							type="button"
+							aria-label="Expand Sidebar"
+						>
+							<Icon icon={ArrowExpand02Icon} size={16} />
+						</Button>
+						<Button
+							variant="ghost"
+							size="sm"
+							className="h-8 w-8 p-0"
+							type="button"
+							aria-label="Close Sidebar"
+							onClick={() => setOpen(false)}
+						>
+							<Icon icon={Cancel01Icon} size={16} />
+						</Button>
+					</div>
+				</div>
 			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>

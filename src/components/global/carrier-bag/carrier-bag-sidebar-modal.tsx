@@ -1,29 +1,21 @@
 "use client";
 
-import { Command } from "lucide-react";
-import type * as React from "react";
+import { Command, X } from "lucide-react";
+import { useCarrierBagStore } from "~/stores/carrier-bag";
 
+import {
+	CarrierBagItem,
+	type CarrierBagItemData,
+} from "~/components/global/carrier-bag/carrier-bag-item";
 import { Button } from "~/components/ui/button";
 import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
 	SidebarGroup,
-	SidebarHeader,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
-} from "~/components/ui/sidebar";
-import { useCarrierBagStore } from "~/stores/carrier-bag";
-import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
+} from "../../ui/sidebar";
 
-export const iframeHeight = "800px";
-
-export const description = "A sidebar with a header and a search form.";
-
-export function CarrierBagSidebar({
-	...props
-}: React.ComponentProps<typeof Sidebar>) {
+export function CarrierBagSidebarModal() {
 	const isHydrated = useCarrierBagStore((state) => state.isHydrated);
 	const isOpen = useCarrierBagStore((state) => state.isOpen);
 	const setOpen = useCarrierBagStore((state) => state.setOpen);
@@ -40,31 +32,37 @@ export function CarrierBagSidebar({
 		window.location.href = `/pattern/${slug}`;
 	};
 
+	if (!isOpen) return null;
+
 	return (
-		<Sidebar
-			side="right"
-			variant="inset"
-			className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
-			{...props}
-		>
-			<SidebarHeader>
-				<SidebarMenu>
-					<SidebarMenuItem>
-						<SidebarMenuButton size="lg" asChild>
-							<a href="www.google.com">
-								<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-									<Command className="size-4" />
-								</div>
-								<div className="grid flex-1 text-left text-sm leading-tight">
-									<span className="truncate font-medium">Carrier Bag</span>
-									<span className="truncate text-xs">Saved Patterns</span>
-								</div>
-							</a>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
-				</SidebarMenu>
-			</SidebarHeader>
-			<SidebarContent>
+		<Sidebar className="fixed top-20 right-4 bottom-4 left-auto z-50 flex w-[var(--sidebar-width)] flex-col rounded-md border border-sidebar-border bg-sidebar shadow-lg">
+			{/* Header */}
+			<div className="flex items-center justify-between border-sidebar-border border-b p-4">
+				<div className="flex items-center gap-2">
+					<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+						<Command className="size-4" />
+					</div>
+					<div className="grid flex-1 text-left text-sm leading-tight">
+						<span className="truncate font-medium text-sidebar-foreground">
+							DIGITCORE
+						</span>
+						<span className="truncate text-sidebar-foreground/70 text-xs">
+							Patterns
+						</span>
+					</div>
+				</div>
+				<Button
+					variant="ghost"
+					size="icon"
+					className="h-6 w-6 text-sidebar-foreground/70 hover:text-sidebar-foreground"
+					onClick={() => setOpen(false)}
+				>
+					<X className="h-4 w-4" />
+				</Button>
+			</div>
+
+			{/* Content */}
+			<SidebarContent className="flex-1 overflow-auto p-2">
 				<SidebarGroup>
 					<div className="flex flex-col gap-2 p-2">
 						{!isHydrated ? (
@@ -101,6 +99,11 @@ export function CarrierBagSidebar({
 					</div>
 				</SidebarGroup>
 			</SidebarContent>
+
+			{/* Footer */}
+			{/* <div className="border-sidebar-border border-t p-2">
+					<NavUser user={data.user} />
+				</div> */}
 			<SidebarFooter>
 				<div className="flex flex-col gap-2.5 p-2">
 					<div className="flex flex-col items-end justify-end gap-2 px-6 py-4">

@@ -4,7 +4,7 @@ import "~/styles/globals.css";
 export const metadata: Metadata = {
 	title: "Digitcore",
 	description: "Digitcore Sanity Studio",
-	icons: [{ rel: "icon", url: "/icon.png" }],
+	icons: [{ rel: "icon", url: "/oedp-icon.png" }],
 };
 
 export default function RootLayout({
