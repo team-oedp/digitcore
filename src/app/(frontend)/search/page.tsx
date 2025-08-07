@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { PageHeader } from "~/components/global/page-header";
 import { PageWrapper } from "~/components/global/page-wrapper";
 import { SearchClientWrapper } from "~/components/pages/search/search-client-wrapper";
 import { SearchInterfaceWrapper } from "~/components/pages/search/search-interface-wrapper";
-import { SearchResultsHeader } from "~/components/pages/search/search-results-header";
-import { Separator } from "~/components/ui/separator";
 import { sanityFetch } from "~/sanity/lib/live";
 import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
 
@@ -34,7 +33,13 @@ export default async function SearchPage() {
 				)}
 				<div className="space-y-6">
 					<SearchInterfaceWrapper />
-					<SearchClientWrapper />
+					<Suspense
+						fallback={
+							<div className="h-32 animate-pulse rounded bg-zinc-100" />
+						}
+					>
+						<SearchClientWrapper />
+					</Suspense>
 				</div>
 			</div>
 		</PageWrapper>
