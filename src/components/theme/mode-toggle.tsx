@@ -1,7 +1,7 @@
 "use client";
 
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
-import { useState } from "react";
+import { useTheme } from "next-themes";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -11,25 +11,22 @@ import {
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
-type Theme = "light" | "dark" | "system";
-
 export function ModeToggle() {
-	const [theme, setTheme] = useState<Theme>("system");
-
-	// For demo purposes, we'll simulate system preference as "light"
-	const systemPreference = "light";
-	const displayTheme = theme === "system" ? systemPreference : theme;
+	const { setTheme, theme, resolvedTheme } = useTheme();
 
 	return (
 		<div>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button size="icon" variant="outline" aria-label="Select theme">
-						{displayTheme === "light" && (
+						{resolvedTheme === "light" && (
 							<SunIcon size={16} aria-hidden="true" />
 						)}
-						{displayTheme === "dark" && (
+						{resolvedTheme === "dark" && (
 							<MoonIcon size={16} aria-hidden="true" />
+						)}
+						{resolvedTheme === "system" && (
+							<MonitorIcon size={16} aria-hidden="true" />
 						)}
 					</Button>
 				</DropdownMenuTrigger>

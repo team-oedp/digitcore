@@ -3,7 +3,6 @@
 import { Link, PanelRightOpen, SidebarIcon } from "lucide-react";
 
 import { usePathname } from "next/navigation";
-import { SearchForm } from "~/components/global/search-form";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { useSidebar } from "~/components/ui/sidebar";
@@ -151,11 +150,10 @@ export function SiteHeader() {
 						</ul>
 					</nav>
 				</div>
-				<SearchForm className="w-full sm:ml-auto sm:w-auto" />
 				<Separator orientation="vertical" className="ml-2 h-4" />
-				<LanguageSelector />
-				<ModeToggle />
-				<CommandMenu />
+				{hydrated && <LanguageSelector />}
+				{hydrated && <ModeToggle />}
+				{hydrated && <CommandMenu />}
 				{hydrated && (
 					<Button
 						className="h-8 w-8"

@@ -23,7 +23,7 @@ export function LayoutUI({ children }: LayoutUIProps) {
 				} as React.CSSProperties
 			}
 		>
-			<SiteHeader />
+			{/* <SiteHeader />
 			<div className="flex flex-1">
 				<SidebarInset className="flex flex-1 flex-col">
 					<main className="m-2 flex flex-1 flex-col rounded-md bg-primary-foreground">
@@ -32,6 +32,15 @@ export function LayoutUI({ children }: LayoutUIProps) {
 				</SidebarInset>
 				{!isModalMode && <CarrierBagSidebar />}
 			</div>
+			{isModalMode && <CarrierBagSidebarModal />} */}
+			<SidebarInset className="flex min-h-screen flex-col">
+				<SiteHeader />
+				<main className="sticky inset-x-2 top-[calc(var(--header-height)+var(--spacing(2)))] flex h-full flex-1 flex-col rounded-md bg-primary-foreground">
+					{children}
+				</main>
+				<SiteFooter />
+			</SidebarInset>
+			{!isModalMode && <CarrierBagSidebar />}
 			{isModalMode && <CarrierBagSidebarModal />}
 
 			<SiteFooter />

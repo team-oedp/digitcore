@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
@@ -25,13 +24,6 @@ export function Header() {
 						)}
 					>
 						<Link href="/" className="flex items-center gap-3.5">
-							<Image
-								src="/oedp-icon.png"
-								alt="Digitcore Logo"
-								width={24}
-								height={24}
-								className="h-auto w-6"
-							/>
 							<span className="font-normal text-sm">Digitcore</span>
 						</Link>
 					</Button>
