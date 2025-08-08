@@ -1,18 +1,24 @@
 "use client";
 
-import { Command, X } from "lucide-react";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 
+import {
+	ArrowExpand02Icon,
+	Cancel01Icon,
+	SidebarRightIcon,
+} from "@hugeicons/core-free-icons";
 import {
 	CarrierBagItem,
 	type CarrierBagItemData,
 } from "~/components/global/carrier-bag/carrier-bag-item";
+import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
 import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
 	SidebarGroup,
+	SidebarHeader,
 } from "../../ui/sidebar";
 
 export function CarrierBagSidebarModal() {
@@ -36,102 +42,105 @@ export function CarrierBagSidebarModal() {
 
 	return (
 		<Sidebar className="fixed top-20 right-4 bottom-4 left-auto z-50 flex w-[var(--sidebar-width)] flex-col rounded-md border border-sidebar-border bg-sidebar shadow-lg">
-			{/* Header */}
-			<div className="flex items-center justify-between border-sidebar-border border-b p-4">
-				<div className="flex items-center gap-2">
-					<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-						<Command className="size-4" />
-					</div>
-					<div className="grid flex-1 text-left text-sm leading-tight">
-						<span className="truncate font-medium text-sidebar-foreground">
-							DIGITCORE
-						</span>
-						<span className="truncate text-sidebar-foreground/70 text-xs">
-							Patterns
-						</span>
-					</div>
-				</div>
-				<Button
-					variant="ghost"
-					size="icon"
-					className="h-6 w-6 text-sidebar-foreground/70 hover:text-sidebar-foreground"
-					onClick={() => setOpen(false)}
-				>
-					<X className="h-4 w-4" />
-				</Button>
-			</div>
-
-			{/* Content */}
-			<SidebarContent className="flex-1 overflow-auto p-2">
-				<SidebarGroup>
-					<div className="flex flex-col gap-2 p-2">
-						{!isHydrated ? (
-							<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-								<p className="font-normal text-muted-foreground text-sm">
-									Loading...
-								</p>
-							</div>
-						) : items.length === 0 ? (
-							<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-								<p className="font-normal text-muted-foreground text-sm">
-									There are no patterns in your carrier bag. Start by saving one
-									from the toolkit.
-								</p>
-							</div>
-						) : (
-							items.map((item) => {
-								const itemData: CarrierBagItemData = {
-									id: item.pattern._id,
-									title: item.pattern.title || "Untitled Pattern",
-								};
-								return (
-									<CarrierBagItem
-										key={item.pattern._id}
-										item={itemData}
-										onRemove={() => handleRemoveItem(item.pattern._id)}
-										onExpand={() =>
-											handleExpandItem(item.pattern.slug?.current || "")
-										}
-									/>
-								);
-							})
-						)}
-					</div>
-				</SidebarGroup>
-			</SidebarContent>
-
-			{/* Footer */}
-			{/* <div className="border-sidebar-border border-t p-2">
-					<NavUser user={data.user} />
-				</div> */}
-			<SidebarFooter>
-				<div className="flex flex-col gap-2.5 p-2">
-					<div className="flex flex-col items-end justify-end gap-2 px-6 py-4">
-						<div className="flex flex-row items-end justify-end gap-2">
+			<div className="flex h-full flex-col rounded-md">
+				<SidebarHeader>
+					<div className="flex items-start justify-between p-2">
+						<h3 className="font-normal text-lg text-primary">Carrier Bag</h3>
+						<div className="flex items-center gap-1">
 							<Button
-								variant="outline"
+								variant="ghost"
 								size="sm"
-								className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+								className="h-8 w-8 p-0"
 								type="button"
-								onClick={clearBag}
-								disabled={!isHydrated || items.length === 0}
+								aria-label="Pin Sidebar to Page"
+								onClick={() => console.log("Pin Sidebar to Page")}
 							>
-								Clear all items
+								<Icon icon={SidebarRightIcon} size={16} />
 							</Button>
 							<Button
-								variant="outline"
+								variant="ghost"
 								size="sm"
-								className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+								className="h-8 w-8 p-0"
 								type="button"
-								onClick={() => console.log("Download list as JSON")}
-								disabled={!isHydrated}
+								aria-label="Expand Sidebar"
 							>
-								Download list as JSON
+								<Icon icon={ArrowExpand02Icon} size={16} />
+							</Button>
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 w-8 p-0"
+								type="button"
+								aria-label="Close Sidebar"
+								onClick={() => setOpen(false)}
+							>
+								<Icon icon={Cancel01Icon} size={16} />
 							</Button>
 						</div>
 					</div>
-				</div>
-			</SidebarFooter>
+				</SidebarHeader>
+				<SidebarContent className="flex-1 overflow-y-auto">
+					<SidebarGroup>
+						<div className="flex flex-col gap-2 p-2">
+							{!isHydrated ? (
+								<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
+									<p className="font-normal text-muted-foreground text-sm">
+										Loading...
+									</p>
+								</div>
+							) : items.length === 0 ? (
+								<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
+									<p className="font-normal text-muted-foreground text-sm">
+										There are no patterns in your carrier bag. Start by saving
+										one from the toolkit.
+									</p>
+								</div>
+							) : (
+								items.map((item) => {
+									const itemData: CarrierBagItemData = {
+										id: item.pattern._id,
+										title: item.pattern.title || "Untitled Pattern",
+									};
+									return (
+										<CarrierBagItem
+											key={item.pattern._id}
+											item={itemData}
+											onRemove={() => handleRemoveItem(item.pattern._id)}
+											onExpand={() =>
+												handleExpandItem(item.pattern.slug?.current || "")
+											}
+										/>
+									);
+								})
+							)}
+						</div>
+					</SidebarGroup>
+				</SidebarContent>
+				<SidebarFooter>
+					<div className="flex flex-row items-end justify-between gap-2 p-2">
+						<Button
+							variant="outline"
+							size="sm"
+							className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+							type="button"
+							onClick={clearBag}
+							disabled={!isHydrated || items.length === 0}
+						>
+							Clear all items
+						</Button>
+						<Button
+							variant="outline"
+							size="sm"
+							className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+							type="button"
+							onClick={() => console.log("Download list as JSON")}
+							disabled={!isHydrated}
+						>
+							Download list as JSON
+						</Button>
+					</div>
+				</SidebarFooter>
+			</div>
 		</Sidebar>
 	);
 }
