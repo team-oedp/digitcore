@@ -1,7 +1,8 @@
 "use client";
 
-import { Link, SidebarIcon } from "lucide-react";
+import { SidebarIcon } from "lucide-react";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
