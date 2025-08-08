@@ -8,7 +8,6 @@ import {
 	useSidebar,
 } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
-import { useCarrierBagStore } from "~/stores/carrier-bag";
 
 type LayoutUIProps = {
 	children: React.ReactNode;
@@ -38,8 +37,6 @@ function LayoutElements({ children }: LayoutUIProps) {
 }
 
 export function LayoutUI({ children }: LayoutUIProps) {
-	const isModalMode = useCarrierBagStore((state) => state.isModalMode);
-
 	return (
 		<SidebarProvider
 			className="flex h-screen flex-col gap-2.5"

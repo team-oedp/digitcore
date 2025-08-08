@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, PanelRightOpen, SidebarIcon } from "lucide-react";
+import { Link, SidebarIcon } from "lucide-react";
 
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
@@ -21,6 +21,7 @@ export function SiteHeader() {
 	const setOpen = useCarrierBagStore((state) => state.setOpen);
 	const hydrated = useHydration();
 
+	// TODO: implement toggle of carrier bag sidebar into a modal
 	const handleModalModeToggle = () => {
 		toggleModalMode();
 		// When switching to modal mode, ensure the modal is open
@@ -37,10 +38,7 @@ export function SiteHeader() {
 					<Button
 						variant="link"
 						asChild
-						className={cn(
-							"flex h-auto items-center gap-3.5 px-3 py-2",
-							pathname === "/" ? "text-foreground" : "text-muted-foreground",
-						)}
+						className="flex h-auto items-center gap-3.5 px-3 py-2 text-foreground"
 					>
 						<Link href="/" className="text-sm">
 							Digitcore
@@ -155,26 +153,17 @@ export function SiteHeader() {
 				{hydrated && <ModeToggle />}
 				{hydrated && <CommandMenu />}
 				{hydrated && (
-					<Button
-						className="h-8 w-8"
-						variant={isModalMode ? "default" : "ghost"}
-						size="icon"
-						onClick={handleModalModeToggle}
-						title={isModalMode ? "Switch to Sidebar" : "Switch to Modal"}
-					>
-						<PanelRightOpen />
-					</Button>
-				)}
-				{hydrated && (
-					<Button
-						className="h-8 w-8"
-						variant="ghost"
-						size="icon"
+					<button
+						type="button"
+						className="group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear hover:bg-main-foreground/40 focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:border-border/50 dark:focus-visible:ring-neutral-800 dark:hover:border-white/10 dark:hover:bg-main-foreground/20"
 						onClick={isModalMode ? toggleOpen : toggleSidebar}
 						title="Toggle Sidebar"
+						aria-label="Toggle Sidebar"
 					>
-						<SidebarIcon />
-					</Button>
+						<span className="flex items-center gap-0.5 text-primary text-sm">
+							<SidebarIcon size={14} />
+						</span>
+					</button>
 				)}
 			</nav>
 		</header>

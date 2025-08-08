@@ -1,8 +1,13 @@
 "use client";
 
-import { Command } from "lucide-react";
 import type * as React from "react";
 
+import {
+	ArrowExpand02Icon,
+	Cancel01Icon,
+	SidebarRightIcon,
+} from "@hugeicons/core-free-icons";
+import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
 import {
 	Sidebar,
@@ -10,9 +15,6 @@ import {
 	SidebarFooter,
 	SidebarGroup,
 	SidebarHeader,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
 } from "~/components/ui/sidebar";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
@@ -49,21 +51,40 @@ export function CarrierBagSidebar({
 		>
 			<div className="flex h-full flex-col rounded-md">
 				<SidebarHeader>
-					<SidebarMenu>
-						<SidebarMenuItem>
-							<SidebarMenuButton size="lg" asChild>
-								<a href="www.google.com">
-									<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-										<Command className="size-4" />
-									</div>
-									<div className="grid flex-1 text-left text-sm leading-tight">
-										<span className="truncate font-medium">Carrier Bag</span>
-										<span className="truncate text-xs">Saved Patterns</span>
-									</div>
-								</a>
-							</SidebarMenuButton>
-						</SidebarMenuItem>
-					</SidebarMenu>
+					<div className="flex items-start justify-between p-2">
+						<h3 className="font-normal text-lg text-primary">Carrier Bag</h3>
+						<div className="flex items-center gap-1">
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 w-8 p-0"
+								type="button"
+								aria-label="Pin Sidebar to Page"
+								onClick={() => console.log("Pin Sidebar to Page")}
+							>
+								<Icon icon={SidebarRightIcon} size={16} />
+							</Button>
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 w-8 p-0"
+								type="button"
+								aria-label="Expand Sidebar"
+							>
+								<Icon icon={ArrowExpand02Icon} size={16} />
+							</Button>
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 w-8 p-0"
+								type="button"
+								aria-label="Close Sidebar"
+								onClick={() => setOpen(false)}
+							>
+								<Icon icon={Cancel01Icon} size={16} />
+							</Button>
+						</div>
+					</div>
 				</SidebarHeader>
 				<SidebarContent className="flex-1 overflow-y-auto">
 					<SidebarGroup>
@@ -103,31 +124,27 @@ export function CarrierBagSidebar({
 					</SidebarGroup>
 				</SidebarContent>
 				<SidebarFooter>
-					<div className="flex flex-col gap-2.5 p-2">
-						<div className="flex flex-col items-end justify-end gap-2 px-6 py-4">
-							<div className="flex flex-row items-end justify-end gap-2">
-								<Button
-									variant="outline"
-									size="sm"
-									className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
-									type="button"
-									onClick={clearBag}
-									disabled={!isHydrated || items.length === 0}
-								>
-									Clear all items
-								</Button>
-								<Button
-									variant="outline"
-									size="sm"
-									className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
-									type="button"
-									onClick={() => console.log("Download list as JSON")}
-									disabled={!isHydrated}
-								>
-									Download list as JSON
-								</Button>
-							</div>
-						</div>
+					<div className="flex flex-row items-end justify-between gap-2 p-2">
+						<Button
+							variant="outline"
+							size="sm"
+							className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+							type="button"
+							onClick={clearBag}
+							disabled={!isHydrated || items.length === 0}
+						>
+							Clear all items
+						</Button>
+						<Button
+							variant="outline"
+							size="sm"
+							className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+							type="button"
+							onClick={() => console.log("Download list as JSON")}
+							disabled={!isHydrated}
+						>
+							Download list as JSON
+						</Button>
 					</div>
 				</SidebarFooter>
 			</div>

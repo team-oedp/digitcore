@@ -3,7 +3,6 @@
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
-import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -18,17 +17,23 @@ export function ModeToggle() {
 		<div>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button size="icon" variant="outline" aria-label="Select theme">
-						{resolvedTheme === "light" && (
-							<SunIcon size={16} aria-hidden="true" />
-						)}
-						{resolvedTheme === "dark" && (
-							<MoonIcon size={16} aria-hidden="true" />
-						)}
-						{resolvedTheme === "system" && (
-							<MonitorIcon size={16} aria-hidden="true" />
-						)}
-					</Button>
+					<button
+						type="button"
+						aria-label="Select theme"
+						className="group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear hover:bg-main-foreground/40 focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:border-border/50 dark:focus-visible:ring-neutral-800 dark:hover:border-white/10 dark:hover:bg-main-foreground/20"
+					>
+						<span className="flex items-center gap-0.5 text-primary text-sm">
+							{resolvedTheme === "light" && (
+								<SunIcon size={14} aria-hidden="true" />
+							)}
+							{resolvedTheme === "dark" && (
+								<MoonIcon size={14} aria-hidden="true" />
+							)}
+							{resolvedTheme === "system" && (
+								<MonitorIcon size={14} aria-hidden="true" />
+							)}
+						</span>
+					</button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="min-w-32">
 					<DropdownMenuItem onClick={() => setTheme("light")}>
