@@ -9,6 +9,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
+import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import {
 	Sidebar,
 	SidebarContent,
@@ -17,6 +18,7 @@ import {
 	SidebarHeader,
 	SidebarRail,
 } from "~/components/ui/sidebar";
+import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
 
@@ -33,6 +35,7 @@ export function CarrierBagSidebar({
 	const items = useCarrierBagStore((state) => state.items);
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
+	const documentData = useCarrierBagDocument(items);
 
 	const handleRemoveItem = (patternId: string) => {
 		removePattern(patternId);

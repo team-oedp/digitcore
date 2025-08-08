@@ -27,37 +27,17 @@ export const PATTERN_QUERY =
     title,
     description,
     "slug": slug.current,
-    tags[]->{
-      _id,
-      _type,
-      title
-    },
-    audiences[]->{
-      _id,
-      _type,
-      title,
-      description
-    },
-    theme->{
-      _id,
-      _type,
-      title
-    },
+    tags[]->{...},
+    audiences[]->{...},
+    themes[]->{...},
     solutions[]->{
-      _id,
-      _type,
-      title,
-      description,
-      audiences[]
+      ...,
+      audiences[]->{ _id, title }
     },
     resources[]->{
-      _id,
-      _type,
-      title,
-      description,
-      links,
-      "solutionRefs": solutions[]
-    }
+      ...,
+      solution[]->{...},
+    },
   }`);
 
 export const PATTERN_PAGES_SLUGS_QUERY =
@@ -225,13 +205,20 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
     // Apply tags filter if provided
     && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
   ]
-  // Apply search scoring if search term is provided
+  // Apply search scoring with both exact and partial matching
   | score(
-      boost(title match $searchTerm + "*", 5),
-      boost(title match $searchTerm, 4), 
-      boost(pt::text(description) match $searchTerm + "*", 3),
-      boost(pt::text(description) match $searchTerm, 2)
+      // Exact matches get highest scores
+      boost(title match $searchTerm, 10),
+      boost(pt::text(description) match $searchTerm, 8),
+      // Partial/prefix matches get lower scores
+      boost(title match ($searchTerm + "*"), 6),
+      boost(pt::text(description) match ($searchTerm + "*"), 4),
+      // Basic scoring for any match
+      title match ($searchTerm + "*"),
+      pt::text(description) match ($searchTerm + "*")
     )
+  // Filter out results with very low relevance scores
+  [_score > 0]
   // Order by relevance score, then by title
   | order(_score desc, title asc)
   {

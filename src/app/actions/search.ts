@@ -1,5 +1,6 @@
 "use server";
 
+import { createLogLocation, logger } from "~/lib/logger";
 import type { ParsedSearchParams } from "~/lib/search";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
 import { client } from "~/sanity/lib/client";
@@ -76,7 +77,11 @@ export type SearchPattern = {
 export async function searchPatterns(
 	formData: FormData,
 ): Promise<SearchResult> {
+	const location = createLogLocation("search.ts", "searchPatterns");
+
 	try {
+		logger.searchInfo("Starting search operation", undefined, location);
+
 		// Extract search parameters from form data
 		const rawParams = {
 			q: formData.get("q")?.toString(),
@@ -87,19 +92,39 @@ export async function searchPatterns(
 			limit: formData.get("limit")?.toString(),
 		};
 
+		logger.search("Raw form data parameters", rawParams, location);
+
 		// Validate and parse parameters
 		const validatedParams = searchParamsSchema.parse(rawParams);
-		const parsedParams = parseSearchParams(validatedParams);
+		logger.search("Validated parameters", validatedParams, location);
 
-		// Prepare GROQ query parameters - ensure arrays are always provided
+		const parsedParams = parseSearchParams(validatedParams);
+		logger.search("Parsed parameters", parsedParams, location);
+
+		// Prepare GROQ query parameters - always provide all parameters (empty arrays if no values)
 		const queryParams: Record<string, unknown> = {
 			audiences: parsedParams.audiences || [],
 			themes: parsedParams.themes || [],
 			tags: parsedParams.tags || [],
 		};
 
+		logger.search(
+			"GROQ query parameters prepared",
+			{
+				audiences: queryParams.audiences,
+				themes: queryParams.themes,
+				tags: queryParams.tags,
+			},
+			location,
+		);
+
 		// Determine which query to use based on search term
 		const hasSearchTerm = parsedParams.searchTerm?.trim();
+		logger.search(
+			"Has search term",
+			{ hasSearchTerm: !!hasSearchTerm, searchTerm: parsedParams.searchTerm },
+			location,
+		);
 
 		let query: string;
 		if (hasSearchTerm) {
@@ -109,17 +134,47 @@ export async function searchPatterns(
 				.trim()
 				.replace(/["\\]/g, "\\$&"); // Escape quotes and backslashes
 			queryParams.searchTerm = escapedSearchTerm;
+			logger.groq(
+				"Using PATTERN_SEARCH_QUERY with escaped search term",
+				{ original: parsedParams.searchTerm, escaped: escapedSearchTerm },
+				location,
+			);
 		} else {
 			query = PATTERN_FILTER_QUERY;
+			logger.groq(
+				"Using PATTERN_FILTER_QUERY (no search term)",
+				undefined,
+				location,
+			);
 		}
 
-		console.log("Using query:", hasSearchTerm ? "SEARCH" : "FILTER");
-		console.log("Search query params:", queryParams);
+		logger.groq("Final GROQ query parameters", queryParams, location);
+		logger.groq("Query type", hasSearchTerm ? "SEARCH" : "FILTER", location);
 
 		// Execute GROQ query
+		logger.groq(
+			"Executing GROQ query",
+			{ queryType: hasSearchTerm ? "SEARCH" : "FILTER" },
+			location,
+		);
+		const startTime = Date.now();
 		const results = await client.fetch(query, queryParams);
+		const endTime = Date.now();
 
-		console.log(`Search completed: ${results.length} results found`);
+		logger.groq(
+			"GROQ query completed",
+			{
+				resultCount: results.length,
+				executionTime: `${endTime - startTime}ms`,
+			},
+			location,
+		);
+
+		logger.searchInfo(
+			"Search completed successfully",
+			{ resultCount: results.length },
+			location,
+		);
 
 		return {
 			success: true,
@@ -128,18 +183,45 @@ export async function searchPatterns(
 			searchParams: parsedParams,
 		};
 	} catch (error) {
-		console.error("Search error:", error);
-		console.error("Error type:", typeof error);
-		console.error("Error constructor:", error?.constructor?.name);
+		logger.searchError("Search operation failed", error, location);
+		logger.error(
+			"server",
+			"Search error details",
+			{
+				errorType: typeof error,
+				errorConstructor: error?.constructor?.name,
+				isError: error instanceof Error,
+				isNull: error === null,
+			},
+			location,
+		);
 
 		// More detailed error logging
 		if (error instanceof Error) {
-			console.error("Error message:", error.message);
-			console.error("Error stack:", error.stack);
+			logger.searchError(
+				"Error details",
+				{
+					message: error.message,
+					stack: error.stack,
+					name: error.name,
+				},
+				location,
+			);
 		} else if (error === null) {
-			console.error("Error is null - this might be a GROQ syntax issue");
+			logger.searchError(
+				"Null error - likely GROQ syntax issue",
+				undefined,
+				location,
+			);
 		} else {
-			console.error("Unknown error type:", typeof error, error);
+			logger.searchError(
+				"Unknown error type",
+				{
+					type: typeof error,
+					value: error,
+				},
+				location,
+			);
 		}
 
 		return {
@@ -162,7 +244,15 @@ export async function searchPatterns(
 export async function searchPatternsWithParams(
 	searchParams: URLSearchParams,
 ): Promise<SearchResult> {
+	const location = createLogLocation("search.ts", "searchPatternsWithParams");
+
 	try {
+		logger.searchInfo(
+			"Converting URLSearchParams to FormData",
+			Object.fromEntries(searchParams.entries()),
+			location,
+		);
+
 		const formData = new FormData();
 
 		// Convert URLSearchParams to FormData
@@ -170,9 +260,10 @@ export async function searchPatternsWithParams(
 			formData.append(key, value);
 		}
 
+		logger.search("Delegating to searchPatterns", undefined, location);
 		return await searchPatterns(formData);
 	} catch (error) {
-		console.error("Search with params error:", error);
+		logger.searchError("searchPatternsWithParams failed", error, location);
 
 		return {
 			success: false,

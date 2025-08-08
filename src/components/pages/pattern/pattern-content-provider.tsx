@@ -1,6 +1,6 @@
 "use client";
 
-import { usePatternContent } from "~/hooks/use-pattern-content";
+import { usePatternContentStore } from "~/hooks/use-pattern-content";
 import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
 
 type PatternContentProviderProps = {
@@ -12,7 +12,7 @@ export function PatternContentProvider({
 	pattern,
 	children,
 }: PatternContentProviderProps) {
-	usePatternContent(pattern);
+	usePatternContentStore(pattern);
 
 	return <>{children}</>;
 }

@@ -3,12 +3,26 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import { CustomPortableText } from "~/components/global/portable-text";
 import type { Solution } from "~/sanity/sanity.types";
+import { SuggestSolutionButton } from "./suggest-solution-button";
+
+type AudienceDisplay = {
+	_id?: string;
+	_key?: string;
+	_ref?: string;
+	title?: string;
+};
 
 type SolutionsProps = {
 	solutions?: Solution[];
+	patternName?: string;
+	patternSlug?: string;
 };
 
-export function Solutions({ solutions }: SolutionsProps) {
+export function Solutions({
+	solutions,
+	patternName,
+	patternSlug,
+}: SolutionsProps) {
 	// Generate numbering for solutions (i., ii., iii., etc.)
 	const getSolutionNumber = (index: number): string => {
 		const romanNumerals = [
@@ -66,13 +80,13 @@ export function Solutions({ solutions }: SolutionsProps) {
 
 							{solution.audiences && solution.audiences.length > 0 && (
 								<div className="flex gap-2">
-									{solution.audiences.map((audience) => (
+									{solution.audiences.map((audience: AudienceDisplay) => (
 										<div
-											key={audience._key}
+											key={audience._id ?? audience._key ?? audience._ref}
 											className="flex h-6 items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-100 px-[9px] py-2"
 										>
 											<span className="text-nowrap font-normal text-[#1e40ae] text-[14px]">
-												{audience._ref}
+												{audience.title ?? audience._ref}
 											</span>
 											<HugeiconsIcon
 												icon={ChartRelationshipIcon}
@@ -88,6 +102,15 @@ export function Solutions({ solutions }: SolutionsProps) {
 					</div>
 				))}
 			</div>
+
+			{patternName && patternSlug && (
+				<div className="mt-4 mb-4">
+					<SuggestSolutionButton
+						patternName={patternName}
+						patternSlug={patternSlug}
+					/>
+				</div>
+			)}
 		</section>
 	);
 }
