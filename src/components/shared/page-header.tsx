@@ -23,7 +23,6 @@ export function PageHeader({
 	description,
 	slug,
 	pattern,
-	sticky = true,
 }: PageHeaderProps) {
 	const pathname = usePathname();
 	const { addPattern, hasPattern, setOpen, isHydrated } = useCarrierBagStore();
@@ -56,12 +55,7 @@ export function PageHeader({
 		isHydrated && pattern ? hasPattern(pattern._id) : false;
 
 	return (
-		<header
-			className={cn(
-				"max-w-4xl lg:pl-20",
-				sticky && "sticky top-5 z-10 bg-primary-foreground",
-			)}
-		>
+		<header id="page-header" className={cn("max-w-4xl lg:pl-20")}>
 			<h1 className="font-light text-[32px] text-primary capitalize">
 				{pageTitle}
 			</h1>

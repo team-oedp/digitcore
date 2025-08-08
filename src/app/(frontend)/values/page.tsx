@@ -16,7 +16,7 @@ export default function ValuesPage() {
 				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
 					<div className="flex items-start justify-between gap-6">
 						<div className="flex-1">
-							<PageHeader title="Values" description="" sticky={false} />
+							<PageHeader title="Values" description="" />
 						</div>
 					</div>
 				</div>

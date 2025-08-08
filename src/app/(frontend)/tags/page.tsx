@@ -165,7 +165,6 @@ export default function Tags() {
 							<PageHeader
 								title="Tags"
 								description="Explore tags to discover new pathways through the toolkit's patterns."
-								sticky={false}
 							/>
 						</div>
 

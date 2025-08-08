@@ -39,46 +39,29 @@ export function CurrentLetterIndicator({
 		tagItemsMapRef.current.clear();
 		intersectingItemsRef.current.clear();
 
-		// Find the sticky header to calculate its height
-		// Look for the sticky element that contains the page header
-		const stickyHeader = document.querySelector(".sticky.top-0.z-10");
-		if (stickyHeader) {
-			const rect = stickyHeader.getBoundingClientRect();
-			headerHeightRef.current = rect.height;
-		} else {
-			// Fallback to a reasonable default if header not found
-			headerHeightRef.current = 120;
-		}
+		// Use a fixed intersection line aligned with scroll-mt-40 (10rem = 160px)
+		headerHeightRef.current = 240;
 
 		const intersectionLine = headerHeightRef.current;
 
-		// Collect all tag items (h3 elements) with their associated letters
-		const allTagItems: Element[] = [];
+		// Collect letter group headings (the main letter headers like "A", "B", "C")
+		const letterHeadings: Element[] = [];
 
 		for (const letter of availableLetters) {
 			const section = document.getElementById(`letter-${letter}`);
 			if (!section) continue;
 
-			// Get all h3 elements (tag names) within this section
-			const tagHeaders = section.querySelectorAll("h3");
-			for (const header of tagHeaders) {
-				allTagItems.push(header);
-				tagItemsMapRef.current.set(header, letter);
-			}
-
-			// Also observe the section header (h2) if no tags exist
-			if (tagHeaders.length === 0) {
-				const sectionHeader = section.querySelector("h2");
-				if (sectionHeader) {
-					allTagItems.push(sectionHeader);
-					tagItemsMapRef.current.set(sectionHeader, letter);
-				}
+			// Find the letter heading within this section (typically an h2 with the letter)
+			const letterHeading = section.querySelector("h2");
+			if (letterHeading) {
+				letterHeadings.push(letterHeading);
+				tagItemsMapRef.current.set(letterHeading, letter);
 			}
 		}
 
-		if (allTagItems.length === 0) return;
+		if (letterHeadings.length === 0) return;
 
-		// Create intersection observer
+		// Create intersection observer to track when letter headings pass beneath the page header
 		// The rootMargin creates an observation line at the bottom of the page header
 		observerRef.current = new IntersectionObserver(
 			(entries) => {
@@ -106,17 +89,18 @@ export function CurrentLetterIndicator({
 					}
 				} else {
 					// No items intersecting - find the closest item above the line
+					// This ensures we stay on the current letter until it's fully scrolled past
 					let closestAbove: Element | null = null;
-					let closestDistance = Number.NEGATIVE_INFINITY;
+					let maxAboveBottom = Number.NEGATIVE_INFINITY;
 
-					for (const item of allTagItems) {
+					for (const item of letterHeadings) {
 						const rect = item.getBoundingClientRect();
 						// Item is above the intersection line
 						if (
 							rect.bottom < intersectionLine &&
-							rect.bottom > closestDistance
+							rect.bottom > maxAboveBottom
 						) {
-							closestDistance = rect.bottom;
+							maxAboveBottom = rect.bottom;
 							closestAbove = item;
 						}
 					}
@@ -146,36 +130,33 @@ export function CurrentLetterIndicator({
 			},
 		);
 
-		// Start observing all tag items
-		for (const item of allTagItems) {
+		// Start observing all letter headings
+		for (const item of letterHeadings) {
 			observerRef.current?.observe(item);
 		}
 
 		// Initial determination of active letter
 		const determineInitialLetter = () => {
 			let activeElement: Element | null = null;
-			let minDistance = Number.POSITIVE_INFINITY;
+			let maxAboveBottom = Number.NEGATIVE_INFINITY;
 
-			// Find the element closest to the intersection line
-			for (const item of allTagItems) {
+			// Find the letter heading that's closest to but above the intersection line
+			for (const item of letterHeadings) {
 				const rect = item.getBoundingClientRect();
-				const distance = Math.abs(rect.top - intersectionLine);
-
-				if (distance < minDistance) {
-					minDistance = distance;
+				if (rect.bottom < intersectionLine && rect.bottom > maxAboveBottom) {
+					maxAboveBottom = rect.bottom;
 					activeElement = item;
 				}
 			}
 
-			// If no element is near the line, find the first one below it or last one above
-			if (!activeElement || minDistance > 200) {
-				for (const item of allTagItems) {
+			// If no element is above the line, find the first one below it
+			if (!activeElement) {
+				for (const item of letterHeadings) {
 					const rect = item.getBoundingClientRect();
 					if (rect.top >= intersectionLine) {
 						activeElement = item;
 						break;
 					}
-					activeElement = item; // Keep updating to get the last one if all are above
 				}
 			}
 
@@ -192,16 +173,8 @@ export function CurrentLetterIndicator({
 
 		// Listen for window resize to recalculate header height
 		const handleResize = () => {
-			const stickyHeader = document.querySelector(".sticky.top-0.z-10");
-			if (stickyHeader) {
-				const rect = stickyHeader.getBoundingClientRect();
-				if (rect.height !== headerHeightRef.current) {
-					// Header height changed, need to recreate observer
-					headerHeightRef.current = rect.height;
-					// Trigger re-creation of the observer by updating dependencies
-					// This will cause the effect to re-run
-				}
-			}
+			// Keep the intersection line consistent with scroll-mt-40
+			headerHeightRef.current = 160;
 		};
 
 		window.addEventListener("resize", handleResize);
