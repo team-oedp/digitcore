@@ -3,20 +3,21 @@
 import Link from "next/link";
 import type { TagsByLetter } from "~/app/(frontend)/tags/page";
 import { LetterNavigation } from "~/components/shared/letter-navigation";
-import { useScrollToTarget } from "~/hooks/use-scroll-to-target";
 
+/**
+ * TagsList component displays tags organized alphabetically with letter navigation.
+ *
+ * Each letter section uses `scroll-mt-40` (scroll-margin-top: 10rem) to ensure
+ * that when scrolling to a letter via the LetterNavigation component, the content
+ * is positioned below the fixed header instead of being hidden underneath it.
+ * This provides proper visual spacing and prevents content from being cut off.
+ */
 export function TagsList({
 	tagsByLetter,
 	alphabet,
 }: { tagsByLetter: TagsByLetter; alphabet: string[] }) {
-	const activeLetter = useScrollToTarget({
-		highlight: true,
-		groupSelector: "[data-letter]",
-		debounceMs: 150,
-	});
-
 	return (
-		<div className="flex gap-20 space-y-8 pb-[800px]">
+		<div className="flex gap-20 space-y-8 pb-[800px]" data-scroll-container>
 			<LetterNavigation itemsByLetter={tagsByLetter} contentId="tags-content" />
 			<div id="tags-content" className="flex-1 space-y-16 lg:pl-20">
 				{alphabet.map((letter) => {
@@ -26,7 +27,7 @@ export function TagsList({
 					return (
 						<section
 							key={letter}
-							className="max-w-4xl space-y-8"
+							className="max-w-4xl scroll-mt-40 space-y-8"
 							id={`letter-${letter}`}
 						>
 							<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
