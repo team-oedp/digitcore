@@ -6,14 +6,16 @@ import { usePathname } from "next/navigation";
 import type { Pattern } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 
+import { CustomPortableText } from "~/components/global/portable-text";
+import { cn } from "~/lib/utils";
 import { Icon } from "./icon";
-import { CustomPortableText } from "./portable-text";
 
 type PageHeaderProps = {
 	title?: string;
 	description?: string | PortableTextBlock[];
 	slug?: string;
 	pattern?: Pattern;
+	sticky?: boolean;
 };
 
 export function PageHeader({
@@ -21,6 +23,7 @@ export function PageHeader({
 	description,
 	slug,
 	pattern,
+	sticky = true,
 }: PageHeaderProps) {
 	const pathname = usePathname();
 	const { addPattern, hasPattern, setOpen, isHydrated } = useCarrierBagStore();
@@ -53,20 +56,26 @@ export function PageHeader({
 		isHydrated && pattern ? hasPattern(pattern._id) : false;
 
 	return (
-		<header className="max-w-4xl space-y-5">
+		<header
+			className={cn(
+				"max-w-4xl lg:pl-20",
+				sticky && "sticky top-5 z-10 bg-primary-foreground",
+			)}
+		>
 			<h1 className="font-light text-[32px] text-primary capitalize">
 				{pageTitle}
 			</h1>
 			{isPatternPage && pattern && (
 				<button
 					type="button"
-					className={`flex items-center gap-2.5 rounded-lg border border-border px-[7px] py-1 transition-colors ${
+					className={cn(
+						"mt-5 flex items-center gap-2.5 rounded-lg border border-border px-[7px] py-1 transition-colors",
 						!isHydrated
 							? "cursor-pointer bg-white hover:bg-secondary"
 							: isPatternInBag
 								? "cursor-default border-green-200 bg-green-50"
-								: "cursor-pointer bg-white hover:bg-secondary"
-					}`}
+								: "cursor-pointer bg-white hover:bg-secondary",
+					)}
 					onClick={isPatternInBag ? undefined : handleSaveToCarrierBag}
 					disabled={isPatternInBag}
 				>
@@ -86,7 +95,7 @@ export function PageHeader({
 				</button>
 			)}
 			{description && (
-				<div className="text-primary text-sm">
+				<div className="mt-5 text-primary text-sm">
 					{typeof description === "string" ? (
 						<p>{description}</p>
 					) : (
