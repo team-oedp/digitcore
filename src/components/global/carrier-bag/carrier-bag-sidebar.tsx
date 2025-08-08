@@ -15,6 +15,7 @@ import {
 	SidebarFooter,
 	SidebarGroup,
 	SidebarHeader,
+  SidebarRail,
 } from "~/components/ui/sidebar";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
@@ -43,12 +44,12 @@ export function CarrierBagSidebar({
 	};
 
 	return (
-		<Sidebar
-			side="right"
-			variant="inset"
+    <Sidebar
+    side="right"
+    variant="inset"
 			className="top-16.5 right-2 bottom-2 h-[calc(100%-var(--spacing(20))-var(--spacing(8))] rounded-md bg-primary-foreground"
 			{...props}
-		>
+      >
 			<div className="flex h-full flex-col rounded-md">
 				<SidebarHeader>
 					<div className="flex items-start justify-between p-2">
