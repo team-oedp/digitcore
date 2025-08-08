@@ -7,6 +7,7 @@ import {
 	Cancel01Icon,
 	SidebarRightIcon,
 } from "@hugeicons/core-free-icons";
+import Link from "next/link";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
@@ -16,14 +17,11 @@ import {
 	SidebarFooter,
 	SidebarGroup,
 	SidebarHeader,
+	useSidebar,
 } from "~/components/ui/sidebar";
 import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
-
-export const iframeHeight = "800px";
-
-export const description = "A sidebar with a header and a search form.";
 
 export function CarrierBagSidebar({
 	...props
@@ -35,6 +33,7 @@ export function CarrierBagSidebar({
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const documentData = useCarrierBagDocument(items);
+	const { toggleSidebar } = useSidebar();
 
 	const handleRemoveItem = (patternId: string) => {
 		removePattern(patternId);
@@ -64,25 +63,29 @@ export function CarrierBagSidebar({
 								type="button"
 								aria-label="Pin Sidebar to Page"
 								onClick={() => console.log("Pin Sidebar to Page")}
+								disabled
 							>
 								<Icon icon={SidebarRightIcon} size={16} />
 							</Button>
-							<Button
-								variant="ghost"
-								size="sm"
-								className="h-8 w-8 p-0"
-								type="button"
-								aria-label="Expand Sidebar"
-							>
-								<Icon icon={ArrowExpand02Icon} size={16} />
-							</Button>
+							<Link href="/carrier-bag" tabIndex={-1}>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="h-8 w-8 p-0"
+									type="button"
+									aria-label="Expand Sidebar"
+									tabIndex={0}
+								>
+									<Icon icon={ArrowExpand02Icon} size={16} />
+								</Button>
+							</Link>
 							<Button
 								variant="ghost"
 								size="sm"
 								className="h-8 w-8 p-0"
 								type="button"
 								aria-label="Close Sidebar"
-								onClick={() => setOpen(false)}
+								onClick={toggleSidebar}
 							>
 								<Icon icon={Cancel01Icon} size={16} />
 							</Button>
@@ -127,7 +130,7 @@ export function CarrierBagSidebar({
 					</SidebarGroup>
 				</SidebarContent>
 				<SidebarFooter>
-					<div className="flex flex-row items-end justify-between gap-2 p-2">
+					<div className="flex flex-row flex-wrap items-end justify-between gap-2 p-2">
 						<Button
 							variant="outline"
 							size="sm"
