@@ -3,7 +3,7 @@
 import { Download03Icon, EyeIcon } from "@hugeicons/core-free-icons";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Icon } from "~/components/global/icon";
+import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -21,7 +21,7 @@ import type {
 } from "~/hooks/use-pattern-content";
 import { downloadCarrierBagPDF } from "./pdf-components";
 
-interface PDFPreviewModalProps {
+type PDFPreviewModalProps = {
 	documentData: CarrierBagDocumentData;
 	disabled?: boolean;
 	children?: React.ReactNode;

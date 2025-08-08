@@ -7,16 +7,15 @@ import {
 	Cancel01Icon,
 	SidebarRightIcon,
 } from "@hugeicons/core-free-icons";
+import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
-import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
 	SidebarGroup,
 	SidebarHeader,
-	SidebarRail,
 } from "~/components/ui/sidebar";
 import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
@@ -135,7 +134,7 @@ export function CarrierBagSidebar({
 							className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
 							type="button"
 							onClick={clearBag}
-							disabled={!isHydrated || items.length === 0}
+							disabled={items.length === 0}
 						>
 							Clear all items
 						</Button>
@@ -145,10 +144,24 @@ export function CarrierBagSidebar({
 							className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
 							type="button"
 							onClick={() => console.log("Download list as JSON")}
-							disabled={!isHydrated}
+							disabled={items.length === 0}
 						>
 							Download list as JSON
 						</Button>
+						<PDFPreviewModal
+							documentData={documentData}
+							disabled={items.length === 0}
+						>
+							<Button
+								variant="outline"
+								size="sm"
+								className="flex h-auto items-center gap-2 border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+								type="button"
+								disabled={items.length === 0}
+							>
+								Download as PDF
+							</Button>
+						</PDFPreviewModal>
 					</div>
 				</SidebarFooter>
 			</div>
