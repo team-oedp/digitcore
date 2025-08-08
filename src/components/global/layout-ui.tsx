@@ -9,9 +9,16 @@ type LayoutUIProps = {
 	children: React.ReactNode;
 };
 
-function LayoutElements({ children }: LayoutUIProps) {
+export function LayoutUI({ children }: LayoutUIProps) {
 	return (
-		<>
+		<SidebarProvider
+			className="flex h-screen flex-col gap-2.5"
+			style={
+				{
+					"--sidebar-width": "22rem",
+				} as React.CSSProperties
+			}
+		>
 			<SiteHeader />
 			<div
 				className={cn(
@@ -30,21 +37,6 @@ function LayoutElements({ children }: LayoutUIProps) {
 					</main>
 				</SidebarInset>
 			</div>
-		</>
-	);
-}
-
-export function LayoutUI({ children }: LayoutUIProps) {
-	return (
-		<SidebarProvider
-			className="flex h-screen flex-col gap-2.5"
-			style={
-				{
-					"--sidebar-width": "22rem",
-				} as React.CSSProperties
-			}
-		>
-			<LayoutElements>{children}</LayoutElements>
 		</SidebarProvider>
 	);
 }
