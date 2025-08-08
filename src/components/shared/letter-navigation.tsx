@@ -12,7 +12,7 @@ export function LetterNavigation<T>({
 	contentId = "content",
 }: LetterNavigationProps<T>) {
 	return (
-		<div className="-translate-y-1/2 fixed top-1/2 left-8 z-20 hidden lg:block">
+		<div className="fixed left-8 z-20 hidden lg:block">
 			<div className="flex flex-col">
 				{ALPHABET.map((letter) => {
 					const hasItems = (itemsByLetter[letter]?.length ?? 0) > 0;

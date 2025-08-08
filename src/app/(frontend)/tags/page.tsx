@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+
+import { TagsList } from "~/components/pages/tags/tags-list";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
-import { LetterNavigation } from "~/components/shared/letter-navigation";
+import { PageHeader } from "~/components/shared/page-header";
+import { PageWrapper } from "~/components/shared/page-wrapper";
 
 export const metadata: Metadata = {
 	title: "Tags | DIGITCORE Toolkit",
@@ -142,10 +144,10 @@ const TAGS_DATA = [
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 // Grouped tags keyed by their starting letter
-type Tag = (typeof TAGS_DATA)[number];
-type TagsByLetter = Partial<Record<string, Tag[]>>;
+export type Tag = (typeof TAGS_DATA)[number];
+export type TagsByLetter = Partial<Record<string, Tag[]>>;
 
-export default function TagsPage() {
+export default function Tags() {
 	// Group tags by letter
 	const tagsByLetter = TAGS_DATA.reduce<TagsByLetter>((acc, tag) => {
 		const group = acc[tag.letter] ?? [];
@@ -155,84 +157,29 @@ export default function TagsPage() {
 	}, {});
 
 	return (
-		<div className="relative flex h-screen flex-col">
-			{/* Letter Navigation Sidebar - Fixed positioning */}
-			<LetterNavigation itemsByLetter={tagsByLetter} contentId="tags-content" />
+		<div className="relative">
+			<PageWrapper>
+				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+					<div className="flex items-start justify-between gap-6">
+						<div className="flex-1">
+							<PageHeader
+								title="Tags"
+								description="Explore tags to discover new pathways through the toolkit's patterns."
+								sticky={false}
+							/>
+						</div>
 
-			{/* Fixed Header Content */}
-			<div className="flex-shrink-0 space-y-8 p-5 lg:pl-20">
-				{/* Header */}
-				<section className="max-w-4xl">
-					<h1 className="font-light text-4xl text-neutral-500 leading-tight">
-						Tags
-					</h1>
-				</section>
+						<div className="shrink-0">
+							<CurrentLetterIndicator
+								availableLetters={Object.keys(tagsByLetter)}
+								contentId="tags-content"
+							/>
+						</div>
+					</div>
+				</div>
 
-				{/* Introduction */}
-				<section className="max-w-4xl">
-					<p className="text-base text-neutral-500 leading-relaxed">
-						Explore tags to discover new pathways through the toolkit's
-						patterns.
-					</p>
-				</section>
-
-				{/* Current Letter Indicator */}
-				<CurrentLetterIndicator
-					availableLetters={Object.keys(tagsByLetter)}
-					contentId="tags-content"
-				/>
-			</div>
-
-			{/* Scrollable Content - Tags only */}
-			<div
-				id="tags-content"
-				className="scrollbar-hide flex-1 space-y-16 overflow-y-auto p-5 lg:pl-20"
-			>
-				{/* Tags by Letter */}
-				{ALPHABET.map((letter) => {
-					const tags = tagsByLetter[letter];
-					if (!tags || tags.length === 0) return null;
-
-					return (
-						<section
-							key={letter}
-							className="max-w-4xl space-y-8"
-							id={`letter-${letter}`}
-						>
-							<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
-								{letter}
-							</h2>
-
-							{tags.map((tag) => (
-								<div key={tag.id} className="space-y-4">
-									<h3 className="font-normal text-neutral-500 text-xl">
-										{tag.name}
-									</h3>
-
-									<p className="mb-4 text-base text-neutral-500 leading-relaxed">
-										Tagged to the following pages. Showing first{" "}
-										{Math.min(tag.resources.length, 10)} links.
-									</p>
-
-									<div className="flex flex-wrap gap-2">
-										{tag.resources.slice(0, 10).map((resource) => (
-											<Link
-												key={resource.id}
-												href={`/pattern/${resource.slug}`}
-												className="flex h-6 items-center gap-2.5 rounded-lg border border-[#d1a7f3] bg-[#ead1fa] py-2 pr-3 pl-[9px] transition-opacity hover:opacity-80"
-											>
-												<span className="whitespace-nowrap text-[#4f065f] text-[14px]">
-													{resource.title}
-												</span>
-											</Link>
-										))}
-									</div>
-								</div>
-							))}
-						</section>
-					);
-				})}
-			</div>
+				<TagsList tagsByLetter={tagsByLetter} alphabet={ALPHABET} />
+			</PageWrapper>
 		</div>
 	);
 }
