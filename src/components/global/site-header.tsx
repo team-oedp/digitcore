@@ -41,7 +41,7 @@ export function SiteHeader() {
 						asChild
 						className="flex h-auto items-center gap-3.5 px-3 py-2 text-foreground"
 					>
-						<Link href="/" className="text-sm">
+						<Link href="/" className="text-sm uppercase">
 							Digitcore
 						</Link>
 					</Button>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageWrapper } from "~/components/shared/page-wrapper";
 import { CarrierBagContent } from "./carrier-bag-content";
 
 export const metadata: Metadata = {
@@ -9,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function CarrierBag() {
 	return (
-		<div className="min-h-screen bg-background">
+		<PageWrapper>
 			<CarrierBagContent />
-		</div>
+		</PageWrapper>
 	);
 }
