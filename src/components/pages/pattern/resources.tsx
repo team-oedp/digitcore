@@ -5,6 +5,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
+import type { Resource as SanityResource } from "~/sanity/sanity.types";
 import { CustomPortableText } from "~/components/global/portable-text";
 import { SolutionPreview } from "./solution-preview";
 
@@ -20,15 +21,15 @@ type ResourceReference = {
 type Resource = {
 	_id: string;
 	title?: string | null;
-	description?: PortableTextBlock[];
+	description?: PortableTextBlock[] | null;
 	links?: { href: string }[];
 	solutions?: Solution[];
 };
 
 function isDereferencedResource(
-	resource: Resource | ResourceReference,
+	resource: any,
 ): resource is Resource {
-	return "title" in resource;
+	return resource && "title" in resource;
 }
 
 type Solution = {
@@ -38,7 +39,7 @@ type Solution = {
 };
 
 type ResourcesProps = {
-	resources: Resource[];
+	resources: any[];
 };
 
 export function Resources({ resources }: ResourcesProps) {

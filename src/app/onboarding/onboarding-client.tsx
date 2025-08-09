@@ -5,7 +5,7 @@ import { Link02Icon, Search02Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { Icon } from "~/components/global/icon";
+import { Icon } from "~/components/shared/icon";
 
 const heroImage1 =
 	"http://localhost:3845/assets/7ed4677b62d314739282582970ffc2151fe29d17.png";

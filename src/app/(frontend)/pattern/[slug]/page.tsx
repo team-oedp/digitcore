@@ -118,7 +118,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
 					<Resources resources={pattern.resources || []} />
 				</div>
 				<Solutions
-					solutions={pattern.solutions || []}
+					solutions={(pattern.solutions as Solution[]) || []}
 					patternName={pattern.title || ""}
 					patternSlug={slug}
 				/>
