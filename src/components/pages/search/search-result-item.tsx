@@ -460,37 +460,13 @@ export function SearchResultItem({
 	pattern,
 	searchTerm,
 }: SearchResultItemProps) {
-	switch (pattern._type) {
-		case "pattern":
-			return (
-				<PatternSearchResult
-					pattern={pattern as PatternSearchResultData}
-					searchTerm={searchTerm}
-				/>
-			);
-		case "resource":
-			return (
-				<ResourceSearchResult
-					pattern={pattern as ResourceSearchResultData}
-					searchTerm={searchTerm}
-				/>
-			);
-		case "solution":
-			return (
-				<SolutionSearchResult
-					pattern={pattern as SolutionSearchResultData}
-					searchTerm={searchTerm}
-				/>
-			);
-		default:
-			// Fallback for unknown types - default to pattern
-			return (
-				<PatternSearchResult
-					pattern={pattern as PatternSearchResultData}
-					searchTerm={searchTerm}
-				/>
-			);
-	}
+	// Since SearchPattern always has _type: "pattern", we only handle that case
+	return (
+		<PatternSearchResult
+			pattern={pattern as PatternSearchResultData}
+			searchTerm={searchTerm}
+		/>
+	);
 }
 
 function renderHighlightedText(text: string, searchTerm: string) {

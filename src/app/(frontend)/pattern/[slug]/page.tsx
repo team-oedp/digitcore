@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
-import { PageHeader } from "~/components/shared/page-header";
-import { PageWrapper } from "~/components/shared/page-wrapper";
 import { PatternConnections } from "~/components/pages/pattern/pattern-connections";
 import { PatternContentProvider } from "~/components/pages/pattern/pattern-content-provider";
+import type { DereferencedResource } from "~/components/pages/pattern/resources";
 import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
+import { PageHeader } from "~/components/shared/page-header";
+import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -115,14 +116,22 @@ export default async function PatternPage({ params }: PatternPageProps) {
 						/>
 					</div>
 					<Solutions solutions={(pattern.solutions as Solution[]) || []} />
-					<Resources resources={pattern.resources || []} />
+					<Resources
+						resources={
+							(pattern.resources as unknown as DereferencedResource[]) || []
+						}
+					/>
 				</div>
 				<Solutions
 					solutions={(pattern.solutions as Solution[]) || []}
 					patternName={pattern.title || ""}
 					patternSlug={slug}
 				/>
-				<Resources resources={pattern.resources || []} />
+				<Resources
+					resources={
+						(pattern.resources as unknown as DereferencedResource[]) || []
+					}
+				/>
 			</PageWrapper>
 		</PatternContentProvider>
 	);

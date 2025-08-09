@@ -5,7 +5,6 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
-import type { Resource as SanityResource } from "~/sanity/sanity.types";
 import { CustomPortableText } from "~/components/global/portable-text";
 import { SolutionPreview } from "./solution-preview";
 
@@ -18,32 +17,34 @@ type ResourceReference = {
 	_key: string;
 };
 
-type Resource = {
+export type DereferencedResource = {
 	_id: string;
 	title?: string | null;
 	description?: PortableTextBlock[] | null;
 	links?: { href: string }[];
-	solutions?: Solution[];
+	solutionRefs?: { _ref: string; _type: "reference"; _key: string }[];
 };
 
 function isDereferencedResource(
-	resource: any,
-): resource is Resource {
-	return resource && "title" in resource;
+	resource: unknown,
+): resource is DereferencedResource {
+	return !!resource && typeof resource === "object" && "title" in resource;
 }
 
-type Solution = {
-	_id: string;
-	title?: string | null;
-	description?: unknown;
-};
+function isSolutionReference(
+	solution: unknown,
+): solution is { _ref: string; _type: "reference"; _key: string } {
+	if (!solution || typeof solution !== "object") return false;
+	const s = solution as Record<string, unknown>;
+	return "_ref" in s && "_type" in s && s._type === "reference";
+}
 
 type ResourcesProps = {
-	resources: any[];
+	resources: DereferencedResource[];
 };
 
 export function Resources({ resources }: ResourcesProps) {
-	if (!resources) return null;
+	if (!resources.length) return null;
 	return (
 		<section id="resources" className="flex flex-col gap-5">
 			<header className="flex flex-row items-center gap-2.5">
@@ -106,30 +107,28 @@ export function Resources({ resources }: ResourcesProps) {
 										strokeWidth={1.5}
 									/>
 									<div className="flex gap-2.5">
-										{resource.solutions?.map((solution, index) => (
-											<SolutionPreview
-												key={solution._id || index}
-												solutionNumber={String(index + 1)}
-												solutionTitle={solution.title || "Solution"}
-												solutionDescription={
-													solution.description
-														? "Solution description"
-														: "No description available"
-												}
-											>
-												<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-[#a2e636] bg-[#e6fbc5] px-2 py-1.5">
-													<span className="font-normal text-[#95b661] text-[14px] tracking-[-0.14px]">
-														{solution.title || `Solution ${index + 1}`}
-													</span>
-													<HugeiconsIcon
-														icon={ChartRelationshipIcon}
-														size={14}
-														color="#95b661"
-														strokeWidth={1.5}
-													/>
-												</div>
-											</SolutionPreview>
-										))}
+										{resource.solutionRefs?.map((solution, index) =>
+											isSolutionReference(solution) ? (
+												<SolutionPreview
+													key={solution._ref || index}
+													solutionNumber={String(index + 1)}
+													solutionTitle={"Linked Solution"}
+													solutionDescription={"No description available"}
+												>
+													<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-[#a2e636] bg-[#e6fbc5] px-2 py-1.5">
+														<span className="font-normal text-[#95b661] text-[14px] tracking-[-0.14px]">
+															{`Solution ${index + 1}`}
+														</span>
+														<HugeiconsIcon
+															icon={ChartRelationshipIcon}
+															size={14}
+															color="#95b661"
+															strokeWidth={1.5}
+														/>
+													</div>
+												</SolutionPreview>
+											) : null,
+										)}
 									</div>
 								</div>
 							</div>

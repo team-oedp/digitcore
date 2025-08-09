@@ -105,6 +105,10 @@ export default async function PatternsPage() {
 														...aud,
 														title: aud.title === null ? undefined : aud.title,
 													})) ?? null,
+												resources: pattern.resources?.map((resource) => ({
+													...resource,
+													solution: resource.solutions || null,
+												})) ?? null,
 											}}
 										/>
 									))
