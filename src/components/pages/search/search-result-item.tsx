@@ -479,6 +479,7 @@ function renderHighlightedText(text: string, searchTerm: string) {
 	let inMark = false;
 	let markBuffer = "";
 	let markKey = 0;
+	let textKey = 0;
 	for (const part of parts) {
 		if (part === '<mark class="bg-yellow-200 rounded-sm">') {
 			inMark = true;
@@ -499,7 +500,7 @@ function renderHighlightedText(text: string, searchTerm: string) {
 		} else if (inMark) {
 			markBuffer += part;
 		} else {
-			result.push(part);
+			result.push(<span key={`text-${textKey++}`}>{part}</span>);
 		}
 	}
 	return result;
