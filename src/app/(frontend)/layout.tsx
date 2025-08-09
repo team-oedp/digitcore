@@ -33,7 +33,7 @@ export default async function Layout({
 
 	return (
 		<section className={cn(sans.variable)}>
-			<div className="h-screen bg-background text-foreground antialiased [--header-height:calc(--spacing(14))]">
+			<div className="h-screen text-foreground antialiased [--header-height:calc(--spacing(14))]">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"

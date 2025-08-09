@@ -16,6 +16,7 @@ type PageHeaderProps = {
 	slug?: string;
 	pattern?: Pattern;
 	sticky?: boolean;
+	withIndent?: boolean;
 };
 
 export function PageHeader({
@@ -23,6 +24,7 @@ export function PageHeader({
 	description,
 	slug,
 	pattern,
+	withIndent = true,
 }: PageHeaderProps) {
 	const pathname = usePathname();
 	const { addPattern, hasPattern, setOpen, isHydrated } = useCarrierBagStore();
@@ -55,7 +57,10 @@ export function PageHeader({
 		isHydrated && pattern ? hasPattern(pattern._id) : false;
 
 	return (
-		<header id="page-header" className={cn("max-w-4xl lg:pl-20")}>
+		<header
+			id="page-header"
+			className={cn("max-w-4xl", withIndent && "lg:pl-20")}
+		>
 			<h1 className="font-light text-[32px] text-primary capitalize">
 				{pageTitle}
 			</h1>

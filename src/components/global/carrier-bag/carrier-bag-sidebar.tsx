@@ -79,6 +79,7 @@ export function CarrierBagSidebar({
 								type="button"
 								aria-label="Expand Sidebar"
 								tabIndex={0}
+								onClick={toggleSidebar}
 							>
 								<Icon icon={ArrowExpand02Icon} size={16} />
 							</Button>

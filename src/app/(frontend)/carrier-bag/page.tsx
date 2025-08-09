@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { PageWrapper } from "~/components/shared/page-wrapper";
-import { CarrierBagContent } from "./carrier-bag-content";
+import { CarrierBagPage } from "./carrier-bag-page";
 
 export const metadata: Metadata = {
 	title: "Carrier Bag | DIGITCORE Toolkit",
@@ -10,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function CarrierBag() {
 	return (
-		<PageWrapper>
-			<CarrierBagContent />
-		</PageWrapper>
+		<div className="w-full px-2 pb-2">
+			<CarrierBagPage />
+		</div>
 	);
 }

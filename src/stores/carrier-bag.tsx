@@ -119,7 +119,13 @@ export const createCarrierBagStore = () =>
 				storage: createJSONStorage(() => localStorage),
 				onRehydrateStorage: () => (state) => {
 					state?.setHydrated(true);
+					// Ensure sidebar is closed on initial load
+					state?.setOpen(false);
 				},
+				partialize: (state) => ({
+					// Only persist items, not UI state
+					items: state.items,
+				}),
 			},
 		),
 	);

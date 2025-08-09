@@ -11,17 +11,18 @@ type LayoutUIProps = {
 export function LayoutUI({ children }: LayoutUIProps) {
 	return (
 		<SidebarProvider
-			className="flex h-screen flex-col gap-2"
+			className="flex h-svh w-full flex-col gap-2"
 			style={
 				{
 					"--sidebar-width": "24rem",
 				} as React.CSSProperties
 			}
+			defaultOpen={false}
 		>
 			<SiteHeader />
 			<div className="flex flex-1 flex-row-reverse gap-2 overflow-hidden bg-neutral-200 pt-14 transition-[gap] md:[&:has([data-slot=sidebar][data-state=collapsed])]:gap-0 md:[&:has([data-slot=sidebar][data-state=collapsed])]:delay-200 md:[&:has([data-slot=sidebar][data-state=collapsed])]:duration-0">
 				<CarrierBagSidebar className="peer" />
-				<SidebarInset className="flex flex-1 flex-col overflow-hidden">
+				<SidebarInset className="flex flex-1 flex-col overflow-hidden bg-neutral-200">
 					<main className="flex flex-1 flex-col overflow-y-auto bg-primary-foreground">
 						{children}
 					</main>
