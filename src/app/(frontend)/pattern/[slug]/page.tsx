@@ -115,23 +115,17 @@ export default async function PatternPage({ params }: PatternPageProps) {
 							theme={(pattern.theme as unknown as Theme) || undefined}
 						/>
 					</div>
-					<Solutions solutions={(pattern.solutions as Solution[]) || []} />
+					<Solutions
+						solutions={(pattern.solutions as Solution[]) || []}
+						patternName={pattern.title || ""}
+						patternSlug={slug}
+					/>
 					<Resources
 						resources={
 							(pattern.resources as unknown as DereferencedResource[]) || []
 						}
 					/>
 				</div>
-				<Solutions
-					solutions={(pattern.solutions as Solution[]) || []}
-					patternName={pattern.title || ""}
-					patternSlug={slug}
-				/>
-				<Resources
-					resources={
-						(pattern.resources as unknown as DereferencedResource[]) || []
-					}
-				/>
 			</PageWrapper>
 		</PatternContentProvider>
 	);
