@@ -83,7 +83,6 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
-		"@biomejs/cli-darwin-arm64": "^1.9.4",
 		"@tailwindcss/postcss": "^4.0.15",
 		"@testing-library/dom": "^10.0.0",
 		"@testing-library/jest-dom": "^6.4.1",
