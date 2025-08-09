@@ -25,7 +25,7 @@ type PDFPreviewModalProps = {
 	documentData: CarrierBagDocumentData;
 	disabled?: boolean;
 	children?: React.ReactNode;
-}
+};
 
 // Web preview components that match the PDF layout
 const PreviewCoverPage = ({

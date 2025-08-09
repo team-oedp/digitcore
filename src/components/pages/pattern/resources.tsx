@@ -20,15 +20,15 @@ type ResourceReference = {
 type Resource = {
 	_id: string;
 	title?: string | null;
-	description?: PortableTextBlock[];
+	description?: PortableTextBlock[] | null;
 	links?: { href: string }[];
 	solutions?: Solution[];
 };
 
 function isDereferencedResource(
-	resource: Resource | ResourceReference,
+	resource: ResourceReference | Resource,
 ): resource is Resource {
-	return "title" in resource;
+	return resource && "title" in resource;
 }
 
 type Solution = {
@@ -38,7 +38,7 @@ type Solution = {
 };
 
 type ResourcesProps = {
-	resources: Resource[];
+	resources: (ResourceReference | Resource)[];
 };
 
 export function Resources({ resources }: ResourcesProps) {

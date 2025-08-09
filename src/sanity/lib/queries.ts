@@ -31,12 +31,25 @@ export const PATTERN_QUERY =
     audiences[]->{...},
     themes[]->{...},
     solutions[]->{
-      ...,
+      _id,
+      _type,
+      _createdAt,
+      _updatedAt,
+      _rev,
+      title,
+      description,
       audiences[]->{ _id, title }
     },
     resources[]->{
-      ...,
-      solution[]->{...},
+      _id,
+      _type,
+      _createdAt,
+      _updatedAt,
+      _rev,
+      title,
+      description,
+      links,
+      solutions[]->{...},
     },
   }`);
 
