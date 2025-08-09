@@ -8,9 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function CarrierBag() {
-	return (
-		<div className="w-full px-2 pb-2">
-			<CarrierBagPage />
-		</div>
-	);
+	return <CarrierBagPage />;
 }

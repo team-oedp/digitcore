@@ -51,7 +51,7 @@ export function CarrierBagSidebar({
 			side="right"
 			variant="inset"
 			className={cn(
-				"right-2 mt-16 mb-2 flex h-[calc(100%-var(--spacing(20))-var(--spacing(8))] flex-col rounded-md bg-primary-foreground",
+				"top-[calc(var(--header-height)+theme(spacing.2))] right-2 bottom-2 flex h-[calc(100svh-var(--header-height)-theme(spacing.4))] min-h-0 flex-col rounded-md bg-primary-foreground",
 				className,
 			)}
 			{...props}
