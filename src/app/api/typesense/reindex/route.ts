@@ -1,8 +1,8 @@
 import { createClient } from "next-sanity";
 import { type NextRequest, NextResponse } from "next/server";
 import Typesense from "typesense";
-import { dataset, projectId } from "~/sanity/env";
-import type { BlockContent } from "~/sanity/sanity.types";
+import { dataset, projectId } from "../../../../sanity/env";
+import type { BlockContent } from "../../../../sanity/sanity.types";
 
 // Types for GROQ query results (dereferenced data)
 interface DereferencedEntity {

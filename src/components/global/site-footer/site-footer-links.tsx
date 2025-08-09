@@ -41,13 +41,13 @@ const SOCIAL_LINKS: SocialLink[] = [
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-export default function Content() {
+export default function SiteFooterLinks() {
 	return (
 		<div className="mx-auto grid h-full max-w-6xl grid-cols-12 gap-8 px-8 py-6">
 			<div className="col-span-12 flex h-full flex-col justify-between lg:col-span-6">
 				<div className="flex items-center">
 					<Image
-						src="/icon.png"
+						src="/oedp-icon.png"
 						alt="Digital Toolkit logo"
 						width={24}
 						height={24}

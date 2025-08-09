@@ -6,7 +6,7 @@ import {
 	DragDropVerticalIcon,
 	Share02Icon,
 } from "@hugeicons/core-free-icons";
-import { Icon } from "~/components/global/icon";
+import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
 import type { Pattern } from "~/sanity/sanity.types";
 

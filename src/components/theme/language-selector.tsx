@@ -29,12 +29,11 @@ export function LanguageSelector() {
 				<button
 					type="button"
 					className={cn(
-						"group relative flex items-center rounded-md border border-border px-2 py-0.5 dark:border-border/50",
-						"bg-background outline-none duration-150 ease-linear hover:bg-main-foreground/40 focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:focus-visible:ring-neutral-800 dark:hover:border-white/10 dark:hover:bg-main-foreground/20",
+						"group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear hover:bg-main-foreground/40 focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:border-border/50 dark:focus-visible:ring-neutral-800 dark:hover:border-white/10 dark:hover:bg-main-foreground/20",
 					)}
 				>
 					<span
-						className={cn("text-primary text-sm", "flex items-center gap-0.5")}
+						className={cn("flex items-center gap-0.5 text-primary text-sm")}
 					>
 						<span className="font-normal text-sm">LANG</span>
 						<HugeiconsIcon
