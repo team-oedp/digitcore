@@ -1,35 +1,35 @@
 "use client";
 
 import {
-  AiIdeaIcon,
-  Book02Icon,
-  Chatting01Icon,
-  CleaningBucketIcon,
-  Directions01Icon,
-  Download05Icon,
-  FileDownloadIcon,
-  Link05Icon,
+	AiIdeaIcon,
+	Book02Icon,
+	Chatting01Icon,
+	CleaningBucketIcon,
+	Directions01Icon,
+	Download05Icon,
+	FileDownloadIcon,
+	Link05Icon,
 } from "@hugeicons/core-free-icons";
 import { useRouter } from "next/navigation";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
 } from "~/components/ui/card";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
+	Sidebar,
+	SidebarContent,
+	SidebarFooter,
+	SidebarGroup,
+	SidebarGroupContent,
+	SidebarGroupLabel,
+	SidebarMenu,
+	SidebarMenuButton,
+	SidebarMenuItem,
+	SidebarProvider,
 } from "~/components/ui/sidebar";
 import { CarrierBagContent } from "./carrier-bag-content";
 
@@ -56,9 +56,9 @@ function CloseCarrierBagButton() {
 			onClick={() => {
 				const ref = document.referrer;
 				if (ref) {
-						try {
-							const referrerUrl = new URL(ref);
-							if (referrerUrl.origin === window.location.origin) {
+					try {
+						const referrerUrl = new URL(ref);
+						if (referrerUrl.origin === window.location.origin) {
 							router.back();
 							return;
 						}

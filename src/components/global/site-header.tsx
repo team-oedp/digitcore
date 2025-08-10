@@ -33,7 +33,7 @@ export function SiteHeader() {
 
 	const pathname = usePathname();
 	const isOnCarrierBagRoute = pathname === "/carrier-bag";
-	
+
 	return (
 		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-primary-foreground">
 			<nav className="flex w-full items-center justify-between gap-3.5 px-3.5 py-1.5">
@@ -162,17 +162,33 @@ export function SiteHeader() {
 							"group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:border-border/50 dark:focus-visible:ring-neutral-800",
 							isOnCarrierBagRoute
 								? "cursor-not-allowed opacity-50"
-								: "hover:bg-main-foreground/40 dark:hover:border-white/10 dark:hover:bg-main-foreground/20"
+								: "hover:bg-main-foreground/40 dark:hover:border-white/10 dark:hover:bg-main-foreground/20",
 						)}
-						onClick={isOnCarrierBagRoute ? undefined : (isModalMode ? toggleOpen : toggleSidebar)}
+						onClick={
+							isOnCarrierBagRoute
+								? undefined
+								: isModalMode
+									? toggleOpen
+									: toggleSidebar
+						}
 						disabled={isOnCarrierBagRoute}
-						title={isOnCarrierBagRoute ? "Carrier Bag (currently viewing)" : "Toggle Sidebar"}
-						aria-label={isOnCarrierBagRoute ? "Carrier Bag (currently viewing)" : "Toggle Sidebar"}
+						title={
+							isOnCarrierBagRoute
+								? "Carrier Bag (currently viewing)"
+								: "Toggle Sidebar"
+						}
+						aria-label={
+							isOnCarrierBagRoute
+								? "Carrier Bag (currently viewing)"
+								: "Toggle Sidebar"
+						}
 					>
-						<span className={cn(
-							"flex items-center gap-0.5 text-sm",
-							isOnCarrierBagRoute ? "text-muted-foreground" : "text-primary"
-						)}>
+						<span
+							className={cn(
+								"flex items-center gap-0.5 text-sm",
+								isOnCarrierBagRoute ? "text-muted-foreground" : "text-primary",
+							)}
+						>
 							<SidebarIcon size={14} />
 						</span>
 					</button>
