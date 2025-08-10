@@ -159,83 +159,57 @@ export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
 						: undefined,
 					description: pattern.description ?? undefined,
 				},
-			],
-			solutions: (pattern.solutions || []).map((solution) => {
-				const baseSolution = {
-					...solution,
-					// Ensure required fields are present, using defaults if missing
-					_createdAt:
-						("_createdAt" in solution && typeof solution._createdAt === "string"
-							? solution._createdAt
-							: undefined) || pattern._createdAt,
-					_updatedAt:
-						("_updatedAt" in solution && typeof solution._updatedAt === "string"
-							? solution._updatedAt
-							: undefined) || pattern._updatedAt,
-					_rev:
-						("_rev" in solution && typeof solution._rev === "string"
-							? solution._rev
-							: undefined) || pattern._rev,
-				};
-				return baseSolution as Solution;
-			}),
-			resources: (pattern.resources || []).map((resource) => {
-				const baseResource = {
-					...resource,
-					// Ensure required fields are present, using defaults if missing
-					_createdAt:
-						("_createdAt" in resource && typeof resource._createdAt === "string"
-							? resource._createdAt
-							: undefined) || pattern._createdAt,
-					_updatedAt:
-						("_updatedAt" in resource && typeof resource._updatedAt === "string"
-							? resource._updatedAt
-							: undefined) || pattern._updatedAt,
-					_rev:
-						("_rev" in resource && typeof resource._rev === "string"
-							? resource._rev
-							: undefined) || pattern._rev,
-				};
-				return baseResource as Resource;
-			}),
-			tags: (pattern.tags || []).map((tag) => {
-				const baseTag = {
-					...tag,
-					// Ensure required fields are present, using defaults if missing
-					_createdAt:
-						("_createdAt" in tag && typeof tag._createdAt === "string"
-							? tag._createdAt
-							: undefined) || pattern._createdAt,
-					_updatedAt:
-						("_updatedAt" in tag && typeof tag._updatedAt === "string"
-							? tag._updatedAt
-							: undefined) || pattern._updatedAt,
-					_rev:
-						("_rev" in tag && typeof tag._rev === "string"
-							? tag._rev
-							: undefined) || pattern._rev,
-				};
-				return baseTag as Tag;
-			}),
-			audiences: (pattern.audiences || []).map((audience) => {
-				const baseAudience = {
-					...audience,
-					// Ensure required fields are present, using defaults if missing
-					_createdAt:
-						("_createdAt" in audience && typeof audience._createdAt === "string"
-							? audience._createdAt
-							: undefined) || pattern._createdAt,
-					_updatedAt:
-						("_updatedAt" in audience && typeof audience._updatedAt === "string"
-							? audience._updatedAt
-							: undefined) || pattern._updatedAt,
-					_rev:
-						("_rev" in audience && typeof audience._rev === "string"
-							? audience._rev
-							: undefined) || pattern._rev,
-				};
-				return baseAudience as Audience;
-			}),
+		],
+		solutions:
+			pattern.solutions?.map(
+				(solution) =>
+					({
+						_id: solution._id,
+						_type: solution._type,
+						_createdAt: new Date().toISOString(),
+						_updatedAt: new Date().toISOString(),
+						_rev: "",
+						title: solution.title || undefined,
+						description: solution.description || undefined,
+					}) as Solution,
+			) || [],
+		resources:
+			pattern.resources?.map(
+				(resource) =>
+					({
+						_id: resource._id,
+						_type: resource._type,
+						_createdAt: new Date().toISOString(),
+						_updatedAt: new Date().toISOString(),
+						_rev: "",
+						title: resource.title || undefined,
+						description: resource.description || undefined,
+					}) as Resource,
+			) || [],
+		tags:
+			pattern.tags?.map(
+				(tag) =>
+					({
+						_id: tag._id,
+						_type: tag._type,
+						_createdAt: new Date().toISOString(),
+						_updatedAt: new Date().toISOString(),
+						_rev: "",
+						title: tag.title || undefined,
+					}) as Tag,
+			) || [],
+		audiences:
+			pattern.audiences?.map(
+				(audience) =>
+					({
+						_id: audience._id,
+						_type: audience._type,
+						_createdAt: new Date().toISOString(),
+						_updatedAt: new Date().toISOString(),
+						_rev: "",
+						title: audience.title || undefined,
+					}) as Audience,
+			) || [],
 		};
 
 		console.log("Setting searchable content in store:", searchableContent);

@@ -4,6 +4,7 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { PatternConnections } from "~/components/pages/pattern/pattern-connections";
 import { PatternContentProvider } from "~/components/pages/pattern/pattern-content-provider";
+import type { DereferencedResource } from "~/components/pages/pattern/resources";
 import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
 import { PageHeader } from "~/components/shared/page-header";
@@ -114,23 +115,15 @@ export default async function PatternPage({ params }: PatternPageProps) {
 							theme={(pattern.theme as unknown as Theme) || undefined}
 						/>
 					</div>
-					<Solutions solutions={(pattern.solutions as Solution[]) || []} />
+					<Solutions
+						solutions={(pattern.solutions as Solution[]) || []}
+						patternName={pattern.title || ""}
+						patternSlug={slug}
+					/>
 					<Resources
-						resources={(pattern.resources || []).map((r) => ({
-							_id: r._id,
-							title: r.title,
-							description: r.description
-								? (r.description.map((block) => ({
-										...block,
-										children: block.children || [],
-									})) as PortableTextBlock[])
-								: null,
-							links:
-								r.links?.map((link) => ({
-									href: ("href" in link ? link.href : "") || "",
-								})) || undefined,
-							solutions: [], // The component expects solutions array but query doesn't populate it
-						}))}
+						resources={
+							(pattern.resources as unknown as DereferencedResource[]) || []
+						}
 					/>
 				</div>
 			</PageWrapper>
