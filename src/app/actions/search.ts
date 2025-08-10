@@ -64,7 +64,11 @@ export type SearchPattern = {
 		_id: string;
 		title?: string;
 		description?: Array<unknown>;
-		solution: Array<{
+		solutions?: Array<{
+			_id: string;
+			title?: string;
+		}> | null;
+		solution?: Array<{
 			_id: string;
 			title?: string;
 		}> | null;

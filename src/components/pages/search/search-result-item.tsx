@@ -60,7 +60,14 @@ type PatternSearchResultData = BaseSearchResultData & {
 		_id: string;
 		title?: string;
 		description?: Array<unknown>;
-		solution?: unknown;
+		solutions?: Array<{
+			_id: string;
+			title?: string;
+		}> | null;
+		solution?: Array<{
+			_id: string;
+			title?: string;
+		}> | null;
 	}> | null;
 };
 
@@ -98,7 +105,11 @@ type SearchResultData =
 	| SolutionSearchResultData;
 
 type SearchResultItemProps = {
-	pattern: SearchPattern;
+	pattern:
+		| SearchPattern
+		| PatternSearchResultData
+		| ResourceSearchResultData
+		| SolutionSearchResultData;
 	searchTerm?: string;
 };
 

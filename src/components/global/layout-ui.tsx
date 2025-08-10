@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
 import { SiteHeader } from "~/components/global/site-header";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
@@ -10,29 +11,28 @@ type LayoutUIProps = {
 };
 
 export function LayoutUI({ children }: LayoutUIProps) {
+	const pathname = usePathname();
+	const isCarrierBagRoute = pathname === "/carrier-bag";
 	return (
 		<SidebarProvider
-			className="flex h-screen flex-col gap-2.5"
+			className="flex h-full min-h-0 w-full flex-col gap-2"
 			style={
 				{
-					"--sidebar-width": "22rem",
+					"--sidebar-width": "24rem",
 				} as React.CSSProperties
 			}
+			defaultOpen={false}
 		>
 			<SiteHeader />
-			<div
-				className={cn(
-					"flex flex-1 flex-row-reverse overflow-hidden bg-neutral-200 px-2 pt-16.5 pb-2",
-				)}
-			>
-				<CarrierBagSidebar />
-				{/* spacer between sidebar and main, collapses after sidebar is collapsed */}
-				<div
-					aria-hidden
-					className="hidden shrink-0 md:block md:w-2 md:transition-[width] md:duration-200 md:ease-linear md:peer-data-[state=collapsed]:w-0 md:peer-data-[state=collapsed]:delay-200"
-				/>
-				<SidebarInset className="flex flex-1 flex-col overflow-hidden md:peer-data-[variant=inset]:m-0">
-					<main className="flex flex-1 flex-col overflow-y-auto bg-primary-foreground">
+			<div className="flex min-h-0 flex-1 flex-row-reverse gap-2 overflow-hidden bg-neutral-200 pt-14 transition-[gap] md:[&:has([data-slot=sidebar][data-state=collapsed])]:gap-0 md:[&:has([data-slot=sidebar][data-state=collapsed])]:delay-200 md:[&:has([data-slot=sidebar][data-state=collapsed])]:duration-0">
+				<CarrierBagSidebar className="peer" />
+				<SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden bg-neutral-200">
+					<main
+						className={cn(
+							"flex min-h-0 flex-1 flex-col overflow-y-auto",
+							isCarrierBagRoute ? "bg-neutral-200" : "bg-primary-foreground",
+						)}
+					>
 						{children}
 					</main>
 				</SidebarInset>

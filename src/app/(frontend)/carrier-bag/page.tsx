@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CarrierBagContent } from "./carrier-bag-content";
+import { CarrierBagPage } from "./carrier-bag-page";
 
 export const metadata: Metadata = {
 	title: "Carrier Bag | DIGITCORE Toolkit",
@@ -8,9 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function CarrierBag() {
-	return (
-		<div className="min-h-screen bg-background">
-			<CarrierBagContent />
-		</div>
-	);
+	return <CarrierBagPage />;
 }

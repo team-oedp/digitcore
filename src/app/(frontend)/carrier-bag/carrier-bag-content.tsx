@@ -1,151 +1,84 @@
 "use client";
 
-import Link from "next/link";
-import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
-import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
-import { Button } from "~/components/ui/button";
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "~/components/ui/card";
-import { useHydration } from "~/hooks/use-hydration";
-import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
+	CarrierBagItem,
+	type CarrierBagItemData,
+} from "~/components/global/carrier-bag/carrier-bag-item";
+import { PageHeader } from "~/components/shared/page-header";
+import { Button } from "~/components/ui/button";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 
-interface PatternCardProps {
-	item: CarrierBagItem;
-	onRemove: (patternId: string) => void;
-}
-
-function PatternCard({ item, onRemove }: PatternCardProps) {
-	const { pattern, dateAdded } = item;
-
-	return (
-		<Card>
-			<CardHeader>
-				<div className="flex items-start justify-between">
-					<div>
-						<CardTitle className="capitalize">
-							<Link
-								href={`/pattern/${pattern.slug?.current || ""}`}
-								className="hover:underline"
-							>
-								{pattern.title}
-							</Link>
-						</CardTitle>
-						<CardDescription>
-							Added {new Date(dateAdded).toLocaleDateString()}
-						</CardDescription>
-					</div>
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => onRemove(pattern._id)}
-					>
-						Remove
-					</Button>
-				</div>
-			</CardHeader>
-			<CardContent>
-				<div className="space-y-3">
-					{pattern.tags && pattern.tags.length > 0 && (
-						<div className="flex flex-wrap gap-1">
-							{pattern.tags.slice(0, 3).map((tag) => (
-								<span
-									key={tag._key || tag._ref}
-									className="rounded bg-gray-200 px-2 py-1 text-xs"
-								>
-									{typeof tag === "object" &&
-									tag !== null &&
-									"title" in tag &&
-									typeof tag.title === "string"
-										? tag.title
-										: typeof tag === "object" &&
-												tag !== null &&
-												"_ref" in tag &&
-												typeof tag._ref === "string"
-											? tag._ref
-											: "Untitled Tag"}
-								</span>
-							))}
-							{pattern.tags && pattern.tags.length > 3 && (
-								<span className="text-muted-foreground text-xs">
-									+{pattern.tags.length - 3} more
-								</span>
-							)}
-						</div>
-					)}
-				</div>
-			</CardContent>
-		</Card>
-	);
-}
-
 export function CarrierBagContent() {
-	const hydrated = useHydration();
-	const { items, removePattern } = useCarrierBagStore();
-	const documentData = useCarrierBagDocument(items);
+	const items = useCarrierBagStore((state) => state.items);
+	const removePattern = useCarrierBagStore((state) => state.removePattern);
 
-	if (!hydrated) {
-		return (
-			<Card aria-live="polite" className="text-center">
-				<CardHeader>
-					<CardTitle>Loading your carrier bag...</CardTitle>
-					<CardDescription>
-						Your saved patterns will appear here once loaded.
-					</CardDescription>
-				</CardHeader>
-			</Card>
-		);
-	}
+	const handleRemoveItem = (patternId: string) => {
+		removePattern(patternId);
+	};
 
-	if (items.length === 0) {
-		return (
-			<Card aria-live="polite" className="text-center">
-				<CardHeader>
-					<CardTitle>No patterns saved yet</CardTitle>
-					<CardDescription>
-						Browse patterns and select "Save to carrier bag" to build your
-						collection.
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<Button variant="link" asChild>
-						<Link href="/tags">Browse patterns</Link>
-					</Button>
-				</CardContent>
-			</Card>
-		);
-	}
+	const handleExpandItem = (slug: string) => {
+		// Navigate to pattern page
+		window.location.href = `/pattern/${slug}`;
+	};
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<p className="text-muted-foreground">
-					{items.length} pattern{items.length !== 1 ? "s" : ""} in your bag
-				</p>
-				<div className="flex items-center gap-3">
-					<PDFPreviewModal
-						documentData={documentData}
-						disabled={items.length === 0}
-					/>
-					<Button variant="outline" size="sm" asChild>
-						<Link href="/tags">Browse more patterns</Link>
-					</Button>
+		<div className="flex h-full min-h-0 w-full flex-col gap-4 overflow-hidden rounded-md bg-primary-foreground px-4">
+			<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+				<div className="flex items-start justify-between gap-6">
+					<div className="flex-1">
+						<PageHeader
+							title="Carrier Bag"
+							description={`${items.length} saved items`}
+							withIndent={false}
+						/>
+					</div>
 				</div>
 			</div>
 
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{items.map((item: CarrierBagItem) => (
-					<PatternCard
-						key={item.pattern._id}
-						item={item}
-						onRemove={removePattern}
-					/>
-				))}
+			<div className="flex flex-wrap items-center gap-2">
+				<h3 className="font-normal text-foreground text-sm">Filters</h3>
+				<Button
+					variant="ghost"
+					size="sm"
+					className="text-muted-foreground text-sm hover:text-foreground"
+				>
+					Add filter
+				</Button>
+				<Button
+					variant="ghost"
+					size="sm"
+					className="text-muted-foreground text-sm hover:text-foreground"
+				>
+					Clear all
+				</Button>
+			</div>
+
+			<div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
+				{items.length === 0 ? (
+					<div className="flex flex-col items-start justify-center py-8 text-left">
+						<p className="font-normal text-muted-foreground text-sm">
+							There are no patterns in your carrier bag. Start by saving one
+							from the toolkit.
+						</p>
+					</div>
+				) : (
+					items.map((item) => {
+						const itemData: CarrierBagItemData = {
+							id: item.pattern._id,
+							title: item.pattern.title || "Untitled Pattern",
+						};
+						return (
+							<CarrierBagItem
+								key={item.pattern._id}
+								item={itemData}
+								onRemove={() => handleRemoveItem(item.pattern._id)}
+								onExpand={() =>
+									handleExpandItem(item.pattern.slug?.current || "")
+								}
+							/>
+						);
+					})
+				)}
 			</div>
 		</div>
 	);

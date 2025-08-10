@@ -13,11 +13,11 @@ import {
 } from "~/components/ui/dropdown-menu";
 
 const languages = [
-	{ code: "ES", name: "Spanish" },
-	{ code: "EN", name: "English" },
-	{ code: "PT", name: "Português" },
-	{ code: "FR", name: "Français" },
-	{ code: "KR", name: "한국어" },
+	{ code: "ES", label: "Spanish" },
+	{ code: "EN", label: "English" },
+	{ code: "PT", label: "Português" },
+	{ code: "FR", label: "Français" },
+	{ code: "KR", label: "한국어" },
 ];
 
 export function LanguageSelector() {
@@ -35,7 +35,7 @@ export function LanguageSelector() {
 					<span
 						className={cn("flex items-center gap-0.5 text-primary text-sm")}
 					>
-						<span className="font-normal text-sm">LANG</span>
+						<span className="hidden font-normal text-sm">LANG</span>
 						<HugeiconsIcon
 							icon={Globe02Icon}
 							size={14}
@@ -80,7 +80,7 @@ export function LanguageSelector() {
 										: "text-muted-foreground",
 								)}
 							>
-								{language.name}
+								{language.label}
 							</span>
 						</DropdownMenuItem>
 					))}
