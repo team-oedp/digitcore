@@ -12,7 +12,7 @@ export default function RootLayout({
 }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body>{children}</body>
+			<body className="bg-neutral-200">{children}</body>
 		</html>
 	);
 }

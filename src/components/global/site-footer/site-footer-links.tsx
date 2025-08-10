@@ -39,7 +39,7 @@ const SOCIAL_LINKS: SocialLink[] = [
 	},
 ];
 
-const CURRENT_YEAR = new Date().getFullYear();
+//
 
 export default function SiteFooterLinks() {
 	return (
@@ -59,7 +59,7 @@ export default function SiteFooterLinks() {
 					</h2>
 				</div>
 				<p className="mt-auto text-left text-gray-600 text-sm">
-					Copyright {CURRENT_YEAR} © Open Environmental Data Project
+					open environmental data project 2025
 				</p>
 			</div>
 

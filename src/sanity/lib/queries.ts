@@ -318,3 +318,12 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
     }
   }
 `);
+
+export const ONBOARDING_QUERY = defineQuery(`
+  *[_type == 'onboarding'][0]{
+    _id,
+    _type,
+    title,
+    description,
+  }
+`);
