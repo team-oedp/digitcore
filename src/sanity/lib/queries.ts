@@ -9,7 +9,11 @@ export const PATTERNS_QUERY =
     "slug": slug.current,
     tags[]->,
     audiences[]->,
-    themes[]->,
+    theme->{
+      _id,
+      title,
+      description
+    },
     solutions[]->,
     resources[]->{
       ...,
@@ -28,8 +32,8 @@ export const PATTERN_QUERY =
     description,
     "slug": slug.current,
     tags[]->{...},
-    audiences[]->{...},
-    themes[]->{...},
+	    audiences[]->{...},
+	    theme->{...},
     solutions[]->{
       _id,
       _type,
@@ -109,6 +113,22 @@ export const TAGS_BY_IDS_QUERY = defineQuery(`*[_type == "tag" && _id in $ids]{
     _id,
     _type,
     title
+  }`);
+
+export const GLOSSARY_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'glossary'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+  }`);
+
+export const GLOSSARY_TERMS_QUERY = defineQuery(`
+  *[_type == "glossary"] | order(title asc) {
+    _id,
+    title,
+    description
   }`);
 
 export const AUDIENCES_BY_IDS_QUERY =
@@ -214,7 +234,7 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
     // Apply audience filter if provided
     && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
     // Apply theme filter if provided  
-    && (!defined($themes) || count($themes) == 0 || count((themes[]._ref)[@ in $themes]) > 0)
+    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)
     // Apply tags filter if provided
     && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
   ]
@@ -249,7 +269,7 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
       _id,
       title
     },
-    themes[]->{
+    theme->{
       _id,
       title,
       description
@@ -277,7 +297,7 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
     // Apply audience filter if provided
     && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
     // Apply theme filter if provided  
-    && (!defined($themes) || count($themes) == 0 || count((themes[]._ref)[@ in $themes]) > 0)
+    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)
     // Apply tags filter if provided
     && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
   ]
@@ -297,7 +317,7 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
       _id,
       title
     },
-    themes[]->{
+    theme->{
       _id,
       title,
       description
@@ -328,6 +348,18 @@ export const ONBOARDING_QUERY = defineQuery(`
   }
 `);
 
+export const TAGS_WITH_PATTERNS_QUERY = defineQuery(`
+  *[_type == "tag"] | order(title asc) {
+    _id,
+    title,
+    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)] | order(title asc) {
+      _id,
+      title,
+      "slug": slug.current
+    }
+  }[count(patterns) > 0]
+`);
+
 export const CARRIER_BAG_QUERY = defineQuery(`
   *[_type == 'carrierBag'][0]{
     _id,
@@ -343,6 +375,7 @@ export const CARRIER_BAG_QUERY = defineQuery(`
 // Fetch patterns by an array of slugs with references needed for carrier bag
 export const PATTERNS_BY_SLUGS_QUERY = defineQuery(`
   *[_type == "pattern" && defined(slug.current) && slug.current in $slugs]{
+    ...,
     _id,
     _type,
     title,
@@ -373,5 +406,35 @@ export const PATTERNS_BY_SLUGS_QUERY = defineQuery(`
       links,
       solutions[]->{ _id, title }
     }
+  }
+`);
+
+export const VALUES_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'values'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]
+  }
+`);
+
+export const HOME_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == '/'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]
+  }
+`);
+
+export const FAQS_QUERY = defineQuery(`
+  *[_type == "faq"] | order(_createdAt asc) {
+    _id,
+    title,
+    description
   }
 `);

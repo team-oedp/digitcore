@@ -33,6 +33,9 @@ export const pageType = defineType({
 				defineArrayMember({
 					type: "content",
 				}),
+				defineArrayMember({
+					type: "cardCarousel",
+				}),
 			],
 		}),
 	],

@@ -31,6 +31,13 @@ export const patternType = defineType({
 			],
 		}),
 		defineField({
+			name: "icon",
+			title: "Icon",
+			type: "reference",
+			to: [{ type: "icon" }],
+			description: "Select an icon document (SVG) to represent this pattern",
+		}),
+		defineField({
 			name: "tags",
 			type: "array",
 			of: [defineArrayMember({ type: "reference", to: { type: "tag" } })],
