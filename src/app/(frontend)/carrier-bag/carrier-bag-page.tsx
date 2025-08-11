@@ -9,12 +9,17 @@ import {
 	Download05Icon,
 	FileDownloadIcon,
 	Link05Icon,
+	Tick02Icon,
 } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { CustomPortableText } from "~/components/global/portable-text";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { FacebookIcon } from "~/components/icons/facebook-icon";
+import { LinkedInIcon } from "~/components/icons/linkedin-icon";
+import { XIcon } from "~/components/icons/x-icon";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
+import { CopyButton } from "~/components/shared/copy-button";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
 import {
@@ -43,7 +48,7 @@ import {
 import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
 import { client } from "~/sanity/lib/client";
 import { PATTERNS_BY_SLUGS_QUERY } from "~/sanity/lib/queries";
-import type { CarrierBag } from "~/sanity/sanity.types";
+import type { CarrierBag, Pattern } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { CarrierBagContent } from "./carrier-bag-content";
 
@@ -134,12 +139,12 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 					clearBag();
 				}
 				for (const p of patterns) {
-					addPattern(p);
+					addPattern(p as Pattern);
 				}
 				const cleanUrl = `${window.location.origin}/carrier-bag`;
 				window.history.replaceState({}, "", cleanUrl);
 			} catch (err) {
-				// swallow
+				// TODO: catch errors
 			}
 		})();
 	}, [addPattern, clearBag]);
@@ -184,10 +189,8 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 				handleDownloadJson();
 				break;
 			case "Export Patterns As PDF":
-				// handled by PDFPreviewModal wrapper trigger
 				break;
 			case "Generate Link":
-				navigator.clipboard.writeText(shareUrl).catch(() => {});
 				break;
 			case "Share To Socials":
 				setShareOpen((o) => !o);
@@ -252,13 +255,13 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 												</PopoverTrigger>
 												<PopoverContent className="w-80">
 													<div className="space-y-2">
-														<p className="font-medium text-sm">
+														<p className="font-normal text-sm">
 															Share this carrier bag
 														</p>
 														<input
 															readOnly
 															value={shareUrl}
-															className="w-full rounded border bg-muted px-2 py-1 text-xs"
+															className="w-full rounded-md border border-border bg-muted px-2 py-1 text-xs"
 														/>
 														<div className="grid grid-cols-3 gap-2">
 															<Button
@@ -270,8 +273,9 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 																		"_blank",
 																	)
 																}
+																className="flex items-center justify-center p-2"
 															>
-																Facebook
+																<FacebookIcon />
 															</Button>
 															<Button
 																variant="outline"
@@ -282,8 +286,9 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 																		"_blank",
 																	)
 																}
+																className="flex items-center justify-center p-2"
 															>
-																LinkedIn
+																<LinkedInIcon />
 															</Button>
 															<Button
 																variant="outline"
@@ -294,13 +299,33 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 																		"_blank",
 																	)
 																}
+																className="flex items-center justify-center p-2"
 															>
-																X
+																<XIcon />
 															</Button>
 														</div>
 													</div>
 												</PopoverContent>
 											</Popover>
+										) : item.label === "Generate Link" ? (
+											<SidebarMenuButton asChild>
+												<CopyButton
+													className="w-full"
+													value={shareUrl}
+													disabled={items.length === 0}
+													copiedChildren={
+														<div className="flex items-center gap-2">
+															<Icon icon={Tick02Icon} />
+															<span className="capitalize">Link Copied</span>
+														</div>
+													}
+												>
+													<div className="flex items-center gap-2">
+														<Icon icon={item.icon} />
+														<span className="capitalize">{item.label}</span>
+													</div>
+												</CopyButton>
+											</SidebarMenuButton>
 										) : (
 											<SidebarMenuButton asChild>
 												<button
