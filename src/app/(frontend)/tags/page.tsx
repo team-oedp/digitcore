@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
-import { client } from "~/sanity/lib/client";
-import { TAGS_WITH_PATTERNS_QUERY } from "~/sanity/lib/queries";
-import { token } from "~/sanity/lib/token";
 import { TagsList } from "~/components/pages/tags/tags-list";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
 import { PageHeader } from "~/components/shared/page-header";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { client } from "~/sanity/lib/client";
+import { TAGS_WITH_PATTERNS_QUERY } from "~/sanity/lib/queries";
+import { token } from "~/sanity/lib/token";
 
 export const metadata: Metadata = {
 	title: "Tags | DIGITCORE Toolkit",
@@ -63,19 +63,20 @@ export default async function Tags() {
 	);
 
 	// Transform Sanity data to match the component's expected format
-	const transformedTags: Tag[] = (tagsData as TagFromSanity[])?.map((tag) => {
-		const firstLetter = tag.title.charAt(0).toUpperCase();
-		return {
-			id: tag._id,
-			name: tag.title,
-			letter: firstLetter,
-			resources: tag.patterns.map((pattern) => ({
-				id: pattern._id,
-				title: pattern.title,
-				slug: pattern.slug,
-			})),
-		};
-	}) || [];
+	const transformedTags: Tag[] =
+		(tagsData as TagFromSanity[])?.map((tag) => {
+			const firstLetter = tag.title.charAt(0).toUpperCase();
+			return {
+				id: tag._id,
+				name: tag.title,
+				letter: firstLetter,
+				resources: tag.patterns.map((pattern) => ({
+					id: pattern._id,
+					title: pattern.title,
+					slug: pattern.slug,
+				})),
+			};
+		}) || [];
 
 	// Group tags by letter
 	const tagsByLetter = transformedTags.reduce<TagsByLetter>((acc, tag) => {

@@ -47,7 +47,7 @@ export function CarrierBagItem({
 			{item.slug ? (
 				<Link
 					href={`/pattern/${item.slug}`}
-					className="flex min-w-0 flex-1 items-center gap-3 cursor-pointer rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+					className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 				>
 					<div className="flex-shrink-0">
 						<Icon icon={Share02Icon} size={16} />
@@ -57,7 +57,9 @@ export function CarrierBagItem({
 							{item.title}
 						</p>
 						{item.subtitle ? (
-							<p className="truncate text-muted-foreground text-xs">{item.subtitle}</p>
+							<p className="truncate text-muted-foreground text-xs">
+								{item.subtitle}
+							</p>
 						) : null}
 					</div>
 				</Link>
@@ -67,13 +69,17 @@ export function CarrierBagItem({
 						<Icon icon={Share02Icon} size={16} />
 					</div>
 					<div className="min-w-0 flex-1">
-						<p className="truncate font-normal text-foreground text-sm">{item.title}</p>
+						<p className="truncate font-normal text-foreground text-sm">
+							{item.title}
+						</p>
 						{item.subtitle ? (
-							<p className="truncate text-muted-foreground text-xs">{item.subtitle}</p>
+							<p className="truncate text-muted-foreground text-xs">
+								{item.subtitle}
+							</p>
 						) : null}
 					</div>
 				</>
-			) }
+			)}
 
 			{/* Actions */}
 			<div className="actions flex items-center gap-1 opacity-0 transition-opacity">

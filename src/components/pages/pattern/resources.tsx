@@ -5,7 +5,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
-import { CustomPortableText } from "~/components/global/portable-text";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { SolutionPreview } from "./solution-preview";
 
 // Because references in Sanity have to be derefenced in order to get access to the fields of the referenced type, we are keying the Pattern query result by "resources"

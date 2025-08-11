@@ -39,13 +39,10 @@ export const iconType = defineType({
 			image: "svg",
 		},
 		prepare(selection) {
-			const { title, image } = selection as {
-				title?: string;
-				image?: any;
-			};
+			const { title, image } = selection;
 			return {
 				title: title || "Icon (SVG)",
-				media: image?.asset?._ref ? image : SparkleIcon,
+				media: image || SparkleIcon,
 			};
 		},
 	},

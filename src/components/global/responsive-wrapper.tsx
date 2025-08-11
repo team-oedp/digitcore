@@ -12,7 +12,7 @@ type ResponsiveWrapperProps = {
 
 export function ResponsiveWrapper({ children }: ResponsiveWrapperProps) {
 	const [isTabletOrBelow, setIsTabletOrBelow] = useState<boolean | undefined>(
-		undefined
+		undefined,
 	);
 
 	useEffect(() => {
@@ -25,8 +25,10 @@ export function ResponsiveWrapper({ children }: ResponsiveWrapperProps) {
 		checkScreenSize();
 
 		// Set up media query listener
-		const mediaQuery = window.matchMedia(`(max-width: ${TABLET_BREAKPOINT - 1}px)`);
-		
+		const mediaQuery = window.matchMedia(
+			`(max-width: ${TABLET_BREAKPOINT - 1}px)`,
+		);
+
 		const handleChange = (e: MediaQueryListEvent) => {
 			setIsTabletOrBelow(e.matches);
 		};
@@ -35,8 +37,8 @@ export function ResponsiveWrapper({ children }: ResponsiveWrapperProps) {
 		if (mediaQuery.addEventListener) {
 			mediaQuery.addEventListener("change", handleChange);
 		} else {
-			// Fallback for older browsers
-			mediaQuery.addListener(handleChange);
+			// Fallback for environments without addEventListener support
+			mediaQuery.onchange = handleChange;
 		}
 
 		// Also listen to resize events as a fallback
@@ -47,7 +49,7 @@ export function ResponsiveWrapper({ children }: ResponsiveWrapperProps) {
 			if (mediaQuery.removeEventListener) {
 				mediaQuery.removeEventListener("change", handleChange);
 			} else {
-				mediaQuery.removeListener(handleChange);
+				mediaQuery.onchange = null;
 			}
 			window.removeEventListener("resize", checkScreenSize);
 		};

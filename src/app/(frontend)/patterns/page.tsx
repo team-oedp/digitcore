@@ -1,18 +1,23 @@
 import { draftMode } from "next/headers";
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
+import { PageHeader } from "~/components/shared/page-header";
+import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
-import { PATTERNS_GROUPED_BY_THEME_QUERY } from "~/sanity/lib/queries";
+import { PATTERNS_WITH_THEMES_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type {
-	PATTERNS_GROUPED_BY_THEME_QUERYResult,
+	PATTERNS_WITH_THEMES_QUERYResult,
 	Theme,
 } from "~/sanity/sanity.types";
+
+type PatternWithTheme = PATTERNS_WITH_THEMES_QUERYResult[0];
 
 export default async function PatternsPage() {
 	const isDraftMode = (await draftMode()).isEnabled;
 
-	const themeGroups: PATTERNS_GROUPED_BY_THEME_QUERYResult = await client.fetch(
-		PATTERNS_GROUPED_BY_THEME_QUERY,
+	// Fetch ALL patterns with their themes
+	const allPatterns: PATTERNS_WITH_THEMES_QUERYResult = await client.fetch(
+		PATTERNS_WITH_THEMES_QUERY,
 		{},
 		isDraftMode
 			? {
@@ -27,102 +32,193 @@ export default async function PatternsPage() {
 				},
 	);
 
+	// Log to see what we're getting
+	console.log("Total patterns fetched:", allPatterns.length);
+	console.log(
+		"Pattern details:",
+		allPatterns.map((p) => ({
+			title: p.title,
+			theme: p.theme ? { id: p.theme._id, title: p.theme.title } : "No theme",
+		})),
+	);
+
+	// Group patterns by theme
+	const themeGroups = new Map<
+		string,
+		{
+			theme: NonNullable<PatternWithTheme["theme"]>;
+			patterns: PatternWithTheme[];
+		}
+	>();
+	const ungroupedPatterns: PatternWithTheme[] = [];
+
+	for (const pattern of allPatterns) {
+		if (pattern.theme?._id) {
+			const themeId = pattern.theme._id;
+			if (!themeGroups.has(themeId)) {
+				themeGroups.set(themeId, {
+					theme: pattern.theme,
+					patterns: [],
+				});
+			}
+			const themeGroup = themeGroups.get(themeId);
+			if (themeGroup) {
+				themeGroup.patterns.push(pattern);
+			}
+		} else {
+			ungroupedPatterns.push(pattern);
+		}
+	}
+
 	return (
 		<div className="relative size-full overflow-clip rounded-lg bg-white">
-			{/* Header Section */}
-			<div className="top-0 left-0 box-border flex w-[834px] flex-col content-stretch items-start justify-start gap-5 pt-5 pr-0 pb-0 pl-7">
-				<div className="relative box-border flex shrink-0 flex-row content-stretch items-center justify-center gap-2.5 p-0">
-					<div className="relative flex shrink-0 flex-col justify-center text-nowrap text-left font-sans text-[#3d3d3d] text-[32px] capitalize not-italic leading-[0]">
-						<h1 className="block whitespace-pre leading-[normal]">Patterns</h1>
-					</div>
+			<PageWrapper>
+				{/* Header Section */}
+				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+					<PageHeader
+						title="Patterns"
+						description="Explore patterns to discover new open environmental research to share and incorporate into your own work."
+					/>
 				</div>
-				<div className="relative min-w-full shrink-0 text-left font-sans text-[#3d3d3d] text-[16px] not-italic leading-[0]">
-					<p className="block leading-[normal]">
-						Explore patterns to discover new open environmental research to
-						share and incorporate into your own work.
-					</p>
-				</div>
-			</div>
 
-			{/* Patterns Content */}
-			<div className="absolute top-[164px] left-0 box-border flex flex-col content-stretch items-start justify-start bg-white py-0 pr-0 pl-5">
-				{!themeGroups || themeGroups.length === 0 ? (
-					<div className="p-8">
-						<p className="text-gray-500">
-							No themes or patterns found. Please check your Sanity database.
-						</p>
-					</div>
-				) : (
-					themeGroups.map((group) => (
-						<div key={group._id} className="mb-12">
-							{/* Theme Section Header */}
-							<div className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-start gap-2.5 px-0 pt-0 pb-9">
-								<div className="relative box-border flex w-[834px] shrink-0 flex-col content-stretch items-start justify-start gap-5 py-0 pr-0 pl-2">
-									<div className="relative box-border flex shrink-0 flex-row content-stretch items-center justify-center gap-2.5 p-0">
-										<div className="relative flex shrink-0 flex-col justify-center text-nowrap text-left font-sans text-[#3d3d3d] text-[32px] capitalize not-italic leading-[0]">
-											<p className="block whitespace-pre leading-[normal]">
-												{group.title}
-											</p>
-										</div>
-									</div>
-									{group.description && (
-										<div className="relative min-w-full shrink-0 text-left font-sans text-[#3d3d3d] text-[16px] not-italic leading-[0]">
-											<p className="block leading-[normal]">
-												{Array.isArray(group.description)
-													? group.description
-															.map(
-																(block: NonNullable<Theme["description"]>[0]) =>
-																	block.children
-																		?.map(
-																			(
-																				child: NonNullable<
-																					NonNullable<
-																						Theme["description"]
-																					>[0]["children"]
-																				>[0],
-																			) => child.text || "",
-																		)
-																		.join("") || "",
-															)
-															.join(" ")
-													: group.description}
-											</p>
-										</div>
-									)}
-								</div>
-							</div>
-
-							{/* Pattern Items using SearchResultItem */}
-							<div className="space-y-0">
-								{group.patterns && group.patterns.length > 0 ? (
-									group.patterns.map((pattern) => (
-										<SearchResultItem
-											key={pattern._id}
-											pattern={{
-												...pattern,
-												audiences:
-													pattern.audiences?.map((aud) => ({
-														...aud,
-														title: aud.title === null ? undefined : aud.title,
-													})) ?? null,
-												resources:
-													pattern.resources?.map((resource) => ({
-														...resource,
-														solution: resource.solutions || null,
-													})) ?? null,
-											}}
-										/>
-									))
-								) : (
-									<div className="p-4 text-gray-500 italic">
-										No patterns found for this theme.
-									</div>
-								)}
-							</div>
+				{/* Patterns Content */}
+				<div className="px-5">
+					{!allPatterns || allPatterns.length === 0 ? (
+						<div className="p-8">
+							<p className="text-gray-500">
+								No patterns found. Please check your Sanity database.
+							</p>
 						</div>
-					))
-				)}
-			</div>
+					) : (
+						<>
+							{/* Render patterns grouped by theme */}
+							{Array.from(themeGroups.values()).map(({ theme, patterns }) => (
+								<div key={theme._id} className="mb-12">
+									{/* Theme Section Header */}
+									<div className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-start gap-2.5 px-0 pt-0 pb-9">
+										<div className="relative box-border flex w-[834px] shrink-0 flex-col content-stretch items-start justify-start gap-5 py-0 pr-0 pl-2">
+											<div className="relative box-border flex shrink-0 flex-row content-stretch items-center justify-center gap-2.5 p-0">
+												<div className="relative flex shrink-0 flex-col justify-center text-nowrap text-left font-sans text-[#3d3d3d] text-[32px] capitalize not-italic leading-[0]">
+													<p className="block whitespace-pre leading-[normal]">
+														{theme.title}
+													</p>
+												</div>
+											</div>
+											{theme.description && (
+												<div className="relative min-w-full shrink-0 text-left font-sans text-[#3d3d3d] text-[16px] not-italic leading-[0]">
+													<p className="block leading-[normal]">
+														{Array.isArray(theme.description)
+															? theme.description
+																	.map(
+																		(
+																			block: NonNullable<
+																				Theme["description"]
+																			>[0],
+																		) =>
+																			block.children
+																				?.map(
+																					(
+																						child: NonNullable<
+																							NonNullable<
+																								Theme["description"]
+																							>[0]["children"]
+																						>[0],
+																					) => child.text || "",
+																				)
+																				.join("") || "",
+																	)
+																	.join(" ")
+															: theme.description}
+													</p>
+												</div>
+											)}
+										</div>
+									</div>
+
+									{/* Pattern Items using SearchResultItem */}
+									<div className="space-y-0">
+										{patterns.map((pattern) => (
+											<SearchResultItem
+												key={pattern._id}
+												pattern={{
+													...pattern,
+													theme: pattern.theme
+														? {
+																_id: pattern.theme._id,
+																title:
+																	pattern.theme.title === null
+																		? undefined
+																		: pattern.theme.title,
+																description: pattern.theme.description as
+																	| unknown[]
+																	| undefined,
+															}
+														: null,
+													audiences:
+														pattern.audiences?.map((aud) => ({
+															...aud,
+															title: aud.title === null ? undefined : aud.title,
+														})) ?? null,
+													resources:
+														pattern.resources?.map((resource) => ({
+															...resource,
+															solution: resource.solutions || null,
+														})) ?? null,
+												}}
+											/>
+										))}
+									</div>
+								</div>
+							))}
+
+							{/* Section for patterns without a theme */}
+							{ungroupedPatterns.length > 0 && (
+								<div className="mb-12">
+									<div className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-start gap-2.5 px-0 pt-0 pb-9">
+										<div className="relative box-border flex w-[834px] shrink-0 flex-col content-stretch items-start justify-start gap-5 py-0 pr-0 pl-2">
+											<div className="relative box-border flex shrink-0 flex-row content-stretch items-center justify-center gap-2.5 p-0">
+												<div className="relative flex shrink-0 flex-col justify-center text-nowrap text-left font-sans text-[#3d3d3d] text-[32px] capitalize not-italic leading-[0]">
+													<p className="block whitespace-pre leading-[normal]">
+														Additional Patterns
+													</p>
+												</div>
+											</div>
+											<div className="relative min-w-full shrink-0 text-left font-sans text-[#3d3d3d] text-[16px] not-italic leading-[0]">
+												<p className="block leading-[normal]">
+													Patterns that haven't been categorized into a theme
+													yet.
+												</p>
+											</div>
+										</div>
+									</div>
+
+									<div className="space-y-0">
+										{ungroupedPatterns.map((pattern) => (
+											<SearchResultItem
+												key={pattern._id}
+												pattern={{
+													...pattern,
+													theme: null,
+													audiences:
+														pattern.audiences?.map((aud) => ({
+															...aud,
+															title: aud.title === null ? undefined : aud.title,
+														})) ?? null,
+													resources:
+														pattern.resources?.map((resource) => ({
+															...resource,
+															solution: resource.solutions || null,
+														})) ?? null,
+												}}
+											/>
+										))}
+									</div>
+								</div>
+							)}
+						</>
+					)}
+				</div>
+			</PageWrapper>
 		</div>
 	);
 }
