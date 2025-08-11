@@ -3,10 +3,11 @@
 import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
 import { usePathname } from "next/navigation";
+import { useSidebar } from "~/components/ui/sidebar";
 import type { Pattern } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 
-import { CustomPortableText } from "~/components/global/portable-text";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { cn } from "~/lib/utils";
 import { Icon } from "./icon";
 
@@ -15,7 +16,6 @@ type PageHeaderProps = {
 	description?: string | PortableTextBlock[];
 	slug?: string;
 	pattern?: Pattern;
-	sticky?: boolean;
 	withIndent?: boolean;
 };
 
@@ -28,6 +28,7 @@ export function PageHeader({
 }: PageHeaderProps) {
 	const pathname = usePathname();
 	const { addPattern, hasPattern, setOpen, isHydrated } = useCarrierBagStore();
+	const { isMobile, setOpen: setUISidebarOpen, setOpenMobile } = useSidebar();
 
 	const pageTitle = (() => {
 		if (title) return title;
@@ -48,7 +49,14 @@ export function PageHeader({
 	const handleSaveToCarrierBag = () => {
 		if (pattern) {
 			addPattern(pattern);
-			setOpen(true); // Open the carrier bag sidebar to show the added item
+			// Ensure the carrier bag UI is visible after saving
+			if (isMobile) {
+				setOpenMobile(true);
+			} else {
+				setUISidebarOpen(true);
+			}
+			// Also set the store open flag (used by modal mode)
+			setOpen(true);
 		}
 	};
 
