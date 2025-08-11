@@ -1,9 +1,9 @@
 "use client";
 
-interface LetterNavigationProps<T> {
+type LetterNavigationProps<T> = {
 	itemsByLetter: Partial<Record<string, T[]>>;
 	contentId?: string;
-}
+};
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 

@@ -9,11 +9,11 @@ import {
 	HoverCardTrigger,
 } from "~/components/ui/hover-card";
 
-interface SearchResultPreviewProps {
+type SearchResultPreviewProps = {
 	children: React.ReactNode;
 	description: string;
 	patternTitle: string;
-}
+};
 
 export function SearchResultPreview({
 	children,

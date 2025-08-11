@@ -8,11 +8,11 @@ import {
 import { createLogLocation, logger } from "~/lib/logger";
 import { SearchInterface } from "./search-interface";
 
-interface FilterOptions {
+type FilterOptions = {
 	audiences: FilterOption[];
 	themes: FilterOption[];
 	tags: FilterOption[];
-}
+};
 
 export function SearchInterfaceWrapper() {
 	const location = createLogLocation(
