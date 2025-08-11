@@ -1,42 +1,50 @@
 "use client";
 
-import { Globe02Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import Image from "next/image";
+import { SidebarIcon } from "lucide-react";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
+import { useSidebar } from "~/components/ui/sidebar";
+import { useHydration } from "~/hooks/use-hydration";
 import { cn } from "~/lib/utils";
+import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { LanguageSelector } from "../theme/language-selector";
 import { ModeToggle } from "../theme/mode-toggle";
-import { Button } from "../ui/button";
-import { SidebarTrigger } from "../ui/sidebar";
 import { CommandMenu } from "./command-menu";
 
-export function Header() {
+export function SiteHeader() {
+	const { toggleSidebar } = useSidebar();
+	const isModalMode = useCarrierBagStore((state) => state.isModalMode);
+	const toggleModalMode = useCarrierBagStore((state) => state.toggleModalMode);
+	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
+	const setOpen = useCarrierBagStore((state) => state.setOpen);
+	const hydrated = useHydration();
+
+	// TODO: implement toggle of carrier bag sidebar into a modal
+	const handleModalModeToggle = () => {
+		toggleModalMode();
+		// When switching to modal mode, ensure the modal is open
+		if (!isModalMode) {
+			setOpen(true);
+		}
+	};
+
 	const pathname = usePathname();
-	const [commandOpen, setCommandOpen] = useState(false);
+	const isOnCarrierBagRoute = pathname === "/carrier-bag";
+
 	return (
-		<header className="sticky top-2 z-50 mx-2 my-2 rounded-md bg-primary-foreground">
+		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-primary-foreground">
 			<nav className="flex w-full items-center justify-between gap-3.5 px-3.5 py-1.5">
-				<div className="flex items-center gap-10">
+				<div className="flex w-full items-center gap-10">
 					<Button
 						variant="link"
 						asChild
-						className={cn(
-							"flex h-auto items-center gap-3.5 px-3 py-2",
-							pathname === "/" ? "text-foreground" : "text-muted-foreground",
-						)}
+						className="flex h-auto items-center gap-3.5 px-3 py-2 text-foreground"
 					>
-						<Link href="/" className="flex items-center gap-3.5">
-							<Image
-								src="/icon.png"
-								alt="Digitcore Logo"
-								width={16}
-								height={16}
-								className="h-6 w-6"
-							/>
-							<span className="font-normal text-sm">Digitcore</span>
+						<Link href="/" className="text-sm uppercase">
+							Digitcore
 						</Link>
 					</Button>
 
@@ -81,7 +89,7 @@ export function Header() {
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href="/onboarding">Onboarding</Link>
+									<Link href="/onboarding?via=header">Onboarding</Link>
 								</Button>
 							</li>
 							<li>
@@ -143,13 +151,48 @@ export function Header() {
 						</ul>
 					</nav>
 				</div>
-
-				<div className="flex items-center gap-3.5">
-					<LanguageSelector />
-					<ModeToggle />
-					<CommandMenu />
-					<SidebarTrigger className="-ml-1" />
-				</div>
+				<Separator orientation="vertical" className="ml-2 h-4" />
+				{hydrated && <LanguageSelector />}
+				{hydrated && <ModeToggle />}
+				{hydrated && <CommandMenu />}
+				{hydrated && (
+					<button
+						type="button"
+						className={cn(
+							"group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:border-border/50 dark:focus-visible:ring-neutral-800",
+							isOnCarrierBagRoute
+								? "cursor-not-allowed opacity-50"
+								: "hover:bg-main-foreground/40 dark:hover:border-white/10 dark:hover:bg-main-foreground/20",
+						)}
+						onClick={
+							isOnCarrierBagRoute
+								? undefined
+								: isModalMode
+									? toggleOpen
+									: toggleSidebar
+						}
+						disabled={isOnCarrierBagRoute}
+						title={
+							isOnCarrierBagRoute
+								? "Carrier Bag (currently viewing)"
+								: "Toggle Sidebar"
+						}
+						aria-label={
+							isOnCarrierBagRoute
+								? "Carrier Bag (currently viewing)"
+								: "Toggle Sidebar"
+						}
+					>
+						<span
+							className={cn(
+								"flex items-center gap-0.5 text-sm",
+								isOnCarrierBagRoute ? "text-muted-foreground" : "text-primary",
+							)}
+						>
+							<SidebarIcon size={14} />
+						</span>
+					</button>
+				)}
 			</nav>
 		</header>
 	);

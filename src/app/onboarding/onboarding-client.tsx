@@ -1,75 +1,347 @@
 "use client";
 
-// Copied from original page.tsx to act as the client component that handles all interactive logic for the onboarding flow.
-import { Link02Icon, Search02Icon } from "@hugeicons/core-free-icons";
+import { SearchList02Icon, Share02Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { Icon } from "~/components/global/icon";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import type { FilterOption } from "~/app/actions/filter-options";
+import { Icon } from "~/components/shared/icon";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "~/components/ui/breadcrumb";
+import { cn } from "~/lib/utils";
+import type { Onboarding } from "~/sanity/sanity.types";
+import {
+	OnboardingStoreProvider,
+	useOnboardingStore,
+} from "~/stores/onboarding";
 
-const heroImage1 =
-	"http://localhost:3845/assets/7ed4677b62d314739282582970ffc2151fe29d17.png";
-const heroImage2 =
-	"http://localhost:3845/assets/32e85c03c386393ce821b623d8720d8b4383dffa.png";
-const heroImage3 =
-	"http://localhost:3845/assets/209efa532a3df32c6c672cafaf2d5d3003b20759.png";
+function getSafePath(path?: string) {
+	try {
+		if (!path) return "/";
+		if (/^https?:\/\//i.test(path)) {
+			return new URL(path).pathname || "/";
+		}
+		const cleaned = (path.split("#")[0] || "/").split("?")[0] || "/";
+		return cleaned.startsWith("/") ? cleaned || "/" : "/";
+	} catch {
+		return "/";
+	}
+}
 
-export default function OnboardingClient() {
-	const [currentSlide, setCurrentSlide] = useState(1);
+function friendlyLabelFromPath(path?: string) {
+	try {
+		const safe = path ?? "/";
+		const isAbsolute = /^https?:\/\//i.test(safe);
+		const pathname = isAbsolute
+			? new URL(safe).pathname
+			: (safe.split("#")[0] || "/").split("?")[0] || "/";
+
+		if (pathname === "/") return "DIGITCORE Home Page";
+		const segments = pathname.split("/").filter(Boolean);
+		if (segments[0] === "pattern" && segments[1]) return "Pattern Page";
+		if (segments[0] === "patterns") return "Patterns Page";
+		if (segments[0] === "search") return "Search Page";
+		if (segments[0] === "tags") return "Tags Page";
+		if (segments[0] === "faq") return "FAQ Page";
+		if (segments[0] === "glossary") return "Glossary Page";
+		const last = segments[segments.length - 1] || "";
+		return last
+			.replace(/[-_]+/g, " ")
+			.replace(/\s+/g, " ")
+			.trim()
+			.split(" ")
+			.map((s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase())
+			.join(" ");
+	} catch {
+		return "DIGITCORE Toolkit";
+	}
+}
+
+function DashedBorder({
+	strokeWidth = 1.5,
+}: { strokeWidth?: number | string }) {
+	return (
+		<svg
+			aria-hidden="true"
+			width="100%"
+			height="100%"
+			className="pointer-events-none absolute inset-0 h-full w-full text-neutral-600"
+			fill="none"
+		>
+			<rect
+				x="0"
+				y="0"
+				width="100%"
+				height="100%"
+				rx="8"
+				ry="8"
+				stroke="currentColor"
+				strokeWidth={strokeWidth}
+				strokeDasharray="4 4"
+			/>
+		</svg>
+	);
+}
+
+function ActionButton({
+	href,
+	onClick,
+	children,
+	dashed = true,
+}: {
+	href?: string;
+	onClick?: () => void;
+	children: React.ReactNode;
+	dashed?: boolean;
+}) {
+	const baseClass =
+		"relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-2 text-left text-foreground text-lg uppercase font-light transition-colors hover:bg-neutral-100";
+
+	if (href) {
+		return (
+			<Link href={href} className={baseClass} onClick={onClick}>
+				<span className="relative z-10 inline-flex items-center gap-2">
+					{children}
+				</span>
+				{dashed ? <DashedBorder /> : null}
+			</Link>
+		);
+	}
+
+	return (
+		<button type="button" onClick={onClick} className={baseClass}>
+			<span className="relative z-10 inline-flex items-center gap-2">
+				{children}
+			</span>
+			{dashed ? <DashedBorder /> : null}
+		</button>
+	);
+}
+
+export function OnboardingClient({
+	onboarding,
+	patternTitle,
+	returnToPath,
+	audienceOptions,
+	themeOptions,
+}: {
+	onboarding?: Onboarding;
+	patternTitle?: string;
+	returnToPath?: string;
+	audienceOptions: FilterOption[];
+	themeOptions: FilterOption[];
+}) {
+	// Provide store context locally for onboarding flow
+	return (
+		<OnboardingStoreProvider>
+			<OnboardingInner
+				onboarding={onboarding}
+				patternTitle={patternTitle}
+				returnToPath={returnToPath}
+				audienceOptions={audienceOptions}
+				themeOptions={themeOptions}
+			/>
+		</OnboardingStoreProvider>
+	);
+}
+
+function OnboardingInner({
+	onboarding,
+	patternTitle,
+	returnToPath,
+	audienceOptions,
+	themeOptions,
+}: {
+	onboarding?: Onboarding;
+	patternTitle?: string;
+	returnToPath?: string;
+	audienceOptions: FilterOption[];
+	themeOptions: FilterOption[];
+}) {
+	const searchParams = useSearchParams();
+	const router = useRouter();
+
+	const initialStep = (() => {
+		const value = Number(searchParams.get("step") ?? "1");
+		return value >= 1 && value <= 3 ? value : 1;
+	})();
+
+	const [currentSlide, setCurrentSlide] = useState<1 | 2 | 3>(
+		initialStep as 1 | 2 | 3,
+	);
 	const [isTransitioning, setIsTransitioning] = useState(false);
 
-	const searchParams = useSearchParams();
 	const patternSlug = (searchParams.get("pattern") ?? undefined) as
 		| string
 		| undefined;
 
-	const goToSlide2 = () => {
+	// Mark onboarding as seen unless the user arrived via the header override flag
+	const headerOverride = searchParams.get("via") === "header";
+	const setSeen = useOnboardingStore((s) => s.setSeen);
+	useEffect(() => {
+		if (!headerOverride) {
+			setSeen(true);
+		}
+	}, [headerOverride, setSeen]);
+
+	const goToSlide = (n: 1 | 2 | 3) => {
 		setIsTransitioning(true);
 		setTimeout(() => {
-			setCurrentSlide(2);
+			setCurrentSlide(n);
 			setIsTransitioning(false);
 		}, 300);
+
+		const params = new URLSearchParams(searchParams.toString());
+		params.set("step", String(n));
+		router.replace(`?${params.toString()}`, { scroll: false });
 	};
 
-	const goToSlide1 = () => {
-		setIsTransitioning(true);
-		setTimeout(() => {
-			setCurrentSlide(1);
-			setIsTransitioning(false);
-		}, 300);
-	};
-
-	const goToSlide3 = () => {
-		setIsTransitioning(true);
-		setTimeout(() => {
-			setCurrentSlide(3);
-			setIsTransitioning(false);
-		}, 300);
-	};
+	const goToSlide1 = () => goToSlide(1);
+	const goToSlide2 = () => goToSlide(2);
+	const goToSlide3 = () => goToSlide(3);
 
 	return (
-		<div className="relative flex min-h-screen bg-white">
-			{/* Skip button */}
-			<div className="absolute top-8 right-8 z-10">
-				<Link
-					href="/"
-					className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-600 text-sm uppercase transition-colors hover:bg-gray-50"
-				>
-					Skip
-				</Link>
-			</div>
+		<div className="m-2 rounded-md bg-neutral-200">
+			<div className="relative h-[calc(100vh-1rem)] overflow-clip rounded-md bg-primary-foreground p-2">
+				<div className="absolute top-5 right-4 z-10">
+					<ActionButton
+						href="/"
+						dashed={false}
+						onClick={() => {
+							try {
+								document.cookie =
+									"onboarding_completed=1; path=/; max-age=31536000";
+							} catch {}
+						}}
+					>
+						<span className="text-xs">Skip onboarding</span>
+					</ActionButton>
+				</div>
 
-			{/* Slide container with fade transition */}
-			<div
-				className={`w-full transition-opacity duration-300 ${isTransitioning ? "opacity-0" : "opacity-100"}`}
-			>
-				{currentSlide === 1 && (
-					<Slide1 patternSlug={patternSlug} goToSlide2={goToSlide2} />
-				)}
-				{currentSlide === 2 && (
-					<Slide2 goToSlide1={goToSlide1} goToSlide3={goToSlide3} />
-				)}
-				{currentSlide === 3 && <Slide3 goToSlide2={goToSlide2} />}
+				<div
+					className={cn(
+						"h-full w-full transition-opacity duration-300",
+						isTransitioning ? "opacity-0" : "opacity-100",
+					)}
+				>
+					{currentSlide === 1 && (
+						<Slide1
+							onboardingTitle={onboarding?.title || null}
+							patternSlug={patternSlug}
+							patternTitle={patternTitle}
+							returnToPath={returnToPath}
+							goToSlide2={goToSlide2}
+							onNavigateSlide={goToSlide}
+						/>
+					)}
+					{currentSlide === 2 && (
+						<Slide2
+							goToSlide1={goToSlide1}
+							goToSlide3={goToSlide3}
+							onNavigateSlide={goToSlide}
+							audienceOptions={audienceOptions}
+						/>
+					)}
+					{currentSlide === 3 && (
+						<Slide3
+							goToSlide2={goToSlide2}
+							onNavigateSlide={goToSlide}
+							themeOptions={themeOptions}
+						/>
+					)}
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function OnboardingBreadcrumb({
+	currentSlide,
+	onNavigateSlide,
+}: {
+	currentSlide: 1 | 2 | 3;
+	onNavigateSlide?: (n: 1 | 2 | 3) => void;
+}) {
+	return (
+		<Breadcrumb className="mb-8">
+			<BreadcrumbList>
+				<BreadcrumbItem>
+					{currentSlide === 1 ? (
+						<BreadcrumbPage>Introduction</BreadcrumbPage>
+					) : onNavigateSlide ? (
+						<BreadcrumbLink asChild>
+							<button type="button" onClick={() => onNavigateSlide(1)}>
+								Introduction
+							</button>
+						</BreadcrumbLink>
+					) : (
+						<BreadcrumbLink href="#">Introduction</BreadcrumbLink>
+					)}
+				</BreadcrumbItem>
+				<BreadcrumbSeparator />
+				<BreadcrumbItem>
+					{currentSlide === 2 ? (
+						<BreadcrumbPage>Audiences</BreadcrumbPage>
+					) : onNavigateSlide ? (
+						<BreadcrumbLink asChild>
+							<button type="button" onClick={() => onNavigateSlide(2)}>
+								Audiences
+							</button>
+						</BreadcrumbLink>
+					) : (
+						<BreadcrumbLink href="#">Audiences</BreadcrumbLink>
+					)}
+				</BreadcrumbItem>
+				<BreadcrumbSeparator />
+				<BreadcrumbItem>
+					{currentSlide === 3 ? (
+						<BreadcrumbPage>Interests</BreadcrumbPage>
+					) : onNavigateSlide ? (
+						<BreadcrumbLink asChild>
+							<button type="button" onClick={() => onNavigateSlide(3)}>
+								Interests
+							</button>
+						</BreadcrumbLink>
+					) : (
+						<BreadcrumbLink href="#">Interests</BreadcrumbLink>
+					)}
+				</BreadcrumbItem>
+			</BreadcrumbList>
+		</Breadcrumb>
+	);
+}
+
+function Slide({
+	currentSlide,
+	children,
+	asset,
+	onNavigateSlide,
+}: {
+	currentSlide: 1 | 2 | 3;
+	children: React.ReactNode;
+	asset?: React.ReactNode;
+	onNavigateSlide?: (n: 1 | 2 | 3) => void;
+}) {
+	return (
+		<div className="flex h-full">
+			<div className="flex w-1/2 flex-col justify-start py-4 pr-4 pl-4">
+				<OnboardingBreadcrumb
+					currentSlide={currentSlide}
+					onNavigateSlide={onNavigateSlide}
+				/>
+				<div className="min-h-0 flex-1">{children}</div>
+				<footer className="pt-8 text-left text-foreground text-sm">
+					Open Environmental Data Project
+				</footer>
+			</div>
+			<div className="w-1/2 pl-2">
+				{asset || <div className="h-full w-full rounded-md bg-neutral-300" />}
 			</div>
 		</div>
 	);
@@ -77,369 +349,343 @@ export default function OnboardingClient() {
 
 function Slide1({
 	patternSlug,
+	patternTitle,
+	returnToPath,
 	goToSlide2,
+	onboardingTitle,
+	onNavigateSlide,
 }: {
 	patternSlug: string | undefined;
+	patternTitle?: string;
+	returnToPath?: string;
 	goToSlide2: () => void;
+	onboardingTitle?: string | null;
+	onNavigateSlide?: (n: 1 | 2 | 3) => void;
 }) {
+	const toTitleCase = (s: string) =>
+		s
+			.split("-")
+			.join(" ")
+			.split(" ")
+			.map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+			.join(" ");
+
 	return (
-		<div className="flex min-h-screen">
-			{/* Left side - Text content */}
-			<div className="flex w-11/24 flex-col justify-center px-8 py-8">
-				{/* Breadcrumb */}
-				<div className="mb-8 text-gray-500 text-sm">
-					Introduction → Audiences → Interests
+		<Slide currentSlide={1} onNavigateSlide={onNavigateSlide}>
+			<div className="space-y-8">
+				<h1 className="font-light text-2xl text-foreground leading-relaxed">
+					{onboardingTitle ||
+						"Welcome to the Digital Toolkit for Collaborative Environmental Research, or, DIGITCORE!"}
+				</h1>
+
+				<div className="space-y-6 font-light text-foreground text-lg leading-relaxed">
+					<p>
+						DIGITCORE outlines challenges, problems, and phenomena experienced
+						or observed by community organizations, researchers, and open source
+						technologists working on collaborative environmental research. This
+						toolkit is designed to help you make decisions about tools, modes of
+						interaction, research design, and process.
+					</p>
+
+					{patternSlug ? (
+						<p>
+							You're seeing this message because you followed a link to a
+							pattern in the DIGITCORE toolkit.
+						</p>
+					) : (
+						<p>
+							Use this short onboarding to tailor the toolkit to your needs.
+						</p>
+					)}
 				</div>
 
-				{/* Main content */}
-				<div className="space-y-8">
-					<h1 className="font-light text-3xl text-gray-600 leading-relaxed">
-						Welcome to the Digital Toolkit for Collaborative Environmental
-						Research, or, DIGITCORE!
-					</h1>
+				<div className="space-y-4">
+					<ActionButton onClick={goToSlide2}>
+						<span>Tell me more about the DIGITCORE toolkit</span>
+						<Icon
+							icon={SearchList02Icon}
+							size={20}
+							color="#525252"
+							strokeWidth={1.5}
+						/>
+					</ActionButton>
 
-					<div className="space-y-6 font-light text-3xl text-gray-600 leading-relaxed">
-						<p>
-							DIGITCORE outlines challenges, problems, and phenomena experienced
-							or observed by community organizations, researchers, and open
-							source technologists working on collaborative environmental
-							research. This toolkit is designed to help you make decisions
-							about tools, modes of interaction, research design, and process.
-						</p>
-
-						<p>
-							You're seeing this message because you have clicked a link to a
-							pattern in the Digitcore toolkit library.
-						</p>
-					</div>
-
-					{/* Action buttons */}
-					<div className="space-y-4">
-						<button
-							type="button"
-							onClick={goToSlide2}
-							className="flex w-full items-center justify-between rounded-lg border-2 border-gray-800 border-dashed bg-white px-3 py-3 text-left text-2xl text-gray-600 uppercase transition-colors hover:bg-gray-50"
-						>
-							<span>Tell me more about The digitcore library</span>
-							<Icon
-								icon={Search02Icon}
-								size={24}
-								color="#525252"
-								strokeWidth={1.5}
-							/>
-						</button>
-
-						<div>
-							<p className="mb-2 text-gray-600 text-sm">
-								Or, go directly to the pattern:
-							</p>
-							<Link
-								href={
-									patternSlug
-										? `/pattern/${patternSlug}`
-										: "/pattern/enhancing-frontline-communities-agency"
-								}
-								className="flex w-full items-center justify-between rounded-lg border-2 border-gray-800 border-dashed bg-white px-3 py-3 text-left text-2xl text-gray-600 uppercase transition-colors hover:bg-gray-50"
+					<div>
+						<p className="mb-2 text-foreground text-sm">Or, go directly to:</p>
+						{patternSlug ? (
+							<ActionButton
+								href={`/pattern/${patternSlug}`}
+								onClick={() => {
+									try {
+										document.cookie =
+											"onboarding_completed=1; path=/; max-age=31536000";
+									} catch {}
+								}}
 							>
-								<span>
-									{patternSlug
-										? patternSlug.replace(/-/g, " ")
-										: "Enhancing frontline communities' agency"}
-								</span>
+								<span>{patternTitle || toTitleCase(patternSlug)}</span>
 								<Icon
-									icon={Link02Icon}
-									size={24}
+									icon={Share02Icon}
+									size={20}
 									color="#525252"
 									strokeWidth={1.5}
 								/>
-							</Link>
-						</div>
+							</ActionButton>
+						) : (
+							<ActionButton
+								href={getSafePath(returnToPath)}
+								onClick={() => {
+									try {
+										document.cookie =
+											"onboarding_completed=1; path=/; max-age=31536000";
+									} catch {}
+								}}
+							>
+								<span>{friendlyLabelFromPath(getSafePath(returnToPath))}</span>
+								<Icon
+									icon={Share02Icon}
+									size={20}
+									color="#525252"
+									strokeWidth={1.5}
+								/>
+							</ActionButton>
+						)}
 					</div>
 				</div>
-
-				{/* Footer */}
-				<div className="mt-16 text-gray-600 text-sm">
-					All rights reserved. Open Environmental Data Project © 2025.
-				</div>
 			</div>
-
-			{/* Right side - Image */}
-			<div className="w-13/24 p-4">
-				<div
-					className="h-full w-full rounded-lg bg-center bg-cover"
-					style={{ backgroundImage: `url('${heroImage1}')` }}
-				/>
-			</div>
-		</div>
+		</Slide>
 	);
 }
 
 function Slide2({
 	goToSlide1,
 	goToSlide3,
-}: { goToSlide1: () => void; goToSlide3: () => void }) {
-	const [selectedAudiences, setSelectedAudiences] = useState<string[]>([]);
-
-	const toggleAudience = (audience: string) => {
-		setSelectedAudiences((prev) =>
-			prev.includes(audience)
-				? prev.filter((a) => a !== audience)
-				: [...prev, audience],
-		);
-	};
-
-	return (
-		<div className="flex min-h-screen">
-			{/* Left side - Text content */}
-			<div className="flex w-11/24 flex-col justify-center px-8 py-8">
-				{/* Breadcrumb */}
-				<div className="mb-8 text-gray-500 text-sm">
-					Introduction → Audiences → Interests
-				</div>
-
-				{/* Main content */}
-				<div className="space-y-8">
-					<h1 className="font-light text-3xl text-gray-600 leading-relaxed">
-						To start exploring, please select which audience groups are most
-						relevant to you, and which themes you're most interested in.
-					</h1>
-
-					<div className="space-y-6 font-light text-3xl text-gray-600 leading-relaxed">
-						<p>
-							The Digitcore project seeks to ground open infrastructure
-							development in the practice-based work of organizers and their
-							collaborators—
-						</p>
-
-						{/* Audience buttons embedded in the text flow */}
-						<div className="space-y-2">
-							<div className="flex flex-wrap items-center gap-2">
-								<button
-									type="button"
-									onClick={() => toggleAudience("RESEARCHERS")}
-									className={`rounded-lg border-2 px-3 py-2 text-2xl uppercase transition-colors ${
-										selectedAudiences.includes("RESEARCHERS")
-											? "border-[#a6bcbf] bg-[#637e85] text-white"
-											: "border-gray-800 border-dashed bg-white text-gray-600 hover:bg-gray-50"
-									}`}
-								>
-									RESEARCHERS
-								</button>
-							</div>
-
-							<div className="flex flex-wrap items-center gap-2">
-								<button
-									type="button"
-									onClick={() => toggleAudience("COMMUNITY ORGANIZATIONS")}
-									className={`rounded-lg border-2 px-3 py-2 text-2xl uppercase transition-colors ${
-										selectedAudiences.includes("COMMUNITY ORGANIZATIONS")
-											? "border-[#a6bcbf] bg-[#637e85] text-white"
-											: "border-gray-800 border-dashed bg-white text-gray-600 hover:bg-gray-50"
-									}`}
-								>
-									COMMUNITY ORGANIZATIONS
-								</button>
-								<button
-									type="button"
-									onClick={() => toggleAudience("FUNDERS")}
-									className={`rounded-lg border-2 px-3 py-2 text-2xl uppercase transition-colors ${
-										selectedAudiences.includes("FUNDERS")
-											? "border-[#a6bcbf] bg-[#637e85] text-white"
-											: "border-gray-800 border-dashed bg-white text-gray-600 hover:bg-gray-50"
-									}`}
-								>
-									FUNDERS
-								</button>
-							</div>
-
-							<div className="flex flex-wrap items-center gap-2">
-								<button
-									type="button"
-									onClick={() => toggleAudience("OPEN SOURCE DEVELOPERS")}
-									className={`rounded-lg border-2 px-3 py-2 text-2xl uppercase transition-colors ${
-										selectedAudiences.includes("OPEN SOURCE DEVELOPERS")
-											? "border-[#a6bcbf] bg-[#637e85] text-white"
-											: "border-gray-800 border-dashed bg-white text-gray-600 hover:bg-gray-50"
-									}`}
-								>
-									OPEN SOURCE DEVELOPERS
-								</button>
-								<span>and</span>
-								<button
-									type="button"
-									onClick={() => toggleAudience("OTHERS")}
-									className={`rounded-lg border-2 px-3 py-2 text-2xl uppercase transition-colors ${
-										selectedAudiences.includes("OTHERS")
-											? "border-[#a6bcbf] bg-[#637e85] text-white"
-											: "border-gray-800 border-dashed bg-white text-gray-600 hover:bg-gray-50"
-									}`}
-								>
-									OTHERS
-								</button>
-								<span>.</span>
-							</div>
-						</div>
-					</div>
-
-					{/* Action buttons */}
-					<div className="space-y-4">
-						<div className="flex items-center gap-2">
-							<span
-								className={`font-light text-3xl text-gray-600 transition-opacity ${
-									selectedAudiences.length > 0 ? "opacity-0" : "opacity-100"
-								}`}
-							>
-								Select your
-							</span>
-							<button
-								type="button"
-								onClick={selectedAudiences.length > 0 ? goToSlide3 : undefined}
-								className="rounded-lg border-2 border-gray-800 border-dashed bg-white px-3 py-2 text-2xl text-gray-600 uppercase transition-colors hover:bg-gray-50"
-							>
-								{selectedAudiences.length > 0 ? "NEXT" : "AUDIENCE TYPE"}
-							</button>
-							<span
-								className={`font-light text-3xl text-gray-600 transition-opacity ${
-									selectedAudiences.length > 0 ? "opacity-0" : "opacity-100"
-								}`}
-							>
-								to continue.
-							</span>
-						</div>
-
-						<div className="flex items-center gap-2">
-							<span className="font-light text-3xl text-gray-600">Or, go</span>
-							<button
-								type="button"
-								onClick={goToSlide1}
-								className="rounded-lg border-2 border-gray-800 border-dashed bg-white px-3 py-2 text-2xl text-gray-600 uppercase transition-colors hover:bg-gray-50"
-							>
-								BACK
-							</button>
-							<span className="font-light text-3xl text-gray-600">
-								to the previous step.
-							</span>
-						</div>
-					</div>
-				</div>
-
-				{/* Footer */}
-				<div className="mt-16 text-gray-600 text-sm">
-					All rights reserved. Open Environmental Data Project © 2025.
-				</div>
-			</div>
-
-			{/* Right side - Image */}
-			<div className="w-13/24 p-4">
-				<div
-					className="h-full w-full rounded-lg bg-center bg-cover"
-					style={{ backgroundImage: `url('${heroImage2}')` }}
-				/>
-			</div>
-		</div>
+	onNavigateSlide,
+	audienceOptions,
+}: {
+	goToSlide1: () => void;
+	goToSlide3: () => void;
+	onNavigateSlide?: (n: 1 | 2 | 3) => void;
+	audienceOptions: FilterOption[];
+}) {
+	const selectedAudienceIds = useOnboardingStore((s) => s.selectedAudienceIds);
+	const setSelectedAudiences = useOnboardingStore(
+		(s) => s.setSelectedAudiences,
 	);
-}
 
-function Slide3({ goToSlide2 }: { goToSlide2: () => void }) {
-	const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-
-	const themes = [
-		"ENSURING BENEFIT TO FRONTLINE COMMUNITIES",
-		"PRACTICING OPENNESS",
-		"DATA ≠ INFORMATION",
-		"ACADEMIC CULTURE AND NORMS",
-		"SITUATIONAL COLLABORATION PRACTICES",
-	];
-
-	const toggleTheme = (theme: string) => {
-		setSelectedThemes((prev) =>
-			prev.includes(theme) ? prev.filter((t) => t !== theme) : [...prev, theme],
+	const toggleAudience = (audienceId: string) => {
+		setSelectedAudiences(
+			selectedAudienceIds.includes(audienceId)
+				? selectedAudienceIds.filter((a) => a !== audienceId)
+				: [...selectedAudienceIds, audienceId],
 		);
 	};
 
 	return (
-		<div className="flex min-h-screen">
-			{/* Left side - Text content */}
-			<div className="flex w-11/24 flex-col justify-center px-8 py-8">
-				{/* Breadcrumb */}
-				<div className="mb-8 text-gray-500 text-sm">
-					Introduction → Audiences → Interests
-				</div>
+		<Slide currentSlide={2} onNavigateSlide={onNavigateSlide}>
+			<div className="space-y-6">
+				<h1 className="font-light text-2xl text-foreground leading-relaxed">
+					The toolkit groups together distinct needs, practices, and realities
+					that different audiences experience and navigate.
+				</h1>
 
-				{/* Main content */}
-				<div className="space-y-8">
-					<h1 className="font-light text-3xl text-gray-600 leading-relaxed">
-						Help us tailor your experience of this library to your needs.
-					</h1>
+				<div className="space-y-4 font-light text-foreground text-lg leading-relaxed">
+					<p>Please select which audience groups are most relevant to you.</p>
 
-					<h2 className="font-light text-3xl text-gray-600 leading-relaxed">
-						What interests you?
-					</h2>
-
-					{/* Theme buttons */}
-					<div className="space-y-4">
-						{themes.map((theme) => (
+					{/* Audience buttons embedded in the text flow */}
+					<div className="flex flex-wrap items-center gap-2">
+						{audienceOptions.map((opt, idx) => (
 							<button
+								key={opt.value}
 								type="button"
-								key={theme}
-								onClick={() => toggleTheme(theme)}
-								className={`block w-full rounded-lg border-2 px-3 py-3 text-left text-2xl uppercase transition-colors ${
-									selectedThemes.includes(theme)
-										? "border-[#a6bcbf] bg-[#637e85] text-white"
-										: "border-gray-800 border-dashed bg-white text-gray-600 hover:bg-gray-50"
-								}`}
+								onClick={() => toggleAudience(opt.value)}
+								className={cn(
+									"relative overflow-hidden rounded-lg border-2 border-transparent px-3 py-1.5 text-base text-foreground uppercase transition-colors",
+									selectedAudienceIds.includes(opt.value)
+										? "bg-neutral-300"
+										: "bg-primary-foreground hover:bg-neutral-100",
+								)}
 							>
-								{theme}
+								{opt.label}
+								<DashedBorder />
 							</button>
 						))}
 					</div>
+				</div>
 
-					{/* Action buttons */}
-					<div className="space-y-4">
-						<div className="flex items-center gap-2">
-							<span className="font-light text-3xl text-gray-600">
-								Select a
-							</span>
-							<button
-								type="button"
-								className="rounded-lg border-2 border-gray-800 border-dashed bg-white px-3 py-2 text-2xl text-gray-600 uppercase transition-colors hover:bg-gray-50"
-							>
-								THEME
-							</button>
-							<span className="font-light text-3xl text-gray-600">
-								that interests you to continue.
-							</span>
-						</div>
+				<div className="space-y-4">
+					<div className="flex items-center gap-2">
+						{selectedAudienceIds.length === 0 ? (
+							<>
+								<span className="font-light text-foreground text-xl">
+									Select your
+								</span>
+								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-1.5 font-light text-base text-foreground uppercase">
+									AUDIENCE TYPE
+									<DashedBorder />
+								</span>
+								<span className="font-light text-foreground text-xl">
+									to continue.
+								</span>
+							</>
+						) : (
+							<>
+								<span className="font-light text-foreground text-xl capitalize">
+									Click
+								</span>
+								<button
+									type="button"
+									onClick={goToSlide3}
+									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-1.5 font-light text-base text-foreground uppercase transition-colors hover:bg-neutral-100"
+								>
+									NEXT
+									<DashedBorder />
+								</button>
+								<span className="font-light text-foreground text-xl">
+									to continue.
+								</span>
+							</>
+						)}
+					</div>
 
-						<div className="flex items-center gap-2">
-							<span className="font-light text-3xl text-gray-600">Or, go</span>
-							<button
-								type="button"
-								onClick={goToSlide2}
-								className="rounded-lg border-2 border-gray-800 border-dashed bg-white px-3 py-2 text-2xl text-gray-600 uppercase transition-colors hover:bg-gray-50"
-							>
-								BACK
-							</button>
-							<span className="font-light text-3xl text-gray-600">
-								to the previous step.
-							</span>
-						</div>
+					<div className="flex items-center gap-2">
+						<span className="font-light text-foreground text-xl">Or, go</span>
+						<button
+							type="button"
+							onClick={goToSlide1}
+							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-1.5 font-light text-base text-foreground uppercase transition-colors hover:bg-neutral-100"
+						>
+							BACK
+							<DashedBorder />
+						</button>
+						<span className="font-light text-foreground text-xl">
+							to the previous step.
+						</span>
 					</div>
 				</div>
+			</div>
+		</Slide>
+	);
+}
 
-				{/* Footer */}
-				<div className="mt-16 text-gray-600 text-sm">
-					All rights reserved. Open Environmental Data Project © 2025.
+function Slide3({
+	goToSlide2,
+	onNavigateSlide,
+	themeOptions,
+}: {
+	goToSlide2: () => void;
+	onNavigateSlide?: (n: 1 | 2 | 3) => void;
+	themeOptions: FilterOption[];
+}) {
+	const selectedThemeIds = useOnboardingStore((s) => s.selectedThemeIds);
+	const selectedAudienceIds = useOnboardingStore((s) => s.selectedAudienceIds);
+	const setSelectedThemes = useOnboardingStore((s) => s.setSelectedThemes);
+	const setCompleted = useOnboardingStore((s) => s.setCompleted);
+
+	const toggleTheme = (themeId: string) => {
+		setSelectedThemes(
+			selectedThemeIds.includes(themeId)
+				? selectedThemeIds.filter((t) => t !== themeId)
+				: [...selectedThemeIds, themeId],
+		);
+	};
+
+	return (
+		<Slide currentSlide={3} onNavigateSlide={onNavigateSlide}>
+			<div className="space-y-8">
+				<h1 className="font-light text-2xl text-foreground leading-relaxed">
+					Through our research, several themes emerged that have helped organize
+					the patterns we surfaced.
+				</h1>
+
+				<h2 className="font-light text-2xl text-foreground leading-relaxed">
+					What interests you?
+				</h2>
+
+				{/* Theme buttons embedded in the text flow */}
+				<div className="flex flex-wrap items-center gap-2">
+					{themeOptions.map((opt) => (
+						<button
+							type="button"
+							key={opt.value}
+							onClick={() => toggleTheme(opt.value)}
+							className={cn(
+								"relative overflow-hidden rounded-lg border-2 border-transparent px-3 py-1.5 font-light text-base text-foreground uppercase transition-colors",
+								selectedThemeIds.includes(opt.value)
+									? "bg-neutral-300"
+									: "bg-primary-foreground hover:bg-neutral-100",
+							)}
+						>
+							{opt.label}
+							<DashedBorder />
+						</button>
+					))}
+				</div>
+
+				<div className="space-y-4">
+					<div className="flex items-center gap-2">
+						{selectedThemeIds.length === 0 ? (
+							<>
+								<span className="font-light text-foreground text-xl">
+									Select a
+								</span>
+								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-1.5 font-light text-base text-foreground uppercase">
+									THEME
+									<DashedBorder />
+								</span>
+								<span className="font-light text-foreground text-xl">
+									that interests you to continue.
+								</span>
+							</>
+						) : (
+							<>
+								<span className="font-light text-foreground text-xl capitalize">
+									click
+								</span>
+								<Link
+									href={`/search?themes=${encodeURIComponent(
+										selectedThemeIds.join(","),
+									)}${
+										selectedAudienceIds.length
+											? `&audiences=${encodeURIComponent(
+													selectedAudienceIds.join(","),
+												)}`
+											: ""
+									}`}
+									onClick={() => {
+										setCompleted(true);
+										try {
+											document.cookie =
+												"onboarding_completed=1; path=/; max-age=31536000";
+										} catch {}
+									}}
+									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-1.5 font-light text-base text-foreground uppercase transition-colors hover:bg-neutral-100"
+								>
+									FINISH
+									<DashedBorder />
+								</Link>
+								<span className="font-light text-foreground text-xl">
+									to continue to the toolkit.
+								</span>
+							</>
+						)}
+					</div>
+
+					<div className="flex items-center gap-2">
+						<span className="font-light text-foreground text-xl">Or, go</span>
+						<button
+							type="button"
+							onClick={goToSlide2}
+							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-1.5 font-light text-base text-foreground uppercase transition-colors hover:bg-neutral-100"
+						>
+							BACK
+							<DashedBorder />
+						</button>
+						<span className="font-light text-foreground text-xl">
+							to the previous step.
+						</span>
+					</div>
 				</div>
 			</div>
-
-			{/* Right side - Image */}
-			<div className="w-13/24 p-4">
-				<div
-					className="h-full w-full rounded-lg bg-center bg-cover"
-					style={{ backgroundImage: `url('${heroImage3}')` }}
-				/>
-			</div>
-		</div>
+		</Slide>
 	);
 }

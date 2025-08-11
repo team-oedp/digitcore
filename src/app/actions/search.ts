@@ -20,7 +20,7 @@ export type SearchResult = {
 
 export type SearchPattern = {
 	_id: string;
-	_type: string;
+	_type: "pattern";
 	_score?: number;
 	title: string | null;
 	description: Array<{
@@ -64,7 +64,11 @@ export type SearchPattern = {
 		_id: string;
 		title?: string;
 		description?: Array<unknown>;
-		solution: Array<{
+		solutions?: Array<{
+			_id: string;
+			title?: string;
+		}> | null;
+		solution?: Array<{
 			_id: string;
 			title?: string;
 		}> | null;

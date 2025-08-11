@@ -4,7 +4,7 @@ import "~/styles/globals.css";
 export const metadata: Metadata = {
 	title: "Digitcore",
 	description: "Digitcore Sanity Studio",
-	icons: [{ rel: "icon", url: "/icon.png" }],
+	icons: [{ rel: "icon", url: "/oedp-icon.png" }],
 };
 
 export default function RootLayout({
@@ -12,7 +12,7 @@ export default function RootLayout({
 }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body>{children}</body>
+			<body className="bg-neutral-200">{children}</body>
 		</html>
 	);
 }

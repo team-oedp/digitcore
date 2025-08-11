@@ -160,10 +160,56 @@ export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
 					description: pattern.description ?? undefined,
 				},
 			],
-			solutions: pattern.solutions || [],
-			resources: pattern.resources || [],
-			tags: pattern.tags || [],
-			audiences: pattern.audiences || [],
+			solutions:
+				pattern.solutions?.map(
+					(solution) =>
+						({
+							_id: solution._id,
+							_type: solution._type,
+							_createdAt: new Date().toISOString(),
+							_updatedAt: new Date().toISOString(),
+							_rev: "",
+							title: solution.title || undefined,
+							description: solution.description || undefined,
+						}) as Solution,
+				) || [],
+			resources:
+				pattern.resources?.map(
+					(resource) =>
+						({
+							_id: resource._id,
+							_type: resource._type,
+							_createdAt: new Date().toISOString(),
+							_updatedAt: new Date().toISOString(),
+							_rev: "",
+							title: resource.title || undefined,
+							description: resource.description || undefined,
+						}) as Resource,
+				) || [],
+			tags:
+				pattern.tags?.map(
+					(tag) =>
+						({
+							_id: tag._id,
+							_type: tag._type,
+							_createdAt: new Date().toISOString(),
+							_updatedAt: new Date().toISOString(),
+							_rev: "",
+							title: tag.title || undefined,
+						}) as Tag,
+				) || [],
+			audiences:
+				pattern.audiences?.map(
+					(audience) =>
+						({
+							_id: audience._id,
+							_type: audience._type,
+							_createdAt: new Date().toISOString(),
+							_updatedAt: new Date().toISOString(),
+							_rev: "",
+							title: audience.title || undefined,
+						}) as Audience,
+				) || [],
 		};
 
 		console.log("Setting searchable content in store:", searchableContent);

@@ -60,7 +60,14 @@ type PatternSearchResultData = BaseSearchResultData & {
 		_id: string;
 		title?: string;
 		description?: Array<unknown>;
-		solution?: unknown;
+		solutions?: Array<{
+			_id: string;
+			title?: string;
+		}> | null;
+		solution?: Array<{
+			_id: string;
+			title?: string;
+		}> | null;
 	}> | null;
 };
 
@@ -98,7 +105,11 @@ type SearchResultData =
 	| SolutionSearchResultData;
 
 type SearchResultItemProps = {
-	pattern: SearchPattern;
+	pattern:
+		| SearchPattern
+		| PatternSearchResultData
+		| ResourceSearchResultData
+		| SolutionSearchResultData;
 	searchTerm?: string;
 };
 
@@ -460,37 +471,13 @@ export function SearchResultItem({
 	pattern,
 	searchTerm,
 }: SearchResultItemProps) {
-	switch (pattern._type) {
-		case "pattern":
-			return (
-				<PatternSearchResult
-					pattern={pattern as PatternSearchResultData}
-					searchTerm={searchTerm}
-				/>
-			);
-		case "resource":
-			return (
-				<ResourceSearchResult
-					pattern={pattern as ResourceSearchResultData}
-					searchTerm={searchTerm}
-				/>
-			);
-		case "solution":
-			return (
-				<SolutionSearchResult
-					pattern={pattern as SolutionSearchResultData}
-					searchTerm={searchTerm}
-				/>
-			);
-		default:
-			// Fallback for unknown types - default to pattern
-			return (
-				<PatternSearchResult
-					pattern={pattern as PatternSearchResultData}
-					searchTerm={searchTerm}
-				/>
-			);
-	}
+	// Since SearchPattern always has _type: "pattern", we only handle that case
+	return (
+		<PatternSearchResult
+			pattern={pattern as PatternSearchResultData}
+			searchTerm={searchTerm}
+		/>
+	);
 }
 
 function renderHighlightedText(text: string, searchTerm: string) {
@@ -503,6 +490,7 @@ function renderHighlightedText(text: string, searchTerm: string) {
 	let inMark = false;
 	let markBuffer = "";
 	let markKey = 0;
+	let textKey = 0;
 	for (const part of parts) {
 		if (part === '<mark class="bg-yellow-200 rounded-sm">') {
 			inMark = true;
@@ -523,7 +511,7 @@ function renderHighlightedText(text: string, searchTerm: string) {
 		} else if (inMark) {
 			markBuffer += part;
 		} else {
-			result.push(part);
+			result.push(<span key={`text-${textKey++}`}>{part}</span>);
 		}
 	}
 	return result;

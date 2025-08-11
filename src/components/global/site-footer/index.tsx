@@ -1,6 +1,6 @@
-import Content from "./footer-content";
+import SiteFooterLinks from "./site-footer-links";
 
-export default function Footer() {
+export default function SiteFooter() {
 	return (
 		<footer
 			className="relative h-[384px] bg-background"
@@ -8,7 +8,7 @@ export default function Footer() {
 		>
 			<div className="-top-[100vh] relative h-[calc(100vh+384px)]">
 				<div className="sticky top-[calc(100vh-384px)] h-[384px]">
-					<Content />
+					<SiteFooterLinks />
 				</div>
 			</div>
 		</footer>

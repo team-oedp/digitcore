@@ -11,6 +11,7 @@ type CarrierBagState = {
 	isHydrated: boolean;
 	isOpen: boolean;
 	isPinned: boolean;
+	isModalMode: boolean;
 	addPattern: (pattern: Pattern, notes?: string) => void;
 	removePattern: (patternId: string) => void;
 	updateNotes: (patternId: string, notes: string) => void;
@@ -22,6 +23,8 @@ type CarrierBagState = {
 	setOpen: (open: boolean) => void;
 	togglePin: () => void;
 	setPin: (pinned: boolean) => void;
+	toggleModalMode: () => void;
+	setModalMode: (modalMode: boolean) => void;
 };
 
 export const createCarrierBagStore = () =>
@@ -32,6 +35,7 @@ export const createCarrierBagStore = () =>
 				isHydrated: false,
 				isOpen: false,
 				isPinned: false,
+				isModalMode: false,
 
 				addPattern: (pattern: Pattern, notes?: string) => {
 					const { items } = get();
@@ -100,13 +104,28 @@ export const createCarrierBagStore = () =>
 				setPin: (pinned: boolean) => {
 					set({ isPinned: pinned });
 				},
+
+				toggleModalMode: () => {
+					const { isModalMode } = get();
+					set({ isModalMode: !isModalMode });
+				},
+
+				setModalMode: (modalMode: boolean) => {
+					set({ isModalMode: modalMode });
+				},
 			}),
 			{
 				name: "carrier-bag",
 				storage: createJSONStorage(() => localStorage),
 				onRehydrateStorage: () => (state) => {
 					state?.setHydrated(true);
+					// Ensure sidebar is closed on initial load
+					state?.setOpen(false);
 				},
+				partialize: (state) => ({
+					// Only persist items, not UI state
+					items: state.items,
+				}),
 			},
 		),
 	);
@@ -132,12 +151,14 @@ export const CarrierBagStoreProvider = ({
 	);
 };
 
-export const useCarrierBagStore = () => {
+export const useCarrierBagStore = <T = CarrierBagState>(
+	selector?: (state: CarrierBagState) => T,
+) => {
 	const store = useContext(CarrierBagStoreContext);
 	if (!store) {
 		throw new Error(
 			"useCarrierBagStore must be used within CarrierBagStoreProvider",
 		);
 	}
-	return useStore(store);
+	return selector ? useStore(store, selector) : (useStore(store) as T);
 };

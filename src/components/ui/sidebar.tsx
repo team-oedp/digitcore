@@ -1,8 +1,8 @@
 "use client";
 
-import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
+import { PanelLeftIcon } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "~/components/ui/button";
@@ -24,7 +24,6 @@ import {
 } from "~/components/ui/tooltip";
 import { useIsMobile } from "~/hooks/use-mobile";
 import { cn } from "~/lib/utils";
-import { Icon } from "../global/icon";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -171,7 +170,7 @@ function Sidebar({
 			<div
 				data-slot="sidebar"
 				className={cn(
-					"flex h-full w-(--sidebar-width) flex-col bg-popover text-primary",
+					"flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground",
 					className,
 				)}
 				{...props}
@@ -188,7 +187,7 @@ function Sidebar({
 					data-sidebar="sidebar"
 					data-slot="sidebar"
 					data-mobile="true"
-					className="w-(--sidebar-width) bg-popover p-0 text-sidebar-foreground [&>button]:hidden"
+					className="w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
 					style={
 						{
 							"--sidebar-width": SIDEBAR_WIDTH_MOBILE,
@@ -208,7 +207,7 @@ function Sidebar({
 
 	return (
 		<div
-			className="group peer hidden text-primary md:block"
+			className="group peer hidden text-sidebar-foreground md:block"
 			data-state={state}
 			data-collapsible={state === "collapsed" ? collapsible : ""}
 			data-variant={variant}
@@ -221,6 +220,7 @@ function Sidebar({
 				className={cn(
 					"relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear",
 					"group-data-[collapsible=offcanvas]:w-0",
+					"group-data-[side=right]:rotate-180",
 					variant === "floating" || variant === "inset"
 						? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]"
 						: "group-data-[collapsible=icon]:w-(--sidebar-width-icon)",
@@ -235,9 +235,8 @@ function Sidebar({
 						: "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
 					// Adjust the padding for floating and inset variants.
 					variant === "floating" || variant === "inset"
-						? "pt-3 pr-1.5 pb-1.5 pl-0 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"
-						: "group-data-[collapsible=icon]:w-(--sidebar-width-icon)",
-					// group-data-[side=left]:border-r group-data-[side=right]:border-l
+						? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"
+						: "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l",
 					className,
 				)}
 				{...props}
@@ -245,8 +244,7 @@ function Sidebar({
 				<div
 					data-sidebar="sidebar"
 					data-slot="sidebar-inner"
-					className="flex h-full w-full flex-col bg-popover group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:shadow-sm"
-					// group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border
+					className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow-sm"
 				>
 					{children}
 				</div>
@@ -268,19 +266,14 @@ function SidebarTrigger({
 			data-slot="sidebar-trigger"
 			variant="ghost"
 			size="icon"
-			className={cn("size-6", className)}
+			className={cn("size-7", className)}
 			onClick={(event) => {
 				onClick?.(event);
 				toggleSidebar();
 			}}
 			{...props}
 		>
-			<Icon
-				icon={Backpack03Icon}
-				size={16}
-				color="currentColor"
-				strokeWidth={1.5}
-			/>
+			<PanelLeftIcon />
 			<span className="sr-only">Toggle Sidebar</span>
 		</Button>
 	);
@@ -317,7 +310,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
 			data-slot="sidebar-inset"
 			className={cn(
 				"relative flex w-full flex-1 flex-col bg-background",
-				"md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2 md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm",
+				"md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:rounded-md md:peer-data-[variant=inset]:shadow-none",
 				className,
 			)}
 			{...props}

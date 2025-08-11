@@ -1,13 +1,31 @@
+import { draftMode } from "next/headers";
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
-import { sanityFetch } from "~/sanity/lib/live";
+import { client } from "~/sanity/lib/client";
 import { PATTERNS_GROUPED_BY_THEME_QUERY } from "~/sanity/lib/queries";
-import type { Theme } from "~/sanity/sanity.types";
+import { token } from "~/sanity/lib/token";
+import type {
+	PATTERNS_GROUPED_BY_THEME_QUERYResult,
+	Theme,
+} from "~/sanity/sanity.types";
 
 export default async function PatternsPage() {
-	const { data: themeGroups } = await sanityFetch({
-		query: PATTERNS_GROUPED_BY_THEME_QUERY,
-		stega: false,
-	});
+	const isDraftMode = (await draftMode()).isEnabled;
+
+	const themeGroups: PATTERNS_GROUPED_BY_THEME_QUERYResult = await client.fetch(
+		PATTERNS_GROUPED_BY_THEME_QUERY,
+		{},
+		isDraftMode
+			? {
+					perspective: "previewDrafts",
+					useCdn: false,
+					stega: true,
+					token,
+				}
+			: {
+					perspective: "published",
+					useCdn: true,
+				},
+	);
 
 	return (
 		<div className="relative size-full overflow-clip rounded-lg bg-white">
@@ -86,6 +104,11 @@ export default async function PatternsPage() {
 													pattern.audiences?.map((aud) => ({
 														...aud,
 														title: aud.title === null ? undefined : aud.title,
+													})) ?? null,
+												resources:
+													pattern.resources?.map((resource) => ({
+														...resource,
+														solution: resource.solutions || null,
 													})) ?? null,
 											}}
 										/>

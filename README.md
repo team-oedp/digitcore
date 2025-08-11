@@ -1,33 +1,92 @@
-# DIGITCORE Toolkit Codebase Project Description
+# Digitcore
 
-The DIGITCORE Toolkit is a comprehensive digital platform and codebase designed to address the challenges and best practices in developing community-centered open infrastructure for environmental research. This software project provides an interactive toolkit that emerges from real-world experiences working with frontline communities on environmental issues and offers practical digital tools and guidance for creating more equitable collaborative relationships between researchers, technology developers, and affected communities.
+This project consists of a Next.js frontend application and a separate Sanity Studio for content management.
 
-## Project Purpose
+## Development Setup
 
-The codebase powers a digital toolkit that addresses a critical gap in how open source environmental tools and research projects engage with frontline communities. Rather than treating communities as data sources or end-users, this software platform advocates for genuine partnership models that prioritize community ownership, data sovereignty, and meaningful collaboration. The digital toolkit recognizes that traditional academic and technology development approaches often fail to serve the needs of the communities most affected by environmental challenges.
+### Prerequisites
 
-## Core Problem
+- Node.js 20+ 
+- npm
 
-Many well-intentioned environmental research and open source projects inadvertently replicate extractive dynamics, where communities provide data or participate in research but receive limited benefit or control over outcomes. This codebase builds software tools that identify common patterns where projects fail—from inadequate metadata and isolated data repositories to mismatched timelines between academic research cycles and urgent community needs.
+### Installation
 
-## Technical Implementation
+1. Install dependencies for the main application:
+```bash
+npm install
+```
 
-The codebase takes a pattern-based approach, implementing 22 recurring challenges organized into six thematic areas within a digital platform. Each pattern includes interactive features with detailed problem descriptions, practical solutions tailored to different audiences (researchers, developers, community organizations, institutions, and funders), and access to concrete digital resources including downloadable templates, integration tools, and real-world case study databases.
+2. Install dependencies for the Sanity Studio:
+```bash
+npm run studio:install
+```
 
-The software architecture progresses users through fundamental issues of community benefit and harm reduction, through technical challenges around data quality and openness, to systemic issues in academic culture and long-term sustainability. This structure allows the platform to address both immediate tactical challenges and deeper structural issues through its user interface and functionality.
+3. Set up environment variables:
 
-## Target Impact
+For the main application, ensure you have the following environment variables:
+```
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2025-07-23
+NEXT_PUBLIC_SANITY_STUDIO_URL=http://localhost:3333
+```
 
-This software project aims to shift the paradigm of environmental open infrastructure development toward truly collaborative models through digital tools and platforms. Rather than communities being consulted or included, the codebase enables approaches where communities co-lead research questions, retain control over their data, and benefit meaningfully from outcomes. It provides digital pathways for researchers and developers to move beyond extractive practices toward reciprocal partnerships.
+For the Sanity Studio, create a `.env.local` file in the `studio/` directory:
+```
+SANITY_PROJECT_ID=your_project_id
+SANITY_DATASET=production
+SANITY_API_VERSION=2025-07-23
+```
 
-## Key Technical Innovations
+### Running the Applications
 
-The codebase's strength lies in its specificity and practical digital orientation. Rather than abstract principles, it implements concrete software solutions like co-ownership agreement generators, community review board management systems, and secure approaches for handling sensitive environmental data. It also addresses often-overlooked technical challenges like building APIs that respect community data sovereignty or creating user interfaces that work across different levels of technical capacity.
+#### Development Mode
 
-## Software Implementation Approach
+To run both applications simultaneously:
+```bash
+npm run dev:all
+```
 
-The codebase is designed as a modular, extensible platform that practitioners can adapt and deploy for their specific contexts. It includes configurable assessment frameworks for understanding community technology ecosystems, customizable templates for data sharing agreements that respect indigenous protocols, and integrated tools for building sustainable funding models that don't compromise community interests.
+To run them separately:
 
-The software recognizes that effective community-centered infrastructure requires not just better individual tools, but transformed digital relationships, governance structures, and institutional practices. The codebase provides both tactical software improvements and platforms for systemic change, making it valuable for both individual project implementations and institutional digital reform efforts.
+1. **Next.js application** (runs on http://localhost:3000):
+```bash
+npm run dev
+```
 
-This software project represents a significant technical contribution to the growing movement toward more equitable and community-controlled approaches to environmental research and technology development.
+2. **Sanity Studio** (runs on http://localhost:3333):
+```bash
+npm run studio:dev
+```
+
+#### Studio Management
+
+- Build the studio: `npm run studio:build`
+- Deploy the studio: `npm run studio:deploy`
+
+### Project Structure
+
+```
+digitcore/
+├── src/                    # Next.js application source
+│   ├── app/               # App router pages
+│   ├── components/        # React components
+│   ├── sanity/           # Sanity configuration for frontend
+│   └── ...
+├── studio/               # Standalone Sanity Studio
+│   ├── sanity/          # Studio-specific schemas and config
+│   ├── sanity.config.ts # Studio configuration
+│   └── package.json     # Studio dependencies
+└── package.json         # Main project dependencies
+```
+
+### Studio vs Frontend Sanity Configuration
+
+The project now has two separate Sanity configurations:
+
+1. **Frontend (`src/sanity/`)**: Used by the Next.js app for fetching content
+2. **Studio (`studio/sanity/`)**: Used by the standalone Sanity Studio for content editing
+
+Both configurations share the same schemas but use different environment variable prefixes:
+- Frontend: `NEXT_PUBLIC_SANITY_*`
+- Studio: `SANITY_*`
