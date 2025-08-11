@@ -46,45 +46,35 @@ export function LanguageSelector() {
 					<span className="sr-only">Select language</span>
 				</button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" className="w-48 rounded-lg border p-3">
-				<div className="mb-3">
-					<h4 className="font-medium text-foreground text-sm">
-						Language selection
-					</h4>
-				</div>
-				<div className="space-y-1">
-					{languages.map((language) => (
-						<DropdownMenuItem
-							key={language.code}
-							onClick={() => setSelectedLanguage(language)}
+			<DropdownMenuContent align="end" className="min-w-32">
+				{languages.map((language) => (
+					<DropdownMenuItem
+						key={language.code}
+						onClick={() => setSelectedLanguage(language)}
+						className="flex items-center gap-3"
+					>
+						<span
 							className={cn(
-								"flex cursor-pointer items-start gap-3 rounded-none border-0 px-0 py-2 hover:bg-transparent focus:bg-transparent",
-								"data-[highlighted]:bg-transparent",
+								"min-w-[24px] font-medium text-xs",
+								selectedLanguage?.code === language.code
+									? "text-foreground"
+									: "text-muted-foreground",
 							)}
 						>
-							<span
-								className={cn(
-									"mt-0.5 min-w-[24px] font-medium text-xs",
-									selectedLanguage?.code === language.code
-										? "text-foreground"
-										: "text-muted-foreground",
-								)}
-							>
-								{language.code}
-							</span>
-							<span
-								className={cn(
-									"text-sm leading-5",
-									selectedLanguage?.code === language.code
-										? "font-medium text-foreground"
-										: "text-muted-foreground",
-								)}
-							>
-								{language.label}
-							</span>
-						</DropdownMenuItem>
-					))}
-				</div>
+							{language.code}
+						</span>
+						<span
+							className={cn(
+								"text-sm",
+								selectedLanguage?.code === language.code
+									? "font-medium text-foreground"
+									: "text-muted-foreground",
+							)}
+						>
+							{language.label}
+						</span>
+					</DropdownMenuItem>
+				))}
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
