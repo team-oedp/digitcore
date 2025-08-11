@@ -6,6 +6,7 @@ import { draftMode } from "next/headers";
 import { sans } from "~/app/(frontend)/fonts";
 import { DisableDraftMode } from "~/components/global/disable-draft-mode";
 import { LayoutUI } from "~/components/global/layout-ui";
+import { ResponsiveWrapper } from "~/components/global/responsive-wrapper";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
@@ -43,7 +44,9 @@ export default async function Layout({
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
 							<PageContentStoreProvider>
-								<LayoutUI>{children}</LayoutUI>
+								<LayoutUI>
+									<ResponsiveWrapper>{children}</ResponsiveWrapper>
+								</LayoutUI>
 							</PageContentStoreProvider>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>
