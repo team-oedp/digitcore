@@ -6,6 +6,7 @@ import {
 } from "~/components/global/carrier-bag/carrier-bag-item";
 import { PageHeader } from "~/components/shared/page-header";
 import { Button } from "~/components/ui/button";
+import type { Pattern } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 
 export function CarrierBagContent() {
@@ -63,18 +64,29 @@ export function CarrierBagContent() {
 					</div>
 				) : (
 					items.map((item) => {
+						type RefTheme = { _ref: string };
+						type PopulatedTheme = { title?: string | null };
+						type PatternMaybePopulatedTheme = Pattern & {
+							theme?: RefTheme | PopulatedTheme;
+						};
+
+						const pattern = item.pattern as PatternMaybePopulatedTheme;
+						const themeTitle =
+							pattern.theme && "title" in pattern.theme
+								? pattern.theme.title || undefined
+								: undefined;
+
 						const itemData: CarrierBagItemData = {
-							id: item.pattern._id,
-							title: item.pattern.title || "Untitled Pattern",
+							id: pattern._id,
+							title: pattern.title || "Untitled Pattern",
+							subtitle: themeTitle,
 						};
 						return (
 							<CarrierBagItem
-								key={item.pattern._id}
+								key={pattern._id}
 								item={itemData}
-								onRemove={() => handleRemoveItem(item.pattern._id)}
-								onExpand={() =>
-									handleExpandItem(item.pattern.slug?.current || "")
-								}
+								onRemove={() => handleRemoveItem(pattern._id)}
+								onExpand={() => handleExpandItem(pattern.slug?.current || "")}
 							/>
 						);
 					})

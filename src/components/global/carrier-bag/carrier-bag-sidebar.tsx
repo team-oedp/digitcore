@@ -3,9 +3,9 @@
 import type * as React from "react";
 
 import {
-	ArrowExpand02Icon,
 	Cancel01Icon,
 	SidebarRightIcon,
+	WebDesign01Icon,
 } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
@@ -46,6 +46,34 @@ export function CarrierBagSidebar({
 		window.location.href = `/pattern/${slug}`;
 	};
 
+	const handleDownloadJson = () => {
+		const payload = {
+			generatedAt: new Date().toISOString(),
+			count: items.length,
+			patterns: items.map((i) => ({
+				id: i.pattern._id,
+				title: i.pattern.title,
+				slug:
+					typeof i.pattern.slug === "string"
+						? i.pattern.slug
+						: i.pattern.slug?.current,
+				notes: i.notes,
+				dateAdded: i.dateAdded,
+			})),
+		};
+		const blob = new Blob([JSON.stringify(payload, null, 2)], {
+			type: "application/json",
+		});
+		const href = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = href;
+		a.download = "carrier-bag.json";
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(href);
+	};
+
 	return (
 		<Sidebar
 			side="right"
@@ -63,7 +91,7 @@ export function CarrierBagSidebar({
 						<Button
 							variant="ghost"
 							size="sm"
-							className="h-8 w-8 p-0"
+							className="hidden h-8 w-8 p-0"
 							type="button"
 							aria-label="Pin Sidebar to Page"
 							onClick={() => console.log("Pin Sidebar to Page")}
@@ -81,7 +109,7 @@ export function CarrierBagSidebar({
 								tabIndex={0}
 								onClick={toggleSidebar}
 							>
-								<Icon icon={ArrowExpand02Icon} size={16} />
+								<Icon icon={WebDesign01Icon} size={16} />
 							</Button>
 						</Link>
 						<Button
@@ -151,7 +179,7 @@ export function CarrierBagSidebar({
 						size="sm"
 						className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
 						type="button"
-						onClick={() => console.log("Download list as JSON")}
+						onClick={handleDownloadJson}
 						disabled={items.length === 0}
 					>
 						Download list as JSON

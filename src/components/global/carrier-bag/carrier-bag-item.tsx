@@ -20,6 +20,7 @@ export type CarrierBagItemData = {
 	id: string;
 	title: string;
 	icon?: React.ComponentType;
+	subtitle?: string;
 };
 
 export type CarrierBagItemProps = {
@@ -50,6 +51,11 @@ export function CarrierBagItem({
 				<p className="truncate font-normal text-foreground text-sm">
 					{item.title}
 				</p>
+				{item.subtitle ? (
+					<p className="truncate text-muted-foreground text-xs">
+						{item.subtitle}
+					</p>
+				) : null}
 			</div>
 
 			{/* Actions */}

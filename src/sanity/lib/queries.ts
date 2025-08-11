@@ -327,3 +327,51 @@ export const ONBOARDING_QUERY = defineQuery(`
     description,
   }
 `);
+
+export const CARRIER_BAG_QUERY = defineQuery(`
+  *[_type == 'carrierBag'][0]{
+    _id,
+    _type,
+    _createdAt,
+    _updatedAt,
+    _rev,
+    title,
+    information,
+  }
+`);
+
+// Fetch patterns by an array of slugs with references needed for carrier bag
+export const PATTERNS_BY_SLUGS_QUERY = defineQuery(`
+  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs]{
+    _id,
+    _type,
+    title,
+    description,
+    "slug": slug.current,
+    tags[]->,
+    audiences[]->{
+      _id,
+      title
+    },
+    theme->{
+      _id,
+      title,
+      description
+    },
+    solutions[]->{
+      _id,
+      _type,
+      title,
+      description,
+      audiences[]->{ _id, title }
+    },
+    resources[]->{
+      _id,
+      _type,
+      title,
+      description,
+      links,
+      solutions[]->{ _id, title }
+    }
+  }
+`);
