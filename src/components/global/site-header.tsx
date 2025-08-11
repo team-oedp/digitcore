@@ -1,7 +1,6 @@
 "use client";
 
-import { SidebarIcon } from "lucide-react";
-
+import { SidebarRightIcon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
@@ -10,6 +9,7 @@ import { useSidebar } from "~/components/ui/sidebar";
 import { useHydration } from "~/hooks/use-hydration";
 import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
+import { Icon } from "../shared/icon";
 import { LanguageSelector } from "../theme/language-selector";
 import { ModeToggle } from "../theme/mode-toggle";
 import { CommandMenu } from "./command-menu";
@@ -183,14 +183,14 @@ export function SiteHeader() {
 								: "Toggle Sidebar"
 						}
 					>
-						<span
+						<Icon
+							icon={SidebarRightIcon}
+							size={14}
 							className={cn(
 								"flex items-center gap-0.5 text-sm",
 								isOnCarrierBagRoute ? "text-muted-foreground" : "text-primary",
 							)}
-						>
-							<SidebarIcon size={14} />
-						</span>
+						/>
 					</button>
 				)}
 			</nav>
