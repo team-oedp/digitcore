@@ -3,9 +3,9 @@
 import { useEffect } from "react";
 import { useGlossaryScroll } from "~/lib/scroll";
 
-interface GlossaryScrollProps {
+type GlossaryScrollProps = {
 	searchParams: { [key: string]: string | string[] | undefined };
-}
+};
 
 export function GlossaryScroll({ searchParams }: GlossaryScrollProps) {
 	const { scrollToWord } = useGlossaryScroll();
