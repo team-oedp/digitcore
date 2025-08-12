@@ -22,9 +22,7 @@ export function usePageContentSearch({
 	const [query, setQuery] = useState("");
 	const [results, setResults] = useState<PageContentSearchResult[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
-	const [pageContent, setPageContent] = useState<PageContentSearchResult[]>(
-		[],
-	);
+	const [pageContent, setPageContent] = useState<PageContentSearchResult[]>([]);
 
 	const [debouncedQuery] = useDebounce(query, debounceDelay);
 
@@ -75,7 +73,11 @@ export function usePageContentSearch({
 		const headingElements = document.querySelectorAll("h1, h2, h3");
 		headingElements.forEach((element, index) => {
 			const title = element.textContent?.trim();
-			if (title && !element.closest('[data-section="solutions"]') && !element.closest('[data-section="resources"]')) {
+			if (
+				title &&
+				!element.closest('[data-section="solutions"]') &&
+				!element.closest('[data-section="resources"]')
+			) {
 				content.push({
 					id: `heading-${index}`,
 					title,
@@ -136,7 +138,7 @@ export function usePageContentSearch({
 			const searchTerms = searchQuery.toLowerCase().split(" ");
 			const matchedResults: PageContentSearchResult[] = [];
 
-			pageContent.forEach((item) => {
+			for (const item of pageContent) {
 				const titleLower = item.title.toLowerCase();
 				const contextLower = item.context?.toLowerCase() || "";
 
@@ -144,7 +146,7 @@ export function usePageContentSearch({
 				let score = 0;
 				let matchedTerms = 0;
 
-				searchTerms.forEach((term) => {
+				for (const term of searchTerms) {
 					if (titleLower.includes(term)) {
 						score += 10; // Higher weight for title matches
 						matchedTerms++;
@@ -152,7 +154,7 @@ export function usePageContentSearch({
 						score += 5; // Lower weight for context matches
 						matchedTerms++;
 					}
-				});
+				}
 
 				// Only include results that match at least one term
 				if (matchedTerms > 0) {
@@ -161,7 +163,7 @@ export function usePageContentSearch({
 						// Could add score to result type if needed for sorting
 					});
 				}
-			});
+			}
 
 			// Sort by type priority: solutions -> resources -> headings -> content
 			const typePriority = {
@@ -202,7 +204,7 @@ export function usePageContentSearch({
 			result.element.style.transition = "background-color 0.3s ease";
 
 			setTimeout(() => {
-				result.element!.style.backgroundColor = "";
+				result.element?.style.setProperty("background-color", "");
 			}, 2000);
 		} else if (result.sectionId) {
 			// Fallback to section scrolling

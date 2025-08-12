@@ -45,7 +45,11 @@ export function Solutions({
 	}
 
 	return (
-		<section id="solutions" data-section="solutions" className="flex flex-col gap-5">
+		<section
+			id="solutions"
+			data-section="solutions"
+			className="flex flex-col gap-5"
+		>
 			<header className="flex flex-row items-center gap-2.5">
 				<h2 className="font-light text-[32px] text-primary">Solutions</h2>
 				<div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f7f7f7] px-4 py-1.5">

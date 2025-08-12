@@ -116,8 +116,30 @@ export function CommandMenu() {
 	const [tagResults, setTagResults] = useState<
 		{ value: string; label: string }[]
 	>([]);
-	const [solutionResults, setSolutionResults] = useState<any[]>([]);
-	const [resourceResults, setResourceResults] = useState<any[]>([]);
+	const [solutionResults, setSolutionResults] = useState<
+		Array<{
+			_id: string;
+			title?: string;
+			description?: Array<unknown>;
+			pattern: SearchPattern;
+		}>
+	>([]);
+	const [resourceResults, setResourceResults] = useState<
+		Array<{
+			_id: string;
+			title?: string;
+			description?: Array<unknown>;
+			solutions?: Array<{
+				_id: string;
+				title?: string;
+			}> | null;
+			solution?: Array<{
+				_id: string;
+				title?: string;
+			}> | null;
+			pattern: SearchPattern;
+		}>
+	>([]);
 
 	// Update search effect to fetch and group all types
 	useEffect(() => {
@@ -139,8 +161,26 @@ export function CommandMenu() {
 				searchParams.set("limit", "10");
 				const result = await searchPatternsWithParams(searchParams);
 				let patterns: SearchPattern[] = [];
-				const solutions: any[] = [];
-				const resources: any[] = [];
+				const solutions: Array<{
+					_id: string;
+					title?: string;
+					description?: Array<unknown>;
+					pattern: SearchPattern;
+				}> = [];
+				const resources: Array<{
+					_id: string;
+					title?: string;
+					description?: Array<unknown>;
+					solutions?: Array<{
+						_id: string;
+						title?: string;
+					}> | null;
+					solution?: Array<{
+						_id: string;
+						title?: string;
+					}> | null;
+					pattern: SearchPattern;
+				}> = [];
 				if (result.success && result.data) {
 					patterns = result.data;
 					// Extract solutions/resources from patterns
