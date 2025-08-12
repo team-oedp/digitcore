@@ -1,93 +1,61 @@
 import "~/styles/globals.css";
 
-import type { Metadata } from "next";
-import { Geist } from "next/font/google";
-import { ModeToggle } from "~/components/mode-toggle";
-import { Button } from "~/components/ui/button";
-
-import Link from "next/link";
-import { ThemeProvider } from "~/components/theme-provider";
+import type { Metadata, Viewport } from "next";
+import { VisualEditing } from "next-sanity";
+import { draftMode } from "next/headers";
+import { sans } from "~/app/(frontend)/fonts";
+import { DisableDraftMode } from "~/components/global/disable-draft-mode";
+import { LayoutUI } from "~/components/global/layout-ui";
+import { ResponsiveWrapper } from "~/components/global/responsive-wrapper";
+import { ThemeProvider } from "~/components/theme/theme-provider";
+import { cn } from "~/lib/utils";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
+import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
 	title: "Digitcore",
 	description: "Digital Toolkit for Collaborative Environmental Research",
-	icons: [{ rel: "icon", url: "/icon.png" }],
+	icons: [{ rel: "icon", url: "/oedp-icon.png" }],
 };
 
-const geist = Geist({
-	subsets: ["latin"],
-	variable: "--font-geist-sans",
-});
+export const viewport: Viewport = {
+	colorScheme: "light",
+	themeColor: [
+		{ media: "(prefers-color-scheme: light)", color: "white" },
+		{ media: "(prefers-color-scheme: dark)", color: "black" },
+	],
+};
 
-export default function Layout({
+export default async function Layout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
+	const isDraftMode = (await draftMode()).isEnabled;
+
 	return (
-		<section className={`${geist.variable}`}>
-			<div className="min-h-screen bg-background text-foreground antialiased">
+		<section className={cn(sans.variable)}>
+			<div className="h-screen text-foreground antialiased [--header-height:calc(--spacing(14))]">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"
 					enableSystem
 					disableTransitionOnChange
 				>
-					{/* Global navigation */}
-					<header className="sticky top-0 z-50 border-b bg-background/60 backdrop-blur supports-backdrop-blur:bg-background/80">
-						<nav className="container mx-auto flex items-center justify-between gap-4 px-4 py-3">
-							<Button
-								variant="link"
-								asChild
-								className="p-0 font-semibold text-lg"
-							>
-								<Link href="/">DIGITCORE Toolkit</Link>
-							</Button>
-
-							{/* Primary navigation links + theme toggle */}
-							<div className="flex items-center gap-2">
-								<ul className="flex flex-wrap gap-2 text-sm">
-									<li>
-										<Button variant="link" asChild>
-											<Link href="/carrier-bag">Carrier Bag</Link>
-										</Button>
-									</li>
-									<li>
-										<Button variant="link" asChild>
-											<Link href="/tags">Tags</Link>
-										</Button>
-									</li>
-									<li>
-										<Button variant="link" asChild>
-											<Link href="/glossary">Glossary</Link>
-										</Button>
-									</li>
-									<li>
-										<Button variant="link" asChild>
-											<Link href="/onboarding">Onboarding</Link>
-										</Button>
-									</li>
-									<li>
-										<Button variant="link" asChild>
-											<Link href="/values">Values</Link>
-										</Button>
-									</li>
-									<li>
-										<Button variant="link" asChild>
-											<Link href="/search">Search</Link>
-										</Button>
-									</li>
-								</ul>
-								<ModeToggle />
-							</div>
-						</nav>
-					</header>
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
-							{/* Main content wrapper */}
-							<main className="container mx-auto px-4 py-8">{children}</main>
+							<PageContentStoreProvider>
+								<LayoutUI>
+									<ResponsiveWrapper>{children}</ResponsiveWrapper>
+								</LayoutUI>
+							</PageContentStoreProvider>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>
+					{isDraftMode && (
+						<>
+							<VisualEditing />
+							<DisableDraftMode />
+						</>
+					)}
 				</ThemeProvider>
 			</div>
 		</section>

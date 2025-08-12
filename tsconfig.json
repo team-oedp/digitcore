@@ -27,7 +27,8 @@
 		/* Path Aliases */
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["./src/*"]
+			"~/*": ["./src/*"],
+			"@icons/*": ["./src/components/icons/*"]
 		}
 	},
 	"include": [
@@ -38,5 +39,5 @@
 		"**/*.js",
 		".next/types/**/*.ts"
 	],
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules", "dist", ".next", "src/sanity/dist"]
 }

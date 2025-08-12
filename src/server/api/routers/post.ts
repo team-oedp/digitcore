@@ -3,10 +3,10 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 // Mocked DB
-interface Post {
+type Post = {
 	id: number;
 	name: string;
-}
+};
 const posts: Post[] = [
 	{
 		id: 1,

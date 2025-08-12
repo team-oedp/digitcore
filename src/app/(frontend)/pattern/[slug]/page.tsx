@@ -1,15 +1,57 @@
 import type { Metadata } from "next";
-import { Button } from "~/components/ui/button";
+import type { PortableTextBlock } from "next-sanity";
+import { draftMode } from "next/headers";
+import { notFound } from "next/navigation";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { PatternConnections } from "~/components/pages/pattern/pattern-connections";
+import { PatternContentProvider } from "~/components/pages/pattern/pattern-content-provider";
+import type { DereferencedResource } from "~/components/pages/pattern/resources";
+import { Resources } from "~/components/pages/pattern/resources";
+import { Solutions } from "~/components/pages/pattern/solutions";
+import { PageHeader } from "~/components/shared/page-header";
+import { PageWrapper } from "~/components/shared/page-wrapper";
+import { client } from "~/sanity/lib/client";
+import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
+import { token } from "~/sanity/lib/token";
+import type {
+	Audience,
+	PATTERN_QUERYResult,
+	Pattern,
+	Slug,
+	Solution,
+	Tag,
+	Theme,
+} from "~/sanity/sanity.types";
 
 export type PatternPageProps = {
 	params: Promise<{ slug: string }>;
 };
 
+/**
+ * Generate the static params for the page.
+ * Learn more: https://nextjs.org/docs/app/api-reference/functions/generate-static-params
+ */
+export async function generateStaticParams() {
+	const data = await client.fetch(
+		PATTERN_PAGES_SLUGS_QUERY,
+		{},
+		{
+			perspective: "published",
+			useCdn: true,
+		},
+	);
+	return data;
+}
+
 export async function generateMetadata({
 	params,
 }: PatternPageProps): Promise<Metadata> {
 	const { slug } = await params;
-	const readable = slug.replace(/-/g, " ");
+	const readable = slug
+		.replace(/-/g, " ")
+		.split(" ")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+		.join(" ");
 	return {
 		title: `${readable} | Pattern | DIGITCORE Toolkit`,
 		description: `Learn how the ${readable} pattern can support community-centered projects.`,
@@ -18,54 +60,82 @@ export async function generateMetadata({
 
 export default async function PatternPage({ params }: PatternPageProps) {
 	const { slug } = await params;
-	const readable = slug.replace(/-/g, " ");
+	const isDraftMode = (await draftMode()).isEnabled;
+
+	const pattern: PATTERN_QUERYResult = await client.fetch(
+		PATTERN_QUERY,
+		{ slug },
+		isDraftMode
+			? {
+					perspective: "previewDrafts",
+					useCdn: false,
+					stega: true,
+					token,
+				}
+			: {
+					perspective: "published",
+					useCdn: true,
+				},
+	);
+
+	if (!pattern) {
+		console.log("No pattern found, returning 404");
+		return notFound();
+	}
+
+	const themeFromPattern: Theme | undefined = (() => {
+		const candidate = pattern as unknown as Partial<{
+			theme: Theme;
+			themes: Theme[];
+		}>;
+		if (Array.isArray(candidate.themes) && candidate.themes.length > 0) {
+			return candidate.themes[0];
+		}
+		return candidate.theme;
+	})();
+
 	return (
-		<article className="space-y-12">
-			{/* Pattern title */}
-			<header className="space-y-2">
-				<h1 className="font-bold text-3xl capitalize">{readable}</h1>
-				<p className="text-muted-foreground">
-					Short description of the pattern’s problem and context.
-				</p>
-			</header>
-
-			{/* Problem description */}
-			<section>
-				<h2 className="font-semibold text-2xl">Problem Description</h2>
-				<p>Describe the problem this pattern addresses.</p>
-			</section>
-
-			{/* Audience-specific solutions */}
-			<section>
-				<h2 className="font-semibold text-2xl">Audience-Specific Solutions</h2>
-				<p>Detail solutions tailored to different stakeholders.</p>
-			</section>
-
-			{/* Related tags */}
-			<section>
-				<h3 className="font-semibold text-xl">Related Tags</h3>
-				<div className="flex flex-wrap gap-2">
-					{/* Placeholder tag */}
-					<span className="rounded bg-gray-200 px-2 py-1 text-sm">Tag</span>
+		<PatternContentProvider pattern={pattern}>
+			<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+				<div className="flex items-start justify-between gap-6">
+					<div className="flex-1">
+						<PageHeader
+							title={pattern.title || ""}
+							slug={
+								typeof pattern.slug === "string"
+									? pattern.slug
+									: (pattern.slug as Slug | null)?.current || ""
+							}
+							pattern={pattern as unknown as Pattern}
+						/>
+					</div>
 				</div>
-			</section>
-
-			{/* Resources */}
-			<section>
-				<h3 className="font-semibold text-xl">Resources</h3>
-				<p>Downloadable files and assets will appear here.</p>
-			</section>
-
-			{/* Real-world examples */}
-			<section>
-				<h3 className="font-semibold text-xl">Real-World Examples</h3>
-				<p>Showcase implementations from the field.</p>
-			</section>
-
-			{/* Save to carrier bag action */}
-			<div className="text-right">
-				<Button>Save to Carrier Bag</Button>
 			</div>
-		</article>
+
+			<PageWrapper>
+				<div className="space-y-12 pt-28">
+					<div className="lg:pl-20">
+						<CustomPortableText
+							value={pattern.description as PortableTextBlock[]}
+						/>
+						<PatternConnections
+							tags={(pattern.tags as Tag[]) || undefined}
+							audiences={(pattern.audiences as Audience[]) || undefined}
+							theme={themeFromPattern}
+						/>
+					</div>
+					<Solutions
+						solutions={(pattern.solutions as unknown as Solution[]) || []}
+						patternName={pattern.title || ""}
+						patternSlug={slug}
+					/>
+					<Resources
+						resources={
+							(pattern.resources as unknown as DereferencedResource[]) || []
+						}
+					/>
+				</div>
+			</PageWrapper>
+		</PatternContentProvider>
 	);
 }
