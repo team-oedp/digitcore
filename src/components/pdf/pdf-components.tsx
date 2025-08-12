@@ -305,9 +305,9 @@ const styles = StyleSheet.create({
 });
 
 // Cover Page Component
-interface PDFCoverPageProps {
+type PDFCoverPageProps = {
 	documentData: CarrierBagDocumentData;
-}
+};
 
 const PDFCoverPage = ({ documentData }: PDFCoverPageProps) => (
 	<Page size="A4" style={styles.page}>
@@ -326,9 +326,9 @@ const PDFCoverPage = ({ documentData }: PDFCoverPageProps) => (
 );
 
 // Table of Contents Component
-interface PDFTableOfContentsProps {
+type PDFTableOfContentsProps = {
 	documentData: CarrierBagDocumentData;
-}
+};
 
 const PDFTableOfContents = ({ documentData }: PDFTableOfContentsProps) => (
 	<Page size="A4" style={styles.page}>
@@ -345,9 +345,9 @@ const PDFTableOfContents = ({ documentData }: PDFTableOfContentsProps) => (
 );
 
 // Pattern Connections Component
-interface PDFPatternConnectionsProps {
+type PDFPatternConnectionsProps = {
 	connections: PatternConnectionData[];
-}
+};
 
 const PDFPatternConnections = ({ connections }: PDFPatternConnectionsProps) => {
 	if (connections.length === 0) return null;
@@ -373,9 +373,9 @@ const PDFPatternConnections = ({ connections }: PDFPatternConnectionsProps) => {
 };
 
 // Solutions Component
-interface PDFSolutionsProps {
+type PDFSolutionsProps = {
 	solutions: SolutionData[];
-}
+};
 
 const PDFSolutions = ({ solutions }: PDFSolutionsProps) => {
 	if (solutions.length === 0) return null;
@@ -412,9 +412,9 @@ const PDFSolutions = ({ solutions }: PDFSolutionsProps) => {
 };
 
 // Resources Component
-interface PDFResourcesProps {
+type PDFResourcesProps = {
 	resources: ResourceData[];
-}
+};
 
 const PDFResources = ({ resources }: PDFResourcesProps) => {
 	if (resources.length === 0) return null;
@@ -456,10 +456,10 @@ const PDFResources = ({ resources }: PDFResourcesProps) => {
 };
 
 // Pattern Notes Component
-interface PDFPatternNotesProps {
+type PDFPatternNotesProps = {
 	notes?: string;
 	dateAdded?: string;
-}
+};
 
 const PDFPatternNotes = ({ notes, dateAdded }: PDFPatternNotesProps) => {
 	if (!notes && !dateAdded) return null;
@@ -485,10 +485,10 @@ const PDFPatternNotes = ({ notes, dateAdded }: PDFPatternNotesProps) => {
 };
 
 // Individual Pattern Page Component
-interface PDFPatternPageProps {
+type PDFPatternPageProps = {
 	pattern: PatternContentData;
 	pageNumber?: number;
-}
+};
 
 const PDFPatternPage = ({ pattern }: PDFPatternPageProps) => (
 	<Page size="A4" style={styles.page} break>
@@ -524,9 +524,9 @@ const PDFPatternPage = ({ pattern }: PDFPatternPageProps) => (
 );
 
 // Main Document Component
-interface CarrierBagPDFDocumentProps {
+type CarrierBagPDFDocumentProps = {
 	documentData: CarrierBagDocumentData;
-}
+};
 
 export const CarrierBagPDFDocument = ({
 	documentData,

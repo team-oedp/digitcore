@@ -1,12 +1,12 @@
 import { toast } from "sonner";
 
-export interface ScrollToAnchorOptions {
+export type ScrollToAnchorOptions = {
 	behavior?: ScrollBehavior;
 	block?: ScrollLogicalPosition;
 	inline?: ScrollLogicalPosition;
 	fallbackMessage?: string;
 	onError?: (message: string) => void;
-}
+};
 
 export function scrollToAnchor(
 	anchorId: string,

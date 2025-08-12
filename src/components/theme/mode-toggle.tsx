@@ -35,7 +35,7 @@ export function ModeToggle() {
 						</span>
 					</button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent className="min-w-32">
+				<DropdownMenuContent className="min-w-32" align="end">
 					<DropdownMenuItem onClick={() => setTheme("light")}>
 						<SunIcon size={16} className="opacity-60" aria-hidden="true" />
 						<span>Light</span>

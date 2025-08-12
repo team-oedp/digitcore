@@ -19,6 +19,7 @@ type IconProps = {
 	size?: number;
 	color?: string;
 	strokeWidth?: number;
+	className?: string;
 };
 
 export function Icon({

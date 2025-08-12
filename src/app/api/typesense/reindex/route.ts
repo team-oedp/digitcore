@@ -5,21 +5,21 @@ import { dataset, projectId } from "../../../../sanity/env";
 import type { BlockContent } from "../../../../sanity/sanity.types";
 
 // Types for GROQ query results (dereferenced data)
-interface DereferencedEntity {
+type DereferencedEntity = {
 	_id: string;
 	title?: string;
-}
+};
 
-interface DereferencedSolution extends DereferencedEntity {
+type DereferencedSolution = DereferencedEntity & {
 	description?: BlockContent;
-}
+};
 
-interface DereferencedResource extends DereferencedEntity {
+type DereferencedResource = DereferencedEntity & {
 	description?: BlockContent;
 	solution?: DereferencedSolution[];
-}
+};
 
-interface PatternQueryResult {
+type PatternQueryResult = {
 	_id: string;
 	_type: "pattern";
 	title?: string;
@@ -27,18 +27,18 @@ interface PatternQueryResult {
 	slug: string;
 	tags?: DereferencedEntity[];
 	audiences?: DereferencedEntity[];
-	themes?: DereferencedEntity[];
+	theme?: DereferencedEntity | null;
 	solutions?: DereferencedSolution[];
 	resources?: DereferencedResource[];
-}
+};
 
-interface PortableTextBlock {
+type PortableTextBlock = {
 	_type: "block";
 	children?: Array<{
 		_type: "span";
 		text?: string;
 	}>;
-}
+};
 
 // Initialize Sanity client
 const sanityClient = createClient({
@@ -76,7 +76,7 @@ const PATTERNS_QUERY = `*[_type == "pattern" && defined(slug.current)][] {
     _id,
     title
   },
-  themes[]-> {
+  theme-> {
     _id,
     title
   },
@@ -129,10 +129,7 @@ function transformPatternToDocument(pattern: PatternQueryResult) {
 			.map((audience) => audience.title || "")
 			.filter(Boolean)
 			.join(", "),
-		themes: (pattern.themes || [])
-			.map((theme) => theme.title || "")
-			.filter(Boolean)
-			.join(", "),
+		themes: [pattern.theme?.title].filter(Boolean).join(", "),
 	};
 }
 

@@ -1,6 +1,15 @@
 "use client";
 
 import { SearchList02Icon, Share02Icon } from "@hugeicons/core-free-icons";
+import Icon01 from "@icons/digitcore/icon-01";
+import Icon02 from "@icons/digitcore/icon-02";
+import Icon03 from "@icons/digitcore/icon-03";
+import Icon04 from "@icons/digitcore/icon-04";
+import Icon05 from "@icons/digitcore/icon-05";
+import Icon06 from "@icons/digitcore/icon-06";
+import Icon07 from "@icons/digitcore/icon-07";
+import Icon08 from "@icons/digitcore/icon-08";
+import Icon09 from "@icons/digitcore/icon-09";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -209,7 +218,7 @@ function OnboardingInner({
 	return (
 		<div className="m-2 rounded-md bg-neutral-200">
 			<div className="relative h-[calc(100vh-1rem)] overflow-clip rounded-md bg-primary-foreground p-2">
-				<div className="absolute top-5 right-4 z-10">
+				<div className="absolute top-4 right-4 z-10">
 					<ActionButton
 						href="/"
 						dashed={false}
@@ -340,8 +349,8 @@ function Slide({
 					Open Environmental Data Project
 				</footer>
 			</div>
-			<div className="w-1/2 pl-2">
-				{asset || <div className="h-full w-full rounded-md bg-neutral-300" />}
+			<div className="w-1/2 rounded-md bg-icon/20 pl-2">
+				{asset || <div className="h-full w-full rounded-md bg-icon/60" />}
 			</div>
 		</div>
 	);
@@ -370,8 +379,30 @@ function Slide1({
 			.map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
 			.join(" ");
 
+	const asset = (
+		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-8">
+			<div className="relative">
+				<Icon01
+					className="absolute inset-0 max-h-full max-w-full fill-icon/10 text-icon/30"
+					width={400}
+					height={400}
+				/>
+				<Icon04
+					className="absolute inset-0 max-h-full max-w-full fill-icon/15 text-icon/40"
+					width={400}
+					height={400}
+				/>
+				<Icon07
+					className="relative max-h-full max-w-full fill-icon/20 text-icon/50"
+					width={400}
+					height={400}
+				/>
+			</div>
+		</div>
+	);
+
 	return (
-		<Slide currentSlide={1} onNavigateSlide={onNavigateSlide}>
+		<Slide currentSlide={1} onNavigateSlide={onNavigateSlide} asset={asset}>
 			<div className="space-y-8">
 				<h1 className="font-light text-2xl text-foreground leading-relaxed">
 					{onboardingTitle ||
@@ -480,8 +511,30 @@ function Slide2({
 		);
 	};
 
+	const asset = (
+		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-8">
+			<div className="relative">
+				<Icon02
+					className="absolute inset-0 max-h-full max-w-full fill-icon/10 text-icon/30"
+					width={400}
+					height={400}
+				/>
+				<Icon05
+					className="absolute inset-0 max-h-full max-w-full fill-icon/15 text-icon/40"
+					width={400}
+					height={400}
+				/>
+				<Icon08
+					className="relative max-h-full max-w-full fill-icon/20 text-icon/50"
+					width={400}
+					height={400}
+				/>
+			</div>
+		</div>
+	);
+
 	return (
-		<Slide currentSlide={2} onNavigateSlide={onNavigateSlide}>
+		<Slide currentSlide={2} onNavigateSlide={onNavigateSlide} asset={asset}>
 			<div className="space-y-6">
 				<h1 className="font-light text-2xl text-foreground leading-relaxed">
 					The toolkit groups together distinct needs, practices, and realities
@@ -589,8 +642,30 @@ function Slide3({
 		);
 	};
 
+	const asset = (
+		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-8">
+			<div className="relative">
+				<Icon03
+					className="absolute inset-0 max-h-full max-w-full fill-icon/10 text-icon/30"
+					width={400}
+					height={400}
+				/>
+				<Icon06
+					className="absolute inset-0 max-h-full max-w-full fill-icon/15 text-icon/40"
+					width={400}
+					height={400}
+				/>
+				<Icon09
+					className="relative max-h-full max-w-full fill-icon/20 text-icon/50"
+					width={400}
+					height={400}
+				/>
+			</div>
+		</div>
+	);
+
 	return (
-		<Slide currentSlide={3} onNavigateSlide={onNavigateSlide}>
+		<Slide currentSlide={3} onNavigateSlide={onNavigateSlide} asset={asset}>
 			<div className="space-y-8">
 				<h1 className="font-light text-2xl text-foreground leading-relaxed">
 					Through our research, several themes emerged that have helped organize

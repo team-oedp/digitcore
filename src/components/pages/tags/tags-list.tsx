@@ -1,8 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import type { TagsByLetter } from "~/app/(frontend)/tags/page";
 import { LetterNavigation } from "~/components/shared/letter-navigation";
+
+// Type definitions
+type Tag = {
+	id: string;
+	name: string;
+	letter: string;
+	resources: {
+		id: string;
+		title: string;
+		slug: string;
+	}[];
+};
+
+type TagsByLetter = Partial<Record<string, Tag[]>>;
 
 /**
  * TagsList component displays tags organized alphabetically with letter navigation.
@@ -36,7 +49,7 @@ export function TagsList({
 
 							{tags.map((tag) => (
 								<div key={tag.id} className="space-y-4">
-									<h3 className="font-normal text-neutral-500 text-xl">
+									<h3 className="font-normal text-neutral-500 text-xl capitalize">
 										{tag.name}
 									</h3>
 

@@ -20,16 +20,16 @@ import {
 	serializeSearchParams,
 } from "~/lib/search";
 
-interface FilterOption {
+type FilterOption = {
 	value: string;
 	label: string;
-}
+};
 
-interface SearchInterfaceProps {
+type SearchInterfaceProps = {
 	audienceOptions?: FilterOption[];
 	themeOptions?: FilterOption[];
 	tagOptions?: FilterOption[];
-}
+};
 
 export function SearchInterface({
 	audienceOptions = [],

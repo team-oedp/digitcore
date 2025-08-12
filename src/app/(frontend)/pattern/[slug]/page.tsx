@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { PatternConnections } from "~/components/pages/pattern/pattern-connections";
 import { PatternContentProvider } from "~/components/pages/pattern/pattern-content-provider";
 import type { DereferencedResource } from "~/components/pages/pattern/resources";
@@ -61,7 +62,6 @@ export default async function PatternPage({ params }: PatternPageProps) {
 	const { slug } = await params;
 	const isDraftMode = (await draftMode()).isEnabled;
 
-	// Option 1: Use the improved single query (recommended for simplicity)
 	const pattern: PATTERN_QUERYResult = await client.fetch(
 		PATTERN_QUERY,
 		{ slug },
@@ -78,30 +78,29 @@ export default async function PatternPage({ params }: PatternPageProps) {
 				},
 	);
 
-	// Option 2: Use separate queries for better performance and type safety
-	// Uncomment this block and comment out the above if you want to use the fetcher approach
-	/*
-	import { client } from "~/sanity/lib/client"
-	import { fetchPatternWithRelations } from "~/sanity/lib/pattern-fetcher"
-	
-	const pattern = await fetchPatternWithRelations(client, slug)
-	*/
-
 	if (!pattern) {
 		console.log("No pattern found, returning 404");
 		return notFound();
 	}
 
+	const themeFromPattern: Theme | undefined = (() => {
+		const candidate = pattern as unknown as Partial<{
+			theme: Theme;
+			themes: Theme[];
+		}>;
+		if (Array.isArray(candidate.themes) && candidate.themes.length > 0) {
+			return candidate.themes[0];
+		}
+		return candidate.theme;
+	})();
+
 	return (
 		<PatternContentProvider pattern={pattern}>
-			<PageWrapper>
-				<div className="space-y-12">
-					<div className="ml-18">
+			<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+				<div className="flex items-start justify-between gap-6">
+					<div className="flex-1">
 						<PageHeader
 							title={pattern.title || ""}
-							description={
-								pattern.description as PortableTextBlock[] | undefined
-							}
 							slug={
 								typeof pattern.slug === "string"
 									? pattern.slug
@@ -109,14 +108,24 @@ export default async function PatternPage({ params }: PatternPageProps) {
 							}
 							pattern={pattern as unknown as Pattern}
 						/>
+					</div>
+				</div>
+			</div>
+
+			<PageWrapper>
+				<div className="space-y-12 pt-28">
+					<div className="lg:pl-20">
+						<CustomPortableText
+							value={pattern.description as PortableTextBlock[]}
+						/>
 						<PatternConnections
 							tags={(pattern.tags as Tag[]) || undefined}
 							audiences={(pattern.audiences as Audience[]) || undefined}
-							theme={(pattern.theme as unknown as Theme) || undefined}
+							theme={themeFromPattern}
 						/>
 					</div>
 					<Solutions
-						solutions={(pattern.solutions as Solution[]) || []}
+						solutions={(pattern.solutions as unknown as Solution[]) || []}
 						patternName={pattern.title || ""}
 						patternSlug={slug}
 					/>

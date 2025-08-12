@@ -4,12 +4,12 @@ import { createLogLocation, logger } from "~/lib/logger";
 import { client } from "~/sanity/lib/client";
 import { FILTER_OPTIONS_QUERY } from "~/sanity/lib/filter-options";
 
-export interface FilterOption {
+export type FilterOption = {
 	value: string;
 	label: string;
-}
+};
 
-export interface FilterOptionsResult {
+export type FilterOptionsResult = {
 	success: boolean;
 	data?: {
 		audiences: FilterOption[];
@@ -17,7 +17,7 @@ export interface FilterOptionsResult {
 		tags: FilterOption[];
 	};
 	error?: string;
-}
+};
 
 /**
  * Server action to fetch filter options from Sanity

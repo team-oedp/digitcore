@@ -2,12 +2,12 @@
  * Search utilities for text processing, highlighting, and truncation
  */
 
-export interface TruncationResult {
+export type TruncationResult = {
 	text: string;
 	isTruncated: boolean;
 	hasMatch: boolean;
 	matchCount: number;
-}
+};
 
 /**
  * Truncates text while preserving context around search matches
