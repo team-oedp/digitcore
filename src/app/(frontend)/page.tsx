@@ -1,13 +1,29 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
+import Image from "next/image";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { PageHeader } from "~/components/shared/page-header";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
-import { HOME_PAGE_QUERY } from "~/sanity/lib/queries";
+import { HOME_PAGE_QUERY, ICONS_QUERY } from "~/sanity/lib/queries";
+import { urlFor } from "~/sanity/lib/image";
 import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
+
+// Temporary interface until types are regenerated
+interface Icon {
+	_id: string;
+	_type: "icon";
+	title: string;
+	svg?: {
+		asset?: {
+			_ref: string;
+			_type: "reference";
+		};
+		_type: "image";
+	};
+}
 
 export const metadata: Metadata = {
 	title: "DIGITCORE Toolkit | Home",
@@ -17,13 +33,17 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 	const isDraftMode = (await draftMode()).isEnabled;
-	const data = (await client.fetch(
-		HOME_PAGE_QUERY,
-		{},
-		isDraftMode
-			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
-			: { perspective: "published", useCdn: true },
-	)) as Page | null;
+	const fetchOptions = isDraftMode
+		? { perspective: "previewDrafts", useCdn: false, stega: true, token }
+		: { perspective: "published", useCdn: true };
+
+	const [data, icons] = await Promise.all([
+		client.fetch(HOME_PAGE_QUERY, {}, fetchOptions) as Promise<Page | null>,
+		client.fetch(ICONS_QUERY, {}, fetchOptions) as Promise<Icon[]>,
+	]);
+
+	// Log icons data to debug
+	console.log('Icons fetched from Sanity:', icons);
 
 	const contentSections = (data?.content ?? []) as NonNullable<Page["content"]>;
 
@@ -42,6 +62,40 @@ export default async function Home() {
 						</div>
 					</div>
 				</div>
+
+				{/* Icons Section - Between header and content */}
+				{icons.length > 0 && (
+					<div className="lg:pl-20 pb-8">
+						<div className="flex gap-6 justify-start">
+							{icons.slice(0, 5).map((icon) => {
+								// Log individual icon data
+								if (icon.svg?.asset) {
+									console.log(`Icon ${icon.title}:`, icon.svg);
+								}
+							return (
+									<div 
+										key={icon._id} 
+										className="relative flex items-center justify-center w-16 h-16 overflow-hidden"
+										title={icon.title}
+									>
+										{icon.svg?.asset ? (
+											<Image
+												src={urlFor(icon.svg).url()}
+												alt={icon.title}
+												width={48}
+												height={48}
+												className="object-contain"
+												style={{ filter: 'brightness(0) saturate(100%) invert(69%) sepia(13%) saturate(500%) hue-rotate(90deg)' }}
+											/>
+										) : (
+											<div className="text-xs text-neutral-400">No SVG</div>
+										)}
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				)}
 
 				{contentSections.length > 0 && (
 					<div className="space-y-8 lg:pl-20">

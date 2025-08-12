@@ -438,3 +438,12 @@ export const FAQS_QUERY = defineQuery(`
     description
   }
 `);
+
+export const ICONS_QUERY = defineQuery(`
+  *[_type == "icon"] | order(title asc) {
+    _id,
+    _type,
+    title,
+    svg
+  }
+`);
