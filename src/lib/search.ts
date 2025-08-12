@@ -17,7 +17,7 @@ export const searchParamsSchema = z.object({
 	limit: z.coerce.number().min(1).max(100).optional().default(20),
 });
 
-export type SearchParams = z.infer<typeof searchParamsSchema>;
+export type SearchParams = z.input<typeof searchParamsSchema>;
 
 // Parsed search parameters for internal use
 export interface ParsedSearchParams {

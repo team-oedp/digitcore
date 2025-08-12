@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
-	parseSearchParams,
-	serializeSearchParams,
-	searchParamsSchema,
-	defaultSearchParams,
-	type SearchParams,
 	type ParsedSearchParams,
+	type SearchParams,
+	defaultSearchParams,
+	parseSearchParams,
+	searchParamsSchema,
+	serializeSearchParams,
 } from "./search";
 
 describe("search functionality", () => {
@@ -27,7 +27,7 @@ describe("search functionality", () => {
 		it("should handle missing optional parameters", () => {
 			const minimalParams = {};
 			const result = searchParamsSchema.parse(minimalParams);
-			
+
 			expect(result.page).toBe(1);
 			expect(result.limit).toBe(20);
 			expect(result.q).toBeUndefined();
@@ -46,23 +46,15 @@ describe("search functionality", () => {
 		});
 
 		it("should reject invalid page numbers", () => {
-			expect(() =>
-				searchParamsSchema.parse({ page: 0 })
-			).toThrow();
+			expect(() => searchParamsSchema.parse({ page: 0 })).toThrow();
 
-			expect(() =>
-				searchParamsSchema.parse({ page: -1 })
-			).toThrow();
+			expect(() => searchParamsSchema.parse({ page: -1 })).toThrow();
 		});
 
 		it("should reject invalid limit numbers", () => {
-			expect(() =>
-				searchParamsSchema.parse({ limit: 0 })
-			).toThrow();
+			expect(() => searchParamsSchema.parse({ limit: 0 })).toThrow();
 
-			expect(() =>
-				searchParamsSchema.parse({ limit: 101 })
-			).toThrow();
+			expect(() => searchParamsSchema.parse({ limit: 101 })).toThrow();
 		});
 	});
 
@@ -265,18 +257,29 @@ describe("search functionality", () => {
 
 			// Parse to internal format
 			const parsed = parseSearchParams(originalParams);
-			
+
 			// Serialize back to URL params
 			const serialized = serializeSearchParams(parsed);
-			
+
 			// Convert URLSearchParams back to SearchParams object
 			const reconstructed: SearchParams = {};
-			if (serialized.has("q")) reconstructed.q = serialized.get("q")!;
-			if (serialized.has("audiences")) reconstructed.audiences = serialized.get("audiences")!;
-			if (serialized.has("themes")) reconstructed.themes = serialized.get("themes")!;
-			if (serialized.has("tags")) reconstructed.tags = serialized.get("tags")!;
-			if (serialized.has("page")) reconstructed.page = Number.parseInt(serialized.get("page")!);
-			if (serialized.has("limit")) reconstructed.limit = Number.parseInt(serialized.get("limit")!);
+			const q = serialized.get("q");
+			if (q !== null) reconstructed.q = q;
+
+			const audiences = serialized.get("audiences");
+			if (audiences !== null) reconstructed.audiences = audiences;
+
+			const themes = serialized.get("themes");
+			if (themes !== null) reconstructed.themes = themes;
+
+			const tags = serialized.get("tags");
+			if (tags !== null) reconstructed.tags = tags;
+
+			const page = serialized.get("page");
+			if (page !== null) reconstructed.page = Number.parseInt(page, 10);
+
+			const limit = serialized.get("limit");
+			if (limit !== null) reconstructed.limit = Number.parseInt(limit, 10);
 
 			// Parse the reconstructed params
 			const finalParsed = parseSearchParams(reconstructed);
@@ -299,15 +302,15 @@ describe("search functionality", () => {
 
 		it("should be immutable", () => {
 			const original = { ...defaultSearchParams };
-			
+
 			// Attempt to modify (this should not affect the original)
 			defaultSearchParams.searchTerm = "modified";
 			defaultSearchParams.audiences.push("test");
-			
+
 			// Reset for test consistency
 			defaultSearchParams.searchTerm = "";
 			defaultSearchParams.audiences.length = 0;
-			
+
 			expect(defaultSearchParams).toEqual(original);
 		});
 	});
@@ -319,7 +322,9 @@ describe("search functionality", () => {
 			};
 
 			const result = parseSearchParams(searchParams);
-			expect(result.searchTerm).toBe("special chars: @#$%^&*()[]{}|\\;':\",./<>?");
+			expect(result.searchTerm).toBe(
+				"special chars: @#$%^&*()[]{}|\\;':\",./<>?",
+			);
 		});
 
 		it("should handle unicode characters", () => {

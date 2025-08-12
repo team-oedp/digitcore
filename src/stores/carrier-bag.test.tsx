@@ -1,9 +1,13 @@
-import { describe, expect, it, beforeEach, vi, afterEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
-import { createCarrierBagStore, useCarrierBagStore, CarrierBagStoreProvider } from "./carrier-bag";
-import type { Pattern } from "~/sanity/sanity.types";
-import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
+import { act, renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { Pattern } from "~/sanity/sanity.types";
+import {
+	CarrierBagStoreProvider,
+	createCarrierBagStore,
+	useCarrierBagStore,
+} from "./carrier-bag";
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -23,7 +27,7 @@ const localStorageMock = (() => {
 	};
 })();
 
-Object.defineProperty(window, 'localStorage', {
+Object.defineProperty(window, "localStorage", {
 	value: localStorageMock,
 });
 
@@ -36,12 +40,11 @@ const mockPattern1: Pattern = {
 	_rev: "1",
 	title: "Test Pattern 1",
 	slug: { current: "test-pattern-1", _type: "slug" },
-	description: null,
-	audiences: null,
-	themes: null,
-	tags: null,
-	solutions: null,
-	resources: null,
+	description: [],
+	audiences: [],
+	tags: [],
+	solutions: [],
+	resources: [],
 };
 
 const mockPattern2: Pattern = {
@@ -52,19 +55,16 @@ const mockPattern2: Pattern = {
 	_rev: "1",
 	title: "Test Pattern 2",
 	slug: { current: "test-pattern-2", _type: "slug" },
-	description: null,
-	audiences: null,
-	themes: null,
-	tags: null,
-	solutions: null,
-	resources: null,
+	description: [],
+	audiences: [],
+	tags: [],
+	solutions: [],
+	resources: [],
 };
 
 // Test wrapper component
 const TestWrapper = ({ children }: { children: ReactNode }) => (
-	<CarrierBagStoreProvider>
-		{children}
-	</CarrierBagStoreProvider>
+	<CarrierBagStoreProvider>{children}</CarrierBagStoreProvider>
 );
 
 describe("CarrierBagStore", () => {
@@ -115,9 +115,9 @@ describe("CarrierBagStore", () => {
 
 			const { items } = store.getState();
 			expect(items).toHaveLength(1);
-			expect(items[0].pattern).toEqual(mockPattern1);
-			expect(items[0].notes).toBe("Test notes");
-			expect(typeof items[0].dateAdded).toBe("string");
+			expect(items[0]?.pattern).toEqual(mockPattern1);
+			expect(items[0]?.notes).toBe("Test notes");
+			expect(typeof items[0]?.dateAdded).toBe("string");
 		});
 
 		it("should add pattern without notes", () => {
@@ -130,7 +130,7 @@ describe("CarrierBagStore", () => {
 
 			const { items } = store.getState();
 			expect(items).toHaveLength(1);
-			expect(items[0].notes).toBeUndefined();
+			expect(items[0]?.notes).toBeUndefined();
 		});
 
 		it("should not add duplicate patterns", () => {
@@ -144,7 +144,7 @@ describe("CarrierBagStore", () => {
 
 			const { items } = store.getState();
 			expect(items).toHaveLength(1);
-			expect(items[0].notes).toBe("First notes");
+			expect(items[0]?.notes).toBe("First notes");
 		});
 
 		it("should add multiple different patterns", () => {
@@ -158,8 +158,8 @@ describe("CarrierBagStore", () => {
 
 			const { items } = store.getState();
 			expect(items).toHaveLength(2);
-			expect(items[0].pattern._id).toBe("pattern-1");
-			expect(items[1].pattern._id).toBe("pattern-2");
+			expect(items[0]?.pattern._id).toBe("pattern-1");
+			expect(items[1]?.pattern._id).toBe("pattern-2");
 		});
 
 		it("should remove pattern from bag", () => {
@@ -179,7 +179,7 @@ describe("CarrierBagStore", () => {
 
 			const { items } = store.getState();
 			expect(items).toHaveLength(1);
-			expect(items[0].pattern._id).toBe("pattern-2");
+			expect(items[0]?.pattern._id).toBe("pattern-2");
 		});
 
 		it("should handle removing non-existent pattern", () => {
@@ -232,7 +232,7 @@ describe("CarrierBagStore", () => {
 			});
 
 			const { items } = store.getState();
-			expect(items[0].notes).toBe("Updated notes");
+			expect(items[0]?.notes).toBe("Updated notes");
 		});
 
 		it("should handle updating notes for non-existent pattern", () => {
@@ -248,7 +248,7 @@ describe("CarrierBagStore", () => {
 			});
 
 			const { items } = store.getState();
-			expect(items[0].notes).toBe("Original notes");
+			expect(items[0]?.notes).toBe("Original notes");
 		});
 
 		it("should update notes for correct pattern when multiple exist", () => {
@@ -265,8 +265,8 @@ describe("CarrierBagStore", () => {
 			});
 
 			const { items } = store.getState();
-			expect(items[0].notes).toBe("Notes 1");
-			expect(items[1].notes).toBe("Updated notes 2");
+			expect(items[0]?.notes).toBe("Notes 1");
+			expect(items[1]?.notes).toBe("Updated notes 2");
 		});
 	});
 
@@ -394,7 +394,9 @@ describe("CarrierBagStore", () => {
 		it("should throw error when used outside provider", () => {
 			expect(() => {
 				renderHook(() => useCarrierBagStore());
-			}).toThrow("useCarrierBagStore must be used within CarrierBagStoreProvider");
+			}).toThrow(
+				"useCarrierBagStore must be used within CarrierBagStoreProvider",
+			);
 		});
 
 		it("should work with provider", () => {
@@ -409,7 +411,7 @@ describe("CarrierBagStore", () => {
 		it("should work with selector", () => {
 			const { result } = renderHook(
 				() => useCarrierBagStore((state) => state.items.length),
-				{ wrapper: TestWrapper }
+				{ wrapper: TestWrapper },
 			);
 
 			expect(typeof result.current).toBe("number");
@@ -426,7 +428,7 @@ describe("CarrierBagStore", () => {
 			});
 
 			expect(result.current.items).toHaveLength(1);
-			expect(result.current.items[0].pattern._id).toBe("pattern-1");
+			expect(result.current.items[0]?.pattern._id).toBe("pattern-1");
 		});
 	});
 
@@ -480,8 +482,12 @@ describe("CarrierBagStore", () => {
 			});
 
 			const { items } = store.getState();
-			expect(items.map(item => item.pattern._id)).toEqual([
-				"pattern-0", "pattern-1", "pattern-2", "pattern-3", "pattern-4"
+			expect(items.map((item) => item.pattern._id)).toEqual([
+				"pattern-0",
+				"pattern-1",
+				"pattern-2",
+				"pattern-3",
+				"pattern-4",
 			]);
 		});
 
@@ -498,7 +504,7 @@ describe("CarrierBagStore", () => {
 
 			const { items } = store.getState();
 			expect(items).toHaveLength(1);
-			expect(items[0].pattern._id).toBe("pattern-2");
+			expect(items[0]?.pattern._id).toBe("pattern-2");
 		});
 	});
 
@@ -513,10 +519,10 @@ describe("CarrierBagStore", () => {
 
 			const { items } = store.getState();
 			// Verify structure matches what would be persisted
-			expect(items[0]).toHaveProperty('pattern');
-			expect(items[0]).toHaveProperty('dateAdded');
-			expect(items[0]).toHaveProperty('notes');
-			expect(typeof items[0].dateAdded).toBe('string');
+			expect(items[0]).toHaveProperty("pattern");
+			expect(items[0]).toHaveProperty("dateAdded");
+			expect(items[0]).toHaveProperty("notes");
+			expect(typeof items[0]?.dateAdded).toBe("string");
 		});
 
 		it("should only include persistable data in items", () => {
@@ -528,11 +534,11 @@ describe("CarrierBagStore", () => {
 			});
 
 			const { items } = store.getState();
-			const item = items[0];
-			
+			const item = items[0] as unknown as NonNullable<(typeof items)[number]>;
+
 			// Check that the item structure is JSON serializable
 			expect(() => JSON.stringify(item)).not.toThrow();
-			
+
 			const parsed = JSON.parse(JSON.stringify(item));
 			expect(parsed.pattern._id).toBe("pattern-1");
 			expect(parsed.notes).toBe("Test notes");
