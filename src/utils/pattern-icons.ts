@@ -72,7 +72,12 @@ export function getPatternIcon(
 
 	// Use the absolute value and modulo to get an index within our icon array
 	const index = Math.abs(hash) % icons.length;
-	return icons[index];
+	const icon = icons[index];
+	if (!icon) {
+		// This should never happen as we use modulo, but satisfies TypeScript
+		return icons[0] as ComponentType<React.ComponentPropsWithoutRef<"svg">>;
+	}
+	return icon;
 }
 
 /**

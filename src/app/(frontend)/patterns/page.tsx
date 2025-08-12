@@ -7,9 +7,7 @@ import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
 import { PATTERNS_WITH_THEMES_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
-import type {
-  PATTERNS_WITH_THEMES_QUERYResult
-} from "~/sanity/sanity.types";
+import type { PATTERNS_WITH_THEMES_QUERYResult } from "~/sanity/sanity.types";
 
 type PatternWithTheme = PATTERNS_WITH_THEMES_QUERYResult[0];
 
@@ -74,14 +72,14 @@ export default async function PatternsPage() {
 	return (
 		<div className="relative">
 			<PageWrapper>
-			<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
-				<PageHeader
-					title="Patterns"
-					description="Explore patterns to discover new open environmental research to share and incorporate into your own work."
-				/>
-			</div>
+				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+					<PageHeader
+						title="Patterns"
+						description="Explore patterns to discover new open environmental research to share and incorporate into your own work."
+					/>
+				</div>
 
-				<div className="lg:pt-12 lg:pl-20 flex flex-col gap-20 space-y-14">
+				<div className="flex flex-col gap-20 space-y-14 lg:pt-12 lg:pl-20">
 					{!allPatterns || allPatterns.length === 0 ? (
 						<div className="p-8">
 							<p className="text-primary">
@@ -93,15 +91,17 @@ export default async function PatternsPage() {
 							{/* Render patterns grouped by theme */}
 							{Array.from(themeGroups.values()).map(({ theme, patterns }) => (
 								<div key={theme._id} className="mb-12">
-									<div className="flex flex-col gap-8 items-start justify-start">
+									<div className="flex flex-col items-start justify-start gap-8">
 										<h2 className="font-light text-[32px] text-primary capitalize">
 											{theme.title}
-                    </h2>
-                    <CustomPortableText value={theme.description as PortableTextBlock[]} />
+										</h2>
+										<CustomPortableText
+											value={theme.description as PortableTextBlock[]}
+										/>
 									</div>
 
 									{/* Pattern items using SearchResultItem */}
-									<div className="pt-12 space-y-0">
+									<div className="space-y-0 pt-12">
 										{patterns.map((pattern) => (
 											<SearchResultItem
 												key={pattern._id}
@@ -134,7 +134,7 @@ export default async function PatternsPage() {
 										))}
 									</div>
 								</div>
-							))}                
+							))}
 
 							{/* Section for patterns without a theme */}
 							{ungroupedPatterns.length > 0 && (

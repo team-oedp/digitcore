@@ -19,7 +19,9 @@ export function LetterNavigation<T>({
 
 	// Determine initial fallback if no active letter yet
 	const firstAvailableLetter = useMemo(
-		() => ALPHABET.find((letter) => (itemsByLetter[letter]?.length ?? 0) > 0) || null,
+		() =>
+			ALPHABET.find((letter) => (itemsByLetter[letter]?.length ?? 0) > 0) ||
+			null,
 		[itemsByLetter],
 	);
 	const effectiveActive = activeLetter ?? firstAvailableLetter ?? undefined;
@@ -30,20 +32,22 @@ export function LetterNavigation<T>({
 				{ALPHABET.map((letter) => {
 					const hasItems = (itemsByLetter[letter]?.length ?? 0) > 0;
 					const isActive = effectiveActive === letter;
-					
+
 					const baseClasses =
 						"block text-sm text-center leading-none py-1 transition-all duration-200";
-					
+
 					// Determine the appropriate classes based on state
 					let stateClasses = "";
 					if (!hasItems) {
-						stateClasses = "text-neutral-300 pointer-events-none cursor-not-allowed";
+						stateClasses =
+							"text-neutral-300 pointer-events-none cursor-not-allowed";
 					} else if (isActive) {
 						// Active letter gets bold and darker color
 						stateClasses = "text-neutral-900 font-semibold";
 					} else {
 						// Inactive but available letters
-						stateClasses = "text-neutral-500 hover:text-neutral-700 font-normal";
+						stateClasses =
+							"text-neutral-500 hover:text-neutral-700 font-normal";
 					}
 
 					return (
