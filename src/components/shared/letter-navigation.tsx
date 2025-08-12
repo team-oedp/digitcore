@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { useActiveLetter } from "~/hooks/use-section-in-view";
 
 type LetterNavigationProps<T> = {
 	itemsByLetter: Partial<Record<string, T[]>>;
@@ -13,38 +14,22 @@ export function LetterNavigation<T>({
 	itemsByLetter,
 	contentId = "content",
 }: LetterNavigationProps<T>) {
-	// Initialize with the first available letter
-	const firstAvailableLetter = ALPHABET.find(
-		(letter) => (itemsByLetter[letter]?.length ?? 0) > 0,
+	// Read active letter from shared store
+	const activeLetter = useActiveLetter();
+
+	// Determine initial fallback if no active letter yet
+	const firstAvailableLetter = useMemo(
+		() => ALPHABET.find((letter) => (itemsByLetter[letter]?.length ?? 0) > 0) || null,
+		[itemsByLetter],
 	);
-	const [activeLetter, setActiveLetter] = useState<string | null>(
-		firstAvailableLetter || null,
-	);
+	const effectiveActive = activeLetter ?? firstAvailableLetter ?? undefined;
 
-	// Listen for letter changes from CurrentLetterIndicator
-	useEffect(() => {
-		const handleLetterChange = (event: CustomEvent) => {
-			setActiveLetter(event.detail.letter);
-		};
-
-		window.addEventListener(
-			"current-letter-changed" as any,
-			handleLetterChange as EventListener,
-		);
-
-		return () => {
-			window.removeEventListener(
-				"current-letter-changed" as any,
-				handleLetterChange as EventListener,
-			);
-		};
-	}, []);
 	return (
 		<div className="fixed left-8 z-20 hidden lg:block">
 			<div className="flex flex-col">
 				{ALPHABET.map((letter) => {
 					const hasItems = (itemsByLetter[letter]?.length ?? 0) > 0;
-					const isActive = activeLetter === letter;
+					const isActive = effectiveActive === letter;
 					
 					const baseClasses =
 						"block text-sm text-center leading-none py-1 transition-all duration-200";

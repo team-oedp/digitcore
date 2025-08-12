@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useSectionInViewStore } from "~/stores/section-in-view";
 
 type CurrentLetterIndicatorProps = {
 	availableLetters: string[];
@@ -11,124 +12,97 @@ export function CurrentLetterIndicator({
 	availableLetters,
 	contentId = "content",
 }: CurrentLetterIndicatorProps) {
-	const [currentLetter, setCurrentLetter] = useState(
-		availableLetters[0] || "A",
+	// Register available letters globally so other components can use them
+	const setAvailableLetters = useSectionInViewStore(
+		(s) => s.setAvailableLetters,
 	);
+	useEffect(() => {
+		setAvailableLetters(availableLetters);
+	}, [availableLetters, setAvailableLetters]);
 
-	// Find which letter section is currently in view
-	const updateCurrentLetter = useCallback(() => {
-		if (!availableLetters.length) return;
+	// Compute and set the header offset based on the PageHeader element
+	const setHeaderOffset = useSectionInViewStore((s) => s.setHeaderOffset);
+	useEffect(() => {
+		const header = document.getElementById("page-header");
+		if (!header) return;
+		const update = () => {
+			const rect = header.getBoundingClientRect();
+			// distance from top of viewport to the bottom of the header
+			setHeaderOffset(rect.top + rect.height);
+		};
+		update();
+		window.addEventListener("resize", update);
+		window.addEventListener("scroll", update, { passive: true });
+		return () => {
+			window.removeEventListener("resize", update);
+			window.removeEventListener("scroll", update as EventListener);
+		};
+	}, [setHeaderOffset]);
 
-		// Get the sticky container that contains the page header
-		// Look for the sticky container (it has classes sticky top-0)
-		const stickyContainers = document.querySelectorAll('.sticky.top-0');
-		if (!stickyContainers.length) return;
-		
-		// Use the first sticky container (should be the page header container)
-		const stickyHeader = stickyContainers[0] as HTMLElement;
-		
-		// Calculate the bottom of the sticky header (this is our threshold)
-		const headerRect = stickyHeader.getBoundingClientRect();
-		const headerBottom = headerRect.bottom;
+	// Build refs for each section we care about and observe them from below the header
+	const headerOffset = useSectionInViewStore((s) => s.headerOffset);
+	const setActiveLetter = useSectionInViewStore((s) => s.setActiveLetter);
 
-		// Sort available letters to ensure we check them in order
-		const sortedLetters = [...availableLetters].sort();
+	// Stable sorted letters to track
+	const letters = useMemo(() => {
+		return [...new Set(availableLetters)].sort();
+	}, [availableLetters]);
 
-		let activeLetter = sortedLetters[0] || "A";
-		let lastVisibleLetter = null;
+	// We create a sentinel element positioned at the header's bottom (using CSS sticky container on page)
+	const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-		// Check each letter section to find which one is currently visible
-		for (let i = 0; i < sortedLetters.length; i++) {
-			const letter = sortedLetters[i];
-			const section = document.getElementById(`letter-${letter}`);
-			if (!section) continue;
-
-			const rect = section.getBoundingClientRect();
-			const nextLetter = sortedLetters[i + 1];
-			const nextSection = nextLetter ? document.getElementById(`letter-${nextLetter}`) : null;
-			const nextRect = nextSection ? nextSection.getBoundingClientRect() : null;
-			
-			// Check if the section's top is at or above the header threshold
-			if (rect.top <= headerBottom) {
-				// If there's a next section and it's also above the threshold,
-				// continue to check the next one
-				if (nextRect && nextRect.top <= headerBottom) {
-					lastVisibleLetter = letter;
-					continue;
+	// On scroll, determine which letter section top is just above the sentinel line
+	useEffect(() => {
+		// Attach listeners regardless of content mount timing; we query sections each time
+		const getActive = () => {
+			let current: string | null = letters[0] ?? null;
+			for (const letter of letters) {
+				const section = document.getElementById(`letter-${letter}`);
+				if (!section) continue;
+				const rect = section.getBoundingClientRect();
+				// Section becomes active when its top crosses above the sentinel line
+				if (rect.top - headerOffset <= 1) {
+					current = letter;
+				} else {
+					break;
 				}
-				// This is the current active section
-				activeLetter = letter;
-				break;
-			} else {
-				// This section hasn't reached the header yet
-				// Use the last visible section if available
-				if (lastVisibleLetter) {
-					activeLetter = lastVisibleLetter;
-				}
-				break;
 			}
-		}
-		
-		// Handle case when scrolled to the very bottom
-		if (!activeLetter && lastVisibleLetter) {
-			activeLetter = lastVisibleLetter;
-		}
-
-		// Update the current letter if it changed
-		if (activeLetter !== currentLetter) {
-			setCurrentLetter(activeLetter);
-			// Broadcast the letter change for other components
+			setActiveLetter(current);
+			// Fire a custom event for components that listen without Zustand
 			window.dispatchEvent(
 				new CustomEvent("current-letter-changed", {
-					detail: { letter: activeLetter },
+					detail: { letter: current },
 				}),
 			);
-		}
-	}, [availableLetters, currentLetter]);
-
-	// Debounced scroll handler using requestAnimationFrame
-	const handleScroll = useCallback(() => {
-		requestAnimationFrame(updateCurrentLetter);
-	}, [updateCurrentLetter]);
-
-	useEffect(() => {
-		if (typeof window === "undefined" || typeof document === "undefined") {
-			return;
-		}
-
-		// Small delay to ensure DOM is fully rendered
-		const initialTimeout = setTimeout(() => {
-			updateCurrentLetter();
-		}, 100);
-
-		// Add scroll listener
-		window.addEventListener("scroll", handleScroll, { passive: true });
-
-		// Also update on resize as the header height might change
-		window.addEventListener("resize", handleScroll, { passive: true });
-
+		};
+		// Measure after layout to avoid race with content mount
+		const raf = requestAnimationFrame(() => {
+			getActive();
+			setTimeout(getActive, 0);
+		});
+		const opts: AddEventListenerOptions = { passive: true };
+		window.addEventListener("scroll", getActive, opts);
+		window.addEventListener("resize", getActive);
 		return () => {
-			clearTimeout(initialTimeout);
-			window.removeEventListener("scroll", handleScroll);
-			window.removeEventListener("resize", handleScroll);
+			cancelAnimationFrame(raf);
+			window.removeEventListener("scroll", getActive as EventListener);
+			window.removeEventListener("resize", getActive as EventListener);
 		};
-	}, [availableLetters, handleScroll, updateCurrentLetter]);
+	}, [headerOffset, letters, setActiveLetter]);
 
-	// Listen for hash changes (when clicking on letter navigation)
+	const activeLetter = useSectionInViewStore((s) => s.activeLetter);
+	// Use the sorted first letter as a stable fallback
+	const [fallback, setFallback] = useState(letters[0] || "A");
 	useEffect(() => {
-		const handleHashChange = () => {
-			// Small delay to allow scroll animation to start
-			setTimeout(updateCurrentLetter, 100);
-		};
-
-		window.addEventListener("hashchange", handleHashChange);
-		return () => window.removeEventListener("hashchange", handleHashChange);
-	}, [updateCurrentLetter]);
+		if (letters[0]) setFallback(letters[0]);
+	}, [letters]);
 
 	return (
 		<div className="max-w-4xl">
+			{/* Sentinel positioned at the header bottom to align our measurement */}
+			<div ref={sentinelRef} style={{ height: 1, marginTop: 0 }} />
 			<div className="mb-8 font-light text-8xl text-neutral-300 leading-none">
-				{currentLetter}
+				{activeLetter ?? fallback}
 			</div>
 		</div>
 	);
