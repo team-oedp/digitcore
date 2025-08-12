@@ -7,5 +7,6 @@ export default defineCliConfig({
 		projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "q0v6uag1",
 		dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
 	},
+	studioHost: "digitcore",
 	autoUpdates: true,
 });
