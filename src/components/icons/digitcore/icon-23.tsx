@@ -15,9 +15,9 @@ export default function Icon23(props: React.ComponentPropsWithoutRef<"svg">) {
 			<path
 				d="M74.6554 164.188C61.8208 161.671 39.0473 143.341 32.9819 137.637C31.7897 106.474 37.1828 82.2731 49.5822 64.7735C53.4593 59.3019 58.0214 54.4854 63.2814 50.3158C101.598 26.0089 130.544 28.6714 159.876 51.3977C167.855 57.5792 172.286 77.2598 166.025 119.347C140.004 157.304 104.395 173.628 74.6554 164.188Z"
 				stroke="currentColor"
-				stroke-width="1"
-				stroke-linecap="round"
-				stroke-linejoin="round"
+				strokeWidth="1"
+				strokeLinecap="round"
+				strokeLinejoin="round"
 			/>
 		</svg>
 	);
