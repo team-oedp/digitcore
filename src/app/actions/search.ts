@@ -50,11 +50,11 @@ export type SearchPattern = {
 		_id: string;
 		title?: string;
 	}> | null;
-	themes: Array<{
+	theme: {
 		_id: string;
 		title?: string;
 		description?: Array<unknown>;
-	}> | null;
+	} | null;
 	solutions: Array<{
 		_id: string;
 		title?: string;

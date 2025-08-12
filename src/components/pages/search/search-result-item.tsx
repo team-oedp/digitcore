@@ -6,9 +6,9 @@ import {
 	Share02Icon,
 	Tag01Icon,
 } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
+import { Icon } from "~/components/shared/icon";
 import {
 	extractTextFromPortableText,
 	getMatchExplanation,
@@ -38,11 +38,11 @@ type BaseSearchResultData = {
 // Pattern-specific type - Updated to handle both search results and patterns page
 type PatternSearchResultData = BaseSearchResultData & {
 	_type: "pattern";
-	themes?: Array<{
+	theme?: {
 		_id: string;
 		title?: string;
 		description?: Array<unknown>;
-	}> | null;
+	} | null;
 	tags?: Array<{
 		_id: string;
 		title?: string;
@@ -99,11 +99,6 @@ type SolutionSearchResultData = BaseSearchResultData & {
 	} | null;
 };
 
-type SearchResultData =
-	| PatternSearchResultData
-	| ResourceSearchResultData
-	| SolutionSearchResultData;
-
 type SearchResultItemProps = {
 	pattern:
 		| SearchPattern
@@ -124,25 +119,15 @@ function SearchResultBase({
 	buttonElement: React.ReactNode;
 }) {
 	return (
-		<div className="relative w-full pb-9">
-			{/* Dashed border at bottom */}
-			<div className="absolute right-0 bottom-0 left-0 h-px border-zinc-300 border-t border-dashed" />
-
-			<div className="py-[15px]">
-				<div className="flex items-start justify-between gap-[150px]">
-					{/* Left Content */}
-					<div className="w-[600px] max-w-[600px] flex-shrink-0">
-						{/* Title */}
-						<h3 className="mb-4 w-[700px] font-light text-[#323232] text-[28px] leading-[37.8px] tracking-[-0.9px]">
-							{title}
-						</h3>
-
-						{children}
-					</div>
-
-					{/* Right Button */}
-					<div className="flex-shrink-0 pt-0.5">{buttonElement}</div>
+		<div className="relative w-full border-border border-t border-dashed pb-9">
+			<div className="flex items-start justify-between py-4">
+				<div className="w-full max-w-[600px] flex-shrink-0 space-y-4">
+					<h3 className="w-full font-light text-[28px] text-primary leading-normal">
+						{title}
+					</h3>
+					{children}
 				</div>
+				<div className="flex-shrink-0 pt-2">{buttonElement}</div>
 			</div>
 		</div>
 	);
@@ -155,7 +140,7 @@ function PatternSearchResult({
 }: { pattern: PatternSearchResultData; searchTerm?: string }) {
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const title = pattern.title || "Untitled Pattern";
-	const theme = pattern.themes?.[0];
+	const theme = pattern.theme;
 	const tags = pattern.tags || [];
 	const audiences = pattern.audiences || [];
 	const rawDescription = pattern.description || [];
@@ -186,10 +171,7 @@ function PatternSearchResult({
 			<span className="font-normal text-[14px] uppercase leading-[20px]">
 				Visit Pattern
 			</span>
-			<HugeiconsIcon
-				icon={Share02Icon}
-				className="h-3.5 w-3.5 text-[#4f065f]"
-			/>
+			<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-[#4f065f]" />
 		</a>
 	);
 
@@ -203,10 +185,7 @@ function PatternSearchResult({
 							<span className="whitespace-nowrap text-[14px] text-zinc-500 capitalize tracking-[-0.28px]">
 								{theme.title}
 							</span>
-							<HugeiconsIcon
-								icon={Share02Icon}
-								className="h-3.5 w-3.5 text-zinc-500"
-							/>
+							<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-zinc-500" />
 						</div>
 					</div>
 				)}
@@ -223,7 +202,7 @@ function PatternSearchResult({
 						{searchTerm &&
 							(matchExplanation.titleMatch ||
 								matchExplanation.descriptionMatch) && (
-								<div className="mt-2 flex items-center gap-2 text-xs text-zinc-500">
+								<div className="mt-2 flex items-center gap-2 text-neutral-500 text-xs">
 									<span>Match found in:</span>
 									{matchExplanation.titleMatch && (
 										<span className="rounded bg-blue-100 px-2 py-1 text-blue-700">
@@ -264,13 +243,10 @@ function PatternSearchResult({
 								key={tag._id}
 								className="flex h-6 items-center gap-2.5 rounded-lg border border-green-200 bg-green-100 py-2 pr-3 pl-[9px]"
 							>
-								<span className="whitespace-nowrap text-[#166534] text-[14px]">
+								<span className="whitespace-nowrap text-[#166534] text-[14px] capitalize">
 									{tag.title}
 								</span>
-								<HugeiconsIcon
-									icon={Tag01Icon}
-									className="h-3.5 w-3.5 text-[#166534]"
-								/>
+								<Icon icon={Tag01Icon} className="h-3.5 w-3.5 text-[#166534]" />
 							</div>
 						))}
 					</div>
@@ -287,7 +263,7 @@ function PatternSearchResult({
 								<span className="whitespace-nowrap text-[#1e40ae] text-[14px]">
 									{audience.title}
 								</span>
-								<HugeiconsIcon
+								<Icon
 									icon={ChartRelationshipIcon}
 									className="h-3.5 w-3.5 text-[#1e40ae]"
 								/>
@@ -319,10 +295,7 @@ function ResourceSearchResult({
 			<span className="font-normal text-[14px] uppercase leading-[20px]">
 				Visit Resource
 			</span>
-			<HugeiconsIcon
-				icon={Share02Icon}
-				className="h-3.5 w-3.5 text-[#1e40af]"
-			/>
+			<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-[#1e40af]" />
 		</a>
 	);
 
@@ -339,7 +312,7 @@ function ResourceSearchResult({
 							<span className="whitespace-nowrap text-[#166534] text-[14px]">
 								{solution.title}
 							</span>
-							<HugeiconsIcon
+							<Icon
 								icon={ChartRelationshipIcon}
 								className="h-3.5 w-3.5 text-[#166534]"
 							/>
@@ -357,10 +330,7 @@ function ResourceSearchResult({
 					</div>
 
 					<div className="flex h-6 w-6 items-center justify-center">
-						<HugeiconsIcon
-							icon={ArrowRight02Icon}
-							className="h-4 w-4 text-zinc-500"
-						/>
+						<Icon icon={ArrowRight02Icon} className="h-4 w-4 text-zinc-500" />
 					</div>
 
 					<SearchResultPreview
@@ -371,10 +341,7 @@ function ResourceSearchResult({
 							<span className="whitespace-nowrap text-[14px] text-zinc-500 capitalize tracking-[-0.28px]">
 								{patternInfo.title}
 							</span>
-							<HugeiconsIcon
-								icon={Share02Icon}
-								className="h-3.5 w-3.5 text-zinc-500"
-							/>
+							<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-zinc-500" />
 						</div>
 					</SearchResultPreview>
 				</div>
@@ -402,10 +369,7 @@ function SolutionSearchResult({
 			<span className="font-normal text-[14px] uppercase leading-[20px]">
 				Visit Solution
 			</span>
-			<HugeiconsIcon
-				icon={Share02Icon}
-				className="h-3.5 w-3.5 text-[#166534]"
-			/>
+			<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-[#166534]" />
 		</a>
 	);
 
@@ -422,7 +386,7 @@ function SolutionSearchResult({
 							<span className="whitespace-nowrap text-[#1e40ae] text-[14px]">
 								{audience.title}
 							</span>
-							<HugeiconsIcon
+							<Icon
 								icon={ChartRelationshipIcon}
 								className="h-3.5 w-3.5 text-[#1e40ae]"
 							/>
@@ -440,10 +404,7 @@ function SolutionSearchResult({
 					</div>
 
 					<div className="flex h-6 w-6 items-center justify-center">
-						<HugeiconsIcon
-							icon={ArrowRight02Icon}
-							className="h-4 w-4 text-zinc-500"
-						/>
+						<Icon icon={ArrowRight02Icon} className="h-4 w-4 text-zinc-500" />
 					</div>
 
 					<SearchResultPreview
@@ -454,10 +415,7 @@ function SolutionSearchResult({
 							<span className="whitespace-nowrap text-[14px] text-zinc-500 capitalize tracking-[-0.28px]">
 								{patternInfo.title}
 							</span>
-							<HugeiconsIcon
-								icon={Share02Icon}
-								className="h-3.5 w-3.5 text-zinc-500"
-							/>
+							<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-zinc-500" />
 						</div>
 					</SearchResultPreview>
 				</div>

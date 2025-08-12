@@ -16,6 +16,7 @@ type CarrierBagState = {
 	removePattern: (patternId: string) => void;
 	updateNotes: (patternId: string, notes: string) => void;
 	clearBag: () => void;
+	setItems: (items: CarrierBagItem[]) => void;
 	hasPattern: (patternId: string) => boolean;
 	getPattern: (patternId: string) => CarrierBagItem | undefined;
 	setHydrated: (hydrated: boolean) => void;
@@ -58,6 +59,10 @@ export const createCarrierBagStore = () =>
 					set({
 						items: items.filter((item) => item.pattern._id !== patternId),
 					});
+				},
+
+				setItems: (items: CarrierBagItem[]) => {
+					set({ items });
 				},
 
 				updateNotes: (patternId: string, notes: string) => {

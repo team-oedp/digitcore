@@ -5,14 +5,14 @@
 type LogLevel = "debug" | "info" | "warn" | "error";
 type LogContext = "search" | "groq" | "client" | "server" | "general";
 
-interface LogEntry {
+type LogEntry = {
 	timestamp: string;
 	level: LogLevel;
 	context: LogContext;
 	message: string;
 	data?: unknown;
 	location?: string;
-}
+};
 
 class SearchLogger {
 	private isDevelopment = process.env.NODE_ENV === "development";

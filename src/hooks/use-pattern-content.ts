@@ -66,25 +66,25 @@ export const getRomanNumeral = (index: number): string => {
 };
 
 // Pattern header data structure
-export interface PatternHeaderData {
+export type PatternHeaderData = {
 	title: string;
 	description: string;
 	slug?: string;
 	hasCarrierBagButton?: boolean;
-}
+};
 
 // Pattern connection data structure
-export interface PatternConnectionData {
+export type PatternConnectionData = {
 	type: "tags" | "audiences" | "themes";
 	title: string;
 	items: Array<{
 		id: string;
 		title: string;
 	}>;
-}
+};
 
 // Solution data structure
-export interface SolutionData {
+export type SolutionData = {
 	id: string;
 	number: string;
 	title: string;
@@ -93,25 +93,25 @@ export interface SolutionData {
 		id: string;
 		title: string;
 	}>;
-}
+};
 
 // Resource data structure
-export interface ResourceData {
+export type ResourceData = {
 	id: string;
 	title: string;
 	description: string;
 	relatedSolutions: string[];
-}
+};
 
 // Pattern content structure
-export interface PatternContentData {
+export type PatternContentData = {
 	header: PatternHeaderData;
 	connections: PatternConnectionData[];
 	solutions: SolutionData[];
 	resources: ResourceData[];
 	notes?: string;
 	dateAdded?: string;
-}
+};
 
 /**
  * Hook to process pattern data into a consistent structure for rendering
@@ -332,14 +332,14 @@ export const usePatternContent = (
 /**
  * Hook for carrier bag document structure
  */
-export interface CarrierBagDocumentData {
+export type CarrierBagDocumentData = {
 	title: string;
 	subtitle: string;
 	date: string;
 	patternCount: number;
 	patterns: PatternContentData[];
 	hasTableOfContents: boolean;
-}
+};
 
 export const useCarrierBagDocument = (
 	items: CarrierBagItem[],

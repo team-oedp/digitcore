@@ -1,7 +1,7 @@
 import { ChartRelationshipIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "@portabletext/types";
-import { CustomPortableText } from "~/components/global/portable-text";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
 import type { Solution } from "~/sanity/sanity.types";
 import { SuggestSolutionButton } from "./suggest-solution-button";
 
@@ -13,7 +13,7 @@ type AudienceDisplay = {
 };
 
 type SolutionsProps = {
-	solutions?: Solution[];
+	solutions?: Solution[] | null;
 	patternName?: string;
 	patternSlug?: string;
 };
@@ -63,7 +63,7 @@ export function Solutions({
 			</header>
 
 			<div className="flex flex-col gap-[13px]">
-				{solutions.map((solution, index) => (
+				{solutions.map((solution: Solution, index: number) => (
 					<div key={solution._id} className="flex items-start gap-8 pb-9">
 						<div className="flex w-10 min-w-10 flex-col items-start gap-2.5">
 							<span className="font-normal text-[18px] text-primary leading-[22px]">

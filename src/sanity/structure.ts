@@ -1,4 +1,9 @@
-import { BasketIcon, CogIcon, PresentationIcon } from "@sanity/icons";
+import {
+	BasketIcon,
+	CogIcon,
+	PresentationIcon,
+	SparklesIcon,
+} from "@sanity/icons";
 import type { StructureResolver } from "sanity/structure";
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
@@ -12,6 +17,7 @@ export const structure: StructureResolver = (S) =>
 			S.documentTypeListItem("theme").title("Themes"),
 			S.documentTypeListItem("solution").title("Solutions"),
 			S.documentTypeListItem("resource").title("Resources"),
+			S.documentTypeListItem("icon").title("Icons").icon(SparklesIcon),
 			S.divider(),
 			S.documentTypeListItem("page").title("Pages"),
 			S.documentTypeListItem("glossary").title("Glossary"),
@@ -46,6 +52,7 @@ export const structure: StructureResolver = (S) =>
 						"carrierBag",
 						"onboarding",
 						"siteSettings",
+						"icon",
 					].includes(item.getId() ?? ""),
 			),
 		]);

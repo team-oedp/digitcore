@@ -20,14 +20,14 @@ export const searchParamsSchema = z.object({
 export type SearchParams = z.input<typeof searchParamsSchema>;
 
 // Parsed search parameters for internal use
-export interface ParsedSearchParams {
+export type ParsedSearchParams = {
 	searchTerm: string;
 	audiences: string[];
 	themes: string[];
 	tags: string[];
 	page: number;
 	limit: number;
-}
+};
 
 // Utility to parse URL search params into arrays
 export function parseSearchParams(

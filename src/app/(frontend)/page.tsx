@@ -1,6 +1,33 @@
-import { BookOpen02Icon, NanoTechnologyIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import type { Metadata } from "next";
+import type { PortableTextBlock } from "next-sanity";
+import { draftMode } from "next/headers";
+import Image from "next/image";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
+import Icon01 from "~/components/icons/digitcore/icon-01";
+import Icon02 from "~/components/icons/digitcore/icon-02";
+import Icon03 from "~/components/icons/digitcore/icon-03";
+import Icon04 from "~/components/icons/digitcore/icon-04";
+import Icon05 from "~/components/icons/digitcore/icon-05";
+import { PageHeader } from "~/components/shared/page-header";
+import { PageWrapper } from "~/components/shared/page-wrapper";
+import { client } from "~/sanity/lib/client";
+import { HOME_PAGE_QUERY, ICONS_QUERY } from "~/sanity/lib/queries";
+import { token } from "~/sanity/lib/token";
+import type { Page } from "~/sanity/sanity.types";
+
+// Temporary interface until types are regenerated
+interface Icon {
+	_id: string;
+	_type: "icon";
+	title: string;
+	svg?: {
+		asset?: {
+			_ref: string;
+			_type: "reference";
+		};
+		_type: "image";
+	};
+}
 
 export const metadata: Metadata = {
 	title: "DIGITCORE Toolkit | Home",
@@ -8,254 +35,109 @@ export const metadata: Metadata = {
 		"Community-centered open infrastructure empowering equitable collaboration between researchers, developers, and frontline communities.",
 };
 
-export default function Home() {
+export default async function Home() {
+	const isDraftMode = (await draftMode()).isEnabled;
+	const data = (await client.fetch(
+		HOME_PAGE_QUERY,
+		{},
+		isDraftMode
+			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
+			: { perspective: "published", useCdn: true },
+	)) as Page | null;
+
+	// Keep the icons fetch for now (as requested) but we won't use it
+	const icons = (await client.fetch(
+		ICONS_QUERY,
+		{},
+		isDraftMode
+			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
+			: { perspective: "published", useCdn: true },
+	)) as Icon[];
+
+	// Log icons data to debug
+	console.log("Icons fetched from Sanity:", icons);
+
+	const contentSections = (data?.content ?? []) as NonNullable<Page["content"]>;
+
 	return (
-		<div className="space-y-16 p-5">
-			{/* Hero Section */}
-			<section className="max-w-4xl space-y-8 ">
-				<h1 className="font-light text-4xl text-neutral-500 leading-tight">
-					Welcome to the Digital Toolkit for Collaborative Environmental
-					Research,
-					<br />
-					or, Digitcore
-				</h1>
-			</section>
-
-			{/* Introduction */}
-			<section className="max-w-4xl space-y-4">
-				<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
-					INTRODUCTION
-				</h2>
-				<p className="text-2xl text-neutral-500 leading-snug">
-					Digitcore is at the forefront of the Open Environmental Data Project
-					(OEDP), championing transparency and collaboration in environmental
-					research. By identifying over 25 patterns of open infrastructure, we
-					aim to create a space to grow the global conversation on environmental
-					data access and use.
-				</p>
-			</section>
-
-			{/* Methodology */}
-			<section className="max-w-4xl space-y-4">
-				<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
-					METHODOLOGY
-				</h2>
-				<p className="text-2xl text-neutral-500 leading-snug">
-					Digitcore serves as a repository for modular solutions or 'recipes for
-					success', identified in our research on the role of open
-					infrastructure in collaborative environmental research. Digitcore
-					allows users to explore patterns based on themes, audiences, and
-					values.
-				</p>
-			</section>
-
-			{/* Open Infrastructure */}
-			<section className="max-w-4xl space-y-4">
-				<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
-					OPEN INFRASTRUCTURE
-				</h2>
-				<p className="text-2xl text-neutral-500 leading-snug">
-					Open digital infrastructure refers to elements of digital
-					infrastructure—including but not limited to hardware, software, data,
-					code, platforms, and standards—that are intentionally made freely
-					available for everyone's use, without copyright or patent protections
-					or the expectation of payment.
-				</p>
-			</section>
-
-			{/* Patterns */}
-			<section className="max-w-4xl space-y-4">
-				<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
-					PATTERNS
-				</h2>
-				<p className="text-2xl text-neutral-500 leading-snug">
-					Our research has identified 25+ patterns for how open infrastructure
-					shows up in environmental research. Each identified pattern will have
-					one or more associated solutions. Each solution may also respond to
-					different patterns. PDF templates, articles, and other resources will
-					be offered as part of a solution to address different patterns.
-					Resources should be connected by or linked to one or many solutions
-					and/ or patterns.
-				</p>
-			</section>
-
-			{/* Themes */}
-			<section className="max-w-4xl space-y-4">
-				<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
-					THEMES
-				</h2>
-				<p className="text-2xl text-neutral-500 leading-snug">
-					The themes centre around ways of practicing openness, the distinction
-					between data and information, the influence of academic culture and
-					norms, the importance of long-term viability, and the commitment to
-					ensuring benefits for frontline communities are foundational to the
-					Digitcore toolkit. These themes guide users in understanding how to
-					effectively engage with data while fostering transparency and
-					inclusivity.
-				</p>
-			</section>
-
-			<section className="w-full">
-				<div className="scrollbar-hidden flex w-full snap-x snap-mandatory gap-6 overflow-x-auto pr-6 pb-4 pl-6">
-					<div className="flex h-80 w-120 flex-none snap-start flex-col justify-between rounded-lg bg-neutral-200/25 p-8">
-						<div className="space-y-6">
-							<h3 className="font-normal text-black text-xl leading-tight">
-								Ensuring Benefit To Frontline Communities
-							</h3>
-							<p className="line-clamp-6 text-base text-neutral-500 leading-relaxed">
-								Within the development of open infrastructure, ensuring benefit
-								to frontline communities means going beyond access and inclusion
-								to prioritizing ownership and collaboration. This may involve
-								co- leadership in decision making, providing resources for
-								collaborating, minimizing harm and maximizing benefit,
-								supporting data sovereignty, and accountability mechanisms.
-							</p>
-						</div>
-						<div className="flex items-center gap-3 text-base text-neutral-500">
-							<HugeiconsIcon
-								icon={NanoTechnologyIcon}
-								size={16}
-								color="currentColor"
-								strokeWidth={1.5}
+		<PageWrapper>
+			<div className="space-y-16 pb-16">
+				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+					<div className="flex items-start justify-between gap-6">
+						<div className="flex-1">
+							<PageHeader
+								title={data?.title ?? "DIGITCORE"}
+								description={
+									data?.description as unknown as PortableTextBlock[]
+								}
 							/>
-							<span>Visit patterns</span>
-						</div>
-					</div>
-
-					<div className="flex h-80 w-120 flex-none snap-start flex-col justify-between rounded-lg bg-neutral-200/25 p-8">
-						<div className="space-y-6">
-							<h3 className="font-normal text-black text-xl leading-tight">
-								Practicing Openness
-							</h3>
-							<p className="line-clamp-6 text-base text-neutral-500 leading-relaxed">
-								Openness is a core principle of open infrastructure, but its
-								meaning and implementation can vary widely. Finding alignment
-								between stakeholders on its use within the project can
-								necessitate balancing competing needs, including addressing
-								commercialization pressures, and creating processes to make it a
-								daily practice.
-							</p>
-						</div>
-						<div className="flex items-center gap-3 text-base text-neutral-500">
-							<HugeiconsIcon
-								icon={NanoTechnologyIcon}
-								size={16}
-								color="currentColor"
-								strokeWidth={1.5}
-							/>
-							<span>Visit patterns</span>
-						</div>
-					</div>
-
-					<div className="flex h-80 w-120 flex-none snap-start flex-col justify-between rounded-lg bg-neutral-200/25 p-8">
-						<div className="space-y-6">
-							<h3 className="font-normal text-black text-xl leading-tight">
-								Data Does Not Equal Information
-							</h3>
-							<p className="line-clamp-6 text-base text-neutral-500 leading-relaxed">
-								Open infrastructure should make data available; it should also
-								aim to make data understandable, usable, and interpretable. This
-								can be accomplished through thoughtful interface design,
-								community-centered design decisions, as well as resource
-								allocation that enables communities to interpret data.
-							</p>
-						</div>
-						<div className="flex items-center gap-3 text-base text-neutral-500">
-							<HugeiconsIcon
-								icon={NanoTechnologyIcon}
-								size={16}
-								color="currentColor"
-								strokeWidth={1.5}
-							/>
-							<span>Visit patterns</span>
 						</div>
 					</div>
 				</div>
-			</section>
 
-			{/* Audiences */}
-			<section className="max-w-4xl space-y-4">
-				<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
-					AUDIENCES
-				</h2>
-				<p className="text-2xl text-neutral-500 leading-snug">
-					These are the audiences that may find these patterns in the Digitcore
-					toolkit most applicable.
-				</p>
-			</section>
-
-			<section className="w-full">
-				<div className="scrollbar-hidden flex w-full snap-x snap-mandatory gap-6 overflow-x-auto pr-6 pb-4 pl-6">
-					<div className="flex h-80 w-120 flex-none snap-start flex-col justify-between rounded-lg bg-neutral-200/25 p-8">
-						<div className="space-y-6">
-							<h3 className="font-normal text-black text-xl leading-tight">
-								Open Source Technologists
-							</h3>
-							<p className="line-clamp-6 text-base text-neutral-500 leading-relaxed">
-								Open source technologists are a diverse group of innovators and
-								developers who thrive on collaboration and transparency. They
-								are passionate about leveraging community-driven projects to
-								create impactful software solutions.
-							</p>
-						</div>
-						<div className="flex items-center gap-3 text-base text-neutral-500">
-							<HugeiconsIcon
-								icon={BookOpen02Icon}
-								size={16}
-								color="currentColor"
-								strokeWidth={1.5}
+				<div className="pb-4 lg:pl-20">
+					<div className="relative h-44 max-w-4xl">
+						<div className="flex justify-start">
+							<Image
+								src="/pattern-logo-600w.svg"
+								alt="DIGITCORE Pattern Logo"
+								width={500}
+								height={144}
+								className="h-44 w-auto object-contain"
 							/>
-							<span>Read more</span>
-						</div>
-					</div>
-
-					<div className="flex h-80 w-120 flex-none snap-start flex-col justify-between rounded-lg bg-neutral-200/25 p-8">
-						<div className="space-y-6">
-							<h3 className="font-normal text-black text-xl leading-tight">
-								Community Groups
-							</h3>
-							<p className="line-clamp-6 text-base text-neutral-500 leading-relaxed">
-								Community groups consist of engaged individuals who come
-								together to share ideas and resources. They are dedicated to
-								fostering connections and supporting one another in various
-								initiatives, often focusing on local issues or shared interests.
-							</p>
-						</div>
-						<div className="flex items-center gap-3 text-base text-neutral-500">
-							<HugeiconsIcon
-								icon={BookOpen02Icon}
-								size={16}
-								color="currentColor"
-								strokeWidth={1.5}
-							/>
-							<span>Read more</span>
-						</div>
-					</div>
-
-					<div className="flex h-80 w-120 flex-none snap-start flex-col justify-between rounded-lg bg-neutral-200/25 p-8">
-						<div className="space-y-6">
-							<h3 className="font-normal text-black text-xl leading-tight">
-								Funders
-							</h3>
-							<p className="line-clamp-6 text-base text-neutral-500 leading-relaxed">
-								Funders are a diverse group of organizations who are supportive
-								of innovative approaches to building relationships and
-								connecting data, often channeling their efforts into impactful
-								projects that resonate with community needs.
-							</p>
-						</div>
-						<div className="flex items-center gap-3 text-base text-neutral-500">
-							<HugeiconsIcon
-								icon={BookOpen02Icon}
-								size={16}
-								color="currentColor"
-								strokeWidth={1.5}
-							/>
-							<span>Read more</span>
 						</div>
 					</div>
 				</div>
-			</section>
-		</div>
+
+				{contentSections.length > 0 && (
+					<div className="space-y-8 lg:pl-20">
+						{contentSections.map((section, index) => (
+							<div key={section._key || index}>
+								<section className="max-w-4xl space-y-4">
+									{section.heading && (
+										<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
+											{section.heading}
+										</h2>
+									)}
+									{section.body && (
+										<CustomPortableText
+											value={section.body as unknown as PortableTextBlock[]}
+											className="prose-2xl prose-neutral-500 max-w-none prose-p:text-neutral-500 prose-p:leading-snug"
+										/>
+									)}
+								</section>
+
+								{/* Display icon between sections (except after the last one) */}
+								{index < contentSections.length - 1 && (
+									<div className="flex justify-start py-4">
+										<div
+											className="icon-item"
+											title={`Icon ${(index % 5) + 1}`}
+											data-index={index % 5}
+										>
+											{index % 5 === 0 && (
+												<Icon01 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
+											)}
+											{index % 5 === 1 && (
+												<Icon02 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
+											)}
+											{index % 5 === 2 && (
+												<Icon03 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
+											)}
+											{index % 5 === 3 && (
+												<Icon04 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
+											)}
+											{index % 5 === 4 && (
+												<Icon05 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
+											)}
+										</div>
+									</div>
+								)}
+							</div>
+						))}
+					</div>
+				)}
+			</div>
+		</PageWrapper>
 	);
 }

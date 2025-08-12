@@ -3,10 +3,14 @@
 import type * as React from "react";
 
 import {
-	ArrowExpand02Icon,
 	Cancel01Icon,
+	CleaningBucketIcon,
+	Download05Icon,
+	FileDownloadIcon,
+	FolderLibraryIcon,
 	SidebarRightIcon,
 } from "@hugeicons/core-free-icons";
+import { Reorder } from "motion/react";
 import Link from "next/link";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import { Icon } from "~/components/shared/icon";
@@ -30,9 +34,9 @@ export function CarrierBagSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
 	const isHydrated = useCarrierBagStore((state) => state.isHydrated);
 	const isOpen = useCarrierBagStore((state) => state.isOpen);
-	const setOpen = useCarrierBagStore((state) => state.setOpen);
 	const items = useCarrierBagStore((state) => state.items);
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
+	const setItems = useCarrierBagStore((state) => state.setItems);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const documentData = useCarrierBagDocument(items);
 	const { toggleSidebar } = useSidebar();
@@ -44,6 +48,34 @@ export function CarrierBagSidebar({
 	const handleExpandItem = (slug: string) => {
 		// Navigate to pattern page
 		window.location.href = `/pattern/${slug}`;
+	};
+
+	const handleDownloadJson = () => {
+		const payload = {
+			generatedAt: new Date().toISOString(),
+			count: items.length,
+			patterns: items.map((i) => ({
+				id: i.pattern._id,
+				title: i.pattern.title,
+				slug:
+					typeof i.pattern.slug === "string"
+						? i.pattern.slug
+						: i.pattern.slug?.current,
+				notes: i.notes,
+				dateAdded: i.dateAdded,
+			})),
+		};
+		const blob = new Blob([JSON.stringify(payload, null, 2)], {
+			type: "application/json",
+		});
+		const href = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = href;
+		a.download = "carrier-bag.json";
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(href);
 	};
 
 	return (
@@ -63,7 +95,7 @@ export function CarrierBagSidebar({
 						<Button
 							variant="ghost"
 							size="sm"
-							className="h-8 w-8 p-0"
+							className="hidden h-8 w-8 p-0"
 							type="button"
 							aria-label="Pin Sidebar to Page"
 							onClick={() => console.log("Pin Sidebar to Page")}
@@ -81,7 +113,7 @@ export function CarrierBagSidebar({
 								tabIndex={0}
 								onClick={toggleSidebar}
 							>
-								<Icon icon={ArrowExpand02Icon} size={16} />
+								<Icon icon={FolderLibraryIcon} size={16} />
 							</Button>
 						</Link>
 						<Button
@@ -114,47 +146,71 @@ export function CarrierBagSidebar({
 								</p>
 							</div>
 						) : (
-							items.map((item) => {
-								const itemData: CarrierBagItemData = {
-									id: item.pattern._id,
-									title: item.pattern.title || "Untitled Pattern",
-								};
-								return (
-									<CarrierBagItem
-										key={item.pattern._id}
-										item={itemData}
-										onRemove={() => handleRemoveItem(item.pattern._id)}
-										onExpand={() =>
-											handleExpandItem(item.pattern.slug?.current || "")
-										}
-									/>
-								);
-							})
+							<Reorder.Group
+								axis="y"
+								values={items}
+								onReorder={(newOrder) => setItems(newOrder)}
+								layoutScroll
+								as="div"
+								style={{
+									display: "flex",
+									flexDirection: "column",
+									gap: "0.5rem",
+								}}
+							>
+								{items.map((item) => {
+									const itemData: CarrierBagItemData = {
+										id: item.pattern._id,
+										title: item.pattern.title || "Untitled Pattern",
+										slug: item.pattern.slug?.current,
+									};
+									return (
+										<Reorder.Item
+											as="div"
+											key={item.pattern._id}
+											value={item}
+											style={{ position: "relative" }}
+										>
+											<CarrierBagItem
+												item={itemData}
+												onRemove={() => handleRemoveItem(item.pattern._id)}
+												onExpand={() =>
+													handleExpandItem(item.pattern.slug?.current || "")
+												}
+											/>
+										</Reorder.Item>
+									);
+								})}
+							</Reorder.Group>
 						)}
 					</div>
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarFooter>
-				<div className="flex flex-row flex-wrap items-end justify-between gap-2 p-2">
+				<div className="flex flex-row items-center gap-2 p-2">
 					<Button
 						variant="outline"
 						size="sm"
-						className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+						className="h-8 w-8 border-[#dcdcdc] bg-[#fcfcfc] p-0 text-[#3d3d3d]"
 						type="button"
 						onClick={clearBag}
 						disabled={items.length === 0}
+						aria-label="Clear all items"
+						title="Clear all items"
 					>
-						Clear all items
+						<Icon icon={CleaningBucketIcon} size={16} />
 					</Button>
 					<Button
 						variant="outline"
 						size="sm"
-						className="h-auto border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+						className="h-8 w-8 border-[#dcdcdc] bg-[#fcfcfc] p-0 text-[#3d3d3d]"
 						type="button"
-						onClick={() => console.log("Download list as JSON")}
+						onClick={handleDownloadJson}
 						disabled={items.length === 0}
+						aria-label="Download list as JSON"
+						title="Download list as JSON"
 					>
-						Download list as JSON
+						<Icon icon={Download05Icon} size={16} />
 					</Button>
 					<PDFPreviewModal
 						documentData={documentData}
@@ -163,11 +219,13 @@ export function CarrierBagSidebar({
 						<Button
 							variant="outline"
 							size="sm"
-							className="flex h-auto items-center gap-2 border-[#dcdcdc] bg-[#fcfcfc] px-[9px] py-[5px] text-[#3d3d3d] text-sm"
+							className="h-8 w-8 border-[#dcdcdc] bg-[#fcfcfc] p-0 text-[#3d3d3d]"
 							type="button"
 							disabled={items.length === 0}
+							aria-label="Download as PDF"
+							title="Download as PDF"
 						>
-							Download as PDF
+							<Icon icon={FileDownloadIcon} size={16} />
 						</Button>
 					</PDFPreviewModal>
 				</div>
