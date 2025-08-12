@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type CurrentLetterIndicatorProps = {
 	availableLetters: string[];
@@ -14,45 +14,67 @@ export function CurrentLetterIndicator({
 	const [currentLetter, setCurrentLetter] = useState(
 		availableLetters[0] || "A",
 	);
-	const sectionsRef = useRef<Map<string, HTMLElement>>(new Map());
-	const rafIdRef = useRef<number | undefined>(undefined);
 
 	// Find which letter section is currently in view
 	const updateCurrentLetter = useCallback(() => {
-		if (sectionsRef.current.size === 0) return;
+		if (!availableLetters.length) return;
 
-		// The offset from top where we consider a section "active"
-		// This should match the scroll-mt-40 class (10rem = 160px)
-		const offset = 160;
-		const scrollTop = window.scrollY;
+		// Get the sticky container that contains the page header
+		// Look for the sticky container (it has classes sticky top-0)
+		const stickyContainers = document.querySelectorAll('.sticky.top-0');
+		if (!stickyContainers.length) return;
+		
+		// Use the first sticky container (should be the page header container)
+		const stickyHeader = stickyContainers[0] as HTMLElement;
+		
+		// Calculate the bottom of the sticky header (this is our threshold)
+		const headerRect = stickyHeader.getBoundingClientRect();
+		const headerBottom = headerRect.bottom;
 
 		// Sort available letters to ensure we check them in order
-		const sortedLetters = [...availableLetters].sort((a, b) =>
-			a.localeCompare(b),
-		);
+		const sortedLetters = [...availableLetters].sort();
 
 		let activeLetter = sortedLetters[0] || "A";
+		let lastVisibleLetter = null;
 
-		// Find the letter section that's currently at or above the offset line
-		for (let i = sortedLetters.length - 1; i >= 0; i--) {
+		// Check each letter section to find which one is currently visible
+		for (let i = 0; i < sortedLetters.length; i++) {
 			const letter = sortedLetters[i];
-			if (!letter) continue;
+			const section = document.getElementById(`letter-${letter}`);
+			if (!section) continue;
 
-			const section = sectionsRef.current.get(letter);
-
-			if (section) {
-				const rect = section.getBoundingClientRect();
-				const sectionTop = scrollTop + rect.top;
-
-				// If this section's top is at or above the scroll position + offset,
-				// this is our active section
-				if (sectionTop <= scrollTop + offset) {
-					activeLetter = letter;
-					break;
+			const rect = section.getBoundingClientRect();
+			const nextLetter = sortedLetters[i + 1];
+			const nextSection = nextLetter ? document.getElementById(`letter-${nextLetter}`) : null;
+			const nextRect = nextSection ? nextSection.getBoundingClientRect() : null;
+			
+			// Check if the section's top is at or above the header threshold
+			if (rect.top <= headerBottom) {
+				// If there's a next section and it's also above the threshold,
+				// continue to check the next one
+				if (nextRect && nextRect.top <= headerBottom) {
+					lastVisibleLetter = letter;
+					continue;
 				}
+				// This is the current active section
+				activeLetter = letter;
+				break;
+			} else {
+				// This section hasn't reached the header yet
+				// Use the last visible section if available
+				if (lastVisibleLetter) {
+					activeLetter = lastVisibleLetter;
+				}
+				break;
 			}
 		}
+		
+		// Handle case when scrolled to the very bottom
+		if (!activeLetter && lastVisibleLetter) {
+			activeLetter = lastVisibleLetter;
+		}
 
+		// Update the current letter if it changed
 		if (activeLetter !== currentLetter) {
 			setCurrentLetter(activeLetter);
 			// Broadcast the letter change for other components
@@ -64,12 +86,9 @@ export function CurrentLetterIndicator({
 		}
 	}, [availableLetters, currentLetter]);
 
-	// Throttled scroll handler
+	// Debounced scroll handler using requestAnimationFrame
 	const handleScroll = useCallback(() => {
-		if (rafIdRef.current) {
-			cancelAnimationFrame(rafIdRef.current);
-		}
-		rafIdRef.current = requestAnimationFrame(updateCurrentLetter);
+		requestAnimationFrame(updateCurrentLetter);
 	}, [updateCurrentLetter]);
 
 	useEffect(() => {
@@ -77,33 +96,34 @@ export function CurrentLetterIndicator({
 			return;
 		}
 
-		// Clear the sections map
-		sectionsRef.current.clear();
-
-		// Collect all letter sections
-		const sortedLetters = [...availableLetters].sort((a, b) =>
-			a.localeCompare(b),
-		);
-		for (const letter of sortedLetters) {
-			const section = document.getElementById(`letter-${letter}`);
-			if (section) {
-				sectionsRef.current.set(letter, section);
-			}
-		}
-
-		// Initial check
-		updateCurrentLetter();
+		// Small delay to ensure DOM is fully rendered
+		const initialTimeout = setTimeout(() => {
+			updateCurrentLetter();
+		}, 100);
 
 		// Add scroll listener
 		window.addEventListener("scroll", handleScroll, { passive: true });
 
+		// Also update on resize as the header height might change
+		window.addEventListener("resize", handleScroll, { passive: true });
+
 		return () => {
+			clearTimeout(initialTimeout);
 			window.removeEventListener("scroll", handleScroll);
-			if (rafIdRef.current) {
-				cancelAnimationFrame(rafIdRef.current);
-			}
+			window.removeEventListener("resize", handleScroll);
 		};
 	}, [availableLetters, handleScroll, updateCurrentLetter]);
+
+	// Listen for hash changes (when clicking on letter navigation)
+	useEffect(() => {
+		const handleHashChange = () => {
+			// Small delay to allow scroll animation to start
+			setTimeout(updateCurrentLetter, 100);
+		};
+
+		window.addEventListener("hashchange", handleHashChange);
+		return () => window.removeEventListener("hashchange", handleHashChange);
+	}, [updateCurrentLetter]);
 
 	return (
 		<div className="max-w-4xl">

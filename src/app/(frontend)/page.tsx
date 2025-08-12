@@ -3,10 +3,14 @@ import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import Image from "next/image";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
+import Icon01 from "~/components/icons/digitcore/icon-01";
+import Icon02 from "~/components/icons/digitcore/icon-02";
+import Icon03 from "~/components/icons/digitcore/icon-03";
+import Icon04 from "~/components/icons/digitcore/icon-04";
+import Icon05 from "~/components/icons/digitcore/icon-05";
 import { PageHeader } from "~/components/shared/page-header";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
-import { urlFor } from "~/sanity/lib/image";
 import { HOME_PAGE_QUERY, ICONS_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
@@ -33,22 +37,22 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 	const isDraftMode = (await draftMode()).isEnabled;
-	const [data, icons] = await Promise.all([
-		client.fetch(
-			HOME_PAGE_QUERY,
-			{},
-			isDraftMode
-				? { perspective: "previewDrafts", useCdn: false, stega: true, token }
-				: { perspective: "published", useCdn: true },
-		) as Promise<Page | null>,
-		client.fetch(
-			ICONS_QUERY,
-			{},
-			isDraftMode
-				? { perspective: "previewDrafts", useCdn: false, stega: true, token }
-				: { perspective: "published", useCdn: true },
-		) as Promise<Icon[]>,
-	]);
+	const data = (await client.fetch(
+		HOME_PAGE_QUERY,
+		{},
+		isDraftMode
+			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
+			: { perspective: "published", useCdn: true },
+	)) as Page | null;
+
+	// Keep the icons fetch for now (as requested) but we won't use it
+	const icons = (await client.fetch(
+		ICONS_QUERY,
+		{},
+		isDraftMode
+			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
+			: { perspective: "published", useCdn: true },
+	)) as Icon[];
 
 	// Log icons data to debug
 	console.log("Icons fetched from Sanity:", icons);
@@ -62,7 +66,7 @@ export default async function Home() {
 					<div className="flex items-start justify-between gap-6">
 						<div className="flex-1">
 							<PageHeader
-								title={data?.title ?? undefined}
+								title={data?.title ?? "DIGITCORE"}
 								description={
 									data?.description as unknown as PortableTextBlock[]
 								}
@@ -71,58 +75,65 @@ export default async function Home() {
 					</div>
 				</div>
 
-				{/* Icons Section - Between header and content */}
-				{icons.length > 0 && (
-					<div className="pb-8 lg:pl-20">
-						<div className="flex justify-start gap-6">
-							{icons.slice(0, 5).map((icon) => {
-								// Log individual icon data
-								if (icon.svg?.asset) {
-									console.log(`Icon ${icon.title}:`, icon.svg);
-								}
-								return (
-									<div
-										key={icon._id}
-										className="relative flex h-24 w-16 items-center justify-center overflow-hidden"
-										title={icon.title}
-									>
-										{icon.svg?.asset ? (
-											<Image
-												src={urlFor(icon.svg).url()}
-												alt={icon.title}
-												width={72}
-												height={72}
-												className="fill-icon/20 object-contain text-icon/50"
-											/>
-										) : (
-											<div className="rounded-md bg-icon/20" />
-										)}
-									</div>
-								);
-							})}
+				<div className="pb-4 lg:pl-20">
+					<div className="relative h-44 max-w-4xl">
+						<div className="flex justify-start">
+							<Image
+								src="/pattern-logo-600w.svg"
+								alt="DIGITCORE Pattern Logo"
+								width={500}
+								height={144}
+								className="h-44 w-auto object-contain"
+							/>
 						</div>
 					</div>
-				)}
+				</div>
 
 				{contentSections.length > 0 && (
 					<div className="space-y-8 lg:pl-20">
 						{contentSections.map((section, index) => (
-							<section
-								key={section._key || index}
-								className="max-w-4xl space-y-4"
-							>
-								{section.heading && (
-									<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
-										{section.heading}
-									</h2>
+							<div key={section._key || index}>
+								<section className="max-w-4xl space-y-4">
+									{section.heading && (
+										<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
+											{section.heading}
+										</h2>
+									)}
+									{section.body && (
+										<CustomPortableText
+											value={section.body as unknown as PortableTextBlock[]}
+											className="prose-2xl prose-neutral-500 max-w-none prose-p:text-neutral-500 prose-p:leading-snug"
+										/>
+									)}
+								</section>
+
+								{/* Display icon between sections (except after the last one) */}
+								{index < contentSections.length - 1 && (
+									<div className="flex justify-start py-4">
+										<div
+											className="icon-item"
+											title={`Icon ${(index % 5) + 1}`}
+											data-index={index % 5}
+										>
+											{index % 5 === 0 && (
+												<Icon01 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
+											)}
+											{index % 5 === 1 && (
+												<Icon02 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
+											)}
+											{index % 5 === 2 && (
+												<Icon03 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
+											)}
+											{index % 5 === 3 && (
+												<Icon04 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
+											)}
+											{index % 5 === 4 && (
+												<Icon05 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
+											)}
+										</div>
+									</div>
 								)}
-								{section.body && (
-									<CustomPortableText
-										value={section.body as unknown as PortableTextBlock[]}
-										className="prose-2xl prose-neutral-500 max-w-none prose-p:text-neutral-500 prose-p:leading-snug"
-									/>
-								)}
-							</section>
+							</div>
 						))}
 					</div>
 				)}

@@ -139,7 +139,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 					clearBag();
 				}
 				for (const p of patterns) {
-					addPattern(p as Pattern);
+					addPattern(p as unknown as Pattern);
 				}
 				const cleanUrl = `${window.location.origin}/carrier-bag`;
 				window.history.replaceState({}, "", cleanUrl);

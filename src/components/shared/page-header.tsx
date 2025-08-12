@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useSidebar } from "~/components/ui/sidebar";
 import type { Pattern } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
+import { getPatternIconWithMapping } from "~/utils/pattern-icons";
 
 import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { cn } from "~/lib/utils";
@@ -46,6 +47,10 @@ export function PageHeader({
 
 	const isPatternPage = pathname.startsWith("/pattern/");
 
+	// Get the appropriate Digitcore icon for this pattern
+	const PatternIcon =
+		isPatternPage && slug ? getPatternIconWithMapping(slug) : null;
+
 	const handleSaveToCarrierBag = () => {
 		if (pattern) {
 			addPattern(pattern);
@@ -65,54 +70,60 @@ export function PageHeader({
 		isHydrated && pattern ? hasPattern(pattern._id) : false;
 
 	return (
-		<header
-			id="page-header"
-			className={cn("max-w-4xl", withIndent && "lg:pl-20")}
-		>
-			<h1 className="font-light text-[32px] text-primary capitalize">
-				{pageTitle}
-			</h1>
-			{isPatternPage && pattern && (
-				<button
-					type="button"
-					className={cn(
-						"mt-5 flex items-center gap-2.5 rounded-lg border border-border px-[7px] py-1 transition-colors",
-						!isHydrated
-							? "cursor-pointer bg-white hover:bg-secondary"
-							: isPatternInBag
-								? "cursor-default border-green-200 bg-green-50"
-								: "cursor-pointer bg-white hover:bg-secondary",
-					)}
-					onClick={isPatternInBag ? undefined : handleSaveToCarrierBag}
-					disabled={isPatternInBag}
-				>
-					<span className="font-normal text-[12px] text-primary uppercase leading-[20px]">
-						{!isHydrated
-							? "Save to Carrier Bag"
-							: isPatternInBag
-								? "Saved to Carrier Bag"
-								: "Save to Carrier Bag"}
-					</span>
-					<Icon
-						icon={Backpack03Icon}
-						size={14}
-						color="#71717a"
-						strokeWidth={1.5}
-					/>
-				</button>
-			)}
-			{description && (
-				<div className="mt-5 text-primary text-sm">
-					{typeof description === "string" ? (
-						<p>{description}</p>
-					) : (
-						<CustomPortableText
-							value={description}
-							className="prose-sm prose-p:text-primary prose-p:text-sm"
-						/>
-					)}
+		<header id="page-header" className={cn("relative max-w-4xl")}>
+			{PatternIcon && (
+				<div className="absolute top-1 left-4 h-10 w-10 flex-shrink-0 lg:left-6">
+					<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
 				</div>
 			)}
+			<div className={cn(withIndent && "lg:pl-25")}>
+				<div className="flex items-center gap-3">
+					<h1 className="font-light text-[32px] text-primary capitalize">
+						{pageTitle}
+					</h1>
+				</div>
+				{isPatternPage && pattern && (
+					<button
+						type="button"
+						className={cn(
+							"mt-5 flex items-center gap-2.5 rounded-lg border border-border px-[7px] py-1 transition-colors",
+							!isHydrated
+								? "cursor-pointer bg-white hover:bg-secondary"
+								: isPatternInBag
+									? "cursor-default border-green-200 bg-green-50"
+									: "cursor-pointer bg-white hover:bg-secondary",
+						)}
+						onClick={isPatternInBag ? undefined : handleSaveToCarrierBag}
+						disabled={isPatternInBag}
+					>
+						<span className="font-normal text-[12px] text-primary uppercase leading-[20px]">
+							{!isHydrated
+								? "Save to Carrier Bag"
+								: isPatternInBag
+									? "Saved to Carrier Bag"
+									: "Save to Carrier Bag"}
+						</span>
+						<Icon
+							icon={Backpack03Icon}
+							size={14}
+							color="#71717a"
+							strokeWidth={1.5}
+						/>
+					</button>
+				)}
+				{description && (
+					<div className="mt-5 text-primary text-sm">
+						{typeof description === "string" ? (
+							<p>{description}</p>
+						) : (
+							<CustomPortableText
+								value={description}
+								className="prose-sm prose-p:text-primary prose-p:text-sm"
+							/>
+						)}
+					</div>
+				)}
+			</div>
 		</header>
 	);
 }
