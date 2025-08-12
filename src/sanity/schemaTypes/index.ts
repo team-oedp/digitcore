@@ -7,6 +7,7 @@ import { pageType } from "./documents/pageType";
 import { patternType } from "./documents/patternType";
 import { resourceType } from "./documents/resourceType";
 import { solutionType } from "./documents/solutionType";
+import { suggestionType } from "./documents/suggestionType";
 import { tagType } from "./documents/tagType";
 import { themeType } from "./documents/themeType";
 import { blockContentType } from "./objects/blockContentType";
@@ -27,6 +28,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 		themeType,
 		resourceType,
 		solutionType,
+		suggestionType,
 		pageType,
 		glossaryType,
 		faqType,

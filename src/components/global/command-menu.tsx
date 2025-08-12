@@ -3,13 +3,19 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { useTheme } from "next-themes";
-import { useTypesenseSearch } from "~/hooks/use-typesense-search";
+import { useDebounce } from "use-debounce";
+import { fetchFilterOptions } from "~/app/actions/filter-options";
+import type { SearchPattern } from "~/app/actions/search";
+import { searchPatternsWithParams } from "~/app/actions/search";
+import { usePageContentSearch } from "~/hooks/use-page-content-search";
 
 import {
 	ArrowDownIcon,
 	ArrowUpIcon,
 	CommandIcon,
 	CornerDownLeftIcon,
+	FileTextIcon,
+	HashIcon,
 } from "lucide-react";
 
 import { cn } from "~/lib/utils";
@@ -100,22 +106,160 @@ export function CommandMenu() {
 		? pathname.split("/").pop()
 		: undefined;
 
+	// Global search using server-side search action
+	const [query, setQuery] = useState("");
+	const [globalResults, setGlobalResults] = useState<SearchPattern[]>([]);
+	const [globalLoading, setGlobalLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const [debouncedQuery] = useDebounce(query, 300);
+
+	const [tagResults, setTagResults] = useState<
+		{ value: string; label: string }[]
+	>([]);
+	const [solutionResults, setSolutionResults] = useState<
+		Array<{
+			_id: string;
+			title?: string;
+			description?: Array<unknown>;
+			pattern: SearchPattern;
+		}>
+	>([]);
+	const [resourceResults, setResourceResults] = useState<
+		Array<{
+			_id: string;
+			title?: string;
+			description?: Array<unknown>;
+			solutions?: Array<{
+				_id: string;
+				title?: string;
+			}> | null;
+			solution?: Array<{
+				_id: string;
+				title?: string;
+			}> | null;
+			pattern: SearchPattern;
+		}>
+	>([]);
+
+	// Update search effect to fetch and group all types
+	useEffect(() => {
+		const performSearch = async () => {
+			if (!debouncedQuery.trim()) {
+				setGlobalResults([]);
+				setTagResults([]);
+				setSolutionResults([]);
+				setResourceResults([]);
+				setError(null);
+				return;
+			}
+			setGlobalLoading(true);
+			setError(null);
+			try {
+				// Patterns (and their solutions/resources)
+				const searchParams = new URLSearchParams();
+				searchParams.set("q", debouncedQuery.trim());
+				searchParams.set("limit", "10");
+				const result = await searchPatternsWithParams(searchParams);
+				let patterns: SearchPattern[] = [];
+				const solutions: Array<{
+					_id: string;
+					title?: string;
+					description?: Array<unknown>;
+					pattern: SearchPattern;
+				}> = [];
+				const resources: Array<{
+					_id: string;
+					title?: string;
+					description?: Array<unknown>;
+					solutions?: Array<{
+						_id: string;
+						title?: string;
+					}> | null;
+					solution?: Array<{
+						_id: string;
+						title?: string;
+					}> | null;
+					pattern: SearchPattern;
+				}> = [];
+				if (result.success && result.data) {
+					patterns = result.data;
+					// Extract solutions/resources from patterns
+					for (const pattern of patterns) {
+						if (pattern.solutions) {
+							for (const sol of pattern.solutions) {
+								solutions.push({ ...sol, pattern });
+							}
+						}
+						if (pattern.resources) {
+							for (const res of pattern.resources) {
+								resources.push({ ...res, pattern });
+							}
+						}
+					}
+				}
+				setGlobalResults(patterns);
+				setSolutionResults(solutions);
+				setResourceResults(resources);
+				// Tags
+				const tagFetch = await fetchFilterOptions();
+				if (tagFetch.success && tagFetch.data) {
+					const filteredTags = tagFetch.data.tags.filter((tag) =>
+						tag.label
+							.toLowerCase()
+							.includes(debouncedQuery.trim().toLowerCase()),
+					);
+					setTagResults(filteredTags);
+				} else {
+					setTagResults([]);
+				}
+			} catch (err) {
+				setError("Search failed");
+				setGlobalResults([]);
+				setTagResults([]);
+				setSolutionResults([]);
+				setResourceResults([]);
+			} finally {
+				setGlobalLoading(false);
+			}
+		};
+		performSearch();
+	}, [debouncedQuery]);
+
+	const clearGlobalSearch = () => {
+		setQuery("");
+		setGlobalResults([]);
+		setError(null);
+	};
+
+	// Page content search (only enabled on pattern pages)
 	const {
-		query,
-		setQuery,
-		results: searchResults,
-		isLoading,
-		error,
-		clearSearch,
-	} = useTypesenseSearch({
-		collectionName: "patterns",
-		patternSlug,
-	});
+		results: pageResults,
+		isLoading: pageLoading,
+		scrollToResult,
+		clearSearch: clearPageSearch,
+		hasContent,
+		setQuery: setPageQuery,
+	} = usePageContentSearch({ enabled: true });
+
+	// Sync queries between both search hooks
+	const handleQueryChange = (newQuery: string) => {
+		setQuery(newQuery);
+		setPageQuery(newQuery);
+	};
+
+	const isLoading = globalLoading || pageLoading;
+	const hasResults = globalResults.length > 0 || pageResults.length > 0;
+
+	const clearSearch = () => {
+		clearGlobalSearch();
+		clearPageSearch();
+	};
 
 	const getCurrentPageTitle = () => {
 		if (pathname === "/") return "Home";
 		if (pathname === "/faq") return "FAQ";
 		if (pathname === "/search") return "Search";
+		if (pathname === "/patterns") return "Patterns";
 		if (pathname === "/tags") return "Tags";
 		if (pathname === "/values") return "Values";
 		if (pathname === "/glossary") return "Glossary";
@@ -152,7 +296,11 @@ export function CommandMenu() {
 			>
 				<CommandMenuIcon />
 			</button>
-			<CommandDialog open={isOpen} onOpenChange={setIsOpen}>
+			<CommandDialog
+				open={isOpen}
+				onOpenChange={setIsOpen}
+				className="data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 top-[10%] max-w-2xl translate-y-0 transition-all duration-200 ease-out data-[state=closed]:animate-out data-[state=open]:animate-in"
+			>
 				<div className="flex items-center gap-1.5 pt-3 pl-4">
 					<div className="flex h-6 w-fit items-center justify-center rounded-md bg-neutral-200 px-2 dark:bg-neutral-900">
 						<span className="font-[460] text-[13px] text-foreground capitalize">
@@ -161,151 +309,189 @@ export function CommandMenu() {
 					</div>
 				</div>
 				<CommandInput
-					placeholder="What are you searching for?"
-					onValueChange={setQuery}
+					placeholder={"Search patterns, solutions, and resources..."}
+					onValueChange={handleQueryChange}
 				/>
-				<CommandList className="min-h-[200px]">
+				<CommandList className="max-h-[400px] overflow-y-auto transition-all duration-300 ease-in-out">
 					{isLoading ? (
-						<div className="flex items-center justify-center py-8">
+						<div className="flex items-center justify-center py-6">
 							<div className="text-muted-foreground text-sm">Searching...</div>
 						</div>
 					) : (
 						<>
 							<CommandEmpty>No results found.</CommandEmpty>
-							{searchResults.length > 0 && (
-								<div className="space-y-1.5 pt-1 pb-1.5">
-									{/* Group results by type */}
-									{["pattern", "solution", "resource", "tag", "audience"].map(
-										(type) => {
-											const resultsOfType = searchResults.filter(
-												(result) => result.type === type,
-											);
-											if (resultsOfType.length === 0) return null;
-
-											return (
-												<CommandGroup
-													key={type}
-													heading={
-														type === "pattern"
-															? "Patterns"
-															: type === "solution"
-																? "Solutions"
-																: type === "resource"
-																	? "Resources"
-																	: type === "tag"
-																		? "Tags"
-																		: "Audiences"
-													}
-												>
-													{resultsOfType.map((result) => {
-														return (
-															<CommandMenuItem
-																key={`${result.type}-${result.id}`}
-																icon={<div style={{ width: 22, height: 22 }} />}
-																setIsOpen={setIsOpen}
-																onSelect={() => {
-																	// Navigate based on type
-																	if (
-																		result.type === "pattern" &&
-																		result.slug
-																	) {
-																		router.push(`/pattern/${result.slug}`);
-																	} else if (
-																		result.type === "solution" ||
-																		result.type === "resource"
-																	) {
-																		// For solutions and resources, scroll to their section on the current page
-																		const sectionId =
-																			result.type === "solution"
-																				? "solutions"
-																				: "resources";
-																		const element =
-																			document.getElementById(sectionId);
-																		if (element) {
-																			element.scrollIntoView({
-																				behavior: "smooth",
-																				block: "start",
-																			});
-																		}
-																	} else if (result.type === "pattern") {
-																		// If searching within the current pattern, scroll to top
-																		window.scrollTo({
-																			top: 0,
-																			behavior: "smooth",
-																		});
-																	}
-																	// Add navigation logic for other types as needed
-																	setIsOpen(false);
-																}}
-																onAction={() => {
-																	if (
-																		result.type === "pattern" &&
-																		result.slug
-																	) {
-																		router.push(`/pattern/${result.slug}`);
-																	} else if (
-																		result.type === "solution" ||
-																		result.type === "resource"
-																	) {
-																		// For solutions and resources, scroll to their section on the current page
-																		const sectionId =
-																			result.type === "solution"
-																				? "solutions"
-																				: "resources";
-																		const element =
-																			document.getElementById(sectionId);
-																		if (element) {
-																			element.scrollIntoView({
-																				behavior: "smooth",
-																				block: "start",
-																			});
-																		}
-																	} else if (result.type === "pattern") {
-																		// If searching within the current pattern, scroll to top
-																		window.scrollTo({
-																			top: 0,
-																			behavior: "smooth",
-																		});
-																	}
-																}}
-															>
-																{result.title || "Untitled"}
-															</CommandMenuItem>
+							{/* Patterns */}
+							{globalResults.length > 0 && (
+								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
+									<CommandGroup heading="Patterns">
+										{globalResults.slice(0, 8).map((result) => (
+											<CommandItem
+												key={`pattern-${result._id}`}
+												value={result.title || ""}
+												onSelect={() => {
+													if (result.slug)
+														router.push(`/pattern/${result.slug}`);
+													setIsOpen(false);
+												}}
+												className="cursor-pointer px-3 py-2"
+											>
+												<div className="flex items-center gap-2">
+													<FileTextIcon className="h-4 w-4 text-muted-foreground" />
+													<span className="truncate text-sm">
+														{result.title}
+													</span>
+												</div>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</div>
+							)}
+							{/* Solutions */}
+							{solutionResults.length > 0 && (
+								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
+									<CommandGroup heading="Solutions">
+										{solutionResults.slice(0, 8).map((sol) => (
+											<CommandItem
+												key={`solution-${sol._id}`}
+												value={sol.title || ""}
+												onSelect={() => {
+													if (sol.pattern?.slug)
+														router.push(
+															`/pattern/${sol.pattern.slug}#${sol._id}`,
 														);
-													})}
-												</CommandGroup>
+													setIsOpen(false);
+												}}
+												className="cursor-pointer px-3 py-2"
+											>
+												<div className="flex items-center gap-2">
+													<div className="h-4 w-4 rounded-full bg-blue-500" />
+													<span className="truncate text-sm">{sol.title}</span>
+												</div>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</div>
+							)}
+							{/* Resources */}
+							{resourceResults.length > 0 && (
+								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
+									<CommandGroup heading="Resources">
+										{resourceResults.slice(0, 8).map((res) => (
+											<CommandItem
+												key={`resource-${res._id}`}
+												value={res.title || ""}
+												onSelect={() => {
+													if (res.pattern?.slug)
+														router.push(
+															`/pattern/${res.pattern.slug}#${res._id}`,
+														);
+													setIsOpen(false);
+												}}
+												className="cursor-pointer px-3 py-2"
+											>
+												<div className="flex items-center gap-2">
+													<div className="h-4 w-4 rounded-full bg-green-500" />
+													<span className="truncate text-sm">{res.title}</span>
+												</div>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</div>
+							)}
+							{/* Tags */}
+							{tagResults.length > 0 && (
+								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
+									<CommandGroup heading="Tags">
+										{tagResults.slice(0, 8).map((tag) => (
+											<CommandItem
+												key={`tag-${tag.value}`}
+												value={tag.label}
+												onSelect={() => {
+													router.push(`/tags#${tag.value}`);
+													setIsOpen(false);
+												}}
+												className="cursor-pointer px-3 py-2"
+											>
+												<div className="flex items-center gap-2">
+													<HashIcon className="h-4 w-4 text-muted-foreground" />
+													<span className="truncate text-sm">{tag.label}</span>
+												</div>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</div>
+							)}
+							{/* Page Content Results - Only show if we have page results */}
+							{pageResults.length > 0 && (
+								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
+									<CommandGroup heading="On this page">
+										{pageResults.slice(0, 5).map((result) => {
+											const getIcon = () => {
+												switch (result.type) {
+													case "solution":
+														return (
+															<div className="h-4 w-4 rounded-full bg-blue-500" />
+														);
+													case "resource":
+														return (
+															<div className="h-4 w-4 rounded-full bg-green-500" />
+														);
+													case "heading":
+														return (
+															<HashIcon className="h-4 w-4 text-muted-foreground" />
+														);
+													default:
+														return (
+															<FileTextIcon className="h-4 w-4 text-muted-foreground" />
+														);
+												}
+											};
+											return (
+												<CommandItem
+													key={result.id}
+													value={result.title}
+													onSelect={() => {
+														scrollToResult(result);
+														setIsOpen(false);
+													}}
+													className="cursor-pointer px-3 py-2"
+												>
+													<div className="flex items-center gap-2">
+														{getIcon()}
+														<span className="truncate text-sm">
+															{result.title}
+														</span>
+													</div>
+												</CommandItem>
 											);
-										},
-									)}
+										})}
+									</CommandGroup>
 								</div>
 							)}
 						</>
 					)}
 				</CommandList>
-				<div className="flex items-center justify-between border-border border-t bg-background p-4">
+				<div className="flex items-center justify-between border-border border-t bg-background px-4 py-3">
+					<div className="text-muted-foreground text-sm">
+						You are on the {currentPage.toLowerCase()} page
+					</div>
 					<div className="flex items-center gap-4">
 						<div className="flex items-center gap-2">
 							<div className="flex items-center gap-1.5">
-								<div className="rounded-md bg-neutral-200 p-1 text-neutral-500 dark:bg-[#141414]">
-									<ArrowUpIcon size={16} />
+								<div className="rounded bg-neutral-200 p-1 text-neutral-500 dark:bg-neutral-800">
+									<ArrowUpIcon size={12} />
 								</div>
-								<div className="rounded-md bg-neutral-200 p-1 text-neutral-500 dark:bg-[#141414]">
-									<ArrowDownIcon size={16} />
+								<div className="rounded bg-neutral-200 p-1 text-neutral-500 dark:bg-neutral-800">
+									<ArrowDownIcon size={12} />
 								</div>
 							</div>
-							<span className="text-sm">Navigate</span>
+							<span className="text-muted-foreground text-xs">Navigation</span>
 						</div>
 						<div className="flex items-center gap-2">
-							<div className="rounded-md bg-neutral-200 p-1 text-neutral-500 dark:bg-[#141414]">
-								<CornerDownLeftIcon size={16} />
+							<div className="rounded bg-neutral-200 p-1 text-neutral-500 dark:bg-neutral-800">
+								<CornerDownLeftIcon size={12} />
 							</div>
-							<span className="text-sm">Select</span>
-						</div>
-					</div>
-					<div className="flex items-center gap-2">
-						<span className="text-sm">Close</span>
-						<div className="rounded-md bg-neutral-200 p-1 text-xs dark:bg-[#141414]">
-							<span className="font-medium text-neutral-500">ESC</span>
+							<span className="text-muted-foreground text-xs">Open result</span>
 						</div>
 					</div>
 				</div>

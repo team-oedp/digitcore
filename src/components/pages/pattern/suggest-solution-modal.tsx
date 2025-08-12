@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { submitSuggestion } from "~/app/actions/submit-suggestion";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -42,10 +43,19 @@ export function SuggestSolutionModal({
 		}));
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log("Form submitted:", { patternName, patternSlug, ...formData });
-		// Here you would typically send the data to your backend or Google Forms
+
+		await submitSuggestion({
+			patternName,
+			patternSlug,
+			newSolutions: formData.newSolutions,
+			newResources: formData.newResources,
+			additionalFeedback: formData.additionalFeedback,
+			nameAndAffiliation: formData.nameAndAffiliation,
+			email: formData.email,
+		});
+
 		setIsOpen(false);
 		// Reset form
 		setFormData({
