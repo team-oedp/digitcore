@@ -1,4 +1,6 @@
+import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
 import { PageHeader } from "~/components/shared/page-header";
 import { PageWrapper } from "~/components/shared/page-wrapper";
@@ -6,8 +8,7 @@ import { client } from "~/sanity/lib/client";
 import { PATTERNS_WITH_THEMES_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type {
-	PATTERNS_WITH_THEMES_QUERYResult,
-	Theme,
+  PATTERNS_WITH_THEMES_QUERYResult
 } from "~/sanity/sanity.types";
 
 type PatternWithTheme = PATTERNS_WITH_THEMES_QUERYResult[0];
@@ -71,22 +72,20 @@ export default async function PatternsPage() {
 	}
 
 	return (
-		<div className="relative size-full overflow-clip rounded-lg bg-white">
+		<div className="relative">
 			<PageWrapper>
-				{/* Header Section */}
-				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
-					<PageHeader
-						title="Patterns"
-						description="Explore patterns to discover new open environmental research to share and incorporate into your own work."
-					/>
-				</div>
+			<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+				<PageHeader
+					title="Patterns"
+					description="Explore patterns to discover new open environmental research to share and incorporate into your own work."
+				/>
+			</div>
 
-				{/* Patterns Content */}
-				<div className="px-5">
+				<div className="lg:pt-12 lg:pl-20 flex flex-col gap-20 space-y-14">
 					{!allPatterns || allPatterns.length === 0 ? (
 						<div className="p-8">
-							<p className="text-gray-500">
-								No patterns found. Please check your Sanity database.
+							<p className="text-primary">
+								No patterns found. Please try again later.
 							</p>
 						</div>
 					) : (
@@ -94,49 +93,15 @@ export default async function PatternsPage() {
 							{/* Render patterns grouped by theme */}
 							{Array.from(themeGroups.values()).map(({ theme, patterns }) => (
 								<div key={theme._id} className="mb-12">
-									{/* Theme Section Header */}
-									<div className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-start gap-2.5 px-0 pt-0 pb-9">
-										<div className="relative box-border flex w-[834px] shrink-0 flex-col content-stretch items-start justify-start gap-5 py-0 pr-0 pl-2">
-											<div className="relative box-border flex shrink-0 flex-row content-stretch items-center justify-center gap-2.5 p-0">
-												<div className="relative flex shrink-0 flex-col justify-center text-nowrap text-left font-sans text-[#3d3d3d] text-[32px] capitalize not-italic leading-[0]">
-													<p className="block whitespace-pre leading-[normal]">
-														{theme.title}
-													</p>
-												</div>
-											</div>
-											{theme.description && (
-												<div className="relative min-w-full shrink-0 text-left font-sans text-[#3d3d3d] text-[16px] not-italic leading-[0]">
-													<p className="block leading-[normal]">
-														{Array.isArray(theme.description)
-															? theme.description
-																	.map(
-																		(
-																			block: NonNullable<
-																				Theme["description"]
-																			>[0],
-																		) =>
-																			block.children
-																				?.map(
-																					(
-																						child: NonNullable<
-																							NonNullable<
-																								Theme["description"]
-																							>[0]["children"]
-																						>[0],
-																					) => child.text || "",
-																				)
-																				.join("") || "",
-																	)
-																	.join(" ")
-															: theme.description}
-													</p>
-												</div>
-											)}
-										</div>
+									<div className="flex flex-col gap-8 items-start justify-start">
+										<h2 className="font-light text-[32px] text-primary capitalize">
+											{theme.title}
+                    </h2>
+                    <CustomPortableText value={theme.description as PortableTextBlock[]} />
 									</div>
 
-									{/* Pattern Items using SearchResultItem */}
-									<div className="space-y-0">
+									{/* Pattern items using SearchResultItem */}
+									<div className="pt-12 space-y-0">
 										{patterns.map((pattern) => (
 											<SearchResultItem
 												key={pattern._id}
@@ -169,7 +134,7 @@ export default async function PatternsPage() {
 										))}
 									</div>
 								</div>
-							))}
+							))}                
 
 							{/* Section for patterns without a theme */}
 							{ungroupedPatterns.length > 0 && (

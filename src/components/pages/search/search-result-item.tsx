@@ -1,20 +1,20 @@
 "use client";
 
 import {
-	ArrowRight02Icon,
-	ChartRelationshipIcon,
-	Share02Icon,
-	Tag01Icon,
+  ArrowRight02Icon,
+  ChartRelationshipIcon,
+  Share02Icon,
+  Tag01Icon,
 } from "@hugeicons/core-free-icons";
 import { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
 import { Icon } from "~/components/shared/icon";
 import {
-	extractTextFromPortableText,
-	getMatchExplanation,
-	hasMatchInTitle,
-	highlightMatches,
-	truncateWithContext,
+  extractTextFromPortableText,
+  getMatchExplanation,
+  hasMatchInTitle,
+  highlightMatches,
+  truncateWithContext,
 } from "~/lib/search-utils";
 import { SearchResultPreview } from "./search-result-preview";
 
@@ -119,26 +119,16 @@ function SearchResultBase({
 	buttonElement: React.ReactNode;
 }) {
 	return (
-		<div className="relative w-full pb-9">
-			{/* Dashed border at bottom */}
-			<div className="absolute right-0 bottom-0 left-0 h-px border-zinc-300 border-t border-dashed" />
-
-			<div className="py-[15px]">
-				<div className="flex items-start justify-between gap-[150px]">
-					{/* Left Content */}
-					<div className="w-[600px] max-w-[600px] flex-shrink-0">
-						{/* Title */}
-						<h3 className="mb-4 w-[700px] font-light text-[#323232] text-[28px] leading-[37.8px] tracking-[-0.9px]">
+		<div className="relative w-full pb-9 border-border border-t border-dashed">
+				<div className="flex items-start justify-between py-4">
+					<div className="w-full max-w-[600px] flex-shrink-0 space-y-4">
+						<h3 className="w-full font-light text-primary text-[28px] leading-normal">
 							{title}
 						</h3>
-
 						{children}
 					</div>
-
-					{/* Right Button */}
-					<div className="flex-shrink-0 pt-0.5">{buttonElement}</div>
+					<div className="flex-shrink-0 pt-2">{buttonElement}</div>
 				</div>
-			</div>
 		</div>
 	);
 }
@@ -212,7 +202,7 @@ function PatternSearchResult({
 						{searchTerm &&
 							(matchExplanation.titleMatch ||
 								matchExplanation.descriptionMatch) && (
-								<div className="mt-2 flex items-center gap-2 text-xs text-zinc-500">
+								<div className="mt-2 flex items-center gap-2 text-xs text-neutral-500">
 									<span>Match found in:</span>
 									{matchExplanation.titleMatch && (
 										<span className="rounded bg-blue-100 px-2 py-1 text-blue-700">
@@ -253,7 +243,7 @@ function PatternSearchResult({
 								key={tag._id}
 								className="flex h-6 items-center gap-2.5 rounded-lg border border-green-200 bg-green-100 py-2 pr-3 pl-[9px]"
 							>
-								<span className="whitespace-nowrap text-[#166534] text-[14px]">
+								<span className="capitalize whitespace-nowrap text-[#166534] text-[14px]">
 									{tag.title}
 								</span>
 								<Icon icon={Tag01Icon} className="h-3.5 w-3.5 text-[#166534]" />
