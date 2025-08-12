@@ -1,51 +1,55 @@
 import { ChartRelationshipIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import type { PortableTextBlock } from "@portabletext/types";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
+import type { Solution } from "~/sanity/sanity.types";
+import { SuggestSolutionButton } from "./suggest-solution-button";
 
-type Solution = {
-	number: string;
-	title: string;
-	description: string;
-	audiences: string[];
+type AudienceDisplay = {
+	_id?: string;
+	_key?: string;
+	_ref?: string;
+	title?: string;
 };
 
 type SolutionsProps = {
-	solutions?: Solution[];
+	solutions?: Solution[] | null;
+	patternName?: string;
+	patternSlug?: string;
 };
 
-const defaultSolutions: Solution[] = [
-	{
-		number: "i.",
-		title: "Iterative co-creation",
-		description:
-			"Co-develop research or design goals, prioritizing transparency in decision making and enabling flexibility and adaptation. Researchers and developers support community agency and data sovereignty when they remain flexible and transparent, recognizing that community members may hold differing views or that priorities may evolve over time.",
-		audiences: ["Open source technologists", "Researchers"],
-	},
-	{
-		number: "ii.",
-		title: "Consent to share",
-		description:
-			"Discuss the possibility of sharing information and publicizing research outputs as well as the mechanisms through which they will be shared. Obtain community consent before sharing. And for indigenous data in particular, consider the use of data licenses or labels for respecting cultural protocols around the sharing and use of knowledge.",
-		audiences: ["Open source technologists", "Researchers"],
-	},
-	{
-		number: "iii.",
-		title: "Community data co-/ownership",
-		description:
-			"Ensure that communities can retain control over data about them or collected by them. Use agreements that clearly delineate what can be shared publicly. When using open platforms and repositories to share data or documentation, opt for those that enable differentiated access and privacy.",
-		audiences: ["Open source technologists", "Researchers"],
-	},
-	{
-		number: "iv.",
-		title: "Meeting communities where they are",
-		description:
-			"Prioritize interventions and practices that support or leverage communities' known and accepted settings and activities. Create documentation in local languages.",
-		audiences: ["Open source technologists", "Researchers"],
-	},
-];
+export function Solutions({
+	solutions,
+	patternName,
+	patternSlug,
+}: SolutionsProps) {
+	// Generate numbering for solutions (i., ii., iii., etc.)
+	const getSolutionNumber = (index: number): string => {
+		const romanNumerals = [
+			"i",
+			"ii",
+			"iii",
+			"iv",
+			"v",
+			"vi",
+			"vii",
+			"viii",
+			"ix",
+			"x",
+		];
+		return `${romanNumerals[index]}.`;
+	};
 
-export function Solutions({ solutions = defaultSolutions }: SolutionsProps) {
+	if (!solutions || solutions.length === 0) {
+		return null;
+	}
+
 	return (
-		<section className="flex flex-col gap-5">
+		<section
+			id="solutions"
+			data-section="solutions"
+			className="flex flex-col gap-5"
+		>
 			<header className="flex flex-row items-center gap-2.5">
 				<h2 className="font-light text-[32px] text-primary">Solutions</h2>
 				<div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f7f7f7] px-4 py-1.5">
@@ -59,11 +63,11 @@ export function Solutions({ solutions = defaultSolutions }: SolutionsProps) {
 			</header>
 
 			<div className="flex flex-col gap-[13px]">
-				{solutions.map((solution) => (
-					<div key={solution.title} className="flex items-start gap-8 pb-9">
+				{solutions.map((solution: Solution, index: number) => (
+					<div key={solution._id} className="flex items-start gap-8 pb-9">
 						<div className="flex w-10 min-w-10 flex-col items-start gap-2.5">
 							<span className="font-normal text-[18px] text-primary leading-[22px]">
-								{solution.number}
+								{getSolutionNumber(index)}
 							</span>
 						</div>
 
@@ -71,32 +75,46 @@ export function Solutions({ solutions = defaultSolutions }: SolutionsProps) {
 							<h3 className="font-normal text-[18px] text-primary leading-[22px]">
 								{solution.title}
 							</h3>
-							<p className="font-normal text-[14px] text-zinc-500 leading-normal">
-								{solution.description}
-							</p>
+							{solution.description && (
+								<CustomPortableText
+									value={solution.description as PortableTextBlock[]}
+									className="prose-sm prose-p:font-normal prose-p:text-[14px] prose-p:text-zinc-500 prose-p:leading-normal"
+								/>
+							)}
 
-							<div className="flex gap-2">
-								{solution.audiences.map((audience) => (
-									<div
-										key={audience}
-										className="flex h-6 items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-100 px-[9px] py-2"
-									>
-										<span className="text-nowrap font-normal text-[#1e40ae] text-[14px]">
-											{audience}
-										</span>
-										<HugeiconsIcon
-											icon={ChartRelationshipIcon}
-											size={14}
-											color="#1e40ae"
-											strokeWidth={1.5}
-										/>
-									</div>
-								))}
-							</div>
+							{solution.audiences && solution.audiences.length > 0 && (
+								<div className="flex gap-2">
+									{solution.audiences.map((audience: AudienceDisplay) => (
+										<div
+											key={audience._id ?? audience._key ?? audience._ref}
+											className="flex h-6 items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-100 px-[9px] py-2"
+										>
+											<span className="text-nowrap font-normal text-[#1e40ae] text-[14px]">
+												{audience.title ?? audience._ref}
+											</span>
+											<HugeiconsIcon
+												icon={ChartRelationshipIcon}
+												size={14}
+												color="#1e40ae"
+												strokeWidth={1.5}
+											/>
+										</div>
+									))}
+								</div>
+							)}
 						</div>
 					</div>
 				))}
 			</div>
+
+			{patternName && patternSlug && (
+				<div className="mt-4 mb-4">
+					<SuggestSolutionButton
+						patternName={patternName}
+						patternSlug={patternSlug}
+					/>
+				</div>
+			)}
 		</section>
 	);
 }

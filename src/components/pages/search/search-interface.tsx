@@ -1,59 +1,216 @@
 "use client";
 
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import { Input } from "~/components/ui/input";
-import MultipleSelector, { type Option } from "~/components/ui/multiselect";
+import {
+	MultiSelect,
+	MultiSelectContent,
+	MultiSelectGroup,
+	MultiSelectItem,
+	MultiSelectTrigger,
+	MultiSelectValue,
+} from "~/components/ui/multiselect";
+import { createLogLocation, logger } from "~/lib/logger";
+import {
+	type ParsedSearchParams,
+	parseSearchParams,
+	searchParamsSchema,
+	serializeSearchParams,
+} from "~/lib/search";
 
-type SearchFilters = {
-	audience: string[];
-	theme: string[];
-	tags: string[];
+type FilterOption = {
+	value: string;
+	label: string;
 };
 
-const audienceOptions: Option[] = [
-	{ value: "researchers", label: "Researchers" },
-	{ value: "open-source-technologists", label: "Open source technologists" },
-	{ value: "community-leaders", label: "Community leaders" },
-	{ value: "policy-makers", label: "Policy makers" },
-];
+type SearchInterfaceProps = {
+	audienceOptions?: FilterOption[];
+	themeOptions?: FilterOption[];
+	tagOptions?: FilterOption[];
+};
 
-const themeOptions: Option[] = [
-	{
-		value: "frontline-communities",
-		label: "Ensuring benefit to frontline communities",
-	},
-	{ value: "data-sovereignty", label: "Data sovereignty" },
-	{ value: "community-engagement", label: "Community engagement" },
-	{ value: "ethical-technology", label: "Ethical technology" },
-];
+export function SearchInterface({
+	audienceOptions = [],
+	themeOptions = [],
+	tagOptions = [],
+}: SearchInterfaceProps) {
+	const location = createLogLocation("search-interface.tsx", "SearchInterface");
+	const [componentId] = useState(() => Math.random().toString(36).substring(7));
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
 
-const tagOptions: Option[] = [
-	{ value: "tools", label: "Tools" },
-	{ value: "strategy", label: "Strategy" },
-	{ value: "workflow", label: "Workflow" },
-	{ value: "data", label: "Data" },
-	{ value: "communication", label: "Communication" },
-	{ value: "assessment", label: "Assessment" },
-];
+	logger.debug(
+		"client",
+		"SearchInterface initialized",
+		{
+			componentId,
+			audienceCount: audienceOptions.length,
+			themeCount: themeOptions.length,
+			tagCount: tagOptions.length,
+		},
+		location,
+	);
 
-export function SearchInterface() {
-	const [searchQuery, setSearchQuery] = useState("");
-	const [filters, setFilters] = useState<SearchFilters>({
-		audience: [],
-		theme: [],
-		tags: [],
-	});
-
-	const handleSearch = () => {
-		console.log("Searching for:", searchQuery, "with filters:", filters);
-		// TODO: Implement actual search functionality
-	};
-
-	const handleKeyDown = (e: React.KeyboardEvent) => {
-		if (e.key === "Enter") {
-			handleSearch();
+	// Parse current URL parameters - this is our single source of truth
+	const currentParams: ParsedSearchParams = useMemo(() => {
+		try {
+			return parseSearchParams(
+				searchParamsSchema.parse({
+					q: searchParams.get("q") ?? undefined,
+					audiences: searchParams.get("audiences") ?? undefined,
+					themes: searchParams.get("themes") ?? undefined,
+					tags: searchParams.get("tags") ?? undefined,
+					page: searchParams.get("page") ?? undefined,
+					limit: searchParams.get("limit") ?? undefined,
+				}),
+			);
+		} catch (error) {
+			console.error("Error parsing search params:", error);
+			// Fall back to default params if parsing fails
+			return parseSearchParams({ page: 1, limit: 20 });
 		}
-	};
+	}, [searchParams]);
+
+	// Completely isolated search input state - no URL sync
+	const [searchTerm, setSearchTerm] = useState("");
+	const debouncedSearchTerm = useDebouncedCallback((value: string) => {
+		updateSearchParams({ searchTerm: value });
+	}, 300);
+
+	// Initialize search term from URL once when currentParams is available
+	const isInitialized = useRef(false);
+	useEffect(() => {
+		if (!isInitialized.current && currentParams) {
+			setSearchTerm(currentParams.searchTerm || "");
+			isInitialized.current = true;
+		}
+	}, [currentParams]); // Fix: use the whole object, not just searchTerm
+
+	// Add optimistic local state for filters
+	const [optimisticAudiences, setOptimisticAudiences] = useState<string[]>(
+		currentParams.audiences,
+	);
+	const [optimisticThemes, setOptimisticThemes] = useState<string[]>(
+		currentParams.themes,
+	);
+	const [optimisticTags, setOptimisticTags] = useState<string[]>(
+		currentParams.tags,
+	);
+
+	// Sync filter states from URL changes
+	useEffect(() => {
+		setOptimisticAudiences(currentParams.audiences);
+	}, [currentParams.audiences]);
+
+	useEffect(() => {
+		setOptimisticThemes(currentParams.themes);
+	}, [currentParams.themes]);
+
+	useEffect(() => {
+		setOptimisticTags(currentParams.tags);
+	}, [currentParams.tags]);
+
+	// Use a ref to always have access to the latest params without causing re-renders
+	const currentParamsRef = useRef(currentParams);
+	currentParamsRef.current = currentParams;
+
+	// Update URL with new search parameters
+	const updateSearchParams = useCallback(
+		(updates: Partial<ParsedSearchParams>) => {
+			logger.debug(
+				"client",
+				"Updating search parameters",
+				{ updates, current: currentParamsRef.current },
+				location,
+			);
+
+			const newParams = { ...currentParamsRef.current, ...updates };
+			const urlParams = serializeSearchParams(newParams);
+			const newUrl = urlParams.toString()
+				? `${pathname}?${urlParams.toString()}`
+				: pathname;
+
+			logger.debug(
+				"client",
+				"Navigating to new URL",
+				{
+					newUrl,
+					urlParams: urlParams.toString(),
+					newParams,
+				},
+				location,
+			);
+
+			router.push(newUrl);
+		},
+		[pathname, router, location],
+	);
+
+	// Handle search input changes
+	const handleSearchChange = useCallback(
+		(value: string) => {
+			setSearchTerm(value);
+			debouncedSearchTerm(value);
+		},
+		[debouncedSearchTerm],
+	);
+
+	// Handle audience filter changes with optimistic updates
+	const handleAudienceChange = useCallback(
+		(audiences: string[]) => {
+			setOptimisticAudiences(audiences);
+			updateSearchParams({ audiences });
+		},
+		[updateSearchParams],
+	);
+
+	// Handle theme filter changes with optimistic updates
+	const handleThemeChange = useCallback(
+		(themes: string[]) => {
+			setOptimisticThemes(themes);
+			updateSearchParams({ themes });
+		},
+		[updateSearchParams],
+	);
+
+	// Handle tags filter changes with optimistic updates
+	const handleTagsChange = useCallback(
+		(tags: string[]) => {
+			setOptimisticTags(tags);
+			updateSearchParams({ tags });
+		},
+		[updateSearchParams],
+	);
+
+	// Handle Enter key for search
+	const handleKeyDown = useCallback(
+		(e: React.KeyboardEvent) => {
+			if (e.key === "Enter") {
+				logger.debug(
+					"client",
+					"Search triggered by Enter key",
+					{ componentId },
+					location,
+				);
+			}
+		},
+		[componentId, location],
+	);
+
+	// Track component lifecycle
+	useEffect(() => {
+		return () => {
+			logger.debug(
+				"client",
+				"SearchInterface unmounted",
+				{ componentId },
+				location,
+			);
+		};
+	}, [componentId, location]);
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -63,19 +220,22 @@ export function SearchInterface() {
 					<div className="relative flex flex-1 items-center justify-start gap-2 p-0">
 						<Input
 							type="text"
-							value={searchQuery}
-							onChange={(e) => setSearchQuery(e.target.value)}
+							value={searchTerm}
+							onChange={(e) => handleSearchChange(e.target.value)}
 							onKeyDown={handleKeyDown}
-							placeholder="Start typing to search"
+							placeholder="Start typing to search patterns, solutions, and resources..."
 							className="h-8 rounded-none border-0 border-zinc-300 border-b bg-transparent px-0 py-1 pr-16 text-sm text-zinc-500 shadow-none placeholder:text-zinc-500 focus-visible:border-zinc-300 focus-visible:ring-0 focus-visible:ring-offset-0"
 						/>
-						<button
-							onClick={handleSearch}
-							type="button"
-							className="absolute right-0 cursor-pointer text-primary text-sm transition-colors hover:text-primary/50"
-						>
-							Search
-						</button>
+						{searchTerm && (
+							<button
+								onClick={() => handleSearchChange("")}
+								type="button"
+								className="absolute right-0 cursor-pointer text-sm text-zinc-400 transition-colors hover:text-zinc-600"
+								title="Clear search"
+							>
+								Clear
+							</button>
+						)}
 					</div>
 				</div>
 			</div>
@@ -85,76 +245,91 @@ export function SearchInterface() {
 				{/* Audience Multiselect */}
 				<div className="min-w-0 flex-1">
 					<div className="mb-1 text-primary text-xs">Audiences</div>
-					<MultipleSelector
-						value={filters.audience.map(
-							(value) =>
-								audienceOptions.find((opt) => opt.value === value) || {
-									value,
-									label: value,
-								},
-						)}
-						onChange={(selected) => {
-							setFilters((prev) => ({
-								...prev,
-								audience: selected.map((opt) => opt.value),
-							}));
-						}}
-						defaultOptions={audienceOptions}
-						placeholder="Select audiences"
-						className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none"
-						emptyIndicator="No options found."
-						hidePlaceholderWhenSelected
-					/>
+					<MultiSelect
+						values={optimisticAudiences}
+						onValuesChange={handleAudienceChange}
+					>
+						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">
+							<MultiSelectValue
+								placeholder="Select audiences"
+								overflowBehavior="cutoff"
+							/>
+						</MultiSelectTrigger>
+						<MultiSelectContent
+							search={{
+								placeholder: "Search audiences...",
+								emptyMessage: "No audiences found.",
+							}}
+						>
+							<MultiSelectGroup>
+								{audienceOptions.map((option) => (
+									<MultiSelectItem key={option.value} value={option.value}>
+										{option.label}
+									</MultiSelectItem>
+								))}
+							</MultiSelectGroup>
+						</MultiSelectContent>
+					</MultiSelect>
 				</div>
 
 				{/* Theme Multiselect */}
 				<div className="min-w-0 flex-1">
 					<div className="mb-1 text-primary text-xs">Themes</div>
-					<MultipleSelector
-						value={filters.theme.map(
-							(value) =>
-								themeOptions.find((opt) => opt.value === value) || {
-									value,
-									label: value,
-								},
-						)}
-						onChange={(selected) => {
-							setFilters((prev) => ({
-								...prev,
-								theme: selected.map((opt) => opt.value),
-							}));
-						}}
-						defaultOptions={themeOptions}
-						placeholder="Select themes"
-						className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none"
-						emptyIndicator="No options found."
-						hidePlaceholderWhenSelected
-					/>
+					<MultiSelect
+						values={optimisticThemes}
+						onValuesChange={handleThemeChange}
+					>
+						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">
+							<MultiSelectValue
+								placeholder="Select themes"
+								overflowBehavior="cutoff"
+							/>
+						</MultiSelectTrigger>
+						<MultiSelectContent
+							search={{
+								placeholder: "Search themes...",
+								emptyMessage: "No themes found.",
+							}}
+						>
+							<MultiSelectGroup>
+								{themeOptions.map((option) => (
+									<MultiSelectItem key={option.value} value={option.value}>
+										{option.label}
+									</MultiSelectItem>
+								))}
+							</MultiSelectGroup>
+						</MultiSelectContent>
+					</MultiSelect>
 				</div>
 
 				{/* Tags Multiselect */}
 				<div className="min-w-0 flex-1">
 					<div className="mb-1 text-primary text-xs">Tags</div>
-					<MultipleSelector
-						value={filters.tags.map(
-							(value) =>
-								tagOptions.find((opt) => opt.value === value) || {
-									value,
-									label: value,
-								},
-						)}
-						onChange={(selected) => {
-							setFilters((prev) => ({
-								...prev,
-								tags: selected.map((opt) => opt.value),
-							}));
-						}}
-						defaultOptions={tagOptions}
-						placeholder="Select tags"
-						className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none"
-						emptyIndicator="No options found."
-						hidePlaceholderWhenSelected
-					/>
+					<MultiSelect
+						values={optimisticTags}
+						onValuesChange={handleTagsChange}
+					>
+						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">
+							<MultiSelectValue
+								placeholder="Select tags"
+								overflowBehavior="cutoff"
+							/>
+						</MultiSelectTrigger>
+						<MultiSelectContent
+							search={{
+								placeholder: "Search tags...",
+								emptyMessage: "No tags found.",
+							}}
+						>
+							<MultiSelectGroup>
+								{tagOptions.map((option) => (
+									<MultiSelectItem key={option.value} value={option.value}>
+										{option.label}
+									</MultiSelectItem>
+								))}
+							</MultiSelectGroup>
+						</MultiSelectContent>
+					</MultiSelect>
 				</div>
 			</div>
 		</div>

@@ -1,0 +1,22 @@
+import type React from "react";
+
+export default function Icon15(props: React.ComponentPropsWithoutRef<"svg">) {
+	return (
+		<svg
+			width="201"
+			height="200"
+			viewBox="0 0 201 200"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			aria-label="Digitcore"
+			role="img"
+			{...props}
+		>
+			<path
+				d="M46.9003 174.193C-0.723536 65.5982 47.4085 21.1926 111.253 25.721C124.091 26.6318 170.304 78.8189 172.619 110.362C173.218 118.53 49.4942 180.109 46.9003 174.193Z"
+				stroke="currentColor"
+				strokeWidth="1"
+			/>
+		</svg>
+	);
+}

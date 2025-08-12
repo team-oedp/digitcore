@@ -1,68 +1,111 @@
 import type { Metadata } from "next";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import type { PortableTextBlock } from "next-sanity";
+import { draftMode } from "next/headers";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { PageHeader } from "~/components/shared/page-header";
+import { PageWrapper } from "~/components/shared/page-wrapper";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "~/components/ui/accordion";
+import { client } from "~/sanity/lib/client";
+import { FAQS_QUERY } from "~/sanity/lib/queries";
+import { token } from "~/sanity/lib/token";
 
 export const metadata: Metadata = {
 	title: "FAQ | DIGITCORE Toolkit",
-	description: "Frequently asked questions about the DIGITCORE Toolkit.",
+	description:
+		"Frequently asked questions about the DIGITCORE Toolkit for Collaborative Environmental Research.",
 };
 
-const FAQS = [
-	{
-		index: 1,
-		question: "What is the DIGITCORE Toolkit?",
-		answer:
-			"The DIGITCORE Toolkit is a collection of design patterns, resources, and tools for building digital products with community agency and data sovereignty at their core.",
-	},
-	{
-		index: 2,
-		question: "Who can use this toolkit?",
-		answer:
-			"The toolkit is designed for designers, developers, researchers, and community organizations working on digital projects that prioritize community needs and ethical data practices.",
-	},
-	{
-		index: 3,
-		question: "How do I contribute to the toolkit?",
-		answer:
-			"We welcome contributions from the community. You can submit new patterns, suggest improvements, or help with documentation. Please check our contribution guidelines for more details.",
-	},
-	{
-		index: 4,
-		question: "Is the toolkit free to use?",
-		answer:
-			"Yes, the DIGITCORE Toolkit is open source and free to use. We believe in meaningful openness and equitable access to knowledge.",
-	},
-	{
-		index: 5,
-		question: "How often is the toolkit updated?",
-		answer:
-			"The toolkit is continuously evolving based on community feedback and new research. We regularly add new patterns and update existing content to reflect best practices.",
-	},
-] as const;
+type FAQFromSanity = {
+	_id: string;
+	title: string;
+	description: PortableTextBlock[];
+};
 
-export default function FAQPage() {
+export default async function FAQPage() {
+	const isDraftMode = (await draftMode()).isEnabled;
+
+	// Fetch FAQs from Sanity
+	const faqs = await client.fetch<FAQFromSanity[]>(
+		FAQS_QUERY,
+		{},
+		isDraftMode
+			? {
+					perspective: "previewDrafts",
+					useCdn: false,
+					stega: true,
+					token,
+				}
+			: {
+					perspective: "published",
+					useCdn: true,
+				},
+	);
+
 	return (
-		<section className="space-y-10">
-			<header className="space-y-2">
-				<h1 className="font-bold text-3xl">Frequently Asked Questions</h1>
-				<p className="text-muted-foreground">
-					Common questions about the DIGITCORE Toolkit and how to use it.
-				</p>
-			</header>
+		<PageWrapper>
+			<div className="space-y-16 pb-16">
+				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+					<div className="flex items-start justify-between gap-6">
+						<div className="flex-1">
+							<PageHeader title="Frequently Asked Questions" description="" />
+						</div>
+					</div>
+				</div>
 
-			<ul className="space-y-6">
-				{FAQS.map((faq) => (
-					<li key={faq.index}>
-						<Card>
-							<CardHeader>
-								<CardTitle>{faq.question}</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<p>{faq.answer}</p>
-							</CardContent>
-						</Card>
-					</li>
-				))}
-			</ul>
-		</section>
+				<div className="space-y-16 lg:pl-20">
+					<section className="max-w-4xl space-y-4">
+						<p className="text-2xl text-neutral-500 leading-snug">
+							Welcome to our FAQ page. Here, we aim to clarify important
+							concepts that connect technology, environmental justice, and
+							community collaboration in the context of using the Digital
+							Toolkit for Collaborative Environmental Research. This glossary
+							serves as a helpful resource for researchers, developers,
+							community organizations, and advocates, guiding you through the
+							intricate world of participatory science and the development of
+							open infrastructure.
+						</p>
+					</section>
+
+					{/* FAQ Accordions */}
+					<section className="max-w-4xl space-y-4">
+						{faqs && faqs.length > 0 ? (
+							<Accordion type="single" collapsible className="w-full">
+								{faqs.map((faq) => (
+									<AccordionItem
+										key={faq._id}
+										value={faq._id}
+										className="border-zinc-300 border-b border-dashed last:border-b"
+									>
+										<AccordionTrigger
+											showPlusMinus
+											className="items-center justify-between py-4 text-left font-normal text-neutral-500 text-xl hover:no-underline"
+										>
+											<span className="text-left">{faq.title}</span>
+										</AccordionTrigger>
+										<AccordionContent className="pt-2 pb-4">
+											<div className="prose prose-neutral max-w-none text-base text-neutral-500 leading-relaxed">
+												<CustomPortableText
+													value={faq.description}
+													className="[&>*]:text-neutral-500"
+												/>
+											</div>
+										</AccordionContent>
+									</AccordionItem>
+								))}
+							</Accordion>
+						) : (
+							<p className="text-neutral-500">
+								No FAQs available at the moment. Please check back later.
+							</p>
+						)}
+					</section>
+				</div>
+			</div>
+		</PageWrapper>
 	);
 }

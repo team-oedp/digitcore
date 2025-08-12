@@ -1,11 +1,12 @@
 import { toast } from "sonner";
 
-export interface ScrollToAnchorOptions {
+export type ScrollToAnchorOptions = {
 	behavior?: ScrollBehavior;
 	block?: ScrollLogicalPosition;
 	inline?: ScrollLogicalPosition;
 	fallbackMessage?: string;
-}
+	onError?: (message: string) => void;
+};
 
 export function scrollToAnchor(
 	anchorId: string,
@@ -16,22 +17,53 @@ export function scrollToAnchor(
 		block = "start",
 		inline = "nearest",
 		fallbackMessage = "Item not found on page",
+		onError,
 	} = options;
 
-	const element = document.getElementById(anchorId);
-
-	if (!element) {
-		toast.error(fallbackMessage);
+	// SSR safety check
+	if (typeof window === "undefined" || typeof document === "undefined") {
 		return false;
 	}
 
-	element.scrollIntoView({
-		behavior,
-		block,
-		inline,
-	});
+	// Input validation
+	if (!anchorId || typeof anchorId !== "string" || anchorId.trim() === "") {
+		const errorMessage = "Invalid anchor ID provided";
+		if (onError) {
+			onError(errorMessage);
+		} else {
+			toast.error(errorMessage);
+		}
+		return false;
+	}
 
-	return true;
+	const cleanAnchorId = anchorId.trim();
+	const element = document.getElementById(cleanAnchorId);
+
+	if (!element) {
+		if (onError) {
+			onError(fallbackMessage);
+		} else {
+			toast.error(fallbackMessage);
+		}
+		return false;
+	}
+
+	try {
+		element.scrollIntoView({
+			behavior,
+			block,
+			inline,
+		});
+		return true;
+	} catch (error) {
+		const errorMessage = "Failed to scroll to element";
+		if (onError) {
+			onError(errorMessage);
+		} else {
+			toast.error(errorMessage);
+		}
+		return false;
+	}
 }
 
 export function scrollToAnchorFromSearchParams(

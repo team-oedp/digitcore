@@ -1,45 +1,61 @@
 import "~/styles/globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { VisualEditing } from "next-sanity";
+import { draftMode } from "next/headers";
 import { sans } from "~/app/(frontend)/fonts";
-import { Header } from "~/components/global/header";
+import { DisableDraftMode } from "~/components/global/disable-draft-mode";
+import { LayoutUI } from "~/components/global/layout-ui";
+import { ResponsiveWrapper } from "~/components/global/responsive-wrapper";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
-import { SanityLive } from "~/sanity/lib/live";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
+import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
-import { handleError } from "./client-utils";
 
 export const metadata: Metadata = {
 	title: "Digitcore",
 	description: "Digital Toolkit for Collaborative Environmental Research",
-	icons: [{ rel: "icon", url: "/icon.png" }],
+	icons: [{ rel: "icon", url: "/oedp-icon.png" }],
 };
 
-export default function Layout({
+export const viewport: Viewport = {
+	colorScheme: "light",
+	themeColor: [
+		{ media: "(prefers-color-scheme: light)", color: "white" },
+		{ media: "(prefers-color-scheme: dark)", color: "black" },
+	],
+};
+
+export default async function Layout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
+	const isDraftMode = (await draftMode()).isEnabled;
+
 	return (
 		<section className={cn(sans.variable)}>
-			<div className="min-h-screen bg-background text-foreground antialiased">
+			<div className="h-screen text-foreground antialiased [--header-height:calc(--spacing(14))]">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"
 					enableSystem
 					disableTransitionOnChange
 				>
-					{/* The <SanityLive> component is responsible for making all sanityFetch calls in your application live, so should always be rendered. */}
-					<SanityLive onError={handleError} />
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
-							<>
-								<Header />
-								<main className="mx-2 mb-2 min-h-full rounded-md bg-primary-foreground">
-									{children}
-								</main>
-							</>
+							<PageContentStoreProvider>
+								<LayoutUI>
+									<ResponsiveWrapper>{children}</ResponsiveWrapper>
+								</LayoutUI>
+							</PageContentStoreProvider>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>
+					{isDraftMode && (
+						<>
+							<VisualEditing />
+							<DisableDraftMode />
+						</>
+					)}
 				</ThemeProvider>
 			</div>
 		</section>

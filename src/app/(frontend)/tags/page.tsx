@@ -1,68 +1,114 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Button } from "~/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "~/components/ui/card";
+import { draftMode } from "next/headers";
+import { TagsList } from "~/components/pages/tags/tags-list";
+import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
+import { PageHeader } from "~/components/shared/page-header";
+import { PageWrapper } from "~/components/shared/page-wrapper";
+import { client } from "~/sanity/lib/client";
+import { TAGS_WITH_PATTERNS_QUERY } from "~/sanity/lib/queries";
+import { token } from "~/sanity/lib/token";
 
 export const metadata: Metadata = {
 	title: "Tags | DIGITCORE Toolkit",
-	description: "Browse all patterns grouped by tag.",
+	description:
+		"Explore tags to discover new pathways through the toolkit's patterns.",
 };
 
-const TAGS = [
-	"Communications",
-	"Data Collection",
-	"Data Processing",
-	"Data Sharing",
-	"Data Validation",
-	"Design",
-	"Development",
-	"Documentation",
-	"Fundraising",
-	"Iteration",
-	"Maintenance",
-	"Process",
-	"Relationship Building",
-	"Risk Management",
-	"Strategy",
-	"Training",
-	"Workflow",
-] as const;
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-export default function TagsPage() {
+// Type definitions
+type Pattern = {
+	_id: string;
+	title: string;
+	slug: string;
+};
+
+type TagFromSanity = {
+	_id: string;
+	title: string;
+	patterns: Pattern[];
+};
+
+type Tag = {
+	id: string;
+	name: string;
+	letter: string;
+	resources: {
+		id: string;
+		title: string;
+		slug: string;
+	}[];
+};
+
+export type TagsByLetter = Partial<Record<string, Tag[]>>;
+
+export default async function Tags() {
+	const isDraftMode = (await draftMode()).isEnabled;
+
+	// Fetch tags with patterns from Sanity
+	const tagsData = await client.fetch(
+		TAGS_WITH_PATTERNS_QUERY,
+		{},
+		isDraftMode
+			? {
+					perspective: "previewDrafts",
+					useCdn: false,
+					stega: true,
+					token,
+				}
+			: {
+					perspective: "published",
+					useCdn: true,
+				},
+	);
+
+	// Transform Sanity data to match the component's expected format
+	const transformedTags: Tag[] =
+		(tagsData as TagFromSanity[])?.map((tag) => {
+			const firstLetter = tag.title.charAt(0).toUpperCase();
+			return {
+				id: tag._id,
+				name: tag.title,
+				letter: firstLetter,
+				resources: tag.patterns.map((pattern) => ({
+					id: pattern._id,
+					title: pattern.title,
+					slug: pattern.slug,
+				})),
+			};
+		}) || [];
+
+	// Group tags by letter
+	const tagsByLetter = transformedTags.reduce<TagsByLetter>((acc, tag) => {
+		const group = acc[tag.letter] ?? [];
+		group.push(tag);
+		acc[tag.letter] = group;
+		return acc;
+	}, {});
+
 	return (
-		<section className="space-y-10">
-			<header className="space-y-2">
-				<h1 className="font-bold text-3xl">Tags Directory</h1>
-				<p className="text-muted-foreground">
-					Explore patterns grouped by thematic tags.
-				</p>
-			</header>
+		<div className="relative">
+			<PageWrapper>
+				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+					<div className="flex items-start justify-between gap-6">
+						<div className="flex-1">
+							<PageHeader
+								title="Tags"
+								description="Explore tags to discover new pathways through the toolkit's patterns."
+							/>
+						</div>
 
-			<ul className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-				{TAGS.map((tag) => (
-					<li key={tag}>
-						<Card>
-							<CardHeader>
-								<CardTitle>{tag}</CardTitle>
-								<CardDescription>0 associated patterns</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<Button variant="link" asChild>
-									<Link href={`/search?tag=${encodeURIComponent(tag)}`}>
-										View patterns
-									</Link>
-								</Button>
-							</CardContent>
-						</Card>
-					</li>
-				))}
-			</ul>
-		</section>
+						<div className="shrink-0">
+							<CurrentLetterIndicator
+								availableLetters={Object.keys(tagsByLetter)}
+								contentId="tags-content"
+							/>
+						</div>
+					</div>
+				</div>
+
+				<TagsList tagsByLetter={tagsByLetter} alphabet={ALPHABET} />
+			</PageWrapper>
+		</div>
 	);
 }

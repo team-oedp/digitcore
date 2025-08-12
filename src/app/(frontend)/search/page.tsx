@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
+import type { PortableTextBlock } from "next-sanity";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
-import { PageHeader } from "~/components/global/page-header";
-import { PageWrapper } from "~/components/global/page-wrapper";
-import { SearchInterface } from "~/components/pages/search/search-interface";
-import { SearchResults } from "~/components/pages/search/search-results";
-import { SearchResultsHeader } from "~/components/pages/search/search-results-header";
-import { Separator } from "~/components/ui/separator";
-import { sanityFetch } from "~/sanity/lib/live";
+import { Suspense } from "react";
+import { SearchClientWrapper } from "~/components/pages/search/search-client-wrapper";
+import {
+	SearchInterfaceSkeleton,
+	SearchInterfaceWrapper,
+} from "~/components/pages/search/search-interface-wrapper";
+import { PageHeader } from "~/components/shared/page-header";
+import { PageWrapper } from "~/components/shared/page-wrapper";
+import { client } from "~/sanity/lib/client";
 import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
+import { token } from "~/sanity/lib/token";
 
 export const metadata: Metadata = {
 	title: "Search | DIGITCORE Toolkit",
@@ -15,9 +20,26 @@ export const metadata: Metadata = {
 };
 
 export default async function SearchPage() {
-	const { data } = await sanityFetch({ query: SEARCH_PAGE_QUERY });
+	const isDraftMode = (await draftMode()).isEnabled;
 
-	if (!data) {
+	// Fetch page data
+	const pageData = await client.fetch(
+		SEARCH_PAGE_QUERY,
+		{},
+		isDraftMode
+			? {
+					perspective: "previewDrafts",
+					useCdn: false,
+					stega: true,
+					token,
+				}
+			: {
+					perspective: "published",
+					useCdn: true,
+				},
+	);
+
+	if (!pageData) {
 		console.log("No page found, returning 404");
 		return notFound();
 	}
@@ -25,12 +47,22 @@ export default async function SearchPage() {
 	return (
 		<PageWrapper>
 			<div className="space-y-12">
-				<PageHeader description={data.description} />
+				{pageData.description && (
+					<PageHeader
+						description={pageData.description as PortableTextBlock[]}
+					/>
+				)}
 				<div className="space-y-6">
-					<SearchInterface />
-					<SearchResultsHeader resultCount={5} searchQuery="maintenance" />
-					<Separator />
-					<SearchResults />
+					<Suspense fallback={<SearchInterfaceSkeleton />}>
+						<SearchInterfaceWrapper />
+					</Suspense>
+					<Suspense
+						fallback={
+							<div className="h-32 animate-pulse rounded bg-zinc-100" />
+						}
+					>
+						<SearchClientWrapper />
+					</Suspense>
 				</div>
 			</div>
 		</PageWrapper>

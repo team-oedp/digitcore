@@ -1,10 +1,8 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import * as React from "react";
 
-import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -13,28 +11,45 @@ import {
 } from "~/components/ui/dropdown-menu";
 
 export function ModeToggle() {
-	const { setTheme } = useTheme();
+	const { setTheme, theme, resolvedTheme } = useTheme();
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button variant="outline" size="icon">
-					<Sun className="dark:-rotate-90 h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:scale-0" />
-					<Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-					<span className="sr-only">Toggle theme</span>
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end">
-				<DropdownMenuItem onClick={() => setTheme("light")}>
-					Light
-				</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme("dark")}>
-					Dark
-				</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme("system")}>
-					System
-				</DropdownMenuItem>
-			</DropdownMenuContent>
-		</DropdownMenu>
+		<div>
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<button
+						type="button"
+						aria-label="Select theme"
+						className="group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear hover:bg-main-foreground/40 focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:border-border/50 dark:focus-visible:ring-neutral-800 dark:hover:border-white/10 dark:hover:bg-main-foreground/20"
+					>
+						<span className="flex items-center gap-0.5 text-primary text-sm">
+							{resolvedTheme === "light" && (
+								<SunIcon size={14} aria-hidden="true" />
+							)}
+							{resolvedTheme === "dark" && (
+								<MoonIcon size={14} aria-hidden="true" />
+							)}
+							{resolvedTheme === "system" && (
+								<MonitorIcon size={14} aria-hidden="true" />
+							)}
+						</span>
+					</button>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent className="min-w-32" align="end">
+					<DropdownMenuItem onClick={() => setTheme("light")}>
+						<SunIcon size={16} className="opacity-60" aria-hidden="true" />
+						<span>Light</span>
+					</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => setTheme("dark")}>
+						<MoonIcon size={16} className="opacity-60" aria-hidden="true" />
+						<span>Dark</span>
+					</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => setTheme("system")}>
+						<MonitorIcon size={16} className="opacity-60" aria-hidden="true" />
+						<span>System</span>
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+		</div>
 	);
 }

@@ -1,63 +1,90 @@
 import type { Metadata } from "next";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import type { PortableTextBlock } from "next-sanity";
+import { draftMode } from "next/headers";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { PageHeader } from "~/components/shared/page-header";
+import { PageWrapper } from "~/components/shared/page-wrapper";
+import { client } from "~/sanity/lib/client";
+import { VALUES_PAGE_QUERY } from "~/sanity/lib/queries";
+import { token } from "~/sanity/lib/token";
+import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "Values | DIGITCORE Toolkit",
-	description: "Core principles guiding the toolkit and its community.",
+	description:
+		"Open infrastructure and environmental research values and principles.",
 };
 
-const VALUES = [
-	{
-		name: "Community Agency",
-		description:
-			"Prioritizing the voices and leadership of frontline communities in every stage of the process.",
-	},
-	{
-		name: "Data Sovereignty",
-		description:
-			"Ensuring communities maintain control over how their data is collected, stored, and used.",
-	},
-	{
-		name: "Meaningful Openness",
-		description:
-			"Promoting transparency that encourages collaboration and equitable access to knowledge.",
-	},
-	{
-		name: "Sustainable Collaboration",
-		description:
-			"Building long-term partnerships that distribute benefits and responsibilities fairly.",
-	},
-	{
-		name: "Accountability",
-		description:
-			"Committing to responsible practices aligned with environmental and social justice movements.",
-	},
-] as const;
+export default async function ValuesPage() {
+	const isDraftMode = (await draftMode()).isEnabled;
+	const data = (await client.fetch(
+		VALUES_PAGE_QUERY,
+		{},
+		isDraftMode
+			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
+			: { perspective: "published", useCdn: true },
+	)) as Page | null;
 
-export default function ValuesPage() {
+	if (!data) {
+		return (
+			<PageWrapper>
+				<div className="space-y-16 pb-16">
+					<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+						<div className="flex items-start justify-between gap-6">
+							<div className="flex-1">
+								<PageHeader title="Values" description="" />
+							</div>
+						</div>
+					</div>
+					<div className="space-y-16 lg:pl-20">
+						<p className="text-2xl text-neutral-500">No content available.</p>
+					</div>
+				</div>
+			</PageWrapper>
+		);
+	}
+
 	return (
-		<section className="space-y-10">
-			<header className="space-y-2">
-				<h1 className="font-bold text-3xl">Our Values</h1>
-				<p className="text-muted-foreground">
-					Principles that guide the DIGITCORE Toolkit’s development and use.
-				</p>
-			</header>
+		<PageWrapper>
+			<div className="space-y-16 pb-16">
+				{/* Page Header */}
+				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+					<div className="flex items-start justify-between gap-6">
+						<div className="flex-1">
+							<PageHeader title={data.title || "Values"} description="" />
+						</div>
+					</div>
+				</div>
 
-			<ul className="space-y-6">
-				{VALUES.map((value) => (
-					<li key={value.name}>
-						<Card>
-							<CardHeader>
-								<CardTitle>{value.name}</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<p>{value.description}</p>
-							</CardContent>
-						</Card>
-					</li>
-				))}
-			</ul>
-		</section>
+				<div className="space-y-16 lg:pl-20">
+					{/* Page Description */}
+					{data.description && (
+						<section className="max-w-4xl">
+							<CustomPortableText
+								value={data.description as PortableTextBlock[]}
+								className="prose-2xl prose-neutral-500 max-w-none prose-headings:font-normal prose-headings:text-neutral-500 prose-p:text-neutral-500 prose-headings:uppercase prose-p:leading-snug prose-headings:tracking-wide"
+							/>
+						</section>
+					)}
+
+					{/* Content Sections */}
+					{data.content?.map((section) => (
+						<section key={section._key} className="max-w-4xl space-y-4">
+							{section.heading && (
+								<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
+									{section.heading}
+								</h2>
+							)}
+							{section.body && (
+								<CustomPortableText
+									value={section.body as PortableTextBlock[]}
+									className="prose-2xl prose-neutral-500 max-w-none prose-p:text-neutral-500 prose-p:leading-snug"
+								/>
+							)}
+						</section>
+					))}
+				</div>
+			</div>
+		</PageWrapper>
 	);
 }

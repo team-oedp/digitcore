@@ -3,19 +3,30 @@
 import { createContext, useContext, useRef } from "react";
 import { createStore, useStore } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { CarrierBagItem, Pattern } from "~/types/pattern";
+import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
+import type { Pattern } from "~/sanity/sanity.types";
 
-interface CarrierBagState {
+type CarrierBagState = {
 	items: CarrierBagItem[];
 	isHydrated: boolean;
+	isOpen: boolean;
+	isPinned: boolean;
+	isModalMode: boolean;
 	addPattern: (pattern: Pattern, notes?: string) => void;
 	removePattern: (patternId: string) => void;
 	updateNotes: (patternId: string, notes: string) => void;
 	clearBag: () => void;
+	setItems: (items: CarrierBagItem[]) => void;
 	hasPattern: (patternId: string) => boolean;
 	getPattern: (patternId: string) => CarrierBagItem | undefined;
 	setHydrated: (hydrated: boolean) => void;
-}
+	toggleOpen: () => void;
+	setOpen: (open: boolean) => void;
+	togglePin: () => void;
+	setPin: (pinned: boolean) => void;
+	toggleModalMode: () => void;
+	setModalMode: (modalMode: boolean) => void;
+};
 
 export const createCarrierBagStore = () =>
 	createStore<CarrierBagState>()(
@@ -23,6 +34,9 @@ export const createCarrierBagStore = () =>
 			(set, get) => ({
 				items: [],
 				isHydrated: false,
+				isOpen: false,
+				isPinned: false,
+				isModalMode: false,
 
 				addPattern: (pattern: Pattern, notes?: string) => {
 					const { items } = get();
@@ -45,6 +59,10 @@ export const createCarrierBagStore = () =>
 					set({
 						items: items.filter((item) => item.pattern._id !== patternId),
 					});
+				},
+
+				setItems: (items: CarrierBagItem[]) => {
+					set({ items });
 				},
 
 				updateNotes: (patternId: string, notes: string) => {
@@ -73,13 +91,46 @@ export const createCarrierBagStore = () =>
 				setHydrated: (hydrated: boolean) => {
 					set({ isHydrated: hydrated });
 				},
+
+				toggleOpen: () => {
+					const { isOpen } = get();
+					set({ isOpen: !isOpen });
+				},
+
+				setOpen: (open: boolean) => {
+					set({ isOpen: open });
+				},
+
+				togglePin: () => {
+					const { isPinned } = get();
+					set({ isPinned: !isPinned });
+				},
+
+				setPin: (pinned: boolean) => {
+					set({ isPinned: pinned });
+				},
+
+				toggleModalMode: () => {
+					const { isModalMode } = get();
+					set({ isModalMode: !isModalMode });
+				},
+
+				setModalMode: (modalMode: boolean) => {
+					set({ isModalMode: modalMode });
+				},
 			}),
 			{
 				name: "carrier-bag",
 				storage: createJSONStorage(() => localStorage),
 				onRehydrateStorage: () => (state) => {
 					state?.setHydrated(true);
+					// Ensure sidebar is closed on initial load
+					state?.setOpen(false);
 				},
+				partialize: (state) => ({
+					// Only persist items, not UI state
+					items: state.items,
+				}),
 			},
 		),
 	);
@@ -105,12 +156,14 @@ export const CarrierBagStoreProvider = ({
 	);
 };
 
-export const useCarrierBagStore = () => {
+export const useCarrierBagStore = <T = CarrierBagState>(
+	selector?: (state: CarrierBagState) => T,
+) => {
 	const store = useContext(CarrierBagStoreContext);
 	if (!store) {
 		throw new Error(
 			"useCarrierBagStore must be used within CarrierBagStoreProvider",
 		);
 	}
-	return useStore(store);
+	return selector ? useStore(store, selector) : (useStore(store) as T);
 };
