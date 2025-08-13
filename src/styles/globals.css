@@ -165,7 +165,7 @@
 		@apply antialiased;
 	}
 	body {
-		@apply bg-background text-foreground text-base font-normal;
+		@apply bg-background text-foreground font-normal;
 	}
 	#app {
 		height: 100vh;

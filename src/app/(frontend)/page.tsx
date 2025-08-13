@@ -35,19 +35,20 @@ export default async function Home() {
 	return (
 		<PageWrapper>
 			<div className="flex flex-col gap-4">
-				<div className="h-18 w-18">
-					<DigitcoreLogoIcon
-						className="h-full w-full stroke-icon/50 text-icon/50"
-						stroke="currentColor"
-						strokeWidth={2}
-					/>
-				</div>
 				{data?.description && (
 					<CustomPortableText
 						value={data.description as PortableTextBlock[]}
 						variant="compact-primary"
 					/>
 				)}
+				<div className="mt-4 mb-10">
+					<div className="h-64 w-64">
+						<DigitcoreLogoIcon
+							className="h-full w-full stroke-icon/20 text-icon/20"
+							stroke="currentColor"
+						/>
+					</div>
+				</div>
 				{contentSections.length > 0 && (
 					<div>
 						{contentSections.map((section, index) => (
