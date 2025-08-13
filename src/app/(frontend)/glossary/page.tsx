@@ -4,7 +4,6 @@ import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
 import { LetterNavigation } from "~/components/shared/letter-navigation";
-import { PageHeader } from "~/components/shared/page-header";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import {
 	Accordion,
@@ -117,14 +116,7 @@ export default async function GlossaryPage() {
 		<div className="relative">
 			<PageWrapper>
 				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
-					<div className="flex items-start justify-between gap-6">
-						<div className="flex-1">
-							<PageHeader
-								title={pageData?.title || "Glossary"}
-								description={pageDescription || defaultDescription}
-							/>
-						</div>
-
+					<div className="flex items-start justify-end gap-6">
 						<div className="shrink-0">
 							<CurrentLetterIndicator
 								availableLetters={Object.keys(termsByLetter)}

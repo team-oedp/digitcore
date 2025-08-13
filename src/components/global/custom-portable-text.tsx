@@ -20,10 +20,18 @@ export function CustomPortableText({
 	className,
 	value,
 	as: Component = "div",
+	variant = "default",
 }: {
 	className?: string;
 	value: PortableTextBlock[];
 	as?: React.ElementType;
+	variant?:
+		| "default"
+		| "primary"
+		| "muted"
+		| "compact"
+		| "compact-primary"
+		| "compact-muted";
 }) {
 	const components: PortableTextComponents = {
 		block: {
@@ -74,7 +82,7 @@ export function CustomPortableText({
 									strokeLinecap="round"
 									strokeLinejoin="round"
 									strokeWidth="2"
-									d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+									d="M13.828 10.172a4 4 0 00-5.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
 								/>
 							</svg>
 						</a>
@@ -89,12 +97,29 @@ export function CustomPortableText({
 		},
 	};
 
+	// Determine the base text utility class based on variant
+	const getTextUtilityClass = () => {
+		switch (variant) {
+			case "primary":
+				return "text-content-primary";
+			case "muted":
+				return "text-content-muted";
+			case "compact":
+				return "text-compact";
+			case "compact-primary":
+				return "text-compact-primary";
+			case "compact-muted":
+				return "text-compact-muted";
+			default:
+				return "text-content";
+		}
+	};
+
+	const baseClass = getTextUtilityClass();
+	const combinedClasses = className ? `${baseClass} ${className}` : baseClass;
+
 	return (
-		<Component
-			className={["prose prose-a:text-brand", className]
-				.filter(Boolean)
-				.join(" ")}
-		>
+		<Component className={combinedClasses}>
 			<PortableText components={components} value={value} />
 		</Component>
 	);

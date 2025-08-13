@@ -6,7 +6,7 @@ import {
 	CarrierBagItem,
 	type CarrierBagItemData,
 } from "~/components/global/carrier-bag/carrier-bag-item";
-import { PageHeader } from "~/components/shared/page-header";
+import { PageHeader } from "~/components/shared/pattern-header";
 import { Button } from "~/components/ui/button";
 import {
 	MultiSelect,

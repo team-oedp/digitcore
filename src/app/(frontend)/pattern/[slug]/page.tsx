@@ -8,8 +8,8 @@ import { PatternContentProvider } from "~/components/pages/pattern/pattern-conte
 import type { DereferencedResource } from "~/components/pages/pattern/resources";
 import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
-import { PageHeader } from "~/components/shared/page-header";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { PageHeader } from "~/components/shared/pattern-header";
 import { client } from "~/sanity/lib/client";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";

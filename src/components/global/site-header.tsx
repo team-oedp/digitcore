@@ -38,18 +38,14 @@ export function SiteHeader() {
 		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-primary-foreground">
 			<nav className="flex w-full items-center justify-between gap-3.5 px-3.5 py-1.5">
 				<div className="flex w-full items-center gap-10">
-					<Button
-						variant="link"
-						asChild
-						className="flex h-auto items-center gap-3.5 px-3 py-2 text-foreground"
-					>
-						<Link href="/" className="text-sm uppercase">
-							Digitcore
+					<Button variant="link" asChild className="space-x-4 px-3 py-2">
+						<Link href="/">
+							<span className="text-primary text-xs uppercase">Digitcore</span>
 						</Link>
 					</Button>
 
 					<nav className="hidden md:flex">
-						<ul className="flex items-center gap-3.5 text-sm">
+						<ul className="flex items-center gap-3.5 text-xs">
 							<li>
 								<Button
 									variant="link"

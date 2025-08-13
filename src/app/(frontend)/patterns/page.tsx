@@ -2,7 +2,6 @@ import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
-import { PageHeader } from "~/components/shared/page-header";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
 import { PATTERNS_WITH_THEMES_QUERY } from "~/sanity/lib/queries";
@@ -72,13 +71,6 @@ export default async function PatternsPage() {
 	return (
 		<div className="relative">
 			<PageWrapper>
-				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
-					<PageHeader
-						title="Patterns"
-						description="Explore patterns to discover new open environmental research to share and incorporate into your own work."
-					/>
-				</div>
-
 				<div className="flex flex-col gap-20 space-y-14 lg:pt-12 lg:pl-20">
 					{!allPatterns || allPatterns.length === 0 ? (
 						<div className="p-8">

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
-import { PageHeader } from "~/components/shared/page-header";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
 import { VALUES_PAGE_QUERY } from "~/sanity/lib/queries";
@@ -25,39 +24,12 @@ export default async function ValuesPage() {
 			: { perspective: "published", useCdn: true },
 	)) as Page | null;
 
-	if (!data) {
-		return (
-			<PageWrapper>
-				<div className="space-y-16 pb-16">
-					<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
-						<div className="flex items-start justify-between gap-6">
-							<div className="flex-1">
-								<PageHeader title="Values" description="" />
-							</div>
-						</div>
-					</div>
-					<div className="space-y-16 lg:pl-20">
-						<p className="text-2xl text-neutral-500">No content available.</p>
-					</div>
-				</div>
-			</PageWrapper>
-		);
-	}
+	if (!data) return null;
 
 	return (
 		<PageWrapper>
 			<div className="space-y-16 pb-16">
-				{/* Page Header */}
-				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
-					<div className="flex items-start justify-between gap-6">
-						<div className="flex-1">
-							<PageHeader title={data.title || "Values"} description="" />
-						</div>
-					</div>
-				</div>
-
 				<div className="space-y-16 lg:pl-20">
-					{/* Page Description */}
 					{data.description && (
 						<section className="max-w-4xl">
 							<CustomPortableText
@@ -66,8 +38,6 @@ export default async function ValuesPage() {
 							/>
 						</section>
 					)}
-
-					{/* Content Sections */}
 					{data.content?.map((section) => (
 						<section key={section._key} className="max-w-4xl space-y-4">
 							{section.heading && (

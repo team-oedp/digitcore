@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { TagsList } from "~/components/pages/tags/tags-list";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
-import { PageHeader } from "~/components/shared/page-header";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { PageHeader } from "~/components/shared/pattern-header";
 import { client } from "~/sanity/lib/client";
 import { TAGS_WITH_PATTERNS_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -90,14 +90,7 @@ export default async function Tags() {
 		<div className="relative">
 			<PageWrapper>
 				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
-					<div className="flex items-start justify-between gap-6">
-						<div className="flex-1">
-							<PageHeader
-								title="Tags"
-								description="Explore tags to discover new pathways through the toolkit's patterns."
-							/>
-						</div>
-
+					<div className="flex items-start justify-end gap-6">
 						<div className="shrink-0">
 							<CurrentLetterIndicator
 								availableLetters={Object.keys(tagsByLetter)}
