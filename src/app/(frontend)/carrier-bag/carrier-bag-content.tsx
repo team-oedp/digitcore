@@ -6,7 +6,6 @@ import {
 	CarrierBagItem,
 	type CarrierBagItemData,
 } from "~/components/global/carrier-bag/carrier-bag-item";
-import { PageHeader } from "~/components/shared/pattern-header";
 import { Button } from "~/components/ui/button";
 import {
 	MultiSelect,
@@ -177,17 +176,14 @@ export function CarrierBagContent() {
 			<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
 				<div className="flex items-start justify-between gap-6">
 					<div className="flex-1">
-						<PageHeader
-							title="Carrier Bag"
-							description={`${items.length} saved items`}
-							withIndent={false}
-						/>
+						<h2 className="font-normal text-2xl">Carrier Bag</h2>
+						<p className="font-normal text-base">{`${items.length} saved items`}</p>
 					</div>
 				</div>
 			</div>
 
 			<div className="flex flex-wrap items-center gap-2">
-				<h3 className="font-normal text-foreground text-sm">Filters</h3>
+				<h3 className="font-normal text-base text-foreground">Filters</h3>
 
 				{/* Sort by */}
 				<Select
@@ -260,7 +256,7 @@ export function CarrierBagContent() {
 
 				<Button
 					variant="ghost"
-					className="text-muted-foreground text-sm hover:text-foreground"
+					className="text-base text-muted-foreground hover:text-foreground"
 					onClick={clearAll}
 				>
 					Clear all

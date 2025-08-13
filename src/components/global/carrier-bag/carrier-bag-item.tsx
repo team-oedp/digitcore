@@ -53,11 +53,11 @@ export function CarrierBagItem({
 						<Icon icon={Share02Icon} size={16} />
 					</div>
 					<div className="min-w-0 flex-1">
-						<p className="truncate font-normal text-foreground text-xs hover:underline">
+						<p className="truncate font-normal text-foreground text-sm hover:underline">
 							{item.title}
 						</p>
 						{item.subtitle ? (
-							<p className="truncate text-muted-foreground text-xs">
+							<p className="truncate text-muted-foreground text-sm">
 								{item.subtitle}
 							</p>
 						) : null}
@@ -69,11 +69,11 @@ export function CarrierBagItem({
 						<Icon icon={Share02Icon} size={16} />
 					</div>
 					<div className="min-w-0 flex-1">
-						<p className="truncate font-normal text-foreground text-xs">
+						<p className="truncate font-normal text-foreground text-sm">
 							{item.title}
 						</p>
 						{item.subtitle ? (
-							<p className="truncate text-muted-foreground text-xs">
+							<p className="truncate text-muted-foreground text-sm">
 								{item.subtitle}
 							</p>
 						) : null}

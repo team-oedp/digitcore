@@ -27,14 +27,14 @@ export function LetterNavigation<T>({
 	const effectiveActive = activeLetter ?? firstAvailableLetter ?? undefined;
 
 	return (
-		<div className="fixed left-8 z-20 hidden lg:block">
+		<div className="z-20 hidden lg:block">
 			<div className="flex flex-col">
 				{ALPHABET.map((letter) => {
 					const hasItems = (itemsByLetter[letter]?.length ?? 0) > 0;
 					const isActive = effectiveActive === letter;
 
 					const baseClasses =
-						"block text-sm text-center leading-none py-1 transition-all duration-200";
+						"block text-base text-center leading-none py-1 transition-all duration-200";
 
 					// Determine the appropriate classes based on state
 					let stateClasses = "";

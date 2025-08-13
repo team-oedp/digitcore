@@ -44,7 +44,7 @@ export default async function SearchPage() {
 
 	return (
 		<PageWrapper>
-			<div className="space-y-6">
+			<div className="space-y-6 pt-16">
 				<Suspense fallback={<SearchInterfaceSkeleton />}>
 					<SearchInterfaceWrapper />
 				</Suspense>

@@ -34,11 +34,11 @@ export default async function Home() {
 
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-4">
+			<div className="flex flex-col gap-4 pb-16">
 				{data?.description && (
 					<CustomPortableText
 						value={data.description as PortableTextBlock[]}
-						variant="compact-primary"
+						className="prose prose-neutral max-w-none"
 					/>
 				)}
 				<div className="mt-4 mb-10">
@@ -55,15 +55,14 @@ export default async function Home() {
 							<div key={section._key || index}>
 								<section className="max-w-4xl space-y-4">
 									{section.heading && (
-										<h2 className="font-normal text-2xl text-primary uppercase tracking-wide">
+										<h2 className="mt-4 font-normal text-lg text-primary uppercase tracking-wide">
 											{section.heading}
 										</h2>
 									)}
 									{section.body && (
 										<CustomPortableText
 											value={section.body as PortableTextBlock[]}
-											variant="primary"
-											className="max-w-none"
+											className="prose prose-neutral max-w-none"
 										/>
 									)}
 								</section>

@@ -49,15 +49,6 @@
 }
 
 @theme {
-	--text-xs: 0.5625rem / 0.75rem; /* 9px / 12px */
-	--text-sm: 0.6875rem / 1rem; /* 11px / 16px */
-	--text-base: 0.875rem / 1.25rem; /* 14px / 20px */
-	--text-md: 1.125rem / 1.5rem; /* 18px / 24px */
-	--text-lg: 1.375rem / 1.75rem; /* 22px / 28px */
-	--text-xl: 1.75rem / 2rem; /* 28px / 32px */
-	--text-2xl: 2rem / 2.25rem; /* 32px / 36px */
-	--text-3xl: 2.75rem / 3rem; /* 44px / 48px */
-
 	--color-neutral-50: var(--color-neutral-50);
 	--color-neutral-100: var(--color-neutral-100);
 	--color-neutral-200: var(--color-neutral-200);
@@ -69,6 +60,30 @@
 	--color-neutral-800: var(--color-neutral-800);
 	--color-neutral-900: var(--color-neutral-900);
 	--color-neutral-950: var(--color-neutral-950);
+
+	--text-xs: 0.5625rem; /* 9px */
+	--text-sm: 0.6875rem; /* 11px */
+	--text-base: 0.875rem; /* 14px */
+	--text-md: 1.125rem; /* 18px */
+	--text-lg: 1.375rem; /* 22px */
+	--text-xl: 1.75rem; /* 28px */
+	--text-2xl: 2rem; /* 32px */
+	--text-3xl: 2.75rem; /* 44px */
+	--text-4xl: 3.5rem; /* 56px */
+	--text-5xl: 4.5rem; /* 72px */
+	--text-6xl: 5.5rem; /* 88px */
+
+	--text-xs--line-height: 1.4;
+	--text-sm--line-height: 1.4;
+	--text-base--line-height: 1.5;
+	--text-md--line-height: 1.5;
+	--text-lg--line-height: 1.4;
+	--text-xl--line-height: 1.3;
+	--text-2xl--line-height: 1.25;
+	--text-3xl--line-height: 1.15;
+	--text-4xl--line-height: 1.1;
+	--text-5xl--line-height: 1.05;
+	--text-6xl--line-height: 1;
 }
 
 :root {
@@ -188,81 +203,6 @@
 		-ms-overflow-style: none;
 		scrollbar-width: none;
 	}
-	/* Text utility classes without color */
-	.text-content {
-		@apply prose max-w-none text-base;
-	}
-
-	.text-content-sm {
-		@apply prose prose-sm max-w-none text-sm;
-	}
-
-	.text-content-lg {
-		@apply prose prose-lg max-w-none text-lg;
-	}
-
-	.text-content-xl {
-		@apply prose prose-xl max-w-none text-xl;
-	}
-
-	.text-content-2xl {
-		@apply prose prose-2xl max-w-none text-2xl;
-	}
-
-	/* Text content with primary color */
-	.text-content-primary {
-		@apply prose text-primary max-w-none text-base;
-	}
-
-	.text-content-primary-sm {
-		@apply prose prose-sm text-primary max-w-none text-sm;
-	}
-
-	.text-content-primary-lg {
-		@apply prose prose-lg text-primary max-w-none text-lg;
-	}
-
-	.text-content-primary-xl {
-		@apply prose prose-xl text-primary max-w-none text-xl;
-	}
-
-	.text-content-primary-2xl {
-		@apply prose prose-2xl text-primary max-w-none text-2xl;
-	}
-
-	/* Text content with muted color */
-	.text-content-muted {
-		@apply prose text-muted-foreground max-w-none text-base;
-	}
-
-	.text-content-muted-sm {
-		@apply prose prose-sm text-muted-foreground max-w-none text-sm;
-	}
-
-	.text-content-muted-lg {
-		@apply prose prose-lg text-muted-foreground max-w-none text-lg;
-	}
-
-	.text-content-muted-xl {
-		@apply prose prose-xl text-muted-foreground max-w-none text-xl;
-	}
-
-	.text-content-muted-2xl {
-		@apply prose prose-2xl text-muted-foreground max-w-none text-2xl;
-	}
-
-	/* Compact text styles */
-	.text-compact {
-		@apply prose prose-sm max-w-none text-sm;
-	}
-
-	.text-compact-muted {
-		@apply prose prose-sm text-muted-foreground max-w-none text-sm;
-	}
-
-	.text-compact-primary {
-		@apply prose prose-sm text-primary max-w-none text-sm;
-	}
 
 	/* Tailwind Typography color mapping using project tokens */
 	.prose {
@@ -282,6 +222,10 @@
 		--tw-prose-pre-bg: var(--card);
 		--tw-prose-th-borders: var(--border);
 		--tw-prose-td-borders: var(--border);
+
+		/* Base typescale for prose */
+		font-size: var(--text-base);
+		line-height: var(--text-base--line-height);
 	}
 
 	.prose-primary {
@@ -294,5 +238,112 @@
 		--tw-prose-body: var(--muted-foreground);
 		--tw-prose-headings: var(--muted-foreground);
 		--tw-prose-links: var(--muted-foreground);
+	}
+
+	/* Map Tailwind Typography headings to project typescale */
+	.prose :where(h1):not(:where(.not-prose *)) {
+		font-size: var(--text-3xl);
+		line-height: var(--text-3xl--line-height);
+	}
+	.prose :where(h2):not(:where(.not-prose *)) {
+		font-size: var(--text-2xl);
+		line-height: var(--text-2xl--line-height);
+	}
+	.prose :where(h3):not(:where(.not-prose *)) {
+		font-size: var(--text-xl);
+		line-height: var(--text-xl--line-height);
+	}
+	.prose :where(h4):not(:where(.not-prose *)) {
+		font-size: var(--text-lg);
+		line-height: var(--text-lg--line-height);
+	}
+	.prose :where(p, ul, ol):not(:where(.not-prose *)) {
+		font-size: inherit;
+		line-height: inherit;
+	}
+
+	/* Size variants aligned to project typescale */
+	.prose-sm {
+		font-size: var(--text-sm);
+		line-height: var(--text-sm--line-height);
+	}
+	.prose-sm :where(h1):not(:where(.not-prose *)) {
+		font-size: var(--text-2xl);
+		line-height: var(--text-2xl--line-height);
+	}
+	.prose-sm :where(h2):not(:where(.not-prose *)) {
+		font-size: var(--text-xl);
+		line-height: var(--text-xl--line-height);
+	}
+	.prose-sm :where(h3):not(:where(.not-prose *)) {
+		font-size: var(--text-lg);
+		line-height: var(--text-lg--line-height);
+	}
+	.prose-sm :where(h4):not(:where(.not-prose *)) {
+		font-size: var(--text-md);
+		line-height: var(--text-md--line-height);
+	}
+
+	.prose-lg {
+		font-size: var(--text-lg);
+		line-height: var(--text-lg--line-height);
+	}
+	.prose-lg :where(h1):not(:where(.not-prose *)) {
+		font-size: var(--text-4xl);
+		line-height: var(--text-4xl--line-height);
+	}
+	.prose-lg :where(h2):not(:where(.not-prose *)) {
+		font-size: var(--text-3xl);
+		line-height: var(--text-3xl--line-height);
+	}
+	.prose-lg :where(h3):not(:where(.not-prose *)) {
+		font-size: var(--text-2xl);
+		line-height: var(--text-2xl--line-height);
+	}
+	.prose-lg :where(h4):not(:where(.not-prose *)) {
+		font-size: var(--text-xl);
+		line-height: var(--text-xl--line-height);
+	}
+
+	.prose-xl {
+		font-size: var(--text-xl);
+		line-height: var(--text-xl--line-height);
+	}
+	.prose-xl :where(h1):not(:where(.not-prose *)) {
+		font-size: var(--text-5xl);
+		line-height: var(--text-5xl--line-height);
+	}
+	.prose-xl :where(h2):not(:where(.not-prose *)) {
+		font-size: var(--text-4xl);
+		line-height: var(--text-4xl--line-height);
+	}
+	.prose-xl :where(h3):not(:where(.not-prose *)) {
+		font-size: var(--text-3xl);
+		line-height: var(--text-3xl--line-height);
+	}
+	.prose-xl :where(h4):not(:where(.not-prose *)) {
+		font-size: var(--text-2xl);
+		line-height: var(--text-2xl--line-height);
+	}
+
+	.prose-2xl {
+		font-size: var(--text-2xl);
+		line-height: var(--text-2xl--line-height);
+	}
+	.prose-2xl :where(h1):not(:where(.not-prose *)) {
+		font-size: var(--text-6xl);
+		line-height: var(--text-6xl--line-height);
+	}
+	.prose-2xl :where(h2):not(:where(.not-prose *)) {
+		font-size: var(--text-5xl);
+		line-height: var(--text-5xl--line-height);
+	}
+	.prose-2xl :where(h3):not(:where(.not-prose *)) {
+		font-size: var(--text-4xl);
+		line-height: var(--text-4xl--line-height);
+	}
+	.prose-2xl :where(h4):not(:where(.not-prose *)) {
+		font-size: var(--text-3xl);
+		line-height: var(--text-3xl--line-height);
 	}
 }

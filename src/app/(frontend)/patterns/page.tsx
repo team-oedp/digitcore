@@ -71,7 +71,7 @@ export default async function PatternsPage() {
 	return (
 		<div className="relative">
 			<PageWrapper>
-				<div className="flex flex-col gap-20 space-y-14 lg:pt-12 lg:pl-20">
+				<div className="flex flex-col gap-20 space-y-14">
 					{!allPatterns || allPatterns.length === 0 ? (
 						<div className="p-8">
 							<p className="text-primary">

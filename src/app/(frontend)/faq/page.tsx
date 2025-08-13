@@ -47,9 +47,9 @@ export default async function FAQPage() {
 
 	return (
 		<PageWrapper>
-			<div className="space-y-16 lg:pl-20">
+			<div className="space-y-16">
 				<section className="max-w-4xl space-y-4">
-					<p className="text-2xl text-neutral-500 leading-snug">
+					<p className="text-base text-neutral-500 leading-snug">
 						Welcome to our FAQ page. Here, we aim to clarify important concepts
 						that connect technology, environmental justice, and community
 						collaboration in the context of using the Digital Toolkit for
@@ -73,7 +73,7 @@ export default async function FAQPage() {
 								>
 									<AccordionTrigger
 										showPlusMinus
-										className="items-center justify-between py-4 text-left font-normal text-neutral-500 text-xl hover:no-underline"
+										className="items-center justify-between py-4 text-left font-normal text-base text-neutral-500 hover:no-underline"
 									>
 										<span className="text-left">{faq.title}</span>
 									</AccordionTrigger>
@@ -81,7 +81,7 @@ export default async function FAQPage() {
 										<div className="prose prose-neutral max-w-none text-base text-neutral-500 leading-relaxed">
 											<CustomPortableText
 												value={faq.description}
-												className="[&>*]:text-neutral-500"
+												className="prose prose-neutral max-w-none [&>*]:text-neutral-500"
 											/>
 										</div>
 									</AccordionContent>

@@ -5,7 +5,7 @@ import { Icon } from "../shared/icon";
 
 export function MobileHoldingPage() {
 	return (
-		<div className="flex min-h-screen items-center justify-center bg-background px-6 py-12">
+		<div className="fixed top-0 left-0 flex h-screen flex-col items-center justify-center overflow-hidden bg-background px-6 py-12">
 			<div className="max-w-md text-center">
 				<div className="mb-8">
 					<h1 className="font-normal text-3xl text-foreground uppercase">

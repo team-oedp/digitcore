@@ -48,12 +48,14 @@ export function SiteHeader() {
 								height={16}
 								className="h-full w-full"
 							/>
-							<span className="text-primary text-xs uppercase">Digitcore</span>
+							<span className="text-base text-primary uppercase">
+								Digitcore
+							</span>
 						</Link>
 					</Button>
 
 					<nav className="hidden md:flex">
-						<ul className="flex items-center gap-3.5 text-xs">
+						<ul className="flex items-center gap-3.5 text-base">
 							<li>
 								<Button
 									variant="link"

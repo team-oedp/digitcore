@@ -20,18 +20,10 @@ export function CustomPortableText({
 	className,
 	value,
 	as: Component = "div",
-	variant = "default",
 }: {
 	className?: string;
 	value: PortableTextBlock[];
 	as?: React.ElementType;
-	variant?:
-		| "default"
-		| "primary"
-		| "muted"
-		| "compact"
-		| "compact-primary"
-		| "compact-muted";
 }) {
 	const components: PortableTextComponents = {
 		block: {
@@ -97,26 +89,7 @@ export function CustomPortableText({
 		},
 	};
 
-	// Determine the base text utility class based on variant
-	const getTextUtilityClass = () => {
-		switch (variant) {
-			case "primary":
-				return "text-content-primary";
-			case "muted":
-				return "text-content-muted";
-			case "compact":
-				return "text-compact";
-			case "compact-primary":
-				return "text-compact-primary";
-			case "compact-muted":
-				return "text-compact-muted";
-			default:
-				return "text-content";
-		}
-	};
-
-	const baseClass = getTextUtilityClass();
-	const combinedClasses = className ? `${baseClass} ${className}` : baseClass;
+	const combinedClasses = className ?? undefined;
 
 	return (
 		<Component className={combinedClasses}>

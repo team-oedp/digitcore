@@ -28,32 +28,30 @@ export default async function ValuesPage() {
 
 	return (
 		<PageWrapper>
-			<div className="space-y-16 pb-16">
-				<div className="space-y-16 lg:pl-20">
-					{data.description && (
-						<section className="max-w-4xl">
+			<div className="space-y-8 pb-16">
+				{data.description && (
+					<section className="max-w-4xl">
+						<CustomPortableText
+							value={data.description as PortableTextBlock[]}
+							className="prose prose-neutral max-w-none"
+						/>
+					</section>
+				)}
+				{data.content?.map((section) => (
+					<section key={section._key} className="max-w-4xl space-y-4">
+						{section.heading && (
+							<h2 className="font-normal text-lg text-primary uppercase tracking-wide">
+								{section.heading}
+							</h2>
+						)}
+						{section.body && (
 							<CustomPortableText
-								value={data.description as PortableTextBlock[]}
-								className="prose-2xl prose-neutral-500 max-w-none prose-headings:font-normal prose-headings:text-neutral-500 prose-p:text-neutral-500 prose-headings:uppercase prose-p:leading-snug prose-headings:tracking-wide"
+								value={section.body as PortableTextBlock[]}
+								className="prose prose-neutral max-w-none"
 							/>
-						</section>
-					)}
-					{data.content?.map((section) => (
-						<section key={section._key} className="max-w-4xl space-y-4">
-							{section.heading && (
-								<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
-									{section.heading}
-								</h2>
-							)}
-							{section.body && (
-								<CustomPortableText
-									value={section.body as PortableTextBlock[]}
-									className="prose-2xl prose-neutral-500 max-w-none prose-p:text-neutral-500 prose-p:leading-snug"
-								/>
-							)}
-						</section>
-					))}
-				</div>
+						)}
+					</section>
+				))}
 			</div>
 		</PageWrapper>
 	);
