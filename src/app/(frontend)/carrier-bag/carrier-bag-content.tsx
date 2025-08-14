@@ -296,6 +296,7 @@ export function CarrierBagContent() {
 								const itemData: CarrierBagItemData = {
 									id: pattern._id,
 									title: pattern.title || "Untitled Pattern",
+									slug: getSlugString(pattern),
 									subtitle: themeTitle,
 								};
 								try {
@@ -311,7 +312,7 @@ export function CarrierBagContent() {
 										key={pattern._id}
 										item={itemData}
 										onRemove={() => handleRemoveItem(pattern._id)}
-										onVisit={() => handleVisitItem(getSlugString(pattern))}
+										onVisit={() => handleVisitItem(getSlugString(pattern))} 
 									/>
 								);
 							})}
@@ -348,6 +349,7 @@ export function CarrierBagContent() {
 							const itemData: CarrierBagItemData = {
 								id: pattern._id,
 								title: pattern.title || "Untitled Pattern",
+								slug: getSlugString(pattern),
 								subtitle: themeTitle,
 							};
 							try {

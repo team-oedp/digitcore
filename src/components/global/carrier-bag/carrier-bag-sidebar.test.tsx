@@ -270,7 +270,9 @@ describe("Carrier Bag Sidebar", () => {
 			});
 
 			// Click the close button in the sidebar
-			const closeButton = screen.getByRole("button", { name: /close sidebar/i });
+			const closeButton = screen.getByRole("button", {
+				name: /close sidebar/i,
+			});
 			fireEvent.click(closeButton);
 
 			// Wait for sidebar to close
@@ -358,7 +360,9 @@ describe("Carrier Bag Sidebar", () => {
 			});
 
 			// Close sidebar using close button
-			const closeButton = screen.getByRole("button", { name: /close sidebar/i });
+			const closeButton = screen.getByRole("button", {
+				name: /close sidebar/i,
+			});
 			fireEvent.click(closeButton);
 
 			// Wait for sidebar to close

@@ -166,11 +166,7 @@ export function SiteHeader() {
 								? "cursor-not-allowed opacity-50"
 								: "hover:bg-main-foreground/40 dark:hover:border-white/10 dark:hover:bg-main-foreground/20",
 						)}
-					onClick={
-						isOnCarrierBagRoute
-							? undefined
-							: toggleOpen
-					}
+						onClick={isOnCarrierBagRoute ? undefined : toggleOpen}
 						disabled={isOnCarrierBagRoute}
 						title={
 							isOnCarrierBagRoute

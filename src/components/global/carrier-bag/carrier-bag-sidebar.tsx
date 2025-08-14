@@ -13,7 +13,6 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Reorder } from "motion/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
@@ -44,7 +43,6 @@ export function CarrierBagSidebar({
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const documentData = useCarrierBagDocument(items);
 	const { setOpen: setSidebarOpen } = useSidebar();
-	const router = useRouter();
 
 	// Sync Zustand store state to Sidebar component state
 	// This is a one-way sync: Zustand store → Sidebar component
@@ -55,11 +53,6 @@ export function CarrierBagSidebar({
 
 	const handleRemoveItem = (patternId: string) => {
 		removePattern(patternId);
-	};
-
-	const handleVisitItem = (slug?: string) => {
-		if (!slug) return;
-		router.push(`/pattern/${slug}`);
 	};
 
 	const handleDownloadJson = () => {
@@ -171,10 +164,13 @@ export function CarrierBagSidebar({
 								}}
 							>
 								{items.map((item) => {
+									const slug = typeof item.pattern.slug === 'string' 
+										? item.pattern.slug 
+										: item.pattern.slug?.current;
 									const itemData: CarrierBagItemData = {
 										id: item.pattern._id,
 										title: item.pattern.title || "Untitled Pattern",
-										slug: item.pattern.slug?.current,
+										slug: slug,
 									};
 									return (
 										<Reorder.Item
@@ -186,9 +182,6 @@ export function CarrierBagSidebar({
 											<CarrierBagItem
 												item={itemData}
 												onRemove={() => handleRemoveItem(item.pattern._id)}
-												onVisit={() =>
-													handleVisitItem(item.pattern.slug?.current)
-												}
 											/>
 										</Reorder.Item>
 									);

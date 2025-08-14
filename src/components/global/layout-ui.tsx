@@ -18,7 +18,7 @@ export function LayoutUI({ children }: LayoutUIProps) {
 			className="flex h-full min-h-0 w-full flex-col gap-2"
 			style={
 				{
-					"--sidebar-width": "24rem",
+					"--sidebar-width": "28rem",
 				} as React.CSSProperties
 			}
 			defaultOpen={false}
