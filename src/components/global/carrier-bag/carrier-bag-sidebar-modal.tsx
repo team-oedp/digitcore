@@ -7,6 +7,7 @@ import {
 	Cancel01Icon,
 	SidebarRightIcon,
 } from "@hugeicons/core-free-icons";
+import { useRouter } from "next/navigation";
 import {
 	CarrierBagItem,
 	type CarrierBagItemData,
@@ -28,14 +29,15 @@ export function CarrierBagSidebarModal() {
 	const items = useCarrierBagStore((state) => state.items);
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
+	const router = useRouter();
 
 	const handleRemoveItem = (patternId: string) => {
 		removePattern(patternId);
 	};
 
-	const handleExpandItem = (slug: string) => {
-		// Navigate to pattern page
-		window.location.href = `/pattern/${slug}`;
+	const handleVisitItem = (slug?: string) => {
+		if (!slug) return;
+		router.push(`/pattern/${slug}`);
 	};
 
 	if (!isOpen) return null;
@@ -106,8 +108,8 @@ export function CarrierBagSidebarModal() {
 											key={item.pattern._id}
 											item={itemData}
 											onRemove={() => handleRemoveItem(item.pattern._id)}
-											onExpand={() =>
-												handleExpandItem(item.pattern.slug?.current || "")
+											onVisit={() =>
+												handleVisitItem(item.pattern.slug?.current)
 											}
 										/>
 									);

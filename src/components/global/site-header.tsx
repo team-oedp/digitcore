@@ -1,6 +1,7 @@
 "use client";
 
 import { SidebarRightIcon } from "@hugeicons/core-free-icons";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
@@ -38,13 +39,16 @@ export function SiteHeader() {
 		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-primary-foreground">
 			<nav className="flex w-full items-center justify-between gap-3.5 px-3.5 py-1.5">
 				<div className="flex w-full items-center gap-10">
-					<Button
-						variant="link"
-						asChild
-						className="flex h-auto items-center gap-3.5 px-3 py-2 text-foreground"
-					>
-						<Link href="/" className="text-sm uppercase">
-							Digitcore
+					<Button variant="link" asChild>
+						<Link href="/" className="space-x-3.5">
+							<Image
+								src="/pattern-logo.svg"
+								alt="Digitcore Logo"
+								width={16}
+								height={16}
+								className="h-full w-full"
+							/>
+							<span className="text-primary text-sm uppercase">Digitcore</span>
 						</Link>
 					</Button>
 

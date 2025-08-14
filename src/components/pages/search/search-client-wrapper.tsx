@@ -247,7 +247,7 @@ export function SearchClientWrapper() {
 				// No search criteria - show empty state instead of loading
 				<div className="py-12 text-center">
 					<p className="mb-2 text-zinc-500">Start your search</p>
-					<p className="text-sm text-zinc-400">
+					<p className="text-base text-zinc-400">
 						Enter a search term or select filters to find patterns
 					</p>
 				</div>
@@ -256,12 +256,12 @@ export function SearchClientWrapper() {
 			) : !searchResult?.success ? (
 				<div className="py-12 text-center">
 					<p className="mb-2 text-red-600">Search Error</p>
-					<p className="text-sm text-zinc-500">{searchResult?.error}</p>
+					<p className="text-base text-zinc-500">{searchResult?.error}</p>
 				</div>
 			) : searchResult.totalCount === 0 ? (
 				<div className="py-12 text-center">
 					<p className="mb-2 text-zinc-500">No results found</p>
-					<p className="text-sm text-zinc-400">
+					<p className="text-base text-zinc-400">
 						Try adjusting your search terms or filters
 					</p>
 				</div>

@@ -12,6 +12,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Reorder } from "motion/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
@@ -40,14 +41,15 @@ export function CarrierBagSidebar({
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const documentData = useCarrierBagDocument(items);
 	const { toggleSidebar } = useSidebar();
+	const router = useRouter();
 
 	const handleRemoveItem = (patternId: string) => {
 		removePattern(patternId);
 	};
 
-	const handleExpandItem = (slug: string) => {
-		// Navigate to pattern page
-		window.location.href = `/pattern/${slug}`;
+	const handleVisitItem = (slug?: string) => {
+		if (!slug) return;
+		router.push(`/pattern/${slug}`);
 	};
 
 	const handleDownloadJson = () => {
@@ -174,8 +176,8 @@ export function CarrierBagSidebar({
 											<CarrierBagItem
 												item={itemData}
 												onRemove={() => handleRemoveItem(item.pattern._id)}
-												onExpand={() =>
-													handleExpandItem(item.pattern.slug?.current || "")
+												onVisit={() =>
+													handleVisitItem(item.pattern.slug?.current)
 												}
 											/>
 										</Reorder.Item>

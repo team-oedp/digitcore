@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { LetterNavigation } from "~/components/shared/letter-navigation";
 
 // Type definitions
 type Tag = {
@@ -30,9 +29,8 @@ export function TagsList({
 	alphabet,
 }: { tagsByLetter: TagsByLetter; alphabet: string[] }) {
 	return (
-		<div className="flex gap-20 space-y-8 pb-[800px]" data-scroll-container>
-			<LetterNavigation itemsByLetter={tagsByLetter} contentId="tags-content" />
-			<div id="tags-content" className="flex-1 space-y-16 lg:pl-20">
+		<div className="space-y-8 pb-[800px]" data-scroll-container>
+			<div id="tags-content" className="flex-1 space-y-16">
 				{alphabet.map((letter) => {
 					const tags = tagsByLetter[letter];
 					if (!tags || tags.length === 0) return null;
@@ -43,13 +41,13 @@ export function TagsList({
 							className="max-w-4xl scroll-mt-40 space-y-8"
 							id={`letter-${letter}`}
 						>
-							<h2 className="font-normal text-2xl text-neutral-500 uppercase tracking-wide">
+							<h2 className="font-normal text-lg text-neutral-500 uppercase tracking-wide">
 								{letter}
 							</h2>
 
 							{tags.map((tag) => (
 								<div key={tag.id} className="space-y-4">
-									<h3 className="font-normal text-neutral-500 text-xl capitalize">
+									<h3 className="font-normal text-lg text-neutral-500 capitalize">
 										{tag.name}
 									</h3>
 
@@ -65,7 +63,7 @@ export function TagsList({
 												href={`/pattern/${resource.slug}`}
 												className="flex h-6 items-center gap-2.5 rounded-lg border border-[#d1a7f3] bg-[#ead1fa] py-2 pr-3 pl-[9px] transition-opacity hover:opacity-80"
 											>
-												<span className="whitespace-nowrap text-[#4f065f] text-[14px]">
+												<span className="whitespace-nowrap text-[#4f065f] text-base">
 													{resource.title}
 												</span>
 											</Link>

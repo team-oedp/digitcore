@@ -96,7 +96,7 @@ export function Resources({ resources }: ResourcesProps) {
 									{resource.description && (
 										<CustomPortableText
 											value={resource.description as PortableTextBlock[]}
-											className="prose-sm prose-p:font-normal prose-p:text-[14px] prose-p:text-zinc-500 prose-p:leading-normal"
+											className="prose prose-neutral max-w-none prose-p:text-[14px] prose-p:leading-normal"
 										/>
 									)}
 								</div>

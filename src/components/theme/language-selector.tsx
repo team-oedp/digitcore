@@ -13,8 +13,8 @@ import {
 } from "~/components/ui/dropdown-menu";
 
 const languages = [
-	{ code: "ES", label: "Spanish" },
 	{ code: "EN", label: "English" },
+	{ code: "ES", label: "Spanish" },
 	{ code: "PT", label: "Português" },
 	{ code: "FR", label: "Français" },
 	{ code: "KR", label: "한국어" },

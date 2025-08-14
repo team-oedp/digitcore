@@ -1,0 +1,168 @@
+# Text Utility Classes
+
+This document outlines the text utility classes available for consistent text styling across the application.
+
+## Overview
+
+The text utility classes provide a standardized way to style text content with consistent typography, spacing, and colors. These classes are built on top of Tailwind's prose classes and are designed to work with both Portable Text content and regular HTML text.
+
+## Available Classes
+
+### Base Text Content Classes
+
+- **`.text-content`** - Default text styling with neutral colors
+- **`.text-content-sm`** - Small text variant
+- **`.text-content-lg`** - Large text variant  
+- **`.text-content-xl`** - Extra large text variant
+- **`.text-content-2xl`** - 2XL text variant
+
+### Primary Color Variants
+
+- **`.text-content-primary`** - Text with primary color scheme
+- **`.text-content-primary-sm`** - Small primary text
+- **`.text-content-primary-lg`** - Large primary text
+- **`.text-content-primary-xl`** - Extra large primary text
+- **`.text-content-primary-2xl`** - 2XL primary text
+
+### Muted Color Variants
+
+- **`.text-content-muted`** - Text with muted color scheme
+- **`.text-content-muted-sm`** - Small muted text
+- **`.text-content-muted-lg`** - Large muted text
+- **`.text-content-muted-xl`** - Extra large muted text
+- **`.text-content-muted-2xl`** - 2XL muted text
+
+### Compact Variants
+
+- **`.text-compact`** - Compact text styling for smaller content areas
+- **`.text-compact-primary`** - Compact text with primary colors
+- **`.text-compact-muted`** - Compact text with muted colors
+
+## Usage Examples
+
+### With CustomPortableText Component
+
+```tsx
+// Default styling (no className needed)
+<CustomPortableText value={content} />
+
+// With variant
+<CustomPortableText value={content} variant="primary" />
+<CustomPortableText value={content} variant="muted" />
+<CustomPortableText value={content} variant="compact" />
+
+// With additional classes
+<CustomPortableText 
+  value={content} 
+  variant="primary" 
+  className="max-w-2xl" 
+/>
+```
+
+### With Regular HTML Elements
+
+```tsx
+// Basic text content
+<div className="text-content">
+  <h1>Heading</h1>
+  <p>Paragraph content...</p>
+</div>
+
+// Primary colored text
+<div className="text-content-primary">
+  <h2>Primary Heading</h2>
+  <p>Primary colored content...</p>
+</div>
+
+// Compact muted text
+<div className="text-compact-muted">
+  <p>Compact muted content...</p>
+</div>
+```
+
+### Responsive Usage
+
+```tsx
+// Responsive text sizing
+<div className="text-content-sm md:text-content lg:text-content-lg">
+  <p>Responsive text that scales with screen size</p>
+</div>
+```
+
+## Features
+
+### Automatic Styling
+
+Each utility class automatically applies:
+- Appropriate typography scale
+- Consistent spacing and margins
+- Proper heading hierarchy
+- Link styling with brand colors
+- List formatting
+- Responsive text sizing
+
+### Customization
+
+You can combine these classes with additional Tailwind classes:
+
+```tsx
+<div className="text-content-primary max-w-3xl mx-auto">
+  <h1>Custom styled content</h1>
+  <p>With additional layout classes</p>
+</div>
+```
+
+### Color Schemes
+
+- **Default**: Uses foreground/background colors from theme
+- **Primary**: Uses primary color scheme
+- **Muted**: Uses muted color scheme for secondary content
+
+## Migration Guide
+
+### From Old Prose Classes
+
+**Before:**
+```tsx
+<div className="prose prose-sm prose-p:text-primary prose-p:text-sm">
+  <p>Content</p>
+</div>
+```
+
+**After:**
+```tsx
+<div className="text-content-primary-sm">
+  <p>Content</p>
+</div>
+```
+
+### From CustomPortableText with className
+
+**Before:**
+```tsx
+<CustomPortableText 
+  value={content} 
+  className="prose prose-primary max-w-none prose-p:text-primary prose-p:text-sm" 
+/>
+```
+
+**After:**
+```tsx
+<CustomPortableText 
+  value={content} 
+  variant="primary" 
+  className="max-w-none" 
+/>
+```
+
+## Best Practices
+
+1. **Use variants for semantic meaning**: Choose variants based on content importance, not just visual preference
+2. **Combine with layout classes**: Add spacing, width, and positioning classes as needed
+3. **Maintain consistency**: Use the same variant for similar content types across the application
+4. **Responsive design**: Use responsive variants for text that should scale with screen size
+5. **Accessibility**: All classes maintain proper contrast ratios and semantic structure
+
+## Component Integration
+
+The `CustomPortableText` component automatically uses these utility classes based on the `variant` prop, eliminating the need to manually specify prose classes. This ensures consistency across all Portable Text content in the application.
