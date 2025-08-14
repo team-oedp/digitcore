@@ -105,19 +105,24 @@ describe("CarrierBagStore", () => {
 	});
 
 	describe("pattern management", () => {
-		it("should add pattern to bag", () => {
+		it("should add pattern to bag and automatically open sidebar", () => {
 			const store = createCarrierBagStore();
 			const { addPattern } = store.getState();
+
+			// Initially sidebar should be closed
+			expect(store.getState().isOpen).toBe(false);
 
 			act(() => {
 				addPattern(mockPattern1, "Test notes");
 			});
 
-			const { items } = store.getState();
+			const { items, isOpen } = store.getState();
 			expect(items).toHaveLength(1);
 			expect(items[0]?.pattern).toEqual(mockPattern1);
 			expect(items[0]?.notes).toBe("Test notes");
 			expect(typeof items[0]?.dateAdded).toBe("string");
+			// Sidebar should automatically open after adding pattern
+			expect(isOpen).toBe(true);
 		});
 
 		it("should add pattern without notes", () => {
@@ -133,33 +138,63 @@ describe("CarrierBagStore", () => {
 			expect(items[0]?.notes).toBeUndefined();
 		});
 
-		it("should not add duplicate patterns", () => {
+		it("should not add duplicate patterns and not reopen sidebar", () => {
 			const store = createCarrierBagStore();
-			const { addPattern } = store.getState();
+			const { addPattern, setOpen } = store.getState();
 
 			act(() => {
 				addPattern(mockPattern1, "First notes");
+			});
+
+			expect(store.getState().isOpen).toBe(true);
+			expect(store.getState().items).toHaveLength(1);
+
+			// Manually close sidebar
+			act(() => {
+				setOpen(false);
+			});
+
+			expect(store.getState().isOpen).toBe(false);
+
+			// Try to add same pattern again
+			act(() => {
 				addPattern(mockPattern1, "Second notes");
 			});
 
-			const { items } = store.getState();
+			const { items, isOpen } = store.getState();
 			expect(items).toHaveLength(1);
-			expect(items[0]?.notes).toBe("First notes");
+			expect(items[0]?.notes).toBe("First notes"); // Original notes preserved
+			expect(isOpen).toBe(false); // Sidebar should not reopen for duplicates
 		});
 
-		it("should add multiple different patterns", () => {
+		it("should add multiple different patterns and reopen sidebar", () => {
 			const store = createCarrierBagStore();
-			const { addPattern } = store.getState();
+			const { addPattern, setOpen } = store.getState();
 
 			act(() => {
 				addPattern(mockPattern1, "Notes 1");
+			});
+
+			expect(store.getState().isOpen).toBe(true);
+			expect(store.getState().items).toHaveLength(1);
+
+			// Manually close sidebar
+			act(() => {
+				setOpen(false);
+			});
+
+			expect(store.getState().isOpen).toBe(false);
+
+			// Add different pattern
+			act(() => {
 				addPattern(mockPattern2, "Notes 2");
 			});
 
-			const { items } = store.getState();
+			const { items, isOpen } = store.getState();
 			expect(items).toHaveLength(2);
 			expect(items[0]?.pattern._id).toBe("pattern-1");
 			expect(items[1]?.pattern._id).toBe("pattern-2");
+			expect(isOpen).toBe(true); // Sidebar should reopen for new patterns
 		});
 
 		it("should remove pattern from bag", () => {
