@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { SearchClientWrapper } from "~/components/pages/search/search-client-wrapper";
 import {
 	SearchInterfaceSkeleton,
 	SearchInterfaceWrapper,
 } from "~/components/pages/search/search-interface-wrapper";
-import { SearchResultsServer } from "~/components/pages/search/search-results-server";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
 import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
@@ -55,7 +55,7 @@ export default async function SearchPage({
 				<Suspense
 					fallback={<div className="h-32 animate-pulse rounded bg-zinc-100" />}
 				>
-					<SearchResultsServer searchParamsPromise={searchParams} />
+					<SearchClientWrapper />
 				</Suspense>
 			</div>
 		</PageWrapper>

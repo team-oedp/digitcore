@@ -51,7 +51,7 @@ export function TagsList({
 										{tag.name}
 									</h3>
 
-									<p className="mb-4 text-base text-neutral-500 leading-relaxed">
+									<p className="mb-4 text-neutral-500 text-sm leading-relaxed">
 										Tagged to the following pages. Showing first{" "}
 										{Math.min(tag.resources.length, 10)} links.
 									</p>
@@ -63,7 +63,7 @@ export function TagsList({
 												href={`/pattern/${resource.slug}`}
 												className="flex h-6 items-center gap-2.5 rounded-lg border border-[#d1a7f3] bg-[#ead1fa] py-2 pr-3 pl-[9px] transition-opacity hover:opacity-80"
 											>
-												<span className="whitespace-nowrap text-[#4f065f] text-base">
+												<span className="whitespace-nowrap text-[#4f065f] text-sm">
 													{resource.title}
 												</span>
 											</Link>
