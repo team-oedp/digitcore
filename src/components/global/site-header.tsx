@@ -1,11 +1,11 @@
 "use client";
 
 import { SidebarRightIcon } from "@hugeicons/core-free-icons";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
-import { useSidebar } from "~/components/ui/sidebar";
 import { useHydration } from "~/hooks/use-hydration";
 import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
@@ -15,7 +15,6 @@ import { ModeToggle } from "../theme/mode-toggle";
 import { CommandMenu } from "./command-menu";
 
 export function SiteHeader() {
-	const { toggleSidebar } = useSidebar();
 	const isModalMode = useCarrierBagStore((state) => state.isModalMode);
 	const toggleModalMode = useCarrierBagStore((state) => state.toggleModalMode);
 	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
@@ -38,13 +37,16 @@ export function SiteHeader() {
 		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-primary-foreground">
 			<nav className="flex w-full items-center justify-between gap-3.5 px-3.5 py-1.5">
 				<div className="flex w-full items-center gap-10">
-					<Button
-						variant="link"
-						asChild
-						className="flex h-auto items-center gap-3.5 px-3 py-2 text-foreground"
-					>
-						<Link href="/" className="text-sm uppercase">
-							Digitcore
+					<Button variant="link" asChild>
+						<Link href="/" className="space-x-3.5">
+							<Image
+								src="/pattern-logo.svg"
+								alt="Digitcore Logo"
+								width={16}
+								height={16}
+								className="h-full w-full"
+							/>
+							<span className="text-primary text-sm uppercase">Digitcore</span>
 						</Link>
 					</Button>
 
@@ -164,13 +166,11 @@ export function SiteHeader() {
 								? "cursor-not-allowed opacity-50"
 								: "hover:bg-main-foreground/40 dark:hover:border-white/10 dark:hover:bg-main-foreground/20",
 						)}
-						onClick={
-							isOnCarrierBagRoute
-								? undefined
-								: isModalMode
-									? toggleOpen
-									: toggleSidebar
-						}
+					onClick={
+						isOnCarrierBagRoute
+							? undefined
+							: toggleOpen
+					}
 						disabled={isOnCarrierBagRoute}
 						title={
 							isOnCarrierBagRoute

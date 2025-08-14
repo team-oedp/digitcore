@@ -27,7 +27,7 @@ export function LetterNavigation<T>({
 	const effectiveActive = activeLetter ?? firstAvailableLetter ?? undefined;
 
 	return (
-		<div className="fixed left-8 z-20 hidden lg:block">
+		<div className="z-20 hidden lg:block">
 			<div className="flex flex-col">
 				{ALPHABET.map((letter) => {
 					const hasItems = (itemsByLetter[letter]?.length ?? 0) > 0;

@@ -194,7 +194,7 @@ function PatternSearchResult({
 				{descriptionResult.text && (
 					<div className="mb-4">
 						{/* Replace dangerouslySetInnerHTML with React-based rendering */}
-						<span className="text-sm text-zinc-600 leading-relaxed">
+						<span className="text-base text-zinc-600 leading-relaxed">
 							{renderHighlightedText(displayDescription, searchTerm)}
 						</span>
 
@@ -226,7 +226,7 @@ function PatternSearchResult({
 						{descriptionResult.isTruncated && (
 							<button
 								onClick={() => setShowFullDescription(!showFullDescription)}
-								className="mt-2 text-blue-600 text-xs hover:text-blue-800"
+								className="ml-2 text-base text-blue-600 leading-relaxed hover:text-blue-800"
 								type="button"
 							>
 								{showFullDescription ? "Show less" : "Show more"}

@@ -232,7 +232,9 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 													>
 														<div className="flex items-center gap-2">
 															<Icon icon={item.icon} />
-															<span className="capitalize">{item.label}</span>
+															<span className="text-sm capitalize">
+																{item.label}
+															</span>
 														</div>
 													</button>
 												</SidebarMenuButton>
@@ -248,7 +250,9 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 														>
 															<div className="flex items-center gap-2">
 																<Icon icon={item.icon} />
-																<span className="capitalize">{item.label}</span>
+																<span className="text-sm capitalize">
+																	{item.label}
+																</span>
 															</div>
 														</button>
 													</SidebarMenuButton>
@@ -261,11 +265,11 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 														<input
 															readOnly
 															value={shareUrl}
-															className="w-full rounded-md border border-border bg-muted px-2 py-1 text-xs"
+															className="w-full rounded-md border border-border bg-muted px-2 py-1 text-base"
 														/>
 														<div className="grid grid-cols-3 gap-2">
 															<Button
-																variant="outline"
+																variant="secondary"
 																size="sm"
 																onClick={() =>
 																	window.open(
@@ -278,7 +282,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 																<FacebookIcon />
 															</Button>
 															<Button
-																variant="outline"
+																variant="secondary"
 																size="sm"
 																onClick={() =>
 																	window.open(
@@ -291,7 +295,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 																<LinkedInIcon />
 															</Button>
 															<Button
-																variant="outline"
+																variant="secondary"
 																size="sm"
 																onClick={() =>
 																	window.open(
@@ -314,15 +318,19 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 													value={shareUrl}
 													disabled={items.length === 0}
 													copiedChildren={
-														<div className="flex items-center gap-2">
+														<div className="flex items-start justify-start gap-2">
 															<Icon icon={Tick02Icon} />
-															<span className="capitalize">Link Copied</span>
+															<span className="w-fit text-sm capitalize">
+																Link Copied
+															</span>
 														</div>
 													}
 												>
 													<div className="flex items-center gap-2">
 														<Icon icon={item.icon} />
-														<span className="capitalize">{item.label}</span>
+														<span className="text-sm capitalize">
+															{item.label}
+														</span>
 													</div>
 												</CopyButton>
 											</SidebarMenuButton>
@@ -338,7 +346,9 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 												>
 													<div className="flex items-center gap-2">
 														<Icon icon={item.icon} />
-														<span className="capitalize">{item.label}</span>
+														<span className="text-sm capitalize">
+															{item.label}
+														</span>
 													</div>
 												</button>
 											</SidebarMenuButton>
@@ -354,11 +364,11 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 								<CardContent className="px-4">
 									{data?.information && data.information.length > 0 ? (
 										<CustomPortableText
-											className="text-xs"
+											className="text-sm"
 											value={data.information as unknown as never}
 										/>
 									) : (
-										<p className="text-xs">{uiData.context.text}</p>
+										<p className="text-sm">{uiData.context.text}</p>
 									)}
 								</CardContent>
 								<CardFooter className="m-0 flex justify-start px-4 pt-2">

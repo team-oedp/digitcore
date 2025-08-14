@@ -51,7 +51,7 @@ export const createCarrierBagStore = () =>
 						notes,
 					};
 
-					set({ items: [...items, newItem] });
+					set({ items: [...items, newItem], isOpen: true });
 				},
 
 				removePattern: (patternId: string) => {

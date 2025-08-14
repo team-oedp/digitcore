@@ -1,6 +1,7 @@
 "use client";
 
 import type * as React from "react";
+import { useEffect } from "react";
 
 import {
 	Cancel01Icon,
@@ -12,6 +13,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Reorder } from "motion/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
@@ -34,20 +36,30 @@ export function CarrierBagSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
 	const isHydrated = useCarrierBagStore((state) => state.isHydrated);
 	const isOpen = useCarrierBagStore((state) => state.isOpen);
+	const setOpen = useCarrierBagStore((state) => state.setOpen);
+	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
 	const items = useCarrierBagStore((state) => state.items);
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
 	const setItems = useCarrierBagStore((state) => state.setItems);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const documentData = useCarrierBagDocument(items);
-	const { toggleSidebar } = useSidebar();
+	const { setOpen: setSidebarOpen } = useSidebar();
+	const router = useRouter();
+
+	// Sync Zustand store state to Sidebar component state
+	// This is a one-way sync: Zustand store → Sidebar component
+	useEffect(() => {
+		if (!isHydrated) return;
+		setSidebarOpen(isOpen);
+	}, [isOpen, setSidebarOpen, isHydrated]);
 
 	const handleRemoveItem = (patternId: string) => {
 		removePattern(patternId);
 	};
 
-	const handleExpandItem = (slug: string) => {
-		// Navigate to pattern page
-		window.location.href = `/pattern/${slug}`;
+	const handleVisitItem = (slug?: string) => {
+		if (!slug) return;
+		router.push(`/pattern/${slug}`);
 	};
 
 	const handleDownloadJson = () => {
@@ -111,7 +123,7 @@ export function CarrierBagSidebar({
 								type="button"
 								aria-label="Expand Sidebar"
 								tabIndex={0}
-								onClick={toggleSidebar}
+								onClick={toggleOpen}
 							>
 								<Icon icon={FolderLibraryIcon} size={16} />
 							</Button>
@@ -122,7 +134,7 @@ export function CarrierBagSidebar({
 							className="h-8 w-8 p-0"
 							type="button"
 							aria-label="Close Sidebar"
-							onClick={toggleSidebar}
+							onClick={() => setOpen(false)}
 						>
 							<Icon icon={Cancel01Icon} size={16} />
 						</Button>
@@ -174,8 +186,8 @@ export function CarrierBagSidebar({
 											<CarrierBagItem
 												item={itemData}
 												onRemove={() => handleRemoveItem(item.pattern._id)}
-												onExpand={() =>
-													handleExpandItem(item.pattern.slug?.current || "")
+												onVisit={() =>
+													handleVisitItem(item.pattern.slug?.current)
 												}
 											/>
 										</Reorder.Item>
