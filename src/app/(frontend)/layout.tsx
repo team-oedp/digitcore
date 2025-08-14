@@ -5,8 +5,7 @@ import { VisualEditing } from "next-sanity";
 import { draftMode } from "next/headers";
 import { sans } from "~/app/(frontend)/fonts";
 import { DisableDraftMode } from "~/components/global/disable-draft-mode";
-import { LayoutUI } from "~/components/global/layout-ui";
-import { ResponsiveWrapper } from "~/components/global/responsive-wrapper";
+import { SiteLayout } from "~/components/global/site-layout";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
@@ -44,9 +43,7 @@ export default async function Layout({
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
 							<PageContentStoreProvider>
-								<LayoutUI>
-									<ResponsiveWrapper>{children}</ResponsiveWrapper>
-								</LayoutUI>
+								<SiteLayout>{children}</SiteLayout>
 							</PageContentStoreProvider>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>
