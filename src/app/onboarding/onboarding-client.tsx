@@ -110,7 +110,7 @@ function ActionButton({
 	dashed?: boolean;
 }) {
 	const baseClass =
-		"relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-2 text-left text-foreground text-md uppercase font-light transition-colors hover:bg-neutral-100";
+		"relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-2 text-left text-foreground text-lg uppercase font-light transition-colors hover:bg-neutral-100";
 
 	if (href) {
 		return (
@@ -229,7 +229,7 @@ function OnboardingInner({
 							} catch {}
 						}}
 					>
-						<span className="text-sm">Skip onboarding</span>
+						<span className="text-xs">Skip onboarding</span>
 					</ActionButton>
 				</div>
 
@@ -345,7 +345,7 @@ function Slide({
 					onNavigateSlide={onNavigateSlide}
 				/>
 				<div className="min-h-0 flex-1">{children}</div>
-				<footer className="pt-8 text-left text-base text-foreground">
+				<footer className="pt-8 text-left text-foreground text-sm">
 					Open Environmental Data Project
 				</footer>
 			</div>
@@ -404,12 +404,12 @@ function Slide1({
 	return (
 		<Slide currentSlide={1} onNavigateSlide={onNavigateSlide} asset={asset}>
 			<div className="space-y-8">
-				<h1 className="font-light text-foreground text-md leading-relaxed">
+				<h1 className="font-light text-2xl text-foreground leading-relaxed">
 					{onboardingTitle ||
 						"Welcome to the Digital Toolkit for Collaborative Environmental Research, or, DIGITCORE!"}
 				</h1>
 
-				<div className="space-y-6 font-light text-foreground text-md leading-relaxed">
+				<div className="space-y-6 font-light text-foreground text-lg leading-relaxed">
 					<p>
 						DIGITCORE outlines challenges, problems, and phenomena experienced
 						or observed by community organizations, researchers, and open source
@@ -442,9 +442,7 @@ function Slide1({
 					</ActionButton>
 
 					<div>
-						<p className="mb-2 text-base text-foreground">
-							Or, go directly to:
-						</p>
+						<p className="mb-2 text-foreground text-sm">Or, go directly to:</p>
 						{patternSlug ? (
 							<ActionButton
 								href={`/pattern/${patternSlug}`}
@@ -538,12 +536,12 @@ function Slide2({
 	return (
 		<Slide currentSlide={2} onNavigateSlide={onNavigateSlide} asset={asset}>
 			<div className="space-y-6">
-				<h1 className="font-light text-foreground text-md leading-relaxed">
+				<h1 className="font-light text-2xl text-foreground leading-relaxed">
 					The toolkit groups together distinct needs, practices, and realities
 					that different audiences experience and navigate.
 				</h1>
 
-				<div className="space-y-4 font-light text-foreground text-md leading-relaxed">
+				<div className="space-y-4 font-light text-foreground text-lg leading-relaxed">
 					<p>Please select which audience groups are most relevant to you.</p>
 
 					{/* Audience buttons embedded in the text flow */}
@@ -554,7 +552,7 @@ function Slide2({
 								type="button"
 								onClick={() => toggleAudience(opt.value)}
 								className={cn(
-									"relative overflow-hidden rounded-lg border-2 border-transparent px-3 py-1.5 text-foreground text-md uppercase transition-colors",
+									"relative overflow-hidden rounded-lg border-2 border-transparent px-3 py-1.5 text-base text-foreground uppercase transition-colors",
 									selectedAudienceIds.includes(opt.value)
 										? "bg-neutral-300"
 										: "bg-primary-foreground hover:bg-neutral-100",
@@ -571,20 +569,20 @@ function Slide2({
 					<div className="flex items-center gap-2">
 						{selectedAudienceIds.length === 0 ? (
 							<>
-								<span className="font-light text-foreground text-md">
+								<span className="font-light text-foreground text-xl">
 									Select your
 								</span>
 								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-1.5 font-light text-base text-foreground uppercase">
 									AUDIENCE TYPE
 									<DashedBorder />
 								</span>
-								<span className="font-light text-foreground text-md">
+								<span className="font-light text-foreground text-xl">
 									to continue.
 								</span>
 							</>
 						) : (
 							<>
-								<span className="font-light text-foreground text-md capitalize">
+								<span className="font-light text-foreground text-xl capitalize">
 									Click
 								</span>
 								<button
@@ -595,7 +593,7 @@ function Slide2({
 									NEXT
 									<DashedBorder />
 								</button>
-								<span className="font-light text-foreground text-md">
+								<span className="font-light text-foreground text-xl">
 									to continue.
 								</span>
 							</>
@@ -603,7 +601,7 @@ function Slide2({
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="font-light text-foreground text-md">Or, go</span>
+						<span className="font-light text-foreground text-xl">Or, go</span>
 						<button
 							type="button"
 							onClick={goToSlide1}
@@ -612,7 +610,7 @@ function Slide2({
 							BACK
 							<DashedBorder />
 						</button>
-						<span className="font-light text-foreground text-md">
+						<span className="font-light text-foreground text-xl">
 							to the previous step.
 						</span>
 					</div>
@@ -669,12 +667,12 @@ function Slide3({
 	return (
 		<Slide currentSlide={3} onNavigateSlide={onNavigateSlide} asset={asset}>
 			<div className="space-y-8">
-				<h1 className="font-light text-2md text-foreground leading-relaxed">
+				<h1 className="font-light text-2xl text-foreground leading-relaxed">
 					Through our research, several themes emerged that have helped organize
 					the patterns we surfaced.
 				</h1>
 
-				<h2 className="font-light text-2md text-foreground leading-relaxed">
+				<h2 className="font-light text-2xl text-foreground leading-relaxed">
 					What interests you?
 				</h2>
 
@@ -686,7 +684,7 @@ function Slide3({
 							key={opt.value}
 							onClick={() => toggleTheme(opt.value)}
 							className={cn(
-								"relative overflow-hidden rounded-lg border-2 border-transparent px-3 py-1.5 font-light text-foreground text-md uppercase transition-colors",
+								"relative overflow-hidden rounded-lg border-2 border-transparent px-3 py-1.5 font-light text-base text-foreground uppercase transition-colors",
 								selectedThemeIds.includes(opt.value)
 									? "bg-neutral-300"
 									: "bg-primary-foreground hover:bg-neutral-100",
@@ -702,20 +700,20 @@ function Slide3({
 					<div className="flex items-center gap-2">
 						{selectedThemeIds.length === 0 ? (
 							<>
-								<span className="font-light text-foreground text-md">
+								<span className="font-light text-foreground text-xl">
 									Select a
 								</span>
 								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-1.5 font-light text-base text-foreground uppercase">
 									THEME
 									<DashedBorder />
 								</span>
-								<span className="font-light text-foreground text-md">
+								<span className="font-light text-foreground text-xl">
 									that interests you to continue.
 								</span>
 							</>
 						) : (
 							<>
-								<span className="font-light text-foreground text-md capitalize">
+								<span className="font-light text-foreground text-xl capitalize">
 									click
 								</span>
 								<Link
@@ -740,7 +738,7 @@ function Slide3({
 									FINISH
 									<DashedBorder />
 								</Link>
-								<span className="font-light text-foreground text-md">
+								<span className="font-light text-foreground text-xl">
 									to continue to the toolkit.
 								</span>
 							</>
@@ -748,7 +746,7 @@ function Slide3({
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="font-light text-foreground text-md">Or, go</span>
+						<span className="font-light text-foreground text-xl">Or, go</span>
 						<button
 							type="button"
 							onClick={goToSlide2}
@@ -757,7 +755,7 @@ function Slide3({
 							BACK
 							<DashedBorder />
 						</button>
-						<span className="font-light text-foreground text-md">
+						<span className="font-light text-foreground text-xl">
 							to the previous step.
 						</span>
 					</div>

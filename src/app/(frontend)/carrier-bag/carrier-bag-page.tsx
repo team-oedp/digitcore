@@ -86,7 +86,7 @@ function CloseCarrierBagButton() {
 				router.push("/");
 			}}
 		>
-			<span className="text-sm uppercase">Close carrier bag</span>
+			<span className="text-xs uppercase">Close carrier bag</span>
 		</Button>
 	);
 }
@@ -232,7 +232,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 													>
 														<div className="flex items-center gap-2">
 															<Icon icon={item.icon} />
-															<span className="text-base capitalize">
+															<span className="text-sm capitalize">
 																{item.label}
 															</span>
 														</div>
@@ -250,7 +250,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 														>
 															<div className="flex items-center gap-2">
 																<Icon icon={item.icon} />
-																<span className="text-base capitalize">
+																<span className="text-sm capitalize">
 																	{item.label}
 																</span>
 															</div>
@@ -320,7 +320,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 													copiedChildren={
 														<div className="flex items-start justify-start gap-2">
 															<Icon icon={Tick02Icon} />
-															<span className="w-fit text-base capitalize">
+															<span className="w-fit text-sm capitalize">
 																Link Copied
 															</span>
 														</div>
@@ -328,7 +328,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 												>
 													<div className="flex items-center gap-2">
 														<Icon icon={item.icon} />
-														<span className="text-base capitalize">
+														<span className="text-sm capitalize">
 															{item.label}
 														</span>
 													</div>
@@ -346,7 +346,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 												>
 													<div className="flex items-center gap-2">
 														<Icon icon={item.icon} />
-														<span className="text-base capitalize">
+														<span className="text-sm capitalize">
 															{item.label}
 														</span>
 													</div>
@@ -364,18 +364,18 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 								<CardContent className="px-4">
 									{data?.information && data.information.length > 0 ? (
 										<CustomPortableText
-											className="text-base"
+											className="text-sm"
 											value={data.information as unknown as never}
 										/>
 									) : (
-										<p className="text-base">{uiData.context.text}</p>
+										<p className="text-sm">{uiData.context.text}</p>
 									)}
 								</CardContent>
 								<CardFooter className="m-0 flex justify-start px-4 pt-2">
 									<Button variant="link" size="inline" asChild>
 										<Link href="/">
 											<Icon icon={Book02Icon} />
-											<span className="text-sm uppercase">Read more</span>
+											<span className="text-xs uppercase">Read more</span>
 										</Link>
 									</Button>
 								</CardFooter>

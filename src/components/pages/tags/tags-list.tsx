@@ -38,7 +38,7 @@ export function TagsList({
 					return (
 						<section
 							key={letter}
-							className="max-w-4xl scroll-mt-42 space-y-8"
+							className="max-w-4xl scroll-mt-40 space-y-8"
 							id={`letter-${letter}`}
 						>
 							<h2 className="font-normal text-lg text-neutral-500 uppercase tracking-wide">

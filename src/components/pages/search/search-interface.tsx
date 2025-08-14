@@ -224,13 +224,13 @@ export function SearchInterface({
 							onChange={(e) => handleSearchChange(e.target.value)}
 							onKeyDown={handleKeyDown}
 							placeholder="Start typing to search patterns, solutions, and resources..."
-							className="h-8 rounded-none border-0 border-zinc-300 border-b bg-transparent px-0 py-1 pr-16 text-base text-zinc-500 shadow-none placeholder:text-zinc-500 focus-visible:border-zinc-300 focus-visible:ring-0 focus-visible:ring-offset-0"
+							className="h-8 rounded-none border-0 border-zinc-300 border-b bg-transparent px-0 py-1 pr-16 text-sm text-zinc-500 shadow-none placeholder:text-zinc-500 focus-visible:border-zinc-300 focus-visible:ring-0 focus-visible:ring-offset-0"
 						/>
 						{searchTerm && (
 							<button
 								onClick={() => handleSearchChange("")}
 								type="button"
-								className="absolute right-0 cursor-pointer text-base text-zinc-400 transition-colors hover:text-zinc-600"
+								className="absolute right-0 cursor-pointer text-sm text-zinc-400 transition-colors hover:text-zinc-600"
 								title="Clear search"
 							>
 								Clear

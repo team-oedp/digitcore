@@ -34,7 +34,7 @@ export function LetterNavigation<T>({
 					const isActive = effectiveActive === letter;
 
 					const baseClasses =
-						"block text-base text-center leading-none py-1 transition-all duration-200";
+						"block text-sm text-center leading-none py-1 transition-all duration-200";
 
 					// Determine the appropriate classes based on state
 					let stateClasses = "";

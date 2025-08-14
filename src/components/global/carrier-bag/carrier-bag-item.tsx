@@ -28,13 +28,13 @@ export type CarrierBagItemData = {
 export type CarrierBagItemProps = {
 	item: CarrierBagItemData;
 	onRemove?: (id: string) => void;
-	onExpand?: (id: string) => void;
+	onVisit?: (slug?: string) => void;
 };
 
 export function CarrierBagItem({
 	item,
 	onRemove,
-	onExpand,
+	onVisit,
 }: CarrierBagItemProps) {
 	return (
 		<div className="flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2.5 transition-colors hover:bg-muted/50 [&:hover_.actions]:opacity-100">
@@ -96,8 +96,9 @@ export function CarrierBagItem({
 					variant="ghost"
 					size="sm"
 					className="h-6 w-6 p-0 hover:bg-neutral-200 dark:hover:bg-neutral-800"
-					onClick={() => onExpand?.(item.id)}
-					aria-label={`Expand ${item.title}`}
+					onClick={() => onVisit?.(item.slug)}
+					disabled={!item.slug}
+					aria-label={`Visit ${item.title}`}
 				>
 					<Icon icon={CircleArrowRight01Icon} size={14} />
 				</Button>

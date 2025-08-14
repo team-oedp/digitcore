@@ -96,25 +96,18 @@ export default async function PatternPage({ params }: PatternPageProps) {
 
 	return (
 		<PatternContentProvider pattern={pattern}>
-			<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
-				<div className="flex items-start justify-between gap-6">
-					<div className="flex-1">
-						<PageHeader
-							title={pattern.title || ""}
-							slug={
-								typeof pattern.slug === "string"
-									? pattern.slug
-									: (pattern.slug as Slug | null)?.current || ""
-							}
-							pattern={pattern as unknown as Pattern}
-						/>
-					</div>
-				</div>
-			</div>
-
-			<PageWrapper>
-				<div className="space-y-12 pt-28">
-					<div className="lg:pl-20">
+			<PageWrapper className="space-y-4">
+				<PageHeader
+					title={pattern.title || ""}
+					slug={
+						typeof pattern.slug === "string"
+							? pattern.slug
+							: (pattern.slug as Slug | null)?.current || ""
+					}
+					pattern={pattern as unknown as Pattern}
+				/>
+				<div className="space-y-12">
+					<div>
 						<CustomPortableText
 							value={pattern.description as PortableTextBlock[]}
 							className="prose prose-neutral max-w-none"

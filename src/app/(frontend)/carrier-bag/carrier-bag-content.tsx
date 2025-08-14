@@ -1,6 +1,7 @@
 "use client";
 
 import { Reorder } from "motion/react";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
 	CarrierBagItem,
@@ -48,6 +49,7 @@ type PatternWithFlexibleRefs = Pattern & {
 	tags?: RefOrDoc[];
 	audiences?: RefOrDoc[];
 	theme?: RefOrDoc;
+	themes?: RefOrDoc[];
 } & PatternWithFlexibleSlug;
 
 function getSlugString(p: PatternWithFlexibleSlug): string | undefined {
@@ -60,6 +62,7 @@ export function CarrierBagContent() {
 	const items = useCarrierBagStore((state) => state.items);
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
 	const setItems = useCarrierBagStore((state) => state.setItems);
+	const router = useRouter();
 
 	// UI state
 	const [sortBy, setSortBy] = useState<"az" | "za">("az");
@@ -158,9 +161,9 @@ export function CarrierBagContent() {
 		removePattern(patternId);
 	};
 
-	const handleExpandItem = (slug: string) => {
-		// Navigate to pattern page
-		window.location.href = `/pattern/${slug}`;
+	const handleVisitItem = (slug?: string) => {
+		if (!slug) return;
+		router.push(`/pattern/${slug}`);
 	};
 
 	const clearAll = () => {
@@ -177,13 +180,13 @@ export function CarrierBagContent() {
 				<div className="flex items-start justify-between gap-6">
 					<div className="flex-1">
 						<h2 className="font-normal text-2xl">Carrier Bag</h2>
-						<p className="font-normal text-base">{`${items.length} saved items`}</p>
+						<p className="font-normal text-sm">{`${items.length} saved items`}</p>
 					</div>
 				</div>
 			</div>
 
 			<div className="flex flex-wrap items-center gap-2">
-				<h3 className="font-normal text-base text-foreground">Filters</h3>
+				<h3 className="font-normal text-foreground text-sm">Filters</h3>
 
 				{/* Sort by */}
 				<Select
@@ -256,7 +259,7 @@ export function CarrierBagContent() {
 
 				<Button
 					variant="ghost"
-					className="text-base text-muted-foreground hover:text-foreground"
+					className="text-muted-foreground hover:text-foreground"
 					onClick={clearAll}
 				>
 					Clear all
@@ -295,14 +298,20 @@ export function CarrierBagContent() {
 									title: pattern.title || "Untitled Pattern",
 									subtitle: themeTitle,
 								};
+								try {
+									console.log("[CarrierBag] item", {
+										id: pattern._id,
+										title: pattern.title,
+										theme: (pattern as unknown as { theme?: unknown }).theme,
+										themeTitle,
+									});
+								} catch (_err) {}
 								return (
 									<CarrierBagItem
 										key={pattern._id}
 										item={itemData}
 										onRemove={() => handleRemoveItem(pattern._id)}
-										onExpand={() =>
-											handleExpandItem(getSlugString(pattern) || "")
-										}
+										onVisit={() => handleVisitItem(getSlugString(pattern))}
 									/>
 								);
 							})}
@@ -341,6 +350,14 @@ export function CarrierBagContent() {
 								title: pattern.title || "Untitled Pattern",
 								subtitle: themeTitle,
 							};
+							try {
+								console.log("[CarrierBag] item", {
+									id: pattern._id,
+									title: pattern.title,
+									theme: (pattern as unknown as { theme?: unknown }).theme,
+									themeTitle,
+								});
+							} catch (_err) {}
 							return (
 								<Reorder.Item
 									as="div"
@@ -352,9 +369,7 @@ export function CarrierBagContent() {
 										key={pattern._id}
 										item={itemData}
 										onRemove={() => handleRemoveItem(pattern._id)}
-										onExpand={() =>
-											handleExpandItem(getSlugString(pattern) || "")
-										}
+										onVisit={() => handleVisitItem(getSlugString(pattern))}
 									/>
 								</Reorder.Item>
 							);

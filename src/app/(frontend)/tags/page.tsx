@@ -92,9 +92,12 @@ export default async function Tags() {
 				{/* Sticky nav and section indicator */}
 				<div className="sticky top-6 z-10 h-full self-start">
 					<div className="flex flex-col items-start justify-start gap-5">
+						{/* Anchor used as the intersection threshold for current-letter detection */}
+						<div id="letter-anchor" />
 						<CurrentLetterIndicator
 							availableLetters={Object.keys(tagsByLetter)}
 							contentId="tags-content"
+							// implicit anchorId defaults to 'letter-anchor'
 						/>
 						<div className="lg:pl-2">
 							<LetterNavigation
