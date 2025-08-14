@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { useDebounce } from "use-debounce";
 import { fetchFilterOptions } from "~/app/actions/filter-options";
-import type { SearchPattern } from "~/app/actions/search";
-import { searchPatternsWithParams } from "~/app/actions/search";
+import type { SearchPattern, SearchSolution, SearchResource, SearchTag } from "~/app/actions/search";
+import { searchContentForCommandModal } from "~/app/actions/search";
 import { usePageContentSearch } from "~/hooks/use-page-content-search";
 
 import {
@@ -106,118 +106,41 @@ export function CommandMenu() {
 		? pathname.split("/").pop()
 		: undefined;
 
-	// Global search using server-side search action
+	// Comprehensive search using enhanced server-side search action
 	const [query, setQuery] = useState("");
-	const [globalResults, setGlobalResults] = useState<SearchPattern[]>([]);
+	const [searchResults, setSearchResults] = useState<{
+		patterns: SearchPattern[];
+		solutions: SearchSolution[];
+		resources: SearchResource[];
+		tags: SearchTag[];
+	}>({ patterns: [], solutions: [], resources: [], tags: [] });
 	const [globalLoading, setGlobalLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [debouncedQuery] = useDebounce(query, 300);
 
-	const [tagResults, setTagResults] = useState<
-		{ value: string; label: string }[]
-	>([]);
-	const [solutionResults, setSolutionResults] = useState<
-		Array<{
-			_id: string;
-			title?: string;
-			description?: Array<unknown>;
-			pattern: SearchPattern;
-		}>
-	>([]);
-	const [resourceResults, setResourceResults] = useState<
-		Array<{
-			_id: string;
-			title?: string;
-			description?: Array<unknown>;
-			solutions?: Array<{
-				_id: string;
-				title?: string;
-			}> | null;
-			solution?: Array<{
-				_id: string;
-				title?: string;
-			}> | null;
-			pattern: SearchPattern;
-		}>
-	>([]);
-
-	// Update search effect to fetch and group all types
+	// Enhanced search effect using comprehensive search
 	useEffect(() => {
 		const performSearch = async () => {
 			if (!debouncedQuery.trim()) {
-				setGlobalResults([]);
-				setTagResults([]);
-				setSolutionResults([]);
-				setResourceResults([]);
+				setSearchResults({ patterns: [], solutions: [], resources: [], tags: [] });
 				setError(null);
 				return;
 			}
 			setGlobalLoading(true);
 			setError(null);
 			try {
-				// Patterns (and their solutions/resources)
-				const searchParams = new URLSearchParams();
-				searchParams.set("q", debouncedQuery.trim());
-				searchParams.set("limit", "10");
-				const result = await searchPatternsWithParams(searchParams);
-				let patterns: SearchPattern[] = [];
-				const solutions: Array<{
-					_id: string;
-					title?: string;
-					description?: Array<unknown>;
-					pattern: SearchPattern;
-				}> = [];
-				const resources: Array<{
-					_id: string;
-					title?: string;
-					description?: Array<unknown>;
-					solutions?: Array<{
-						_id: string;
-						title?: string;
-					}> | null;
-					solution?: Array<{
-						_id: string;
-						title?: string;
-					}> | null;
-					pattern: SearchPattern;
-				}> = [];
+				// Use direct search function for command modal
+				const result = await searchContentForCommandModal(debouncedQuery.trim());
+				
 				if (result.success && result.data) {
-					patterns = result.data;
-					// Extract solutions/resources from patterns
-					for (const pattern of patterns) {
-						if (pattern.solutions) {
-							for (const sol of pattern.solutions) {
-								solutions.push({ ...sol, pattern });
-							}
-						}
-						if (pattern.resources) {
-							for (const res of pattern.resources) {
-								resources.push({ ...res, pattern });
-							}
-						}
-					}
-				}
-				setGlobalResults(patterns);
-				setSolutionResults(solutions);
-				setResourceResults(resources);
-				// Tags
-				const tagFetch = await fetchFilterOptions();
-				if (tagFetch.success && tagFetch.data) {
-					const filteredTags = tagFetch.data.tags.filter((tag) =>
-						tag.label
-							.toLowerCase()
-							.includes(debouncedQuery.trim().toLowerCase()),
-					);
-					setTagResults(filteredTags);
+					setSearchResults(result.data);
 				} else {
-					setTagResults([]);
+					setError(result.error || "Search failed");
+					setSearchResults({ patterns: [], solutions: [], resources: [], tags: [] });
 				}
 			} catch (err) {
 				setError("Search failed");
-				setGlobalResults([]);
-				setTagResults([]);
-				setSolutionResults([]);
-				setResourceResults([]);
+				setSearchResults({ patterns: [], solutions: [], resources: [], tags: [] });
 			} finally {
 				setGlobalLoading(false);
 			}
@@ -227,7 +150,7 @@ export function CommandMenu() {
 
 	const clearGlobalSearch = () => {
 		setQuery("");
-		setGlobalResults([]);
+		setSearchResults({ patterns: [], solutions: [], resources: [], tags: [] });
 		setError(null);
 	};
 
@@ -248,7 +171,12 @@ export function CommandMenu() {
 	};
 
 	const isLoading = globalLoading || pageLoading;
-	const hasResults = globalResults.length > 0 || pageResults.length > 0;
+	const hasResults = 
+		searchResults.patterns.length > 0 || 
+		searchResults.solutions.length > 0 || 
+		searchResults.resources.length > 0 || 
+		searchResults.tags.length > 0 || 
+		pageResults.length > 0;
 
 	const clearSearch = () => {
 		clearGlobalSearch();
@@ -320,108 +248,7 @@ export function CommandMenu() {
 					) : (
 						<>
 							<CommandEmpty>No results found.</CommandEmpty>
-							{/* Patterns */}
-							{globalResults.length > 0 && (
-								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
-									<CommandGroup heading="Patterns">
-										{globalResults.slice(0, 8).map((result) => (
-											<CommandItem
-												key={`pattern-${result._id}`}
-												value={result.title || ""}
-												onSelect={() => {
-													if (result.slug)
-														router.push(`/pattern/${result.slug}`);
-													setIsOpen(false);
-												}}
-												className="cursor-pointer px-3 py-2"
-											>
-												<div className="flex items-center gap-2">
-													<FileTextIcon className="h-4 w-4 text-muted-foreground" />
-													<span className="truncate text-sm">
-														{result.title}
-													</span>
-												</div>
-											</CommandItem>
-										))}
-									</CommandGroup>
-								</div>
-							)}
-							{/* Solutions */}
-							{solutionResults.length > 0 && (
-								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
-									<CommandGroup heading="Solutions">
-										{solutionResults.slice(0, 8).map((sol) => (
-											<CommandItem
-												key={`solution-${sol._id}`}
-												value={sol.title || ""}
-												onSelect={() => {
-													if (sol.pattern?.slug)
-														router.push(
-															`/pattern/${sol.pattern.slug}#${sol._id}`,
-														);
-													setIsOpen(false);
-												}}
-												className="cursor-pointer px-3 py-2"
-											>
-												<div className="flex items-center gap-2">
-													<div className="h-4 w-4 rounded-full bg-blue-500" />
-													<span className="truncate text-sm">{sol.title}</span>
-												</div>
-											</CommandItem>
-										))}
-									</CommandGroup>
-								</div>
-							)}
-							{/* Resources */}
-							{resourceResults.length > 0 && (
-								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
-									<CommandGroup heading="Resources">
-										{resourceResults.slice(0, 8).map((res) => (
-											<CommandItem
-												key={`resource-${res._id}`}
-												value={res.title || ""}
-												onSelect={() => {
-													if (res.pattern?.slug)
-														router.push(
-															`/pattern/${res.pattern.slug}#${res._id}`,
-														);
-													setIsOpen(false);
-												}}
-												className="cursor-pointer px-3 py-2"
-											>
-												<div className="flex items-center gap-2">
-													<div className="h-4 w-4 rounded-full bg-green-500" />
-													<span className="truncate text-sm">{res.title}</span>
-												</div>
-											</CommandItem>
-										))}
-									</CommandGroup>
-								</div>
-							)}
-							{/* Tags */}
-							{tagResults.length > 0 && (
-								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
-									<CommandGroup heading="Tags">
-										{tagResults.slice(0, 8).map((tag) => (
-											<CommandItem
-												key={`tag-${tag.value}`}
-												value={tag.label}
-												onSelect={() => {
-													router.push(`/tags#${tag.value}`);
-													setIsOpen(false);
-												}}
-												className="cursor-pointer px-3 py-2"
-											>
-												<div className="flex items-center gap-2">
-													<HashIcon className="h-4 w-4 text-muted-foreground" />
-													<span className="truncate text-sm">{tag.label}</span>
-												</div>
-											</CommandItem>
-										))}
-									</CommandGroup>
-								</div>
-							)}
-							{/* Page Content Results - Only show if we have page results */}
+							{/* Page Content Results - Highest priority for current page */}
 							{pageResults.length > 0 && (
 								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
 									<CommandGroup heading="On this page">
@@ -465,6 +292,142 @@ export function CommandMenu() {
 												</CommandItem>
 											);
 										})}
+									</CommandGroup>
+								</div>
+							)}
+							{/* Patterns - Second priority */}
+							{searchResults.patterns.length > 0 && (
+								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
+									<CommandGroup heading="Patterns">
+										{searchResults.patterns.slice(0, 6).map((result) => (
+											<CommandItem
+												key={`pattern-${result._id}`}
+												value={result.title || ""}
+												onSelect={() => {
+													if (result.slug)
+														router.push(`/pattern/${result.slug}`);
+													setIsOpen(false);
+												}}
+												className="cursor-pointer px-3 py-2"
+											>
+												<div className="flex items-center gap-2">
+													<FileTextIcon className="h-4 w-4 text-muted-foreground" />
+													<span className="truncate text-sm">
+														{result.title}
+													</span>
+												</div>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</div>
+							)}
+							{/* Solutions - Third priority */}
+							{searchResults.solutions.length > 0 && (
+								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
+									<CommandGroup heading="Solutions">
+										{searchResults.solutions.slice(0, 6).map((sol) => (
+											<CommandItem
+												key={`solution-${sol._id}`}
+												value={sol.title || ""}
+												onSelect={() => {
+													// Navigate to first parent pattern if available
+													if (sol.patterns && sol.patterns.length > 0) {
+														const firstPattern = sol.patterns[0];
+														if (firstPattern?.slug) {
+															router.push(`/pattern/${firstPattern.slug}#${sol._id}`);
+														}
+													}
+													setIsOpen(false);
+												}}
+												className="cursor-pointer px-3 py-2"
+											>
+												<div className="flex items-center gap-2">
+													<div className="h-4 w-4 rounded-full bg-blue-500" />
+													<div className="flex flex-col">
+														<span className="truncate text-sm">{sol.title}</span>
+														{sol.patterns && sol.patterns.length > 0 && sol.patterns[0]?.title && (
+															<span className="text-xs text-muted-foreground">
+																in {sol.patterns[0].title}
+															</span>
+														)}
+													</div>
+												</div>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</div>
+							)}
+							{/* Resources - Fourth priority */}
+							{searchResults.resources.length > 0 && (
+								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
+									<CommandGroup heading="Resources">
+										{searchResults.resources.slice(0, 6).map((res) => (
+											<CommandItem
+												key={`resource-${res._id}`}
+												value={res.title || ""}
+												onSelect={() => {
+													// Navigate to first parent pattern if available
+													if (res.patterns && res.patterns.length > 0) {
+														const firstPattern = res.patterns[0];
+														if (firstPattern?.slug) {
+															router.push(`/pattern/${firstPattern.slug}#${res._id}`);
+														}
+													}
+													setIsOpen(false);
+												}}
+												className="cursor-pointer px-3 py-2"
+											>
+												<div className="flex items-center gap-2">
+													<div className="h-4 w-4 rounded-full bg-green-500" />
+													<div className="flex flex-col">
+														<span className="truncate text-sm">{res.title}</span>
+														{res.patterns && res.patterns.length > 0 && res.patterns[0]?.title && (
+															<span className="text-xs text-muted-foreground">
+																in {res.patterns[0].title}
+															</span>
+														)}
+													</div>
+												</div>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</div>
+							)}
+							{/* Tags - Fifth priority */}
+							{searchResults.tags.length > 0 && (
+								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
+									<CommandGroup heading="Tags">
+										{searchResults.tags.slice(0, 6).map((tag) => (
+											<CommandItem
+												key={`tag-${tag._id}`}
+												value={tag.title || ""}
+												onSelect={() => {
+													// Navigate to first pattern with this tag, or tags page
+													if (tag.patterns && tag.patterns.length > 0) {
+														const firstPattern = tag.patterns[0];
+														if (firstPattern?.slug) {
+															router.push(`/pattern/${firstPattern.slug}`);
+														}
+													} else {
+														router.push(`/tags#${tag._id}`);
+													}
+													setIsOpen(false);
+												}}
+												className="cursor-pointer px-3 py-2"
+											>
+												<div className="flex items-center gap-2">
+													<HashIcon className="h-4 w-4 text-muted-foreground" />
+													<div className="flex flex-col">
+														<span className="truncate text-sm">{tag.title}</span>
+														{tag.patterns && tag.patterns.length > 0 && (
+															<span className="text-xs text-muted-foreground">
+																{tag.patterns.length} pattern{tag.patterns.length !== 1 ? 's' : ''}
+															</span>
+														)}
+													</div>
+												</div>
+											</CommandItem>
+										))}
 									</CommandGroup>
 								</div>
 							)}
