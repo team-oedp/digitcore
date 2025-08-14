@@ -296,6 +296,7 @@ export function CarrierBagContent() {
 								const itemData: CarrierBagItemData = {
 									id: pattern._id,
 									title: pattern.title || "Untitled Pattern",
+									slug: getSlugString(pattern),
 									subtitle: themeTitle,
 								};
 								try {
@@ -348,6 +349,7 @@ export function CarrierBagContent() {
 							const itemData: CarrierBagItemData = {
 								id: pattern._id,
 								title: pattern.title || "Untitled Pattern",
+								slug: getSlugString(pattern),
 								subtitle: themeTitle,
 							};
 							try {
