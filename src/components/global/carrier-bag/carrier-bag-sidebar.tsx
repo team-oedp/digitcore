@@ -164,9 +164,10 @@ export function CarrierBagSidebar({
 								}}
 							>
 								{items.map((item) => {
-									const slug = typeof item.pattern.slug === 'string' 
-										? item.pattern.slug 
-										: item.pattern.slug?.current;
+									const slug =
+										typeof item.pattern.slug === "string"
+											? item.pattern.slug
+											: item.pattern.slug?.current;
 									const itemData: CarrierBagItemData = {
 										id: item.pattern._id,
 										title: item.pattern.title || "Untitled Pattern",

@@ -312,7 +312,7 @@ export function CarrierBagContent() {
 										key={pattern._id}
 										item={itemData}
 										onRemove={() => handleRemoveItem(pattern._id)}
-										onVisit={() => handleVisitItem(getSlugString(pattern))} 
+										onVisit={() => handleVisitItem(getSlugString(pattern))}
 									/>
 								);
 							})}

@@ -10,7 +10,7 @@ type LinkProps = ComponentProps<typeof Link>;
 vi.mock("next/link", () => ({
 	default: ({ children, href, ...props }: LinkProps) => (
 		<a
-			href={href}
+			href={typeof href === "string" ? href : href?.pathname || ""}
 			{...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
 		>
 			{children}

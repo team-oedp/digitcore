@@ -125,16 +125,16 @@ vi.mock("~/stores/carrier-bag", () => ({
 describe("CarrierBagContent Navigation", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
-		(
-			useCarrierBagStore as jest.MockedFunction<typeof useCarrierBagStore>
-		).mockImplementation((selector: (state: unknown) => unknown) => {
-			const state = {
-				items: mockItems,
-				removePattern: mockRemovePattern,
-				setItems: mockSetItems,
-			};
-			return selector ? selector(state) : state;
-		});
+		(useCarrierBagStore as ReturnType<typeof vi.fn>).mockImplementation(
+			(selector: (state: unknown) => unknown) => {
+				const state = {
+					items: mockItems,
+					removePattern: mockRemovePattern,
+					setItems: mockSetItems,
+				};
+				return selector ? selector(state) : state;
+			},
+		);
 	});
 
 	it("renders carrier bag items with correct titles", () => {
@@ -171,7 +171,9 @@ describe("CarrierBagContent Navigation", () => {
 		const visitButtons = screen.getAllByRole("button", { name: /Visit/i });
 		const patternOneVisitButton = visitButtons[0];
 
-		fireEvent.click(patternOneVisitButton);
+		if (patternOneVisitButton) {
+			fireEvent.click(patternOneVisitButton);
+		}
 
 		await waitFor(() => {
 			expect(mockPush).toHaveBeenCalledWith("/pattern/pattern-one");
@@ -188,7 +190,9 @@ describe("CarrierBagContent Navigation", () => {
 		// The button should be disabled
 		expect(patternWithoutSlugVisitButton).toBeDisabled();
 
-		fireEvent.click(patternWithoutSlugVisitButton);
+		if (patternWithoutSlugVisitButton) {
+			fireEvent.click(patternWithoutSlugVisitButton);
+		}
 
 		await waitFor(() => {
 			expect(mockPush).not.toHaveBeenCalled();
@@ -201,7 +205,9 @@ describe("CarrierBagContent Navigation", () => {
 		const removeButtons = screen.getAllByRole("button", { name: /Remove/i });
 		const patternOneRemoveButton = removeButtons[0];
 
-		fireEvent.click(patternOneRemoveButton);
+		if (patternOneRemoveButton) {
+			fireEvent.click(patternOneRemoveButton);
+		}
 
 		await waitFor(() => {
 			expect(mockRemovePattern).toHaveBeenCalledWith("pattern-1");
@@ -222,16 +228,16 @@ describe("CarrierBagContent Navigation", () => {
 			dateAdded: "2024-01-04",
 		};
 
-		(
-			useCarrierBagStore as jest.MockedFunction<typeof useCarrierBagStore>
-		).mockImplementation((selector: (state: unknown) => unknown) => {
-			const state = {
-				items: [itemWithStringSlug],
-				removePattern: mockRemovePattern,
-				setItems: mockSetItems,
-			};
-			return selector ? selector(state) : state;
-		});
+		(useCarrierBagStore as ReturnType<typeof vi.fn>).mockImplementation(
+			(selector: (state: unknown) => unknown) => {
+				const state = {
+					items: [itemWithStringSlug],
+					removePattern: mockRemovePattern,
+					setItems: mockSetItems,
+				};
+				return selector ? selector(state) : state;
+			},
+		);
 
 		render(<CarrierBagContent />);
 
@@ -260,16 +266,16 @@ describe("CarrierBagContent Navigation", () => {
 	});
 
 	it("shows empty state when no items", () => {
-		(
-			useCarrierBagStore as jest.MockedFunction<typeof useCarrierBagStore>
-		).mockImplementation((selector: (state: unknown) => unknown) => {
-			const state = {
-				items: [],
-				removePattern: mockRemovePattern,
-				setItems: mockSetItems,
-			};
-			return selector ? selector(state) : state;
-		});
+		(useCarrierBagStore as ReturnType<typeof vi.fn>).mockImplementation(
+			(selector: (state: unknown) => unknown) => {
+				const state = {
+					items: [],
+					removePattern: mockRemovePattern,
+					setItems: mockSetItems,
+				};
+				return selector ? selector(state) : state;
+			},
+		);
 
 		render(<CarrierBagContent />);
 
