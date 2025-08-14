@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
-import { useSidebar } from "~/components/ui/sidebar";
 import { useHydration } from "~/hooks/use-hydration";
 import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
@@ -16,7 +15,6 @@ import { ModeToggle } from "../theme/mode-toggle";
 import { CommandMenu } from "./command-menu";
 
 export function SiteHeader() {
-	const { toggleSidebar } = useSidebar();
 	const isModalMode = useCarrierBagStore((state) => state.isModalMode);
 	const toggleModalMode = useCarrierBagStore((state) => state.toggleModalMode);
 	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
@@ -168,13 +166,11 @@ export function SiteHeader() {
 								? "cursor-not-allowed opacity-50"
 								: "hover:bg-main-foreground/40 dark:hover:border-white/10 dark:hover:bg-main-foreground/20",
 						)}
-						onClick={
-							isOnCarrierBagRoute
-								? undefined
-								: isModalMode
-									? toggleOpen
-									: toggleSidebar
-						}
+					onClick={
+						isOnCarrierBagRoute
+							? undefined
+							: toggleOpen
+					}
 						disabled={isOnCarrierBagRoute}
 						title={
 							isOnCarrierBagRoute

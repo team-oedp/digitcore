@@ -18,8 +18,9 @@ export function PageHeader({ title, slug, pattern }: PageHeaderProps) {
 	const PatternIcon = getPatternIconWithMapping(slug || "");
 
 	const addPatternToBag = useCarrierBagStore((s) => s.addPattern);
-	const hasPatternInBag = useCarrierBagStore((s) => s.hasPattern);
-	const isPatternInBag = pattern ? hasPatternInBag(pattern._id) : false;
+	const isPatternInBag = useCarrierBagStore((s) =>
+		pattern ? s.hasPattern(pattern._id) : false,
+	);
 
 	function handleSaveToCarrierBag() {
 		if (!pattern) return;
