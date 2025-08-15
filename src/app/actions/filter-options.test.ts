@@ -1,29 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { client } from "~/sanity/lib/client";
+import { logger } from "~/lib/logger";
 import { type FilterOptionsResult, fetchFilterOptions } from "./filter-options";
 
-// Mock the logger
-const mockLogger = {
-	searchInfo: vi.fn(),
-	groq: vi.fn(),
-	searchError: vi.fn(),
-};
-
 vi.mock("~/lib/logger", () => ({
-	createLogLocation: vi.fn(() => ({
-		file: "filter-options.ts",
-		function: "test",
-	})),
-	logger: mockLogger,
-}));
-
-// Mock the Sanity client
-const mockFetch = vi.fn();
-
-vi.mock("~/sanity/lib/client", () => ({
-	client: {
-		fetch: mockFetch,
+	logger: {
+		searchInfo: vi.fn(),
+		groq: vi.fn(),
+		searchError: vi.fn(),
 	},
+	createLogLocation: vi.fn(() => ({ file: "test-file", function: "test-function" })),
 }));
+vi.mock("~/sanity/lib/client");
+
+const mockFetch = vi.mocked(client.fetch);
+const mockLogger = vi.mocked(logger);
 
 // Mock the filter options query
 vi.mock("~/sanity/lib/filter-options", () => ({

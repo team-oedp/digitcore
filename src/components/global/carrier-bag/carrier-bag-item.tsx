@@ -110,6 +110,11 @@ export function CarrierBagItem({
 							className="h-6 w-6 p-0 hover:bg-neutral-200 dark:hover:bg-neutral-800"
 							aria-label={`Visit ${item.title}`}
 							tabIndex={0}
+							onClick={(e) => {
+								e.stopPropagation();
+								onVisit?.(item.slug);
+							}}
+							onPointerDown={(e) => e.stopPropagation()}
 						>
 							<Icon icon={CircleArrowRight01Icon} size={14} />
 						</Button>
