@@ -8,8 +8,8 @@ import {
 	PATTERN_FILTER_QUERY,
 	PATTERN_SEARCH_QUERY,
 	PATTERN_SIMPLE_SEARCH_QUERY,
-	SOLUTION_SEARCH_QUERY,
 	RESOURCE_SEARCH_QUERY,
+	SOLUTION_SEARCH_QUERY,
 	TAG_SEARCH_QUERY,
 } from "~/sanity/lib/queries";
 
@@ -368,37 +368,59 @@ export async function searchContentForCommandModal(
 		const escapedSearchTerm = searchTerm.trim().replace(/["\\]/g, "\\$&");
 		const queryParams = { searchTerm: escapedSearchTerm };
 
-		logger.search("Executing direct GROQ queries", { escapedSearchTerm }, location);
+		logger.search(
+			"Executing direct GROQ queries",
+			{ escapedSearchTerm },
+			location,
+		);
 
 		// Execute all searches directly against Sanity
-		const [patternsResult, solutionsResult, resourcesResult, tagsResult] = await Promise.allSettled([
-			client.fetch(PATTERN_SIMPLE_SEARCH_QUERY, queryParams),
-			client.fetch(SOLUTION_SEARCH_QUERY, queryParams),
-			client.fetch(RESOURCE_SEARCH_QUERY, queryParams),
-			client.fetch(TAG_SEARCH_QUERY, queryParams),
-		]);
+		const [patternsResult, solutionsResult, resourcesResult, tagsResult] =
+			await Promise.allSettled([
+				client.fetch(PATTERN_SIMPLE_SEARCH_QUERY, queryParams),
+				client.fetch(SOLUTION_SEARCH_QUERY, queryParams),
+				client.fetch(RESOURCE_SEARCH_QUERY, queryParams),
+				client.fetch(TAG_SEARCH_QUERY, queryParams),
+			]);
 
 		// Extract results with error handling
-		const patterns = patternsResult.status === 'fulfilled' ? (patternsResult.value || []) : [];
-		const solutions = solutionsResult.status === 'fulfilled' ? (solutionsResult.value || []) : [];
-		const resources = resourcesResult.status === 'fulfilled' ? (resourcesResult.value || []) : [];
-		const tags = tagsResult.status === 'fulfilled' ? (tagsResult.value || []) : [];
+		const patterns =
+			patternsResult.status === "fulfilled" ? patternsResult.value || [] : [];
+		const solutions =
+			solutionsResult.status === "fulfilled" ? solutionsResult.value || [] : [];
+		const resources =
+			resourcesResult.status === "fulfilled" ? resourcesResult.value || [] : [];
+		const tags =
+			tagsResult.status === "fulfilled" ? tagsResult.value || [] : [];
 
 		// Log any failed searches
-		if (patternsResult.status === 'rejected') {
-			logger.searchError("Patterns search failed", patternsResult.reason, location);
+		if (patternsResult.status === "rejected") {
+			logger.searchError(
+				"Patterns search failed",
+				patternsResult.reason,
+				location,
+			);
 		}
-		if (solutionsResult.status === 'rejected') {
-			logger.searchError("Solutions search failed", solutionsResult.reason, location);
+		if (solutionsResult.status === "rejected") {
+			logger.searchError(
+				"Solutions search failed",
+				solutionsResult.reason,
+				location,
+			);
 		}
-		if (resourcesResult.status === 'rejected') {
-			logger.searchError("Resources search failed", resourcesResult.reason, location);
+		if (resourcesResult.status === "rejected") {
+			logger.searchError(
+				"Resources search failed",
+				resourcesResult.reason,
+				location,
+			);
 		}
-		if (tagsResult.status === 'rejected') {
+		if (tagsResult.status === "rejected") {
 			logger.searchError("Tags search failed", tagsResult.reason, location);
 		}
 
-		const totalCount = patterns.length + solutions.length + resources.length + tags.length;
+		const totalCount =
+			patterns.length + solutions.length + resources.length + tags.length;
 
 		logger.searchInfo(
 			"Direct search completed",

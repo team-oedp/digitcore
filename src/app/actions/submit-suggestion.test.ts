@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { submitSuggestion, type SuggestionFormData } from "./submit-suggestion";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { type SuggestionFormData, submitSuggestion } from "./submit-suggestion";
 
 // Mock next-sanity createClient
 const mockCreate = vi.fn();
@@ -34,11 +34,14 @@ const mockDate = new Date("2023-12-01T10:30:00Z");
 vi.setSystemTime(mockDate);
 
 // Test data
-const createMockFormData = (overrides?: Partial<SuggestionFormData>): SuggestionFormData => ({
+const createMockFormData = (
+	overrides?: Partial<SuggestionFormData>,
+): SuggestionFormData => ({
 	patternName: "Climate Adaptation Strategies",
 	patternSlug: "climate-adaptation-strategies",
 	newSolutions: "Implement green infrastructure solutions for urban resilience",
-	newResources: "Urban Climate Toolkit - comprehensive resource for adaptation planning",
+	newResources:
+		"Urban Climate Toolkit - comprehensive resource for adaptation planning",
 	additionalFeedback: "This pattern would benefit from more case studies",
 	nameAndAffiliation: "Dr. Jane Smith, University of Climate Studies",
 	email: "jane.smith@climate-uni.edu",
@@ -49,12 +52,12 @@ describe("submitSuggestion", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		process.env.SANITY_API_WRITE_TOKEN = "test-write-token";
-		delete process.env.SANITY_API_READ_TOKEN;
+		process.env.SANITY_API_READ_TOKEN = undefined;
 	});
 
 	afterEach(() => {
-		delete process.env.SANITY_API_WRITE_TOKEN;
-		delete process.env.SANITY_API_READ_TOKEN;
+		process.env.SANITY_API_WRITE_TOKEN = undefined;
+		process.env.SANITY_API_READ_TOKEN = undefined;
 	});
 
 	it("should successfully submit suggestion with write token", async () => {
@@ -78,8 +81,10 @@ describe("submitSuggestion", () => {
 			_type: "suggestion",
 			patternName: "Climate Adaptation Strategies",
 			patternSlug: "climate-adaptation-strategies",
-			newSolutions: "Implement green infrastructure solutions for urban resilience",
-			newResources: "Urban Climate Toolkit - comprehensive resource for adaptation planning",
+			newSolutions:
+				"Implement green infrastructure solutions for urban resilience",
+			newResources:
+				"Urban Climate Toolkit - comprehensive resource for adaptation planning",
 			additionalFeedback: "This pattern would benefit from more case studies",
 			nameAndAffiliation: "Dr. Jane Smith, University of Climate Studies",
 			email: "jane.smith@climate-uni.edu",
@@ -90,7 +95,7 @@ describe("submitSuggestion", () => {
 	});
 
 	it("should fallback to read token when write token is not available", async () => {
-		delete process.env.SANITY_API_WRITE_TOKEN;
+		process.env.SANITY_API_WRITE_TOKEN = undefined;
 		process.env.SANITY_API_READ_TOKEN = "test-read-token";
 
 		const formData = createMockFormData();
@@ -108,8 +113,8 @@ describe("submitSuggestion", () => {
 	});
 
 	it("should throw error when no API token is available", async () => {
-		delete process.env.SANITY_API_WRITE_TOKEN;
-		delete process.env.SANITY_API_READ_TOKEN;
+		process.env.SANITY_API_WRITE_TOKEN = undefined;
+		process.env.SANITY_API_READ_TOKEN = undefined;
 
 		const formData = createMockFormData();
 
@@ -168,10 +173,14 @@ describe("submitSuggestion", () => {
 		const formData = createMockFormData({
 			patternName: "Sustainable Urban Development",
 			patternSlug: "sustainable-urban-development",
-			newSolutions: "Community-based planning initiatives\nGreen building standards\nPublic transport optimization",
-			newResources: "Urban Sustainability Handbook\nPlanning Guidelines Documentation",
-			additionalFeedback: "Consider adding more European case studies and examples from smaller cities",
-			nameAndAffiliation: "Prof. Maria Rodriguez, Institute for Sustainable Cities",
+			newSolutions:
+				"Community-based planning initiatives\nGreen building standards\nPublic transport optimization",
+			newResources:
+				"Urban Sustainability Handbook\nPlanning Guidelines Documentation",
+			additionalFeedback:
+				"Consider adding more European case studies and examples from smaller cities",
+			nameAndAffiliation:
+				"Prof. Maria Rodriguez, Institute for Sustainable Cities",
 			email: "m.rodriguez@sustainable-cities.org",
 		});
 
@@ -183,10 +192,14 @@ describe("submitSuggestion", () => {
 			_type: "suggestion",
 			patternName: "Sustainable Urban Development",
 			patternSlug: "sustainable-urban-development",
-			newSolutions: "Community-based planning initiatives\nGreen building standards\nPublic transport optimization",
-			newResources: "Urban Sustainability Handbook\nPlanning Guidelines Documentation",
-			additionalFeedback: "Consider adding more European case studies and examples from smaller cities",
-			nameAndAffiliation: "Prof. Maria Rodriguez, Institute for Sustainable Cities",
+			newSolutions:
+				"Community-based planning initiatives\nGreen building standards\nPublic transport optimization",
+			newResources:
+				"Urban Sustainability Handbook\nPlanning Guidelines Documentation",
+			additionalFeedback:
+				"Consider adding more European case studies and examples from smaller cities",
+			nameAndAffiliation:
+				"Prof. Maria Rodriguez, Institute for Sustainable Cities",
 			email: "m.rodriguez@sustainable-cities.org",
 			submittedAt: "2023-12-01T10:30:00.000Z",
 		});
@@ -245,7 +258,8 @@ describe("submitSuggestion", () => {
 		const formData = createMockFormData({
 			patternName: "Pattërn with Spëcial Charactërs & Symbols! @#$%",
 			newSolutions: "Solution with quotes: \"This is a quote\" and 'this too'",
-			additionalFeedback: "Feedback with unicode: 🌱🌍🔄 and symbols: &lt;script&gt;",
+			additionalFeedback:
+				"Feedback with unicode: 🌱🌍🔄 and symbols: &lt;script&gt;",
 			nameAndAffiliation: "Dr. José María Rodríguez-García, École d'Écologie",
 			email: "jose.rodriguez@ecole-ecologie.fr",
 		});
@@ -259,8 +273,10 @@ describe("submitSuggestion", () => {
 			patternName: "Pattërn with Spëcial Charactërs & Symbols! @#$%",
 			patternSlug: "climate-adaptation-strategies",
 			newSolutions: "Solution with quotes: \"This is a quote\" and 'this too'",
-			newResources: "Urban Climate Toolkit - comprehensive resource for adaptation planning",
-			additionalFeedback: "Feedback with unicode: 🌱🌍🔄 and symbols: &lt;script&gt;",
+			newResources:
+				"Urban Climate Toolkit - comprehensive resource for adaptation planning",
+			additionalFeedback:
+				"Feedback with unicode: 🌱🌍🔄 and symbols: &lt;script&gt;",
 			nameAndAffiliation: "Dr. José María Rodríguez-García, École d'Écologie",
 			email: "jose.rodriguez@ecole-ecologie.fr",
 			submittedAt: "2023-12-01T10:30:00.000Z",
@@ -276,11 +292,11 @@ describe("submitSuggestion", () => {
 		await submitSuggestion(formData);
 
 		expect(mockCreate).toHaveBeenCalledTimes(2);
-		
+
 		// Both calls should have the same timestamp since we mocked Date
 		const firstCall = mockCreate.mock.calls[0]?.[0];
 		const secondCall = mockCreate.mock.calls[1]?.[0];
-		
+
 		expect(firstCall?.submittedAt).toBe("2023-12-01T10:30:00.000Z");
 		expect(secondCall?.submittedAt).toBe("2023-12-01T10:30:00.000Z");
 	});

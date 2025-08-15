@@ -1,5 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { searchPatterns, searchPatternsWithParams, type SearchResult } from "./search";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import {
+	type SearchResult,
+	searchPatterns,
+	searchPatternsWithParams,
+} from "./search";
 
 // Mock the logger
 const mockLogger = {
@@ -347,7 +351,7 @@ describe("searchPatterns", () => {
 			page: "1",
 			limit: "20",
 		});
-		
+
 		mockParseSearchParams.mockReturnValue({
 			searchTerm: "test",
 			audiences: [],
@@ -356,7 +360,7 @@ describe("searchPatterns", () => {
 			page: 1,
 			limit: 20,
 		});
-		
+
 		mockFetch.mockRejectedValue(queryError);
 
 		const formData = createFormData({ q: "test" });
@@ -377,7 +381,7 @@ describe("searchPatterns", () => {
 			page: "1",
 			limit: "20",
 		});
-		
+
 		mockParseSearchParams.mockReturnValue({
 			searchTerm: "test",
 			audiences: [],
@@ -386,7 +390,7 @@ describe("searchPatterns", () => {
 			page: 1,
 			limit: 20,
 		});
-		
+
 		mockFetch.mockRejectedValue(null);
 
 		const formData = createFormData({ q: "test" });
@@ -407,7 +411,7 @@ describe("searchPatterns", () => {
 			page: "1",
 			limit: "20",
 		});
-		
+
 		mockParseSearchParams.mockReturnValue({
 			searchTerm: "test",
 			audiences: [],
@@ -416,7 +420,7 @@ describe("searchPatterns", () => {
 			page: 1,
 			limit: 20,
 		});
-		
+
 		mockFetch.mockRejectedValue({ unknown: "error" });
 
 		const formData = createFormData({ q: "test" });
@@ -567,7 +571,7 @@ describe("searchPatternsWithParams", () => {
 
 	it("should handle errors in URLSearchParams conversion", async () => {
 		const conversionError = new Error("URLSearchParams conversion failed");
-		
+
 		// Mock a scenario where parameter processing fails
 		mockSearchParamsSchema.parse.mockImplementation(() => {
 			throw conversionError;

@@ -1,5 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { searchPatternContent, type PatternContentSearchResult } from "./pattern-search";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import {
+	type PatternContentSearchResult,
+	searchPatternContent,
+} from "./pattern-search";
 
 // Mock the Sanity client
 vi.mock("~/sanity/lib/client", () => ({
@@ -196,24 +199,30 @@ describe("searchPatternContent", () => {
 		expect(result.data).toBeDefined();
 
 		// Should match pattern title
-		expect(result.data!.patterns).toHaveLength(1);
-		expect(result.data!.patterns[0]?.title).toBe("Climate Change Adaptation Strategies");
+		expect(result.data?.patterns).toHaveLength(1);
+		expect(result.data?.patterns[0]?.title).toBe(
+			"Climate Change Adaptation Strategies",
+		);
 
 		// Should match tags
-		expect(result.data!.tags).toHaveLength(1);
-		expect(result.data!.tags[0]?.title).toBe("Climate Change");
+		expect(result.data?.tags).toHaveLength(1);
+		expect(result.data?.tags[0]?.title).toBe("Climate Change");
 
 		// Should match solutions with "climate" in description
-		expect(result.data!.solutions).toHaveLength(1);
-		expect(result.data!.solutions[0]?.title).toBe("Community Resilience Programs");
+		expect(result.data?.solutions).toHaveLength(1);
+		expect(result.data?.solutions[0]?.title).toBe(
+			"Community Resilience Programs",
+		);
 
 		// Should match resources with "climate" in description
-		expect(result.data!.resources).toHaveLength(1);
-		expect(result.data!.resources[0]?.title).toBe("Climate Adaptation Toolkit");
+		expect(result.data?.resources).toHaveLength(1);
+		expect(result.data?.resources[0]?.title).toBe("Climate Adaptation Toolkit");
 
 		// Should match nested solutions
-		expect(result.data!.nestedSolutions).toHaveLength(1);
-		expect(result.data!.nestedSolutions[0]?.title).toBe("Risk Assessment Framework");
+		expect(result.data?.nestedSolutions).toHaveLength(1);
+		expect(result.data?.nestedSolutions[0]?.title).toBe(
+			"Risk Assessment Framework",
+		);
 	});
 
 	it("should handle case-insensitive searches", async () => {
@@ -223,8 +232,8 @@ describe("searchPatternContent", () => {
 		const result = await searchPatternContent("test-pattern", "CLIMATE");
 
 		expect(result.success).toBe(true);
-		expect(result.data!.patterns).toHaveLength(1);
-		expect(result.data!.tags).toHaveLength(1);
+		expect(result.data?.patterns).toHaveLength(1);
+		expect(result.data?.tags).toHaveLength(1);
 	});
 
 	it("should escape special characters in search terms", async () => {
@@ -283,7 +292,9 @@ describe("searchPatternContent", () => {
 		await searchPatternContent("test-pattern", "test search");
 
 		expect(mockFetch).toHaveBeenCalledWith(
-			expect.stringContaining('*[_type == "pattern" && slug.current == $patternSlug]'),
+			expect.stringContaining(
+				'*[_type == "pattern" && slug.current == $patternSlug]',
+			),
 			{
 				patternSlug: "test-pattern",
 				searchTerm: "test search",

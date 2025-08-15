@@ -4,27 +4,32 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useTheme } from "next-themes";
 import { useDebounce } from "use-debounce";
-import type { SearchPattern, SearchSolution, SearchResource, SearchTag } from "~/app/actions/search";
+import type {
+	SearchPattern,
+	SearchResource,
+	SearchSolution,
+	SearchTag,
+} from "~/app/actions/search";
 import { searchContentForCommandModal } from "~/app/actions/search";
 import { usePageContentSearch } from "~/hooks/use-page-content-search";
-import { 
-	getMatchExplanation, 
-	truncateWithContext, 
+import {
 	extractTextFromPortableText,
-	highlightMatches 
+	getMatchExplanation,
+	highlightMatches,
+	truncateWithContext,
 } from "~/lib/search-utils";
 
 import {
 	ArrowDownIcon,
 	ArrowUpIcon,
-  AsteriskIcon,
+	AsteriskIcon,
 	CommandIcon,
 	CornerDownLeftIcon,
 	FileTextIcon,
+	FolderIcon,
 	HashIcon,
 	LayersIcon,
 	LightbulbIcon,
-	FolderIcon,
 } from "lucide-react";
 
 import { cn } from "~/lib/utils";
@@ -131,38 +136,54 @@ export function CommandMenu() {
 	useEffect(() => {
 		const performSearch = async () => {
 			if (!debouncedQuery.trim()) {
-				setSearchResults({ patterns: [], solutions: [], resources: [], tags: [] });
+				setSearchResults({
+					patterns: [],
+					solutions: [],
+					resources: [],
+					tags: [],
+				});
 				setError(null);
 				return;
 			}
-			
+
 			// Only search if modal is open
 			if (!isOpen) {
 				return;
 			}
-			
+
 			setGlobalLoading(true);
 			setError(null);
 			try {
 				// Use direct search function for command modal
-				const result = await searchContentForCommandModal(debouncedQuery.trim());
-				
+				const result = await searchContentForCommandModal(
+					debouncedQuery.trim(),
+				);
+
 				if (result.success && result.data) {
 					setSearchResults(result.data);
 				} else {
 					setError(result.error || "Search failed");
-					setSearchResults({ patterns: [], solutions: [], resources: [], tags: [] });
+					setSearchResults({
+						patterns: [],
+						solutions: [],
+						resources: [],
+						tags: [],
+					});
 				}
 			} catch (err) {
 				setError("Search failed");
-				setSearchResults({ patterns: [], solutions: [], resources: [], tags: [] });
+				setSearchResults({
+					patterns: [],
+					solutions: [],
+					resources: [],
+					tags: [],
+				});
 			} finally {
 				setGlobalLoading(false);
 			}
 		};
 		performSearch();
 	}, [debouncedQuery, isOpen]);
-
 
 	// Page content search (only enabled on pattern pages)
 	const {
@@ -181,11 +202,11 @@ export function CommandMenu() {
 	};
 
 	const isLoading = globalLoading || pageLoading;
-	const hasResults = 
-		searchResults.patterns.length > 0 || 
-		searchResults.solutions.length > 0 || 
-		searchResults.resources.length > 0 || 
-		searchResults.tags.length > 0 || 
+	const hasResults =
+		searchResults.patterns.length > 0 ||
+		searchResults.solutions.length > 0 ||
+		searchResults.resources.length > 0 ||
+		searchResults.tags.length > 0 ||
 		pageResults.length > 0;
 
 	// Reset search state when modal opens/closes
@@ -193,7 +214,12 @@ export function CommandMenu() {
 		if (!isOpen) {
 			// Clear search when modal closes - call functions directly to avoid dependency issues
 			setQuery("");
-			setSearchResults({ patterns: [], solutions: [], resources: [], tags: [] });
+			setSearchResults({
+				patterns: [],
+				solutions: [],
+				resources: [],
+				tags: [],
+			});
 			setError(null);
 			clearPageSearch();
 		}
@@ -225,10 +251,10 @@ export function CommandMenu() {
 	// Helper function to get compact search context for command modal
 	const getCompactMatchContext = (
 		title: string | null,
-		description: any,
-		searchTerm: string
-	): { 
-		snippet: string; 
+		description: Array<unknown> | null | undefined,
+		searchTerm: string,
+	): {
+		snippet: string;
 		matchLocations: string[];
 		hasMatch: boolean;
 	} => {
@@ -236,8 +262,12 @@ export function CommandMenu() {
 			return { snippet: "", matchLocations: [], hasMatch: false };
 		}
 
-		const matchExplanation = getMatchExplanation(title, description || "", searchTerm);
-		
+		const matchExplanation = getMatchExplanation(
+			title,
+			(description as any) || "",
+			searchTerm,
+		);
+
 		if (!matchExplanation.titleMatch && !matchExplanation.descriptionMatch) {
 			return { snippet: "", matchLocations: [], hasMatch: false };
 		}
@@ -247,19 +277,23 @@ export function CommandMenu() {
 			return {
 				snippet: "",
 				matchLocations: matchExplanation.matchLocations,
-				hasMatch: true
+				hasMatch: true,
 			};
 		}
 
 		// If only description matches, show context around the match
 		if (matchExplanation.descriptionMatch) {
-			const plainDescription = extractTextFromPortableText(description || "");
-			const contextResult = truncateWithContext(plainDescription, searchTerm, 60);
-			
+			const plainDescription = extractTextFromPortableText((description as any) || "");
+			const contextResult = truncateWithContext(
+				plainDescription,
+				searchTerm,
+				60,
+			);
+
 			return {
 				snippet: highlightMatches(contextResult.text, searchTerm),
 				matchLocations: matchExplanation.matchLocations,
-				hasMatch: contextResult.hasMatch
+				hasMatch: contextResult.hasMatch,
 			};
 		}
 
@@ -268,18 +302,28 @@ export function CommandMenu() {
 
 	// Helper for solutions context
 	const getSolutionContext = (solution: SearchSolution, searchTerm: string) => {
-		return getCompactMatchContext(solution.title, solution.description, searchTerm);
+		return getCompactMatchContext(
+			solution.title,
+			solution.description,
+			searchTerm,
+		);
 	};
 
-	// Helper for resources context  
+	// Helper for resources context
 	const getResourceContext = (resource: SearchResource, searchTerm: string) => {
-		return getCompactMatchContext(resource.title, resource.description, searchTerm);
+		return getCompactMatchContext(
+			resource.title,
+			resource.description,
+			searchTerm,
+		);
 	};
 
 	// Helper for tags context (simpler since tags only have titles)
 	const getTagContext = (tag: SearchTag, searchTerm: string) => {
 		if (!searchTerm.trim() || !tag.title) return { hasMatch: false };
-		const titleMatch = tag.title.toLowerCase().includes(searchTerm.toLowerCase());
+		const titleMatch = tag.title
+			.toLowerCase()
+			.includes(searchTerm.toLowerCase());
 		return { hasMatch: titleMatch };
 	};
 
@@ -385,7 +429,11 @@ export function CommandMenu() {
 								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
 									<CommandGroup heading="Patterns">
 										{searchResults.patterns.slice(0, 6).map((result) => {
-											const context = getCompactMatchContext(result.title, result.description, query);
+											const context = getCompactMatchContext(
+												result.title,
+												result.description,
+												query,
+											);
 											return (
 												<CommandItem
 													key={`pattern-${result._id}`}
@@ -404,19 +452,29 @@ export function CommandMenu() {
 																{result.title}
 															</span>
 															{context.snippet && (
-																<span 
-																	className="text-xs text-muted-foreground truncate"
-																	dangerouslySetInnerHTML={{ __html: `...${context.snippet}...` }}
+																<span
+																	className="truncate text-muted-foreground text-xs"
+																	dangerouslySetInnerHTML={{
+																		__html: `...${context.snippet}...`,
+																	}}
 																/>
 															)}
 														</div>
 														{context.hasMatch && !context.snippet && (
 															<div className="flex flex-shrink-0 gap-1">
 																{context.matchLocations.includes("title") && (
-																	<div className="w-1.5 h-1.5 rounded-full bg-blue-500" title="Match in title" />
+																	<div
+																		className="h-1.5 w-1.5 rounded-full bg-blue-500"
+																		title="Match in title"
+																	/>
 																)}
-																{context.matchLocations.includes("description") && (
-																	<div className="w-1.5 h-1.5 rounded-full bg-green-500" title="Match in description" />
+																{context.matchLocations.includes(
+																	"description",
+																) && (
+																	<div
+																		className="h-1.5 w-1.5 rounded-full bg-green-500"
+																		title="Match in description"
+																	/>
 																)}
 															</div>
 														)}
@@ -442,36 +500,52 @@ export function CommandMenu() {
 														if (sol.patterns && sol.patterns.length > 0) {
 															const firstPattern = sol.patterns[0];
 															if (firstPattern?.slug) {
-																router.push(`/pattern/${firstPattern.slug}#${sol._id}`);
+																router.push(
+																	`/pattern/${firstPattern.slug}#${sol._id}`,
+																);
 															}
 														}
 														setIsOpen(false);
 													}}
 													className="cursor-pointer px-3 py-2"
 												>
-													<div className="flex items-center gap-2 w-full">
-														<LightbulbIcon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-														<div className="flex flex-col min-w-0 flex-1">
-															<span className="truncate text-sm">{sol.title}</span>
+													<div className="flex w-full items-center gap-2">
+														<LightbulbIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+														<div className="flex min-w-0 flex-1 flex-col">
+															<span className="truncate text-sm">
+																{sol.title}
+															</span>
 															{context.snippet && (
-																<span 
-																	className="text-xs text-muted-foreground truncate"
-																	dangerouslySetInnerHTML={{ __html: `...${context.snippet}...` }}
+																<span
+																	className="truncate text-muted-foreground text-xs"
+																	dangerouslySetInnerHTML={{
+																		__html: `...${context.snippet}...`,
+																	}}
 																/>
 															)}
-															{sol.patterns && sol.patterns.length > 0 && sol.patterns[0]?.title && (
-																<span className="text-xs text-muted-foreground truncate">
-																	in {sol.patterns[0].title}
-																</span>
-															)}
+															{sol.patterns &&
+																sol.patterns.length > 0 &&
+																sol.patterns[0]?.title && (
+																	<span className="truncate text-muted-foreground text-xs">
+																		in {sol.patterns[0].title}
+																	</span>
+																)}
 														</div>
 														{context.hasMatch && !context.snippet && (
-															<div className="flex gap-1 flex-shrink-0">
+															<div className="flex flex-shrink-0 gap-1">
 																{context.matchLocations.includes("title") && (
-																	<div className="w-1.5 h-1.5 rounded-full bg-blue-500" title="Match in title" />
+																	<div
+																		className="h-1.5 w-1.5 rounded-full bg-blue-500"
+																		title="Match in title"
+																	/>
 																)}
-																{context.matchLocations.includes("description") && (
-																	<div className="w-1.5 h-1.5 rounded-full bg-green-500" title="Match in description" />
+																{context.matchLocations.includes(
+																	"description",
+																) && (
+																	<div
+																		className="h-1.5 w-1.5 rounded-full bg-green-500"
+																		title="Match in description"
+																	/>
 																)}
 															</div>
 														)}
@@ -497,36 +571,52 @@ export function CommandMenu() {
 														if (res.patterns && res.patterns.length > 0) {
 															const firstPattern = res.patterns[0];
 															if (firstPattern?.slug) {
-																router.push(`/pattern/${firstPattern.slug}#${res._id}`);
+																router.push(
+																	`/pattern/${firstPattern.slug}#${res._id}`,
+																);
 															}
 														}
 														setIsOpen(false);
 													}}
 													className="cursor-pointer px-3 py-2"
 												>
-													<div className="flex items-center gap-2 w-full">
-														<FolderIcon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-														<div className="flex flex-col min-w-0 flex-1">
-															<span className="truncate text-sm">{res.title}</span>
+													<div className="flex w-full items-center gap-2">
+														<FolderIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+														<div className="flex min-w-0 flex-1 flex-col">
+															<span className="truncate text-sm">
+																{res.title}
+															</span>
 															{context.snippet && (
-																<span 
-																	className="text-xs text-muted-foreground truncate"
-																	dangerouslySetInnerHTML={{ __html: `...${context.snippet}...` }}
+																<span
+																	className="truncate text-muted-foreground text-xs"
+																	dangerouslySetInnerHTML={{
+																		__html: `...${context.snippet}...`,
+																	}}
 																/>
 															)}
-															{res.patterns && res.patterns.length > 0 && res.patterns[0]?.title && (
-																<span className="text-xs text-muted-foreground truncate">
-																	in {res.patterns[0].title}
-																</span>
-															)}
+															{res.patterns &&
+																res.patterns.length > 0 &&
+																res.patterns[0]?.title && (
+																	<span className="truncate text-muted-foreground text-xs">
+																		in {res.patterns[0].title}
+																	</span>
+																)}
 														</div>
 														{context.hasMatch && !context.snippet && (
-															<div className="flex gap-1 flex-shrink-0">
+															<div className="flex flex-shrink-0 gap-1">
 																{context.matchLocations.includes("title") && (
-																	<div className="w-1.5 h-1.5 rounded-full bg-blue-500" title="Match in title" />
+																	<div
+																		className="h-1.5 w-1.5 rounded-full bg-blue-500"
+																		title="Match in title"
+																	/>
 																)}
-																{context.matchLocations.includes("description") && (
-																	<div className="w-1.5 h-1.5 rounded-full bg-green-500" title="Match in description" />
+																{context.matchLocations.includes(
+																	"description",
+																) && (
+																	<div
+																		className="h-1.5 w-1.5 rounded-full bg-green-500"
+																		title="Match in description"
+																	/>
 																)}
 															</div>
 														)}
@@ -561,19 +651,25 @@ export function CommandMenu() {
 													}}
 													className="cursor-pointer px-3 py-2"
 												>
-													<div className="flex items-center gap-2 w-full">
-														<HashIcon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-														<div className="flex flex-col min-w-0 flex-1">
-															<span className="truncate text-sm">{tag.title}</span>
+													<div className="flex w-full items-center gap-2">
+														<HashIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+														<div className="flex min-w-0 flex-1 flex-col">
+															<span className="truncate text-sm">
+																{tag.title}
+															</span>
 															{tag.patterns && tag.patterns.length > 0 && (
-																<span className="text-xs text-muted-foreground">
-																	{tag.patterns.length} pattern{tag.patterns.length !== 1 ? 's' : ''}
+																<span className="text-muted-foreground text-xs">
+																	{tag.patterns.length} pattern
+																	{tag.patterns.length !== 1 ? "s" : ""}
 																</span>
 															)}
 														</div>
 														{context.hasMatch && (
-															<div className="flex gap-1 flex-shrink-0">
-																<div className="w-1.5 h-1.5 rounded-full bg-blue-500" title="Match in tag name" />
+															<div className="flex flex-shrink-0 gap-1">
+																<div
+																	className="h-1.5 w-1.5 rounded-full bg-blue-500"
+																	title="Match in tag name"
+																/>
 															</div>
 														)}
 													</div>

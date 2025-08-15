@@ -1,18 +1,18 @@
-import { renderHook } from "@testing-library/react";
 import type { PortableTextBlock } from "@portabletext/types";
-import {
-	portableTextToString,
-	getRomanNumeral,
-	usePatternContent,
-	useCarrierBagDocument,
-	usePatternHeader,
-	usePatternConnections,
-	usePatternSolutions,
-	usePatternResources,
-	type PopulatedPattern,
-	type PatternContentData,
-} from "./use-pattern-content";
+import { renderHook } from "@testing-library/react";
 import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
+import {
+	type PatternContentData,
+	type PopulatedPattern,
+	getRomanNumeral,
+	portableTextToString,
+	useCarrierBagDocument,
+	usePatternConnections,
+	usePatternContent,
+	usePatternHeader,
+	usePatternResources,
+	usePatternSolutions,
+} from "./use-pattern-content";
 
 // Mock data helpers
 const createMockPortableText = (text: string): PortableTextBlock[] => [
@@ -32,7 +32,9 @@ const createMockPortableText = (text: string): PortableTextBlock[] => [
 	},
 ];
 
-const createMockPattern = (overrides?: Partial<PopulatedPattern>): PopulatedPattern => ({
+const createMockPattern = (
+	overrides?: Partial<PopulatedPattern>,
+): PopulatedPattern => ({
 	_id: "pattern1",
 	_type: "pattern",
 	_createdAt: "2023-01-01T00:00:00Z",
@@ -116,7 +118,9 @@ const createMockPattern = (overrides?: Partial<PopulatedPattern>): PopulatedPatt
 	...overrides,
 });
 
-const createMockCarrierBagItem = (pattern?: PopulatedPattern): CarrierBagItem => ({
+const createMockCarrierBagItem = (
+	pattern?: PopulatedPattern,
+): CarrierBagItem => ({
 	pattern: pattern || createMockPattern(),
 	dateAdded: "2023-01-15T10:30:00Z",
 	notes: "Test notes for this pattern",
@@ -253,18 +257,22 @@ describe("usePatternContent", () => {
 
 		// Check connections
 		expect(content.connections).toHaveLength(3);
-		
-		const tagsConnection = content.connections.find(c => c.type === "tags");
+
+		const tagsConnection = content.connections.find((c) => c.type === "tags");
 		expect(tagsConnection?.title).toBe("Tags");
 		expect(tagsConnection?.items).toHaveLength(1);
 		expect(tagsConnection?.items[0]?.title).toBe("Test Tag");
 
-		const audiencesConnection = content.connections.find(c => c.type === "audiences");
+		const audiencesConnection = content.connections.find(
+			(c) => c.type === "audiences",
+		);
 		expect(audiencesConnection?.title).toBe("Audiences");
 		expect(audiencesConnection?.items).toHaveLength(1);
 		expect(audiencesConnection?.items[0]?.title).toBe("Test Audience");
 
-		const themesConnection = content.connections.find(c => c.type === "themes");
+		const themesConnection = content.connections.find(
+			(c) => c.type === "themes",
+		);
 		expect(themesConnection?.title).toBe("Themes");
 		expect(themesConnection?.items).toHaveLength(1);
 		expect(themesConnection?.items[0]?.title).toBe("Test Theme");
@@ -288,8 +296,10 @@ describe("usePatternContent", () => {
 	it("should handle pattern with carrier bag item", () => {
 		const pattern = createMockPattern();
 		const carrierBagItem = createMockCarrierBagItem(pattern);
-		
-		const { result } = renderHook(() => usePatternContent(pattern, carrierBagItem));
+
+		const { result } = renderHook(() =>
+			usePatternContent(pattern, carrierBagItem),
+		);
 
 		const content: PatternContentData = result.current;
 		expect(content.notes).toBe("Test notes for this pattern");
@@ -400,7 +410,9 @@ describe("usePatternContent", () => {
 
 		const { result } = renderHook(() => usePatternContent(pattern));
 
-		const tagsConnection = result.current.connections.find(c => c.type === "tags");
+		const tagsConnection = result.current.connections.find(
+			(c) => c.type === "tags",
+		);
 		expect(tagsConnection?.items[0]?.id).toBe("key1");
 		expect(tagsConnection?.items[0]?.title).toBe("tag-ref-1");
 	});
@@ -419,7 +431,9 @@ describe("usePatternContent", () => {
 
 		const { result } = renderHook(() => usePatternContent(pattern));
 
-		const audiencesConnection = result.current.connections.find(c => c.type === "audiences");
+		const audiencesConnection = result.current.connections.find(
+			(c) => c.type === "audiences",
+		);
 		expect(audiencesConnection?.items[0]?.id).toBe("");
 		expect(audiencesConnection?.items[0]?.title).toBe("Unknown Audience");
 	});
@@ -429,17 +443,21 @@ describe("useCarrierBagDocument", () => {
 	it("should process carrier bag items correctly", () => {
 		const items = [
 			createMockCarrierBagItem(),
-			createMockCarrierBagItem(createMockPattern({ 
-				_id: "pattern2", 
-				title: "Second Pattern" 
-			})),
+			createMockCarrierBagItem(
+				createMockPattern({
+					_id: "pattern2",
+					title: "Second Pattern",
+				}),
+			),
 		];
 
 		const { result } = renderHook(() => useCarrierBagDocument(items));
 
 		const document = result.current;
 		expect(document.title).toBe("Your Carrier Bag");
-		expect(document.subtitle).toBe("A collection of patterns from the DIGITCORE Toolkit");
+		expect(document.subtitle).toBe(
+			"A collection of patterns from the DIGITCORE Toolkit",
+		);
 		expect(document.patternCount).toBe(2);
 		expect(document.patterns).toHaveLength(2);
 		expect(document.hasTableOfContents).toBe(true);
@@ -486,9 +504,13 @@ describe("utility hooks", () => {
 			const { result } = renderHook(() => usePatternConnections(pattern));
 
 			expect(result.current).toHaveLength(3);
-			expect(result.current.find(c => c.type === "tags")?.title).toBe("Tags");
-			expect(result.current.find(c => c.type === "audiences")?.title).toBe("Audiences");
-			expect(result.current.find(c => c.type === "themes")?.title).toBe("Themes");
+			expect(result.current.find((c) => c.type === "tags")?.title).toBe("Tags");
+			expect(result.current.find((c) => c.type === "audiences")?.title).toBe(
+				"Audiences",
+			);
+			expect(result.current.find((c) => c.type === "themes")?.title).toBe(
+				"Themes",
+			);
 		});
 	});
 

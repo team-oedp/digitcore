@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { fetchFilterOptions, type FilterOptionsResult } from "./filter-options";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { type FilterOptionsResult, fetchFilterOptions } from "./filter-options";
 
 // Mock the logger
 const mockLogger = {
@@ -9,7 +9,10 @@ const mockLogger = {
 };
 
 vi.mock("~/lib/logger", () => ({
-	createLogLocation: vi.fn(() => ({ file: "filter-options.ts", function: "test" })),
+	createLogLocation: vi.fn(() => ({
+		file: "filter-options.ts",
+		function: "test",
+	})),
 	logger: mockLogger,
 }));
 
@@ -296,9 +299,7 @@ describe("fetchFilterOptions", () => {
 				{ value: "sustainability", label: "Sustainability" },
 				{ value: "innovation", label: "Innovation" },
 			],
-			tags: [
-				{ value: "valid-tag", label: "Valid Tag" },
-			],
+			tags: [{ value: "valid-tag", label: "Valid Tag" }],
 		};
 
 		mockFetch.mockResolvedValue(mockData);
@@ -383,12 +384,8 @@ describe("fetchFilterOptions", () => {
 				{ value: "invalid1", label: null },
 				{ value: "invalid2", label: null },
 			],
-			themes: [
-				{ value: "invalid3", label: null },
-			],
-			tags: [
-				{ value: "invalid4", label: null },
-			],
+			themes: [{ value: "invalid3", label: null }],
+			tags: [{ value: "invalid4", label: null }],
 		};
 
 		mockFetch.mockResolvedValue(mockData);
