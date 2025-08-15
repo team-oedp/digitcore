@@ -36,9 +36,7 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 							<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
 						</div>
 					)}
-					<h1 className="font-light text-[32px] text-primary capitalize">
-						{title}
-					</h1>
+					<h1 className="text-heading">{title}</h1>
 				</div>
 				<div>
 					{pattern && (

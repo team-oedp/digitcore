@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { TagsList } from "~/components/pages/tags/tags-list";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
@@ -6,8 +7,9 @@ import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
-import { TAGS_WITH_PATTERNS_QUERY } from "~/sanity/lib/queries";
+import { TAGS_PAGE_QUERY, TAGS_WITH_PATTERNS_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
+import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "Tags | DIGITCORE Toolkit",
@@ -45,6 +47,15 @@ export type TagsByLetter = Partial<Record<string, Tag[]>>;
 
 export default async function Tags() {
 	const isDraftMode = (await draftMode()).isEnabled;
+
+	// Fetch page data from Sanity
+	const pageData = (await client.fetch(
+		TAGS_PAGE_QUERY,
+		{},
+		isDraftMode
+			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
+			: { perspective: "published", useCdn: true },
+	)) as Page | null;
 
 	// Fetch tags with patterns from Sanity
 	const tagsData = await client.fetch(
@@ -111,7 +122,12 @@ export default async function Tags() {
 
 				{/* Scrolling section */}
 				<div className="flex flex-col gap-40">
-					<PageHeading title="Tags" description={[]} />
+					{pageData?.title && pageData?.description && (
+						<PageHeading
+							title={pageData.title}
+							description={pageData.description as PortableTextBlock[]}
+						/>
+					)}
 					<TagsList tagsByLetter={tagsByLetter} alphabet={ALPHABET} />
 				</div>
 			</PageWrapper>

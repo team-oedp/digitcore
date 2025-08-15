@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -7,10 +8,12 @@ import {
 	SearchInterfaceSkeleton,
 	SearchInterfaceWrapper,
 } from "~/components/pages/search/search-interface-wrapper";
+import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
 import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
+import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "Search | DIGITCORE Toolkit",
@@ -25,7 +28,7 @@ export default async function SearchPage({
 	const isDraftMode = (await draftMode()).isEnabled;
 
 	// Fetch page data
-	const pageData = await client.fetch(
+	const pageData = (await client.fetch(
 		SEARCH_PAGE_QUERY,
 		{},
 		isDraftMode
@@ -39,7 +42,7 @@ export default async function SearchPage({
 					perspective: "published",
 					useCdn: true,
 				},
-	);
+	)) as Page | null;
 
 	if (!pageData) {
 		console.log("No page found, returning 404");
@@ -48,15 +51,23 @@ export default async function SearchPage({
 
 	return (
 		<PageWrapper>
-			<div className="space-y-6 pt-16">
-				<Suspense fallback={<SearchInterfaceSkeleton />}>
-					<SearchInterfaceWrapper />
-				</Suspense>
-				<Suspense
-					fallback={<div className="h-32 animate-pulse rounded bg-zinc-100" />}
-				>
-					<SearchClientWrapper />
-				</Suspense>
+			<div className="flex flex-col gap-10 pb-44">
+				{pageData.title && pageData.description && (
+					<PageHeading
+						title={pageData.title}
+						description={pageData.description as PortableTextBlock[]}
+					/>
+				)}
+				<div className="space-y-6">
+					<Suspense fallback={<SearchInterfaceSkeleton />}>
+						<SearchInterfaceWrapper />
+					</Suspense>
+					<Suspense
+						fallback={<div className="h-32 animate-pulse rounded bg-zinc-100" />}
+					>
+						<SearchClientWrapper />
+					</Suspense>
+				</div>
 			</div>
 		</PageWrapper>
 	);

@@ -360,6 +360,17 @@ export const TAGS_WITH_PATTERNS_QUERY = defineQuery(`
   }[count(patterns) > 0]
 `);
 
+export const TAGS_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'tags'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]
+  }
+`);
+
 export const CARRIER_BAG_QUERY = defineQuery(`
   *[_type == 'carrierBag'][0]{
     _id,
@@ -411,6 +422,17 @@ export const PATTERNS_BY_SLUGS_QUERY = defineQuery(`
 
 export const VALUES_PAGE_QUERY = defineQuery(`
   *[_type == 'page' && slug.current == 'values'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]
+  }
+`);
+
+export const PATTERNS_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'patterns'][0]{
     _id,
     _type,
     title,

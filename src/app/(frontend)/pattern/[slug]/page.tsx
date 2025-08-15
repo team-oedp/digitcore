@@ -110,7 +110,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
 					<div>
 						<CustomPortableText
 							value={pattern.description as PortableTextBlock[]}
-							className="prose prose-neutral max-w-none"
+							className="prose"
 						/>
 						<PatternConnections
 							tags={(pattern.tags as Tag[]) || undefined}
