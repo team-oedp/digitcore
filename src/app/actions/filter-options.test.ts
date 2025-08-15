@@ -16,7 +16,7 @@ vi.mock("~/lib/logger", () => ({
 }));
 vi.mock("~/sanity/lib/client");
 
-const mockFetch = vi.mocked(client.fetch) as any;
+const mockFetch = vi.mocked(client.fetch);
 const mockLogger = vi.mocked(logger);
 
 // Mock the filter options query
@@ -25,7 +25,9 @@ vi.mock("~/sanity/lib/filter-options", () => ({
 }));
 
 // Mock data
-const createMockFilterData = (overrides?: any) => ({
+const createMockFilterData = (
+	overrides: Partial<FilterOptionsResult> = {},
+) => ({
 	audiences: [
 		{ value: "students", label: "Students" },
 		{ value: "researchers", label: "Researchers" },

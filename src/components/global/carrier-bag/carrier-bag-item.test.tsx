@@ -118,6 +118,7 @@ describe("CarrierBagItem", () => {
 			<div
 				onClick={mockParentClick}
 				onPointerDown={mockParentClick}
+				onKeyDown={mockParentClick}
 				style={{ display: "block" }}
 			>
 				<CarrierBagItem

@@ -16,7 +16,7 @@ import {
 } from "./use-pattern-content";
 
 // Mock data helpers
-const createMockPortableText = (text: string): any[] => [
+const createMockPortableText = (text: string): PortableTextBlock[] => [
 	{
 		_type: "block",
 		_key: "block1",
@@ -33,7 +33,9 @@ const createMockPortableText = (text: string): any[] => [
 	},
 ];
 
-const createMockPattern = (overrides?: any): any => ({
+const createMockPattern = (
+	overrides: Partial<PopulatedPattern> = {},
+): PopulatedPattern => ({
 	_id: "pattern1",
 	_type: "pattern",
 	_createdAt: "2023-01-01T00:00:00Z",
@@ -197,7 +199,7 @@ describe("usePatternContent hook utilities", () => {
 						{
 							_type: "break",
 							_key: "break1",
-						} as any,
+						} as unknown,
 					],
 					markDefs: [],
 					style: "normal",
@@ -213,7 +215,7 @@ describe("usePatternContent hook utilities", () => {
 				{
 					_type: "image",
 					_key: "image1",
-				} as any,
+				} as unknown,
 			];
 
 			const result = portableTextToString(blocks);
@@ -313,7 +315,7 @@ describe("usePatternContent", () => {
 	});
 
 	it("should handle pattern with string slug", () => {
-		const pattern = createMockPattern({ slug: "string-slug" as any });
+		const pattern = createMockPattern({ slug: "string-slug" as unknown });
 		const { result } = renderHook(() => usePatternContent(pattern));
 
 		expect(result.current.header.slug).toBe("string-slug");
@@ -366,7 +368,7 @@ describe("usePatternContent", () => {
 					_rev: "rev1",
 					title: undefined,
 					description: createMockPortableText("Test description"),
-				} as any,
+				} as unknown,
 			],
 		});
 
@@ -386,7 +388,7 @@ describe("usePatternContent", () => {
 					_rev: "rev1",
 					title: undefined,
 					description: createMockPortableText("Test description"),
-				} as any,
+				} as unknown,
 			],
 		});
 
@@ -403,7 +405,7 @@ describe("usePatternContent", () => {
 					_key: "key1",
 					_ref: "tag-ref-1",
 					title: undefined,
-				} as any,
+				} as unknown,
 			],
 		});
 
@@ -424,7 +426,7 @@ describe("usePatternContent", () => {
 					_key: undefined,
 					_ref: undefined,
 					title: undefined,
-				} as any,
+				} as unknown,
 			],
 		});
 
@@ -545,7 +547,7 @@ describe("edge cases and error handling", () => {
 				_rev: "rev1",
 				title: `Solution ${i + 1}`,
 				description: createMockPortableText(`Description ${i + 1}`),
-			})) as any,
+			})) as unknown,
 		});
 
 		const { result } = renderHook(() => usePatternContent(pattern));
@@ -568,7 +570,7 @@ describe("edge cases and error handling", () => {
 					title: "Test Resource",
 					description: createMockPortableText("Test description"),
 					solutions: undefined,
-				} as any,
+				} as unknown,
 			],
 		});
 
@@ -589,7 +591,7 @@ describe("edge cases and error handling", () => {
 					title: "Test Solution",
 					description: createMockPortableText("Test description"),
 					audiences: undefined,
-				} as any,
+				} as unknown,
 			],
 		});
 

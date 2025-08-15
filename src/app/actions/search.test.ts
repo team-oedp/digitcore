@@ -2,11 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { logger } from "~/lib/logger";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
 import { client } from "~/sanity/lib/client";
-import {
-	type SearchResult,
-	searchPatterns,
-	searchPatternsWithParams,
-} from "./search";
+import { searchPatterns, searchPatternsWithParams } from "./search";
 
 vi.mock("~/lib/logger", () => ({
 	logger: {
@@ -24,7 +20,7 @@ vi.mock("~/lib/logger", () => ({
 vi.mock("~/sanity/lib/client");
 vi.mock("~/lib/search");
 
-const mockFetch = vi.mocked(client.fetch) as any;
+const mockFetch = vi.mocked(client.fetch);
 const mockSearchParamsSchema = vi.mocked(searchParamsSchema);
 const mockParseSearchParams = vi.mocked(parseSearchParams);
 const mockLogger = vi.mocked(logger);

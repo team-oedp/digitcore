@@ -13,7 +13,7 @@ const mockSendSuggestionEmail = vi.mocked(sendSuggestionEmail);
 // Setup the mock to return an object with a create method
 mockCreateClient.mockReturnValue({
 	create: mockCreate,
-} as any);
+} as { create: typeof mockCreate });
 
 // Mock Sanity environment variables
 vi.mock("~/sanity/env", () => ({
@@ -49,12 +49,12 @@ describe("submitSuggestion", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		process.env.SANITY_API_WRITE_TOKEN = "test-write-token";
-		delete process.env.SANITY_API_READ_TOKEN;
+		process.env.SANITY_API_READ_TOKEN = undefined;
 	});
 
 	afterEach(() => {
-		delete process.env.SANITY_API_WRITE_TOKEN;
-		delete process.env.SANITY_API_READ_TOKEN;
+		process.env.SANITY_API_WRITE_TOKEN = undefined;
+		process.env.SANITY_API_READ_TOKEN = undefined;
 	});
 
 	it("should successfully submit suggestion with write token", async () => {
@@ -92,7 +92,7 @@ describe("submitSuggestion", () => {
 	});
 
 	it("should fallback to read token when write token is not available", async () => {
-		delete process.env.SANITY_API_WRITE_TOKEN;
+		process.env.SANITY_API_WRITE_TOKEN = undefined;
 		process.env.SANITY_API_READ_TOKEN = "test-read-token";
 
 		const formData = createMockFormData();
@@ -110,8 +110,8 @@ describe("submitSuggestion", () => {
 	});
 
 	it("should throw error when no API token is available", async () => {
-		delete process.env.SANITY_API_WRITE_TOKEN;
-		delete process.env.SANITY_API_READ_TOKEN;
+		process.env.SANITY_API_WRITE_TOKEN = undefined;
+		process.env.SANITY_API_READ_TOKEN = undefined;
 
 		const formData = createMockFormData();
 

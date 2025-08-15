@@ -1,8 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import {
-	type PatternContentSearchResult,
-	searchPatternContent,
-} from "./pattern-search";
+import { searchPatternContent } from "./pattern-search";
 
 // Mock the Sanity client
 vi.mock("~/sanity/lib/client", () => ({
@@ -22,7 +19,7 @@ import { client } from "~/sanity/lib/client";
 const mockFetch = vi.mocked(client.fetch);
 
 // Mock data helpers
-const createMockPatternResult = (overrides?: any) => ({
+const createMockPatternResult = (overrides: Record<string, unknown> = {}) => ({
 	_id: "pattern1",
 	title: "Climate Change Adaptation Strategies",
 	description: [
@@ -252,7 +249,7 @@ describe("searchPatternContent", () => {
 	});
 
 	it("should return error when pattern is not found", async () => {
-		mockFetch.mockResolvedValueOnce(null as any);
+		mockFetch.mockResolvedValueOnce(null);
 
 		const result = await searchPatternContent("nonexistent-pattern", "test");
 

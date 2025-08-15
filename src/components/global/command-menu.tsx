@@ -13,6 +13,7 @@ import type {
 import { searchContentForCommandModal } from "~/app/actions/search";
 import { usePageContentSearch } from "~/hooks/use-page-content-search";
 import {
+	type PortableTextBlock,
 	extractTextFromPortableText,
 	getMatchExplanation,
 	highlightMatches,
@@ -28,7 +29,6 @@ import {
 	FileTextIcon,
 	FolderIcon,
 	HashIcon,
-	LayersIcon,
 	LightbulbIcon,
 } from "lucide-react";
 
@@ -264,7 +264,7 @@ export function CommandMenu() {
 
 		const matchExplanation = getMatchExplanation(
 			title,
-			(description as any) || "",
+			(description ?? "") as PortableTextBlock[] | string,
 			searchTerm,
 		);
 
@@ -284,7 +284,7 @@ export function CommandMenu() {
 		// If only description matches, show context around the match
 		if (matchExplanation.descriptionMatch) {
 			const plainDescription = extractTextFromPortableText(
-				(description as any) || "",
+				(description ?? "") as PortableTextBlock[] | string,
 			);
 			const contextResult = truncateWithContext(
 				plainDescription,
@@ -455,7 +455,7 @@ export function CommandMenu() {
 															</span>
 															{context.snippet && (
 																<span
-																	className="truncate text-muted-foreground text-xs"
+																	/* biome-ignore lint/security/noDangerouslySetInnerHtml: safe snippet composed from sanitized highlight function */
 																	dangerouslySetInnerHTML={{
 																		__html: `...${context.snippet}...`,
 																	}}
@@ -519,7 +519,7 @@ export function CommandMenu() {
 															</span>
 															{context.snippet && (
 																<span
-																	className="truncate text-muted-foreground text-xs"
+																	/* biome-ignore lint/security/noDangerouslySetInnerHtml: safe snippet composed from sanitized highlight function */
 																	dangerouslySetInnerHTML={{
 																		__html: `...${context.snippet}...`,
 																	}}
@@ -590,7 +590,7 @@ export function CommandMenu() {
 															</span>
 															{context.snippet && (
 																<span
-																	className="truncate text-muted-foreground text-xs"
+																	/* biome-ignore lint/security/noDangerouslySetInnerHtml: safe snippet composed from sanitized highlight function */
 																	dangerouslySetInnerHTML={{
 																		__html: `...${context.snippet}...`,
 																	}}
