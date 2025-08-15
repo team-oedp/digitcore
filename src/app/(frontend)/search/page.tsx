@@ -63,7 +63,9 @@ export default async function SearchPage({
 						<SearchInterfaceWrapper />
 					</Suspense>
 					<Suspense
-						fallback={<div className="h-32 animate-pulse rounded bg-zinc-100" />}
+						fallback={
+							<div className="h-32 animate-pulse rounded bg-zinc-100" />
+						}
 					>
 						<SearchClientWrapper />
 					</Suspense>

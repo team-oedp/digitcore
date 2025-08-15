@@ -257,7 +257,7 @@ export function SearchClientWrapper() {
 					<p className="text-base text-zinc-500">{searchResult?.error}</p>
 				</div>
 			) : searchResult.totalCount === 0 ? (
-				<div className="py-12 text-center">
+				<div className="py-12 text-left">
 					<p className="mb-2 text-zinc-500">No results found</p>
 					<p className="text-base text-zinc-400">
 						Try adjusting your search terms or filters

@@ -7,7 +7,10 @@ import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
-import { TAGS_PAGE_QUERY, TAGS_WITH_PATTERNS_QUERY } from "~/sanity/lib/queries";
+import {
+	TAGS_PAGE_QUERY,
+	TAGS_WITH_PATTERNS_QUERY,
+} from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 

@@ -11,7 +11,7 @@ import {
 	AccordionTrigger,
 } from "~/components/ui/accordion";
 import { client } from "~/sanity/lib/client";
-import { FAQ_PAGE_QUERY, FAQS_QUERY } from "~/sanity/lib/queries";
+import { FAQS_QUERY, FAQ_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 
@@ -76,17 +76,17 @@ export default async function FAQPage() {
 									value={faq._id}
 									className="border-zinc-300 border-b border-dashed last:border-b"
 								>
-						<AccordionTrigger
-							showPlusMinus
-							className="items-center justify-between py-4 text-left text-lg text-primary font-normal hover:no-underline"
-						>
-							<span className="text-left">{faq.title}</span>
-						</AccordionTrigger>
-						<AccordionContent className="pt-2 pb-4">
-							<CustomPortableText
-								value={faq.description}
-								className="accordion-detail"
-							/>
+									<AccordionTrigger
+										showPlusMinus
+										className="items-center justify-between py-4 text-left font-normal text-lg text-primary hover:no-underline"
+									>
+										<span className="text-left">{faq.title}</span>
+									</AccordionTrigger>
+									<AccordionContent className="pt-2 pb-4">
+										<CustomPortableText
+											value={faq.description}
+											className="accordion-detail"
+										/>
 									</AccordionContent>
 								</AccordionItem>
 							))}
