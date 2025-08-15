@@ -21,6 +21,12 @@ export const metadata: Metadata = {
 		"Community-centered open infrastructure empowering equitable collaboration between researchers, developers, and frontline communities.",
 };
 
+function getIconByIndex(index: number, className: string) {
+	const icons = [Icon01, Icon02, Icon03, Icon04, Icon05] as const;
+	const Icon = icons[index % icons.length] ?? Icon01;
+	return <Icon className={className} />;
+}
+
 export default async function Home() {
 	const isDraftMode = (await draftMode()).isEnabled;
 	const data = (await client.fetch(
@@ -51,28 +57,9 @@ export default async function Home() {
 				{contentSections.length > 0 &&
 					contentSections.map((section, index) => (
 						<section
-							className="flex flex-col gap-16"
 							key={section._key || index}
+							className="flex flex-col gap-16"
 						>
-							{index > 0 && (
-								<div title={`Icon ${(index % 5) + 1}`} data-index={index % 5}>
-									{index % 5 === 0 && (
-										<Icon01 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
-									)}
-									{index % 5 === 1 && (
-										<Icon02 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
-									)}
-									{index % 5 === 2 && (
-										<Icon03 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
-									)}
-									{index % 5 === 3 && (
-										<Icon04 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
-									)}
-									{index % 5 === 4 && (
-										<Icon05 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
-									)}
-								</div>
-							)}
 							<div className="flex flex-col gap-5">
 								{section.heading && (
 									<SectionHeading heading={section.heading} />
@@ -82,6 +69,18 @@ export default async function Home() {
 										value={section.body as PortableTextBlock[]}
 										className="prose max-w-none"
 									/>
+								)}
+								{index < contentSections.length - 1 && (
+									<div
+										className="icon-item"
+										title={`Icon ${(index % 5) + 1}`}
+										data-index={index % 5}
+									>
+										{getIconByIndex(
+											index,
+											"h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50",
+										)}
+									</div>
 								)}
 							</div>
 						</section>

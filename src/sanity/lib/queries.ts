@@ -228,7 +228,7 @@ export const PATTERNS_GROUPED_BY_THEME_QUERY = defineQuery(`
   }[count(patterns) > 0]
 `);
 
-// Search query with scoring and filtering
+// Enhanced search query with comprehensive content type support
 export const PATTERN_SEARCH_QUERY = defineQuery(`
   *[_type == "pattern" && defined(slug.current)
     // Apply audience filter if provided
@@ -238,14 +238,172 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
     // Apply tags filter if provided
     && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
   ]
-  // Apply search scoring with both exact and partial matching
+  // Enhanced search scoring across relevant fields
+  | score(
+      // Primary content scoring (highest priority)
+      boost(title match $searchTerm, 15),
+      boost(pt::text(description) match $searchTerm, 12),
+      
+      // Partial/prefix matches (lower scores)
+      boost(title match ($searchTerm + "*"), 8),
+      boost(pt::text(description) match ($searchTerm + "*"), 6),
+      
+      // Basic scoring for any match
+      title match ($searchTerm + "*"),
+      pt::text(description) match ($searchTerm + "*")
+    )
+  // Filter out results with very low relevance scores
+  [_score > 0]
+  // Order by relevance score, then by title
+  | order(_score desc, title asc)
+  {
+    _id,
+    _type,
+    _score,
+    title,
+    description,
+    "slug": slug.current,
+    tags[]->{
+      _id,
+      title
+    },
+    audiences[]->{
+      _id,
+      title
+    },
+    theme->{
+      _id,
+      title,
+      description
+    },
+    solutions[]->{
+      _id,
+      title,
+      description
+    },
+    resources[]->{
+      _id,
+      title,
+      description,
+      solution[]->{
+        _id,
+        title
+      }
+    }
+  }
+`);
+
+// Direct solution search query
+export const SOLUTION_SEARCH_QUERY = defineQuery(`
+  *[_type == "solution"]
   | score(
       // Exact matches get highest scores
-      boost(title match $searchTerm, 10),
-      boost(pt::text(description) match $searchTerm, 8),
-      // Partial/prefix matches get lower scores
-      boost(title match ($searchTerm + "*"), 6),
-      boost(pt::text(description) match ($searchTerm + "*"), 4),
+      boost(title match $searchTerm, 12),
+      boost(pt::text(description) match $searchTerm, 10),
+      
+      // Partial matches
+      boost(title match ($searchTerm + "*"), 8),
+      boost(pt::text(description) match ($searchTerm + "*"), 6),
+      
+      // Basic scoring
+      title match ($searchTerm + "*"),
+      pt::text(description) match ($searchTerm + "*")
+    )
+  [_score > 0]
+  | order(_score desc, title asc)
+  {
+    _id,
+    _type,
+    _score,
+    title,
+    description,
+    audiences[]->{
+      _id,
+      title
+    },
+    // Find parent patterns for navigation
+    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{
+      _id,
+      title,
+      "slug": slug.current
+    }[0...3]
+  }
+`);
+
+// Direct resource search query
+export const RESOURCE_SEARCH_QUERY = defineQuery(`
+  *[_type == "resource"]
+  | score(
+      // Exact matches get highest scores
+      boost(title match $searchTerm, 12),
+      boost(pt::text(description) match $searchTerm, 10),
+      
+      // Partial matches
+      boost(title match ($searchTerm + "*"), 8),
+      boost(pt::text(description) match ($searchTerm + "*"), 6),
+      
+      // Basic scoring
+      title match ($searchTerm + "*"),
+      pt::text(description) match ($searchTerm + "*")
+    )
+  [_score > 0]
+  | order(_score desc, title asc)
+  {
+    _id,
+    _type,
+    _score,
+    title,
+    description,
+    links,
+    solutions[]->{
+      _id,
+      title
+    },
+    // Find parent patterns for navigation
+    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{
+      _id,
+      title,
+      "slug": slug.current
+    }[0...3]
+  }
+`);
+
+// Tag search query
+export const TAG_SEARCH_QUERY = defineQuery(`
+  *[_type == "tag" && title match ($searchTerm + "*")]
+  | score(
+      boost(title match $searchTerm, 15),
+      boost(title match ($searchTerm + "*"), 10),
+      title match ($searchTerm + "*")
+    )
+  [_score > 0]
+  | order(_score desc, title asc)
+  {
+    _id,
+    _type,
+    _score,
+    title,
+    // Find patterns that use this tag
+    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{
+      _id,
+      title,
+      "slug": slug.current
+    }[0...5]
+  }
+`);
+
+// Simple pattern search query for command modal (no filters)
+export const PATTERN_SIMPLE_SEARCH_QUERY = defineQuery(`
+  *[_type == "pattern" && defined(slug.current)]
+  | score(
+      // Primary content scoring (highest priority)
+      boost(title match $searchTerm, 15),
+      boost(pt::text(description) match $searchTerm, 12),
+      
+      // Partial/prefix matches (lower scores)
+      boost(title match ($searchTerm + "*"), 8),
+      boost(pt::text(description) match ($searchTerm + "*"), 6),
+      
       // Basic scoring for any match
       title match ($searchTerm + "*"),
       pt::text(description) match ($searchTerm + "*")

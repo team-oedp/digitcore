@@ -1,6 +1,6 @@
 {
 	"permissions": {
-		"allow": ["Bash(npm run typecheck:*)"],
+		"allow": ["Bash(npm run typecheck:*)", "Bash(npm test:*)"],
 		"deny": []
 	}
 }
