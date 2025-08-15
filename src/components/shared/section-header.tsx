@@ -3,11 +3,5 @@ type SectionHeaderProps = {
 };
 
 export function SectionHeader({ children }: SectionHeaderProps) {
-	return (
-		<div className="h-full w-full p-10 md:p-14">
-			<div className="mr-auto flex max-w-xl flex-col items-center justify-center gap-2">
-				{children}
-			</div>
-		</div>
-	);
+	return <h2 className="text-section-heading">{children}</h2>;
 }

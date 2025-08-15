@@ -9,6 +9,7 @@ import Icon03 from "~/components/icons/shapes/icon-03";
 import Icon04 from "~/components/icons/shapes/icon-04";
 import Icon05 from "~/components/icons/shapes/icon-05";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { SectionHeader } from "~/components/shared/section-header";
 import { client } from "~/sanity/lib/client";
 import { HOME_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -55,7 +56,7 @@ export default async function Home() {
 							<div key={section._key || index}>
 								<section className="max-w-4xl space-y-4">
 									{section.heading && (
-										<h2 className="prose mt-4">{section.heading}</h2>
+										<SectionHeader>{section.heading}</SectionHeader>
 									)}
 									{section.body && (
 										<CustomPortableText

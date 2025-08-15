@@ -7,12 +7,6 @@
 @theme {
 	--font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-
-	--text-heading: 2rem; /* 32px */
-	--text-heading--line-height: calc(2.25 / 2); /* 1.125 */
-
-	--text-pattern-list-item-title: 1.5rem; /* 24px */
-	--text-pattern-list-item-title--line-height: calc(2 / 1.5); /* 1.333 */
 }
 
 @theme inline {
@@ -52,6 +46,12 @@
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-ring: var(--sidebar-ring);
 	--color-icon: var(--icon);
+
+	--text-heading: 2rem; /* 32px */
+	--text-heading--line-height: calc(2.25 / 2); /* 1.125 */
+
+	--text-pattern-list-item-title: 1.5rem; /* 24px */
+	--text-pattern-list-item-title--line-height: calc(2 / 1.5); /* 1.333 */
 }
 
 @theme {
@@ -262,12 +262,27 @@
 		font-size: var(--text-heading);
 		line-height: var(--text-heading--line-height);
 		font-weight: 500; /* medium */
+		text-transform: capitalize;
+		color: var(--text-primary);
+		text-align: left;
+	}
+
+	.text-section-heading {
+		font-size: var(--text-heading);
+		line-height: var(--text-heading--line-height);
+		font-weight: 500; /* medium */
+		text-transform: capitalize;
+		color: var(--text-primary);
+		text-align: left;
 	}
 
 	.text-pattern-list-item-title {
 		font-size: var(--text-pattern-list-item-title);
 		line-height: var(--text-pattern-list-item-title--line-height);
 		font-weight: 500; /* medium */
+		text-transform: capitalize;
+		color: var(--text-primary);
+		text-align: left;
 	}
 }
 

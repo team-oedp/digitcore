@@ -7,7 +7,7 @@ export function PageHeader({
 }: { title: string; description: PortableTextBlock[] }) {
 	return (
 		<header>
-			<h1 className="text-[32px] font-bold text-primary">{title}</h1>
+			<h1 className="text-heading">{title}</h1>
 			<CustomPortableText value={description as PortableTextBlock[]} />
 		</header>
 	);
