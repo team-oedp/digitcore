@@ -6,6 +6,7 @@ import {
 	Share02Icon,
 	Tag01Icon,
 } from "@hugeicons/core-free-icons";
+import { MinusIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
 import { Icon } from "~/components/shared/icon";
@@ -16,6 +17,7 @@ import {
 	highlightMatches,
 	truncateWithContext,
 } from "~/lib/search-utils";
+import { cn } from "~/lib/utils";
 import { SearchResultPreview } from "./search-result-preview";
 
 // Base search result type
@@ -193,10 +195,42 @@ function PatternSearchResult({
 				{/* Description with Search Context */}
 				{descriptionResult.text && (
 					<div className="mb-4">
-						{/* Replace dangerouslySetInnerHTML with React-based rendering */}
-						<span className="text-base text-zinc-600 leading-relaxed">
-							{renderHighlightedText(displayDescription, searchTerm)}
-						</span>
+						{/* Smooth expand/collapse using CSS max-height + line clamp */}
+						<div
+							className={cn(
+								"relative overflow-hidden pr-10 transition-[max-height] duration-600 ease-[cubic-bezier(0.22,1,0.36,1)]",
+								showFullDescription
+									? "max-h-[1500px]"
+									: "line-clamp-3 max-h-[96px]",
+							)}
+						>
+							<span className="block text-base text-zinc-600 leading-relaxed">
+								{renderHighlightedText(
+									extractTextFromPortableText(rawDescription),
+									searchTerm,
+								)}
+							</span>
+
+							{/* Inline Expand/Collapse Toggle */}
+							{descriptionResult.isTruncated && (
+								<button
+									onClick={() => setShowFullDescription(!showFullDescription)}
+									type="button"
+									aria-label={
+										showFullDescription
+											? "Collapse description"
+											: "Expand description"
+									}
+									className="absolute right-0 bottom-0 inline-flex h-6 w-6 items-center justify-center rounded-md text-blue-600 transition-colors hover:border hover:border-current/40 hover:bg-blue-50/10 focus:outline-none"
+								>
+									{showFullDescription ? (
+										<MinusIcon className="size-4" aria-hidden="true" />
+									) : (
+										<PlusIcon className="size-4" aria-hidden="true" />
+									)}
+								</button>
+							)}
+						</div>
 
 						{/* Match Indicators */}
 						{searchTerm &&
@@ -221,17 +255,6 @@ function PatternSearchResult({
 									)}
 								</div>
 							)}
-
-						{/* Expand/Collapse Toggle */}
-						{descriptionResult.isTruncated && (
-							<button
-								onClick={() => setShowFullDescription(!showFullDescription)}
-								className="ml-2 text-base text-blue-600 leading-relaxed hover:text-blue-800"
-								type="button"
-							>
-								{showFullDescription ? "Show less" : "Show more"}
-							</button>
-						)}
 					</div>
 				)}
 
