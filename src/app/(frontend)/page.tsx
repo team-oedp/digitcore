@@ -20,6 +20,12 @@ export const metadata: Metadata = {
 		"Community-centered open infrastructure empowering equitable collaboration between researchers, developers, and frontline communities.",
 };
 
+function getIconByIndex(index: number, className: string) {
+	const icons = [Icon01, Icon02, Icon03, Icon04, Icon05] as const;
+	const Icon = icons[index % icons.length] ?? Icon01;
+	return <Icon className={className} />;
+}
+
 export default async function Home() {
 	const isDraftMode = (await draftMode()).isEnabled;
 	const data = (await client.fetch(
@@ -73,20 +79,9 @@ export default async function Home() {
 											title={`Icon ${(index % 5) + 1}`}
 											data-index={index % 5}
 										>
-											{index % 5 === 0 && (
-												<Icon01 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
-											)}
-											{index % 5 === 1 && (
-												<Icon02 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
-											)}
-											{index % 5 === 2 && (
-												<Icon03 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
-											)}
-											{index % 5 === 3 && (
-												<Icon04 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
-											)}
-											{index % 5 === 4 && (
-												<Icon05 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
+											{getIconByIndex(
+												index,
+												"h-64 w-64 fill-icon/20 object-contain text-icon/50",
 											)}
 										</div>
 									</div>
