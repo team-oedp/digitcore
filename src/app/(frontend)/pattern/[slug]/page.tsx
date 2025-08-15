@@ -96,7 +96,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
 
 	return (
 		<PatternContentProvider pattern={pattern}>
-			<PageWrapper className="space-y-4">
+			<PageWrapper className="flex flex-col gap-5 pb-40">
 				<PatternHeading
 					title={pattern.title || ""}
 					slug={
@@ -129,6 +129,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
 						}
 					/>
 				</div>
+				<div className="h-20" />
 			</PageWrapper>
 		</PatternContentProvider>
 	);
