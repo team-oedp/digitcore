@@ -47,11 +47,11 @@ export function TagsList({
 
 							{tags.map((tag) => (
 								<div key={tag.id} className="space-y-4">
-									<h3 className="font-normal text-lg text-neutral-500 capitalize">
+									<h3 className="font-normal text-lg text-primary capitalize">
 										{tag.name}
 									</h3>
 
-									<p className="mb-4 text-neutral-500 text-sm leading-relaxed">
+									<p className="mb-4 text-primary text-sm leading-relaxed">
 										Tagged to the following pages. Showing first{" "}
 										{Math.min(tag.resources.length, 10)} links.
 									</p>
@@ -61,9 +61,9 @@ export function TagsList({
 											<Link
 												key={resource.id}
 												href={`/pattern/${resource.slug}`}
-												className="flex h-6 items-center gap-2.5 rounded-lg border border-[#d1a7f3] bg-[#ead1fa] py-2 pr-3 pl-[9px] transition-opacity hover:opacity-80"
+												className="flex h-6 items-center gap-2.5 rounded-lg border border-neutral-300 bg-neutral-100 py-2 pr-3 pl-[9px] transition-opacity hover:opacity-80"
 											>
-												<span className="whitespace-nowrap text-[#4f065f] text-sm">
+												<span className="whitespace-nowrap text-primary text-sm">
 													{resource.title}
 												</span>
 											</Link>

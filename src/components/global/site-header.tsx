@@ -35,10 +35,10 @@ export function SiteHeader() {
 
 	return (
 		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-primary-foreground">
-			<nav className="flex w-full items-center justify-between gap-3.5 px-3.5 py-1.5">
+			<nav className="flex w-full items-center justify-between gap-3.5 px-3 py-1.5">
 				<div className="flex w-full items-center gap-10">
 					<Button variant="link" asChild>
-						<Link href="/" className="space-x-3.5">
+						<Link href="/" className="space-x-1.5">
 							<Image
 								src="/pattern-logo.svg"
 								alt="Digitcore Logo"

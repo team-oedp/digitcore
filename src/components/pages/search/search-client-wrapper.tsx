@@ -6,7 +6,6 @@ import {
 	type SearchResult,
 	searchPatternsWithParams,
 } from "~/app/actions/search";
-import { Separator } from "~/components/ui/separator";
 import { createLogLocation, logger } from "~/lib/logger";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
 import { SearchResultsSkeleton } from "./search-result-skeleton";
@@ -241,11 +240,10 @@ export function SearchClientWrapper() {
 				resultCount={searchResult?.totalCount || 0}
 				isLoading={isLoading && hasSearchCriteria}
 			/>
-			<Separator />
 
 			{!hasSearchCriteria ? (
 				// No search criteria - show empty state instead of loading
-				<div className="py-12 text-center">
+				<div className="py-12 text-left">
 					<p className="mb-2 text-zinc-500">Start your search</p>
 					<p className="text-base text-zinc-400">
 						Enter a search term or select filters to find patterns

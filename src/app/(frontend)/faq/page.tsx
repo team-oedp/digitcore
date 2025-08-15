@@ -76,19 +76,17 @@ export default async function FAQPage() {
 									value={faq._id}
 									className="border-zinc-300 border-b border-dashed last:border-b"
 								>
-									<AccordionTrigger
-										showPlusMinus
-										className="items-center justify-between py-4 text-left font-normal text-base text-neutral-500 hover:no-underline"
-									>
-										<span className="text-left">{faq.title}</span>
-									</AccordionTrigger>
-									<AccordionContent className="pt-2 pb-4">
-										<div className="prose prose-neutral max-w-none text-base text-neutral-500 leading-relaxed">
-											<CustomPortableText
-												value={faq.description}
-												className="prose prose-neutral max-w-none [&>*]:text-neutral-500"
-											/>
-										</div>
+						<AccordionTrigger
+							showPlusMinus
+							className="items-center justify-between py-4 text-left text-lg text-primary font-normal hover:no-underline"
+						>
+							<span className="text-left">{faq.title}</span>
+						</AccordionTrigger>
+						<AccordionContent className="pt-2 pb-4">
+							<CustomPortableText
+								value={faq.description}
+								className="accordion-detail"
+							/>
 									</AccordionContent>
 								</AccordionItem>
 							))}
