@@ -35,59 +35,55 @@ export default async function Home() {
 
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-4 pb-24">
+			<div className="flex flex-col gap-10 pb-56">
 				{data?.description && (
 					<CustomPortableText
 						value={data.description as PortableTextBlock[]}
 						className="prose prose-neutral max-w-none"
 					/>
 				)}
-				<div className="mt-4 mb-10">
-					<div className="h-64 w-64">
-						<DigitcoreLogoIcon
-							className="h-full w-full stroke-icon/20 text-icon/20"
-							stroke="currentColor"
-						/>
-					</div>
+				<div className="h-64 w-64">
+					<DigitcoreLogoIcon
+						className="h-full w-full stroke-icon/20 text-icon/20"
+						stroke="currentColor"
+					/>
 				</div>
-				{contentSections.length > 0 && (
-					<div>
-						{contentSections.map((section, index) => (
-							<div key={section._key || index}>
-								<section className="max-w-4xl space-y-4">
-									{section.heading && (
-										<SectionHeader heading={section.heading} />
+				{contentSections.length > 0 &&
+					contentSections.map((section, index) => (
+						<section
+							className="flex flex-col gap-10"
+							key={section._key || index}
+						>
+							{index > 0 && (
+								<div title={`Icon ${(index % 5) + 1}`} data-index={index % 5}>
+									{index % 5 === 0 && (
+										<Icon01 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
 									)}
-									{section.body && (
-										<CustomPortableText
-											value={section.body as PortableTextBlock[]}
-											className="prose max-w-none"
-										/>
+									{index % 5 === 1 && (
+										<Icon02 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
 									)}
-								</section>
-								{index < contentSections.length - 1 && (
-									<div title={`Icon ${(index % 5) + 1}`} data-index={index % 5}>
-										{index % 5 === 0 && (
-											<Icon01 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
-										)}
-										{index % 5 === 1 && (
-											<Icon02 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
-										)}
-										{index % 5 === 2 && (
-											<Icon03 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
-										)}
-										{index % 5 === 3 && (
-											<Icon04 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
-										)}
-										{index % 5 === 4 && (
-											<Icon05 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
-										)}
-									</div>
+									{index % 5 === 2 && (
+										<Icon03 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
+									)}
+									{index % 5 === 3 && (
+										<Icon04 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
+									)}
+									{index % 5 === 4 && (
+										<Icon05 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
+									)}
+								</div>
+							)}
+							<div className="flex flex-col gap-5">
+								{section.heading && <SectionHeader heading={section.heading} />}
+								{section.body && (
+									<CustomPortableText
+										value={section.body as PortableTextBlock[]}
+										className="prose max-w-none"
+									/>
 								)}
 							</div>
-						))}
-					</div>
-				)}
+						</section>
+					))}
 			</div>
 		</PageWrapper>
 	);
