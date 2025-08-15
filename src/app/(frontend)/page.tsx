@@ -35,7 +35,7 @@ export default async function Home() {
 
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-4 pb-16">
+			<div className="flex flex-col gap-4 pb-24">
 				{data?.description && (
 					<CustomPortableText
 						value={data.description as PortableTextBlock[]}
@@ -66,28 +66,22 @@ export default async function Home() {
 									)}
 								</section>
 								{index < contentSections.length - 1 && (
-									<div className="flex justify-start py-4">
-										<div
-											className="icon-item"
-											title={`Icon ${(index % 5) + 1}`}
-											data-index={index % 5}
-										>
-											{index % 5 === 0 && (
-												<Icon01 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
-											)}
-											{index % 5 === 1 && (
-												<Icon02 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
-											)}
-											{index % 5 === 2 && (
-												<Icon03 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
-											)}
-											{index % 5 === 3 && (
-												<Icon04 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
-											)}
-											{index % 5 === 4 && (
-												<Icon05 className="h-[120px] w-[120px] fill-icon/20 object-contain text-icon/50" />
-											)}
-										</div>
+									<div title={`Icon ${(index % 5) + 1}`} data-index={index % 5}>
+										{index % 5 === 0 && (
+											<Icon01 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
+										)}
+										{index % 5 === 1 && (
+											<Icon02 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
+										)}
+										{index % 5 === 2 && (
+											<Icon03 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
+										)}
+										{index % 5 === 3 && (
+											<Icon04 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
+										)}
+										{index % 5 === 4 && (
+											<Icon05 className="h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50" />
+										)}
 									</div>
 								)}
 							</div>
