@@ -3,6 +3,7 @@ import { draftMode } from "next/headers";
 import { TagsList } from "~/components/pages/tags/tags-list";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
 import { LetterNavigation } from "~/components/shared/letter-navigation";
+import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
 import { TAGS_WITH_PATTERNS_QUERY } from "~/sanity/lib/queries";
@@ -110,10 +111,7 @@ export default async function Tags() {
 
 				{/* Scrolling section */}
 				<div className="flex flex-col gap-40">
-					<p className="text-base text-primary">
-						Explore tags to discover new pathways through the toolkit’s
-						patterns.
-					</p>
+					<PageHeading title="Tags" description={[]} />
 					<TagsList tagsByLetter={tagsByLetter} alphabet={ALPHABET} />
 				</div>
 			</PageWrapper>

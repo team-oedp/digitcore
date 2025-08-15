@@ -9,7 +9,7 @@ import Icon03 from "~/components/icons/shapes/icon-03";
 import Icon04 from "~/components/icons/shapes/icon-04";
 import Icon05 from "~/components/icons/shapes/icon-05";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import { SectionHeader } from "~/components/shared/section-header";
+import { SectionHeading } from "~/components/shared/section-heading";
 import { client } from "~/sanity/lib/client";
 import { HOME_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -74,7 +74,9 @@ export default async function Home() {
 								</div>
 							)}
 							<div className="flex flex-col gap-5">
-								{section.heading && <SectionHeader heading={section.heading} />}
+								{section.heading && (
+									<SectionHeading heading={section.heading} />
+								)}
 								{section.body && (
 									<CustomPortableText
 										value={section.body as PortableTextBlock[]}

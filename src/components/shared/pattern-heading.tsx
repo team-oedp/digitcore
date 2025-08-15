@@ -8,13 +8,13 @@ import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { Icon } from "./icon";
 
-type PageHeaderProps = {
+type PatternHeadingProps = {
 	title?: string;
 	slug?: string;
 	pattern?: Pattern;
 };
 
-export function PageHeader({ title, slug, pattern }: PageHeaderProps) {
+export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 	const PatternIcon = getPatternIconWithMapping(slug || "");
 
 	const addPatternToBag = useCarrierBagStore((s) => s.addPattern);

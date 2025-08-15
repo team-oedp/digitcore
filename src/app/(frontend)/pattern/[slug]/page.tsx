@@ -9,7 +9,7 @@ import type { DereferencedResource } from "~/components/pages/pattern/resources"
 import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import { PageHeader } from "~/components/shared/pattern-header";
+import { PatternHeading } from "~/components/shared/pattern-heading";
 import { client } from "~/sanity/lib/client";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -97,7 +97,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
 	return (
 		<PatternContentProvider pattern={pattern}>
 			<PageWrapper className="space-y-4">
-				<PageHeader
+				<PatternHeading
 					title={pattern.title || ""}
 					slug={
 						typeof pattern.slug === "string"

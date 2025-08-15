@@ -420,6 +420,17 @@ export const VALUES_PAGE_QUERY = defineQuery(`
   }
 `);
 
+export const ABOUT_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'about'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]
+  }
+`);
+
 export const HOME_PAGE_QUERY = defineQuery(`
   *[_type == 'page' && slug.current == '/'][0]{
     _id,
