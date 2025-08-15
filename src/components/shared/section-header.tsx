@@ -1,7 +1,7 @@
 type SectionHeaderProps = {
-	children: React.ReactNode;
+	heading: string;
 };
 
-export function SectionHeader({ children }: SectionHeaderProps) {
-	return <h2 className="text-section-heading">{children}</h2>;
+export function SectionHeader({ heading }: SectionHeaderProps) {
+	return <h2 className="text-section-heading">{heading}</h2>;
 }
