@@ -55,14 +55,12 @@ export default async function Home() {
 							<div key={section._key || index}>
 								<section className="max-w-4xl space-y-4">
 									{section.heading && (
-										<h2 className="mt-4 font-normal text-lg text-primary uppercase tracking-wide">
-											{section.heading}
-										</h2>
+										<h1 className="prose mt-4">{section.heading}</h1>
 									)}
 									{section.body && (
 										<CustomPortableText
 											value={section.body as PortableTextBlock[]}
-											className="prose prose-neutral max-w-none"
+											className="prose max-w-none"
 										/>
 									)}
 								</section>

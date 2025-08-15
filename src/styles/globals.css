@@ -75,6 +75,38 @@
 	--color-neutral-900: oklch(0.36 0 0);
 	--color-neutral-950: oklch(0.2809 0 0);
 
+	--color-teal-dark: oklch(0.35 0.15 180);
+	--color-teal-default: oklch(0.95 0.08 180);
+	--color-teal-light: oklch(0.97 0.06 180);
+
+	--color-ochre-dark: oklch(0.45 0.15 85);
+	--color-ochre-default: oklch(0.95 0.08 85);
+	--color-ochre-light: oklch(0.96 0.05 85);
+
+	--color-fuschia-dark: oklch(0.35 0.15 300);
+	--color-fuschia-default: oklch(0.85 0.15 300);
+	--color-fuschia-light: oklch(0.9 0.1 300);
+
+	--color-cerulean-dark: oklch(0.35 0.15 240);
+	--color-cerulean-default: oklch(0.8 0.12 240);
+	--color-cerulean-light: oklch(0.88 0.08 240);
+
+	--color-moss-dark: oklch(0.45 0.12 120);
+	--color-moss-default: oklch(0.75 0.2 120);
+	--color-moss-light: oklch(0.9 0.1 120);
+
+	--color-purple-dark: oklch(0.3 0.2 270);
+	--color-purple-default: oklch(0.85 0.08 270);
+	--color-purple-light: oklch(0.9 0.06 270);
+
+	--color-coral-dark: oklch(0.4 0.15 25);
+	--color-coral-default: oklch(0.8 0.15 25);
+	--color-coral-light: oklch(0.92 0.08 25);
+
+	--color-green-dark: oklch(0.25 0.15 150);
+	--color-green-default: oklch(0.8 0.15 120);
+	--color-green-light: oklch(0.9 0.1 120);
+
 	--radius: 0.625rem;
 	--background: var(--color-neutral-100);
 	--foreground: var(--color-neutral-950);
@@ -108,6 +140,30 @@
 	--sidebar-border: var(--color-neutral-200);
 	--sidebar-ring: var(--color-neutral-300);
 	--icon: oklch(0.6902 0.0515 134.87);
+
+	--theme-badge-text: var(--color-orche-dark);
+	--theme-badge-background: var(--color-ochre-default);
+	--theme-badge-border: var(--color-ochre-light);
+
+	--tag-badge-text: var(--color-purple-dark);
+	--tag-badge-background: var(--color-purple-default);
+	--tag-badge-border: var(--color-purple-light);
+
+	--audience-badge-text: var(--color-cerulean-dark);
+	--audience-badge-background: var(--color-cerulean-default);
+	--audience-badge-border: var(--color-cerulean-light);
+
+	--solution-badge-text: var(--color-coral-dark);
+	--solution-badge-background: var(--color-coral-default);
+	--solution-badge-border: var(--color-coral-light);
+
+	--resource-badge-text: var(--color-fuschia-dark);
+	--resource-badge-background: var(--color-fuschia-default);
+	--resource-badge-border: var(--color-fuschia-light);
+
+	--pattern-badge-text: var(--color-teal-dark);
+	--pattern-badge-background: var(--color-teal-default);
+	--pattern-badge-border: var(--color-teal-light);
 }
 
 .dark {
@@ -179,147 +235,23 @@
 		-ms-overflow-style: none;
 		scrollbar-width: none;
 	}
+}
 
-	/* Tailwind Typography color mapping using project tokens */
-	.prose {
-		--tw-prose-body: var(--foreground);
-		--tw-prose-headings: var(--foreground);
-		--tw-prose-lead: var(--muted-foreground);
-		--tw-prose-links: var(--primary);
-		--tw-prose-bold: var(--foreground);
-		--tw-prose-counters: var(--muted-foreground);
-		--tw-prose-bullets: var(--muted-foreground);
-		--tw-prose-hr: var(--border);
-		--tw-prose-quotes: var(--foreground);
-		--tw-prose-quote-borders: var(--border);
-		--tw-prose-captions: var(--muted-foreground);
-		--tw-prose-code: var(--foreground);
-		--tw-prose-pre-code: var(--muted-foreground);
-		--tw-prose-pre-bg: var(--card);
-		--tw-prose-th-borders: var(--border);
-		--tw-prose-td-borders: var(--border);
-
-		/* Base typescale for prose */
-		/* font-size: var(--text-base);
-		line-height: var(--text-base--line-height); */
-	}
-
-	.prose-primary {
-		--tw-prose-body: var(--primary);
-		--tw-prose-headings: var(--primary);
-		--tw-prose-links: var(--primary);
-	}
-
-	.prose-muted {
-		--tw-prose-body: var(--muted-foreground);
-		--tw-prose-headings: var(--muted-foreground);
-		--tw-prose-links: var(--muted-foreground);
-	}
-
-	/* Map Tailwind Typography headings to project typescale */
-	.prose :where(h1):not(:where(.not-prose *)) {
-		font-size: var(--text-3xl);
-		line-height: var(--text-3xl--line-height);
-	}
-	.prose :where(h2):not(:where(.not-prose *)) {
-		font-size: var(--text-2xl);
-		line-height: var(--text-2xl--line-height);
-	}
-	.prose :where(h3):not(:where(.not-prose *)) {
-		font-size: var(--text-xl);
-		line-height: var(--text-xl--line-height);
-	}
-	.prose :where(h4):not(:where(.not-prose *)) {
-		font-size: var(--text-lg);
-		line-height: var(--text-lg--line-height);
-	}
-	.prose :where(p, ul, ol):not(:where(.not-prose *)) {
-		font-size: inherit;
-		line-height: inherit;
-	}
-
-	/* Size variants aligned to project typescale */
-	.prose-sm {
-		font-size: var(--text-sm);
-		line-height: var(--text-sm--line-height);
-	}
-	.prose-sm :where(h1):not(:where(.not-prose *)) {
-		font-size: var(--text-2xl);
-		line-height: var(--text-2xl--line-height);
-	}
-	.prose-sm :where(h2):not(:where(.not-prose *)) {
-		font-size: var(--text-xl);
-		line-height: var(--text-xl--line-height);
-	}
-	.prose-sm :where(h3):not(:where(.not-prose *)) {
-		font-size: var(--text-lg);
-		line-height: var(--text-lg--line-height);
-	}
-	.prose-sm :where(h4):not(:where(.not-prose *)) {
-		font-size: var(--text-md);
-		line-height: var(--text-md--line-height);
-	}
-
-	.prose-lg {
-		font-size: var(--text-lg);
-		line-height: var(--text-lg--line-height);
-	}
-	.prose-lg :where(h1):not(:where(.not-prose *)) {
-		font-size: var(--text-4xl);
-		line-height: var(--text-4xl--line-height);
-	}
-	.prose-lg :where(h2):not(:where(.not-prose *)) {
-		font-size: var(--text-3xl);
-		line-height: var(--text-3xl--line-height);
-	}
-	.prose-lg :where(h3):not(:where(.not-prose *)) {
-		font-size: var(--text-2xl);
-		line-height: var(--text-2xl--line-height);
-	}
-	.prose-lg :where(h4):not(:where(.not-prose *)) {
-		font-size: var(--text-xl);
-		line-height: var(--text-xl--line-height);
-	}
-
-	.prose-xl {
-		font-size: var(--text-xl);
-		line-height: var(--text-xl--line-height);
-	}
-	.prose-xl :where(h1):not(:where(.not-prose *)) {
-		font-size: var(--text-5xl);
-		line-height: var(--text-5xl--line-height);
-	}
-	.prose-xl :where(h2):not(:where(.not-prose *)) {
-		font-size: var(--text-4xl);
-		line-height: var(--text-4xl--line-height);
-	}
-	.prose-xl :where(h3):not(:where(.not-prose *)) {
-		font-size: var(--text-3xl);
-		line-height: var(--text-3xl--line-height);
-	}
-	.prose-xl :where(h4):not(:where(.not-prose *)) {
-		font-size: var(--text-2xl);
-		line-height: var(--text-2xl--line-height);
-	}
-
-	.prose-2xl {
-		font-size: var(--text-2xl);
-		line-height: var(--text-2xl--line-height);
-	}
-	.prose-2xl :where(h1):not(:where(.not-prose *)) {
-		font-size: var(--text-6xl);
-		line-height: var(--text-6xl--line-height);
-	}
-	.prose-2xl :where(h2):not(:where(.not-prose *)) {
-		font-size: var(--text-5xl);
-		line-height: var(--text-5xl--line-height);
-	}
-	.prose-2xl :where(h3):not(:where(.not-prose *)) {
-		font-size: var(--text-4xl);
-		line-height: var(--text-4xl--line-height);
-	}
-	.prose-2xl :where(h4):not(:where(.not-prose *)) {
-		font-size: var(--text-3xl);
-		line-height: var(--text-3xl--line-height);
-	}
+@utility prose {
+	--tw-prose-body: var(--foreground);
+	--tw-prose-headings: var(--foreground);
+	--tw-prose-lead: var(--muted-foreground);
+	--tw-prose-links: var(--primary);
+	--tw-prose-bold: var(--foreground);
+	--tw-prose-counters: var(--muted-foreground);
+	--tw-prose-bullets: var(--muted-foreground);
+	--tw-prose-hr: var(--border);
+	--tw-prose-quotes: var(--foreground);
+	--tw-prose-quote-borders: var(--border);
+	--tw-prose-captions: var(--muted-foreground);
+	--tw-prose-code: var(--foreground);
+	--tw-prose-pre-code: var(--muted-foreground);
+	--tw-prose-pre-bg: var(--card);
+	--tw-prose-th-borders: var(--border);
+	--tw-prose-td-borders: var(--border);
 }
