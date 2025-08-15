@@ -35,7 +35,7 @@ export default async function Home() {
 
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-10 pb-56">
+			<div className="flex flex-col gap-16 pb-44">
 				{data?.description && (
 					<CustomPortableText
 						value={data.description as PortableTextBlock[]}
@@ -51,7 +51,7 @@ export default async function Home() {
 				{contentSections.length > 0 &&
 					contentSections.map((section, index) => (
 						<section
-							className="flex flex-col gap-10"
+							className="flex flex-col gap-16"
 							key={section._key || index}
 						>
 							{index > 0 && (
