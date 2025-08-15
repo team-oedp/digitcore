@@ -5,7 +5,7 @@ export function SearchResultSkeleton() {
 	return (
 		<div className="relative w-full pb-9">
 			{/* Dashed border at bottom */}
-			<div className="absolute right-0 bottom-0 left-0 h-px border-zinc-300 border-t border-dashed" />
+			<div className="absolute right-0 bottom-0 left-0 h-px border-neutral-300 border-t border-dashed" />
 
 			<div className="py-[15px]">
 				<div className="flex items-start justify-between gap-[150px]">

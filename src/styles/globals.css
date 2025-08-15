@@ -246,6 +246,22 @@
 		@apply text-base text-primary prose;
 	}
 
+	.text-minor {
+		@apply text-sm text-neutral-300 prose;
+	}
+
+	.text-subheading {
+		@apply font-normal text-lg text-neutral-500 uppercase tracking-wide;
+	}
+
+	.accordion-heading {
+		@apply prose text-primary text-lg hover:no-underline text-left;
+	}
+
+	.accordion-detail {
+		@apply prose text-primary text-base text-left;
+	}
+
 	.text-button {
 		font-size: 0.875rem; /* 14px */
 		line-height: calc(1.25 / 0.875); /* 1.429 */

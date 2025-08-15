@@ -464,6 +464,17 @@ export const HOME_PAGE_QUERY = defineQuery(`
   }
 `);
 
+export const FAQ_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'frequently-asked-questions'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]
+  }
+`);
+
 export const FAQS_QUERY = defineQuery(`
   *[_type == "faq"] | order(_createdAt asc) {
     _id,

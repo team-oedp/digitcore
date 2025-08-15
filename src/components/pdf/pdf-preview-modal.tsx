@@ -55,7 +55,7 @@ const PreviewTableOfContents = ({
 			{documentData.patterns.map((pattern, index) => (
 				<div
 					key={pattern.header.title}
-					className="flex justify-between border-zinc-100 border-b py-2"
+					className="flex justify-between border-neutral-100 border-b py-2"
 				>
 					<span className="text-primary text-sm capitalize">
 						{pattern.header.title}
@@ -76,14 +76,14 @@ const PreviewPatternConnections = ({
 		<div className="mb-8">
 			{connections.map((connection) => (
 				<div key={connection.type} className="mb-4">
-					<h4 className="mb-2 font-semibold text-gray-700 text-xs uppercase">
+					<h4 className="mb-2 font-semibold text-neutral-700 text-xs uppercase">
 						{connection.title}
 					</h4>
 					<div className="flex flex-wrap gap-2">
 						{connection.items.map((item) => (
 							<span
 								key={item.id}
-								className="rounded bg-gray-200 px-2 py-1 text-gray-700 text-xs"
+								className="rounded bg-gray-200 px-2 py-1 text-neutral-700 text-xs"
 							>
 								{item.title}
 							</span>
@@ -150,7 +150,7 @@ const PreviewResources = ({
 				{resources.map((resource, index) => (
 					<div
 						key={resource.id}
-						className={`border-zinc-300 border-t border-dashed pt-5 pb-5 ${
+						className={`border-neutral-300 border-t border-dashed pt-5 pb-5 ${
 							index === resources.length - 1 ? "border-b" : ""
 						}`}
 					>
@@ -163,7 +163,7 @@ const PreviewResources = ({
 							</p>
 						)}
 						{resource.relatedSolutions.length > 0 && (
-							<p className="text-gray-600 text-xs italic">
+							<p className="text-neutral-600 text-xs italic">
 								Related solutions: {resource.relatedSolutions.join(", ")}
 							</p>
 						)}
@@ -184,20 +184,20 @@ const PreviewPatternNotes = ({
 		<div className="mt-5 border-gray-200 border-t pt-4">
 			{dateAdded && (
 				<div className="mb-2">
-					<h5 className="mb-2 font-semibold text-gray-700 text-sm">
+					<h5 className="mb-2 font-semibold text-neutral-700 text-sm">
 						Added to Carrier Bag
 					</h5>
-					<p className="text-gray-600 text-xs leading-normal">
+					<p className="text-neutral-600 text-xs leading-normal">
 						{new Date(dateAdded).toLocaleDateString()}
 					</p>
 				</div>
 			)}
 			{notes && (
 				<div>
-					<h5 className="mb-2 font-semibold text-gray-700 text-sm">
+					<h5 className="mb-2 font-semibold text-neutral-700 text-sm">
 						Your Notes
 					</h5>
-					<p className="text-gray-600 text-xs leading-normal">{notes}</p>
+					<p className="text-neutral-600 text-xs leading-normal">{notes}</p>
 				</div>
 			)}
 		</div>
@@ -307,7 +307,7 @@ export function PDFPreviewModal({
 							>
 								<PreviewPatternPage pattern={pattern} />
 								{index < documentData.patterns.length - 1 && (
-									<div className="bg-gray-100 px-10 py-2 text-center text-gray-500 text-xs">
+									<div className="bg-gray-100 px-10 py-2 text-center text-neutral-500 text-xs">
 										— Page Break —
 									</div>
 								)}

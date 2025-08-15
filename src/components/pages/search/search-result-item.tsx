@@ -106,6 +106,7 @@ type SearchResultItemProps = {
 		| ResourceSearchResultData
 		| SolutionSearchResultData;
 	searchTerm?: string;
+	showPatternIcon?: boolean;
 };
 
 // Shared base layout component
@@ -113,18 +114,27 @@ function SearchResultBase({
 	children,
 	title,
 	buttonElement,
+	showPatternIcon = false,
 }: {
 	children: React.ReactNode;
 	title: string;
 	buttonElement: React.ReactNode;
+	showPatternIcon?: boolean;
 }) {
 	return (
 		<div className="relative w-full border-border border-t border-dashed pb-9">
 			<div className="flex items-start justify-between py-4">
 				<div className="w-full max-w-[600px] flex-shrink-0 space-y-4">
-					<h3 className="w-full font-light text-[28px] text-primary leading-normal">
-						{title}
-					</h3>
+					<div className="flex items-center gap-3">
+						{showPatternIcon && (
+							<Icon
+								icon={Share02Icon}
+								className="h-5 w-5 flex-shrink-0 text-neutral-500"
+								strokeWidth={1.5}
+							/>
+						)}
+						<h3 className="w-full text-pattern-list-item-title">{title}</h3>
+					</div>
 					{children}
 				</div>
 				<div className="flex-shrink-0 pt-2">{buttonElement}</div>
@@ -137,7 +147,12 @@ function SearchResultBase({
 function PatternSearchResult({
 	pattern,
 	searchTerm = "",
-}: { pattern: PatternSearchResultData; searchTerm?: string }) {
+	showPatternIcon = false,
+}: {
+	pattern: PatternSearchResultData;
+	searchTerm?: string;
+	showPatternIcon?: boolean;
+}) {
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const title = pattern.title || "Untitled Pattern";
 	const theme = pattern.theme;
@@ -168,24 +183,24 @@ function PatternSearchResult({
 			href={`/pattern/${pattern.slug}`}
 			className="flex items-center gap-2 rounded-md border border-[#d1a7f3] bg-[#ead1fa] px-[9px] py-[5px] text-[#4f065f] transition-opacity hover:opacity-80"
 		>
-			<span className="font-normal text-[14px] uppercase leading-[20px]">
-				Visit Pattern
-			</span>
-			<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-[#4f065f]" />
+			<span className="text-button">Visit Pattern</span>
 		</a>
 	);
 
 	return (
 		<SearchResultPreview description={displayDescription} patternTitle={title}>
-			<SearchResultBase title={title} buttonElement={buttonElement}>
+			<SearchResultBase
+				title={title}
+				buttonElement={buttonElement}
+				showPatternIcon={showPatternIcon}
+			>
 				{/* Theme Badge */}
 				{theme && (
 					<div className="mb-4 flex w-full items-center gap-2.5 overflow-hidden">
-						<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-zinc-300 px-2 py-1.5">
-							<span className="whitespace-nowrap text-[14px] text-zinc-500 capitalize tracking-[-0.28px]">
+						<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-md border border-neutral-300 px-2 py-1.5">
+							<span className="whitespace-nowrap text-[14px] text-neutral-500 capitalize tracking-[-0.28px]">
 								{theme.title}
 							</span>
-							<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-zinc-500" />
 						</div>
 					</div>
 				)}
@@ -194,7 +209,7 @@ function PatternSearchResult({
 				{descriptionResult.text && (
 					<div className="mb-4">
 						{/* Replace dangerouslySetInnerHTML with React-based rendering */}
-						<span className="text-base text-zinc-600 leading-relaxed">
+						<span className="prose prose-sm text-neutral-300">
 							{renderHighlightedText(displayDescription, searchTerm)}
 						</span>
 
@@ -215,7 +230,7 @@ function PatternSearchResult({
 										</span>
 									)}
 									{descriptionResult.matchCount > 1 && (
-										<span className="text-zinc-400">
+										<span className="text-neutral-400">
 											({descriptionResult.matchCount} matches)
 										</span>
 									)}
@@ -226,7 +241,7 @@ function PatternSearchResult({
 						{descriptionResult.isTruncated && (
 							<button
 								onClick={() => setShowFullDescription(!showFullDescription)}
-								className="ml-2 text-base text-blue-600 leading-relaxed hover:text-blue-800"
+								className="ml-2 text-minor hover:text-neutral-500"
 								type="button"
 							>
 								{showFullDescription ? "Show less" : "Show more"}
@@ -241,7 +256,7 @@ function PatternSearchResult({
 						{tags.map((tag) => (
 							<div
 								key={tag._id}
-								className="flex h-6 items-center gap-2.5 rounded-lg border border-green-200 bg-green-100 py-2 pr-3 pl-[9px]"
+								className="flex h-6 items-center gap-2.5 rounded-md border border-green-200 bg-green-100 py-2 pr-3 pl-[9px]"
 							>
 								<span className="whitespace-nowrap text-[#166534] text-[14px] capitalize">
 									{tag.title}
@@ -258,7 +273,7 @@ function PatternSearchResult({
 						{audiences.map((audience) => (
 							<div
 								key={audience._id}
-								className="flex h-6 items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-100 py-2 pr-3 pl-[9px]"
+								className="flex h-6 items-center gap-2.5 rounded-md border border-blue-200 bg-blue-100 py-2 pr-3 pl-[9px]"
 							>
 								<span className="whitespace-nowrap text-[#1e40ae] text-[14px]">
 									{audience.title}
@@ -307,7 +322,7 @@ function ResourceSearchResult({
 					{solutions.map((solution) => (
 						<div
 							key={solution._id}
-							className="flex h-6 items-center gap-2.5 rounded-lg border border-green-200 bg-green-100 py-2 pr-3 pl-[9px]"
+							className="flex h-6 items-center gap-2.5 rounded-md border border-green-200 bg-green-100 py-2 pr-3 pl-[9px]"
 						>
 							<span className="whitespace-nowrap text-[#166534] text-[14px]">
 								{solution.title}
@@ -324,24 +339,30 @@ function ResourceSearchResult({
 			{/* From Pattern Line */}
 			{patternInfo && (
 				<div className="mb-4 flex w-full items-center gap-2.5 overflow-hidden">
-					<div className="whitespace-nowrap text-[14px] text-zinc-500 tracking-[-0.14px]">
+					<div className="whitespace-nowrap text-[14px] text-neutral-500 tracking-[-0.14px]">
 						<span>From </span>
 						<span className="uppercase">PATTERN</span>
 					</div>
 
 					<div className="flex h-6 w-6 items-center justify-center">
-						<Icon icon={ArrowRight02Icon} className="h-4 w-4 text-zinc-500" />
+						<Icon
+							icon={ArrowRight02Icon}
+							className="h-4 w-4 text-neutral-500"
+						/>
 					</div>
 
 					<SearchResultPreview
 						description={description}
 						patternTitle={patternInfo.title || "Pattern"}
 					>
-						<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-zinc-300 px-2 py-1.5">
-							<span className="whitespace-nowrap text-[14px] text-zinc-500 capitalize tracking-[-0.28px]">
+						<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-neutral-300 px-2 py-1.5">
+							<span className="whitespace-nowrap text-[14px] text-neutral-500 capitalize tracking-[-0.28px]">
 								{patternInfo.title}
 							</span>
-							<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-zinc-500" />
+							<Icon
+								icon={Share02Icon}
+								className="h-3.5 w-3.5 text-neutral-500"
+							/>
 						</div>
 					</SearchResultPreview>
 				</div>
@@ -381,7 +402,7 @@ function SolutionSearchResult({
 					{audiences.map((audience) => (
 						<div
 							key={audience._id}
-							className="flex h-6 items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-100 py-2 pr-3 pl-[9px]"
+							className="flex h-6 items-center gap-2.5 rounded-md border border-blue-200 bg-blue-100 py-2 pr-3 pl-[9px]"
 						>
 							<span className="whitespace-nowrap text-[#1e40ae] text-[14px]">
 								{audience.title}
@@ -398,24 +419,30 @@ function SolutionSearchResult({
 			{/* From Pattern Line */}
 			{patternInfo && (
 				<div className="mb-4 flex w-full items-center gap-2.5 overflow-hidden">
-					<div className="whitespace-nowrap text-[14px] text-zinc-500 tracking-[-0.14px]">
+					<div className="whitespace-nowrap text-[14px] text-neutral-500 tracking-[-0.14px]">
 						<span>From </span>
 						<span className="uppercase">PATTERN</span>
 					</div>
 
 					<div className="flex h-6 w-6 items-center justify-center">
-						<Icon icon={ArrowRight02Icon} className="h-4 w-4 text-zinc-500" />
+						<Icon
+							icon={ArrowRight02Icon}
+							className="h-4 w-4 text-neutral-500"
+						/>
 					</div>
 
 					<SearchResultPreview
 						description={description}
 						patternTitle={patternInfo.title || "Pattern"}
 					>
-						<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-zinc-300 px-2 py-1.5">
-							<span className="whitespace-nowrap text-[14px] text-zinc-500 capitalize tracking-[-0.28px]">
+						<div className="flex h-6 cursor-pointer items-center gap-2 py-1.5">
+							<span className="whitespace-nowrap text-[14px] text-neutral-500 capitalize tracking-[-0.28px]">
 								{patternInfo.title}
 							</span>
-							<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-zinc-500" />
+							<Icon
+								icon={Share02Icon}
+								className="h-3.5 w-3.5 text-neutral-500"
+							/>
 						</div>
 					</SearchResultPreview>
 				</div>
@@ -428,12 +455,14 @@ function SolutionSearchResult({
 export function SearchResultItem({
 	pattern,
 	searchTerm,
+	showPatternIcon,
 }: SearchResultItemProps) {
 	// Since SearchPattern always has _type: "pattern", we only handle that case
 	return (
 		<PatternSearchResult
 			pattern={pattern as PatternSearchResultData}
 			searchTerm={searchTerm}
+			showPatternIcon={showPatternIcon}
 		/>
 	);
 }
