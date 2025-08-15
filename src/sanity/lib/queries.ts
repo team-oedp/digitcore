@@ -518,6 +518,17 @@ export const TAGS_WITH_PATTERNS_QUERY = defineQuery(`
   }[count(patterns) > 0]
 `);
 
+export const TAGS_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'tags'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]
+  }
+`);
+
 export const CARRIER_BAG_QUERY = defineQuery(`
   *[_type == 'carrierBag'][0]{
     _id,
@@ -578,8 +589,41 @@ export const VALUES_PAGE_QUERY = defineQuery(`
   }
 `);
 
+export const PATTERNS_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'patterns'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]
+  }
+`);
+
+export const ABOUT_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'about'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]
+  }
+`);
+
 export const HOME_PAGE_QUERY = defineQuery(`
   *[_type == 'page' && slug.current == '/'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]
+  }
+`);
+
+export const FAQ_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'frequently-asked-questions'][0]{
     _id,
     _type,
     title,

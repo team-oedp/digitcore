@@ -9,6 +9,7 @@ import Icon03 from "~/components/icons/shapes/icon-03";
 import Icon04 from "~/components/icons/shapes/icon-04";
 import Icon05 from "~/components/icons/shapes/icon-05";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { SectionHeading } from "~/components/shared/section-heading";
 import { client } from "~/sanity/lib/client";
 import { HOME_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -40,56 +41,50 @@ export default async function Home() {
 
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-4 pb-16">
+			<div className="flex flex-col gap-16 pb-44">
 				{data?.description && (
 					<CustomPortableText
 						value={data.description as PortableTextBlock[]}
 						className="prose prose-neutral max-w-none"
 					/>
 				)}
-				<div className="mt-4 mb-10">
-					<div className="h-64 w-64">
-						<DigitcoreLogoIcon
-							className="h-full w-full stroke-icon/20 text-icon/20"
-							stroke="currentColor"
-						/>
-					</div>
+				<div className="h-64 w-64">
+					<DigitcoreLogoIcon
+						className="h-full w-full stroke-icon/20 text-icon/20"
+						stroke="currentColor"
+					/>
 				</div>
-				{contentSections.length > 0 && (
-					<div>
-						{contentSections.map((section, index) => (
-							<div key={section._key || index}>
-								<section className="max-w-4xl space-y-4">
-									{section.heading && (
-										<h2 className="mt-4 font-normal text-lg text-primary uppercase tracking-wide">
-											{section.heading}
-										</h2>
-									)}
-									{section.body && (
-										<CustomPortableText
-											value={section.body as PortableTextBlock[]}
-											className="prose prose-neutral max-w-none"
-										/>
-									)}
-								</section>
+				{contentSections.length > 0 &&
+					contentSections.map((section, index) => (
+						<section
+							key={section._key || index}
+							className="flex flex-col gap-16"
+						>
+							<div className="flex flex-col gap-5">
+								{section.heading && (
+									<SectionHeading heading={section.heading} />
+								)}
+								{section.body && (
+									<CustomPortableText
+										value={section.body as PortableTextBlock[]}
+										className="prose max-w-none"
+									/>
+								)}
 								{index < contentSections.length - 1 && (
-									<div className="flex justify-start py-4">
-										<div
-											className="icon-item"
-											title={`Icon ${(index % 5) + 1}`}
-											data-index={index % 5}
-										>
-											{getIconByIndex(
-												index,
-												"h-64 w-64 fill-icon/20 object-contain text-icon/50",
-											)}
-										</div>
+									<div
+										className="icon-item"
+										title={`Icon ${(index % 5) + 1}`}
+										data-index={index % 5}
+									>
+										{getIconByIndex(
+											index,
+											"h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50",
+										)}
 									</div>
 								)}
 							</div>
-						))}
-					</div>
-				)}
+						</section>
+					))}
 			</div>
 		</PageWrapper>
 	);

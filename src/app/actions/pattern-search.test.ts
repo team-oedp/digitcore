@@ -188,7 +188,7 @@ describe("searchPatternContent", () => {
 
 	it("should search pattern content and return matching results", async () => {
 		const mockPattern = createMockPatternResult();
-		mockFetch.mockResolvedValueOnce(mockPattern);
+		mockFetch.mockResolvedValueOnce({ ms: 100, result: mockPattern });
 
 		const result = await searchPatternContent("test-pattern", "climate");
 
@@ -224,7 +224,7 @@ describe("searchPatternContent", () => {
 
 	it("should handle case-insensitive searches", async () => {
 		const mockPattern = createMockPatternResult();
-		mockFetch.mockResolvedValueOnce(mockPattern);
+		mockFetch.mockResolvedValueOnce({ ms: 100, result: mockPattern });
 
 		const result = await searchPatternContent("test-pattern", "CLIMATE");
 
@@ -235,7 +235,7 @@ describe("searchPatternContent", () => {
 
 	it("should escape special characters in search terms", async () => {
 		const mockPattern = createMockPatternResult();
-		mockFetch.mockResolvedValueOnce(mockPattern);
+		mockFetch.mockResolvedValueOnce({ ms: 100, result: mockPattern });
 
 		await searchPatternContent("test-pattern", 'climate "adaptation"');
 
@@ -249,7 +249,7 @@ describe("searchPatternContent", () => {
 	});
 
 	it("should return error when pattern is not found", async () => {
-		mockFetch.mockResolvedValueOnce(null);
+		mockFetch.mockResolvedValueOnce({ ms: 100, result: null });
 
 		const result = await searchPatternContent("nonexistent-pattern", "test");
 
@@ -284,7 +284,7 @@ describe("searchPatternContent", () => {
 
 	it("should call the correct GROQ query with correct parameters", async () => {
 		const mockPattern = createMockPatternResult();
-		mockFetch.mockResolvedValueOnce(mockPattern);
+		mockFetch.mockResolvedValueOnce({ ms: 100, result: mockPattern });
 
 		await searchPatternContent("test-pattern", "test search");
 

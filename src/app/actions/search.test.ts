@@ -106,7 +106,7 @@ describe("searchPatterns", () => {
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
-		mockFetch.mockResolvedValue(mockResults);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockResults });
 
 		const formData = createFormData({
 			q: "climate",
@@ -157,7 +157,7 @@ describe("searchPatterns", () => {
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
-		mockFetch.mockResolvedValue(mockResults);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockResults });
 
 		const formData = createFormData({
 			q: "",
@@ -213,7 +213,7 @@ describe("searchPatterns", () => {
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
-		mockFetch.mockResolvedValue(mockResults);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockResults });
 
 		const formData = new FormData();
 
@@ -245,7 +245,7 @@ describe("searchPatterns", () => {
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
-		mockFetch.mockResolvedValue(mockResults);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockResults });
 
 		const formData = createFormData({
 			q: 'climate "adaptation" & planning',
@@ -284,7 +284,7 @@ describe("searchPatterns", () => {
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
-		mockFetch.mockResolvedValue(mockResults);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockResults });
 
 		const formData = createFormData({
 			q: "   ",
@@ -438,7 +438,7 @@ describe("searchPatterns", () => {
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
-		mockFetch.mockResolvedValue(mockResults);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockResults });
 
 		const formData = createFormData({ q: "test" });
 
@@ -475,7 +475,7 @@ describe("searchPatterns", () => {
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
-		mockFetch.mockResolvedValue(mockResults);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockResults });
 
 		const formData = createFormData({ q: "test" });
 
@@ -527,7 +527,7 @@ describe("searchPatternsWithParams", () => {
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
-		mockFetch.mockResolvedValue(mockResults);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockResults });
 
 		const searchParams = new URLSearchParams({
 			q: "climate",
@@ -602,7 +602,7 @@ describe("searchPatternsWithParams", () => {
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
-		mockFetch.mockResolvedValue(mockResults);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockResults });
 
 		const searchParams = new URLSearchParams();
 
@@ -649,7 +649,7 @@ describe("searchPatternsWithParams", () => {
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
-		mockFetch.mockResolvedValue(mockResults);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockResults });
 
 		const searchParams = new URLSearchParams({
 			q: "climate change",

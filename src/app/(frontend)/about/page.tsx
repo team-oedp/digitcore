@@ -6,20 +6,20 @@ import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
 import { client } from "~/sanity/lib/client";
-import { VALUES_PAGE_QUERY } from "~/sanity/lib/queries";
+import { ABOUT_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
-	title: "Values | DIGITCORE Toolkit",
+	title: "About | DIGITCORE Toolkit",
 	description:
-		"Open infrastructure and environmental research values and principles.",
+		"Learn about DIGITCORE and our mission for open infrastructure and environmental research.",
 };
 
-export default async function ValuesPage() {
+export default async function AboutPage() {
 	const isDraftMode = (await draftMode()).isEnabled;
 	const data = (await client.fetch(
-		VALUES_PAGE_QUERY,
+		ABOUT_PAGE_QUERY,
 		{},
 		isDraftMode
 			? { perspective: "previewDrafts", useCdn: false, stega: true, token }

@@ -43,7 +43,8 @@ const createMockPattern = (
 	_rev: "rev1",
 	title: "Test Pattern",
 	slug: { current: "test-pattern", _type: "slug" },
-	description: createMockPortableText("Test pattern description"),
+	// biome-ignore lint/suspicious/noExplicitAny: Mocking complex PortableText type requires any
+	description: createMockPortableText("Test pattern description") as any,
 	tags: [
 		{
 			_id: "tag1",
@@ -52,7 +53,8 @@ const createMockPattern = (
 			_updatedAt: "2023-01-01T00:00:00Z",
 			_rev: "rev1",
 			title: "Test Tag",
-		},
+			// biome-ignore lint/suspicious/noExplicitAny: Mocking Sanity reference type requires any
+		} as any,
 	],
 	audiences: [
 		{
@@ -62,7 +64,8 @@ const createMockPattern = (
 			_updatedAt: "2023-01-01T00:00:00Z",
 			_rev: "rev1",
 			title: "Test Audience",
-		},
+			// biome-ignore lint/suspicious/noExplicitAny: Mocking Sanity reference type requires any
+		} as any,
 	],
 	themes: [
 		{
@@ -72,7 +75,8 @@ const createMockPattern = (
 			_updatedAt: "2023-01-01T00:00:00Z",
 			_rev: "rev1",
 			title: "Test Theme",
-		},
+			// biome-ignore lint/suspicious/noExplicitAny: Mocking Sanity reference type requires any
+		} as any,
 	],
 	solutions: [
 		{
@@ -82,7 +86,8 @@ const createMockPattern = (
 			_updatedAt: "2023-01-01T00:00:00Z",
 			_rev: "rev1",
 			title: "Test Solution",
-			description: createMockPortableText("Test solution description"),
+			// biome-ignore lint/suspicious/noExplicitAny: Mocking complex PortableText type requires any
+			description: createMockPortableText("Test solution description") as any,
 			audiences: [
 				{
 					_id: "audience2",
@@ -91,9 +96,11 @@ const createMockPattern = (
 					_updatedAt: "2023-01-01T00:00:00Z",
 					_rev: "rev1",
 					title: "Solution Audience",
-				},
+					// biome-ignore lint/suspicious/noExplicitAny: Mocking Sanity reference type requires any
+				} as any,
 			],
-		},
+			// biome-ignore lint/suspicious/noExplicitAny: Mocking complex Solution type requires any
+		} as any,
 	],
 	resources: [
 		{
@@ -103,7 +110,8 @@ const createMockPattern = (
 			_updatedAt: "2023-01-01T00:00:00Z",
 			_rev: "rev1",
 			title: "Test Resource",
-			description: createMockPortableText("Test resource description"),
+			// biome-ignore lint/suspicious/noExplicitAny: Mocking complex PortableText type requires any
+			description: createMockPortableText("Test resource description") as any,
 			solutions: [
 				{
 					_id: "solution2",
@@ -112,9 +120,11 @@ const createMockPattern = (
 					_updatedAt: "2023-01-01T00:00:00Z",
 					_rev: "rev1",
 					title: "Related Solution",
-				},
+					// biome-ignore lint/suspicious/noExplicitAny: Mocking Sanity reference type requires any
+				} as any,
 			],
-		},
+			// biome-ignore lint/suspicious/noExplicitAny: Mocking complex Resource type requires any
+		} as any,
 	],
 	...overrides,
 });
@@ -199,7 +209,8 @@ describe("usePatternContent hook utilities", () => {
 						{
 							_type: "break",
 							_key: "break1",
-						} as unknown,
+							// biome-ignore lint/suspicious/noExplicitAny: Mocking non-span child type requires any
+						} as any,
 					],
 					markDefs: [],
 					style: "normal",
@@ -215,7 +226,8 @@ describe("usePatternContent hook utilities", () => {
 				{
 					_type: "image",
 					_key: "image1",
-				} as unknown,
+					// biome-ignore lint/suspicious/noExplicitAny: Mocking non-block type requires any
+				} as any,
 			];
 
 			const result = portableTextToString(blocks);
@@ -315,7 +327,8 @@ describe("usePatternContent", () => {
 	});
 
 	it("should handle pattern with string slug", () => {
-		const pattern = createMockPattern({ slug: "string-slug" as unknown });
+		// biome-ignore lint/suspicious/noExplicitAny: Testing string slug instead of object requires any
+		const pattern = createMockPattern({ slug: "string-slug" as any });
 		const { result } = renderHook(() => usePatternContent(pattern));
 
 		expect(result.current.header.slug).toBe("string-slug");
@@ -368,7 +381,8 @@ describe("usePatternContent", () => {
 					_rev: "rev1",
 					title: undefined,
 					description: createMockPortableText("Test description"),
-				} as unknown,
+					// biome-ignore lint/suspicious/noExplicitAny: Mocking solution with undefined title requires any
+				} as any,
 			],
 		});
 
@@ -388,7 +402,8 @@ describe("usePatternContent", () => {
 					_rev: "rev1",
 					title: undefined,
 					description: createMockPortableText("Test description"),
-				} as unknown,
+					// biome-ignore lint/suspicious/noExplicitAny: Mocking resource with undefined title requires any
+				} as any,
 			],
 		});
 
@@ -405,7 +420,8 @@ describe("usePatternContent", () => {
 					_key: "key1",
 					_ref: "tag-ref-1",
 					title: undefined,
-				} as unknown,
+					// biome-ignore lint/suspicious/noExplicitAny: Mocking tag with reference fallback requires any
+				} as any,
 			],
 		});
 
@@ -426,7 +442,8 @@ describe("usePatternContent", () => {
 					_key: undefined,
 					_ref: undefined,
 					title: undefined,
-				} as unknown,
+					// biome-ignore lint/suspicious/noExplicitAny: Mocking audience with no identifiers requires any
+				} as any,
 			],
 		});
 
@@ -547,7 +564,8 @@ describe("edge cases and error handling", () => {
 				_rev: "rev1",
 				title: `Solution ${i + 1}`,
 				description: createMockPortableText(`Description ${i + 1}`),
-			})) as unknown,
+				// biome-ignore lint/suspicious/noExplicitAny: Mocking array of solutions requires any
+			})) as any,
 		});
 
 		const { result } = renderHook(() => usePatternContent(pattern));
@@ -570,7 +588,8 @@ describe("edge cases and error handling", () => {
 					title: "Test Resource",
 					description: createMockPortableText("Test description"),
 					solutions: undefined,
-				} as unknown,
+					// biome-ignore lint/suspicious/noExplicitAny: Mocking resource with undefined solutions requires any
+				} as any,
 			],
 		});
 
@@ -591,7 +610,8 @@ describe("edge cases and error handling", () => {
 					title: "Test Solution",
 					description: createMockPortableText("Test description"),
 					audiences: undefined,
-				} as unknown,
+					// biome-ignore lint/suspicious/noExplicitAny: Mocking solution with undefined audiences requires any
+				} as any,
 			],
 		});
 

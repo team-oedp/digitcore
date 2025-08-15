@@ -9,7 +9,7 @@ import type { DereferencedResource } from "~/components/pages/pattern/resources"
 import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import { PageHeader } from "~/components/shared/pattern-header";
+import { PatternHeading } from "~/components/shared/pattern-heading";
 import { client } from "~/sanity/lib/client";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -96,8 +96,8 @@ export default async function PatternPage({ params }: PatternPageProps) {
 
 	return (
 		<PatternContentProvider pattern={pattern}>
-			<PageWrapper className="space-y-4">
-				<PageHeader
+			<PageWrapper className="flex flex-col gap-5 pb-40">
+				<PatternHeading
 					title={pattern.title || ""}
 					slug={
 						typeof pattern.slug === "string"
@@ -110,7 +110,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
 					<div>
 						<CustomPortableText
 							value={pattern.description as PortableTextBlock[]}
-							className="prose prose-neutral max-w-none"
+							className="prose"
 						/>
 						<PatternConnections
 							tags={(pattern.tags as Tag[]) || undefined}
@@ -129,6 +129,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
 						}
 					/>
 				</div>
+				<div className="h-20" />
 			</PageWrapper>
 		</PatternContentProvider>
 	);

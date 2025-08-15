@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Pattern } from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
-import { PageHeader } from "./pattern-header";
+import { PatternHeading } from "./pattern-heading";
 
 // Mock the pattern icons utility
 vi.mock("~/utils/pattern-icons", () => ({
@@ -21,7 +21,7 @@ function TestWrapper({ children }: { children: React.ReactNode }) {
 	return <CarrierBagStoreProvider>{children}</CarrierBagStoreProvider>;
 }
 
-describe("PageHeader Carrier Bag Functionality", () => {
+describe("PageHeading Carrier Bag Functionality", () => {
 	const mockPattern: Pattern = {
 		_id: "test-pattern-1",
 		_type: "pattern",
@@ -41,7 +41,7 @@ describe("PageHeader Carrier Bag Functionality", () => {
 	it("should render save button when pattern is provided", () => {
 		render(
 			<TestWrapper>
-				<PageHeader
+				<PatternHeading
 					title="Test Pattern"
 					slug="test-pattern"
 					pattern={mockPattern}
@@ -59,7 +59,7 @@ describe("PageHeader Carrier Bag Functionality", () => {
 	it("should not render save button when pattern is not provided", () => {
 		render(
 			<TestWrapper>
-				<PageHeader title="Test Pattern" slug="test-pattern" />
+				<PatternHeading title="Test Pattern" slug="test-pattern" />
 			</TestWrapper>,
 		);
 
@@ -72,7 +72,7 @@ describe("PageHeader Carrier Bag Functionality", () => {
 	it("should show inactive button state initially", () => {
 		render(
 			<TestWrapper>
-				<PageHeader
+				<PatternHeading
 					title="Test Pattern"
 					slug="test-pattern"
 					pattern={mockPattern}
@@ -97,7 +97,7 @@ describe("PageHeader Carrier Bag Functionality", () => {
 	it("should change button state and text when pattern is added to carrier bag", async () => {
 		render(
 			<TestWrapper>
-				<PageHeader
+				<PatternHeading
 					title="Test Pattern"
 					slug="test-pattern"
 					pattern={mockPattern}
@@ -126,7 +126,7 @@ describe("PageHeader Carrier Bag Functionality", () => {
 	it("should prevent duplicate additions to carrier bag", async () => {
 		render(
 			<TestWrapper>
-				<PageHeader
+				<PatternHeading
 					title="Test Pattern"
 					slug="test-pattern"
 					pattern={mockPattern}
@@ -151,7 +151,7 @@ describe("PageHeader Carrier Bag Functionality", () => {
 	it("should maintain active state when component re-renders with same pattern", () => {
 		const { rerender } = render(
 			<TestWrapper>
-				<PageHeader
+				<PatternHeading
 					title="Test Pattern"
 					slug="test-pattern"
 					pattern={mockPattern}
@@ -167,7 +167,7 @@ describe("PageHeader Carrier Bag Functionality", () => {
 		// Re-render with same pattern
 		rerender(
 			<TestWrapper>
-				<PageHeader
+				<PatternHeading
 					title="Test Pattern Updated"
 					slug="test-pattern"
 					pattern={mockPattern}

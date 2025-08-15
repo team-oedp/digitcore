@@ -8,7 +8,7 @@ import {
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
 import { SiteHeader } from "~/components/global/site-header";
-import { PageHeader } from "~/components/shared/pattern-header";
+import { PatternHeading } from "~/components/shared/pattern-heading";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import type { Pattern } from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
@@ -110,7 +110,7 @@ describe("Carrier Bag Sidebar", () => {
 		it("should open sidebar when save pattern button is clicked", async () => {
 			render(
 				<TestWrapper>
-					<PageHeader
+					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}
@@ -156,7 +156,7 @@ describe("Carrier Bag Sidebar", () => {
 		it("should show correct button state for patterns already in bag", async () => {
 			render(
 				<TestWrapper>
-					<PageHeader
+					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}
@@ -200,7 +200,7 @@ describe("Carrier Bag Sidebar", () => {
 		it("should show pattern count in sidebar", async () => {
 			render(
 				<TestWrapper>
-					<PageHeader
+					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}
@@ -239,7 +239,7 @@ describe("Carrier Bag Sidebar", () => {
 			render(
 				<TestWrapper>
 					<SiteHeader />
-					<PageHeader
+					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}
@@ -291,7 +291,7 @@ describe("Carrier Bag Sidebar", () => {
 			render(
 				<TestWrapper>
 					<SiteHeader />
-					<PageHeader
+					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}
@@ -336,7 +336,7 @@ describe("Carrier Bag Sidebar", () => {
 			render(
 				<TestWrapper>
 					<SiteHeader />
-					<PageHeader
+					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}

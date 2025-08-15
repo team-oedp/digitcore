@@ -4,6 +4,7 @@ import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
 import { LetterNavigation } from "~/components/shared/letter-navigation";
+import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import {
 	Accordion,
@@ -132,10 +133,12 @@ export default async function GlossaryPage() {
 				</div>
 
 				<div className="flex w-full flex-col gap-40">
-					<p className="text-base text-primary">
-						Explore the glossary to discover new pathways through the toolkit’s
-						patterns.
-					</p>
+					{pageData?.title && pageData?.description && (
+						<PageHeading
+							title={pageData.title}
+							description={pageData.description as PortableTextBlock[]}
+						/>
+					)}
 					<div className="w-full space-y-8 pb-[800px]" data-scroll-container>
 						<div id="glossary-content" className="w-full space-y-16">
 							{ALPHABET.map((letter) => {
@@ -148,9 +151,7 @@ export default async function GlossaryPage() {
 										className="w-full scroll-mt-40 space-y-4"
 										id={`letter-${letter}`}
 									>
-										<h2 className="font-normal text-lg text-neutral-500 uppercase tracking-wide">
-											{letter}
-										</h2>
+										<h2 className="text-subheading">{letter}</h2>
 
 										<Accordion
 											type="single"
@@ -161,22 +162,20 @@ export default async function GlossaryPage() {
 												<AccordionItem
 													key={term.id}
 													value={term.id}
-													className="border-zinc-300 border-b border-dashed last:border-b"
+													className="border-neutral-300 border-b border-dashed last:border-b"
 													id={term.id}
 												>
 													<AccordionTrigger
 														showPlusMinus
-														className="items-center justify-between py-4 text-left font-normal text-lg text-neutral-500 hover:no-underline"
+														className="accordion-heading items-center justify-between py-4"
 													>
 														<span className="text-left">{term.term}</span>
 													</AccordionTrigger>
 													<AccordionContent className="pt-2 pb-4">
-														<div className="prose prose-neutral max-w-none text-base leading-relaxed">
-															<CustomPortableText
-																value={term.description}
-																className="prose prose-neutral max-w-none [&>*]:text-neutral-500"
-															/>
-														</div>
+														<CustomPortableText
+															value={term.description}
+															className="accordion-detail"
+														/>
 													</AccordionContent>
 												</AccordionItem>
 											))}
