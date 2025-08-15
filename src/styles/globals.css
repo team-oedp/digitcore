@@ -7,6 +7,12 @@
 @theme {
 	--font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+	--text-heading: 2rem; /* 32px */
+	--text-heading--line-height: calc(2.25 / 2); /* 1.125 */
+
+	--text-pattern-list-item-title: 1.5rem; /* 24px */
+	--text-pattern-list-item-title--line-height: calc(2 / 1.5); /* 1.333 */
 }
 
 @theme inline {
@@ -234,6 +240,34 @@
 	.scrollbar-hidden {
 		-ms-overflow-style: none;
 		scrollbar-width: none;
+	}
+
+	.text-body {
+		@apply text-base text-primary prose;
+	}
+
+	.text-button {
+		font-size: 0.875rem; /* 14px */
+		line-height: calc(1.25 / 0.875); /* 1.429 */
+		text-transform: uppercase;
+	}
+
+	.text-badge {
+		font-size: 0.875rem; /* 14px */
+		line-height: calc(1.25 / 0.875); /* 1.429 */
+		text-transform: capitalize;
+	}
+
+	.text-heading {
+		font-size: var(--text-heading);
+		line-height: var(--text-heading--line-height);
+		font-weight: 500; /* medium */
+	}
+
+	.text-pattern-list-item-title {
+		font-size: var(--text-pattern-list-item-title);
+		line-height: var(--text-pattern-list-item-title--line-height);
+		font-weight: 500; /* medium */
 	}
 }
 
