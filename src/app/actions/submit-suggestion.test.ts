@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createClient } from "next-sanity";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { sendSuggestionEmail } from "~/lib/email";
 import { type SuggestionFormData, submitSuggestion } from "./submit-suggestion";
 

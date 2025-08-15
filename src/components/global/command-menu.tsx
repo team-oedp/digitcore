@@ -283,7 +283,9 @@ export function CommandMenu() {
 
 		// If only description matches, show context around the match
 		if (matchExplanation.descriptionMatch) {
-			const plainDescription = extractTextFromPortableText((description as any) || "");
+			const plainDescription = extractTextFromPortableText(
+				(description as any) || "",
+			);
 			const contextResult = truncateWithContext(
 				plainDescription,
 				searchTerm,

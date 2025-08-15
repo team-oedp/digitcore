@@ -1,5 +1,6 @@
 import type { PortableTextBlock } from "@portabletext/types";
 import { renderHook } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
 import {
 	type PatternContentData,
@@ -15,7 +16,7 @@ import {
 } from "./use-pattern-content";
 
 // Mock data helpers
-const createMockPortableText = (text: string): PortableTextBlock[] => [
+const createMockPortableText = (text: string): any[] => [
 	{
 		_type: "block",
 		_key: "block1",
@@ -32,9 +33,7 @@ const createMockPortableText = (text: string): PortableTextBlock[] => [
 	},
 ];
 
-const createMockPattern = (
-	overrides?: Partial<PopulatedPattern>,
-): PopulatedPattern => ({
+const createMockPattern = (overrides?: any): any => ({
 	_id: "pattern1",
 	_type: "pattern",
 	_createdAt: "2023-01-01T00:00:00Z",

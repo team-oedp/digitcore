@@ -252,7 +252,7 @@ describe("searchPatternContent", () => {
 	});
 
 	it("should return error when pattern is not found", async () => {
-		mockFetch.mockResolvedValueOnce(null);
+		mockFetch.mockResolvedValueOnce(null as any);
 
 		const result = await searchPatternContent("nonexistent-pattern", "test");
 

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { client } from "~/sanity/lib/client";
 import { logger } from "~/lib/logger";
+import { client } from "~/sanity/lib/client";
 import { type FilterOptionsResult, fetchFilterOptions } from "./filter-options";
 
 vi.mock("~/lib/logger", () => ({
@@ -9,11 +9,14 @@ vi.mock("~/lib/logger", () => ({
 		groq: vi.fn(),
 		searchError: vi.fn(),
 	},
-	createLogLocation: vi.fn(() => ({ file: "test-file", function: "test-function" })),
+	createLogLocation: vi.fn(() => ({
+		file: "test-file",
+		function: "test-function",
+	})),
 }));
 vi.mock("~/sanity/lib/client");
 
-const mockFetch = vi.mocked(client.fetch);
+const mockFetch = vi.mocked(client.fetch) as any;
 const mockLogger = vi.mocked(logger);
 
 // Mock the filter options query

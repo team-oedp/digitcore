@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { client } from "~/sanity/lib/client";
 import { logger } from "~/lib/logger";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
+import { client } from "~/sanity/lib/client";
 import {
 	type SearchResult,
 	searchPatterns,
@@ -16,12 +16,15 @@ vi.mock("~/lib/logger", () => ({
 		search: vi.fn(),
 		error: vi.fn(),
 	},
-	createLogLocation: vi.fn(() => ({ file: "test-file", function: "test-function" })),
+	createLogLocation: vi.fn(() => ({
+		file: "test-file",
+		function: "test-function",
+	})),
 }));
 vi.mock("~/sanity/lib/client");
 vi.mock("~/lib/search");
 
-const mockFetch = vi.mocked(client.fetch);
+const mockFetch = vi.mocked(client.fetch) as any;
 const mockSearchParamsSchema = vi.mocked(searchParamsSchema);
 const mockParseSearchParams = vi.mocked(parseSearchParams);
 const mockLogger = vi.mocked(logger);
@@ -102,8 +105,8 @@ describe("searchPatterns", () => {
 			audiences: "urban-planners",
 			themes: "sustainability",
 			tags: "climate-change",
-			page: "1",
-			limit: "20",
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
@@ -153,8 +156,8 @@ describe("searchPatterns", () => {
 			audiences: "students",
 			themes: "",
 			tags: "",
-			page: "1",
-			limit: "20",
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
@@ -205,12 +208,12 @@ describe("searchPatterns", () => {
 		};
 
 		mockSearchParamsSchema.parse.mockReturnValue({
-			q: null,
-			audiences: null,
-			themes: null,
-			tags: null,
-			page: null,
-			limit: null,
+			q: undefined,
+			audiences: undefined,
+			themes: undefined,
+			tags: undefined,
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
@@ -241,8 +244,8 @@ describe("searchPatterns", () => {
 			audiences: "",
 			themes: "",
 			tags: "",
-			page: "1",
-			limit: "20",
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
@@ -280,8 +283,8 @@ describe("searchPatterns", () => {
 			audiences: "",
 			themes: "",
 			tags: "",
-			page: "1",
-			limit: "20",
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
@@ -334,8 +337,8 @@ describe("searchPatterns", () => {
 			audiences: "",
 			themes: "",
 			tags: "",
-			page: "1",
-			limit: "20",
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue({
@@ -364,8 +367,8 @@ describe("searchPatterns", () => {
 			audiences: "",
 			themes: "",
 			tags: "",
-			page: "1",
-			limit: "20",
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue({
@@ -394,8 +397,8 @@ describe("searchPatterns", () => {
 			audiences: "",
 			themes: "",
 			tags: "",
-			page: "1",
-			limit: "20",
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue({
@@ -422,20 +425,20 @@ describe("searchPatterns", () => {
 		const mockResults = createMockSearchResult(1);
 		const mockParsedParams = {
 			searchTerm: "test",
-			audiences: undefined,
-			themes: null,
-			tags: undefined,
+			audiences: [],
+			themes: [],
+			tags: [],
 			page: 1,
 			limit: 20,
 		};
 
 		mockSearchParamsSchema.parse.mockReturnValue({
 			q: "test",
-			audiences: null,
-			themes: null,
-			tags: null,
-			page: "1",
-			limit: "20",
+			audiences: undefined,
+			themes: undefined,
+			tags: undefined,
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
@@ -471,8 +474,8 @@ describe("searchPatterns", () => {
 			audiences: "",
 			themes: "",
 			tags: "",
-			page: "1",
-			limit: "20",
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
@@ -523,8 +526,8 @@ describe("searchPatternsWithParams", () => {
 			audiences: "students",
 			themes: "",
 			tags: "",
-			page: "1",
-			limit: "20",
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
@@ -594,12 +597,12 @@ describe("searchPatternsWithParams", () => {
 		};
 
 		mockSearchParamsSchema.parse.mockReturnValue({
-			q: null,
-			audiences: null,
-			themes: null,
-			tags: null,
-			page: null,
-			limit: null,
+			q: undefined,
+			audiences: undefined,
+			themes: undefined,
+			tags: undefined,
+			page: 1,
+			limit: 20,
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
@@ -645,8 +648,8 @@ describe("searchPatternsWithParams", () => {
 			audiences: "students,researchers",
 			themes: "sustainability,innovation",
 			tags: "climate,environment",
-			page: "2",
-			limit: "50",
+			page: 2,
+			limit: 50,
 		});
 
 		mockParseSearchParams.mockReturnValue(mockParsedParams);
