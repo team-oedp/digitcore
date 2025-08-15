@@ -56,7 +56,7 @@ export default async function Home() {
 							<div key={section._key || index}>
 								<section className="max-w-4xl space-y-4">
 									{section.heading && (
-										<SectionHeader>{section.heading}</SectionHeader>
+										<SectionHeader heading={section.heading} />
 									)}
 									{section.body && (
 										<CustomPortableText
