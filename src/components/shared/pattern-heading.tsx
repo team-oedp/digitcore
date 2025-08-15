@@ -51,31 +51,29 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 					<h1 className="text-heading">{title}</h1>
 				</div>
 				<div>
-				{pattern && (
-					<button
-						type="button"
-						className={cn(
-							"flex items-center gap-2.5 rounded-lg border px-2 py-1 transition-colors",
-							isInBag
-								? "cursor-default border-green-200 bg-green-50"
-								: "cursor-pointer border-border bg-white hover:bg-secondary",
-						)}
-						onClick={isInBag ? undefined : handleSaveToCarrierBag}
-						disabled={isInBag || false}
-					>
-						<span className="font-normal text-primary text-sm uppercase">
-							{isInBag
-								? "Saved to Carrier Bag"
-								: "Save to Carrier Bag"}
-						</span>
-						<Icon
-							icon={Backpack03Icon}
-							size={14}
-							color="#71717a"
-							strokeWidth={1.5}
-						/>
-					</button>
-				)}
+					{pattern && (
+						<button
+							type="button"
+							className={cn(
+								"flex items-center gap-2.5 rounded-lg border px-2 py-1 transition-colors",
+								isInBag
+									? "cursor-default border-green-200 bg-green-50"
+									: "cursor-pointer border-border bg-white hover:bg-secondary",
+							)}
+							onClick={isInBag ? undefined : handleSaveToCarrierBag}
+							disabled={isInBag || false}
+						>
+							<span className="font-normal text-primary text-sm uppercase">
+								{isInBag ? "Saved to Carrier Bag" : "Save to Carrier Bag"}
+							</span>
+							<Icon
+								icon={Backpack03Icon}
+								size={14}
+								color="#71717a"
+								strokeWidth={1.5}
+							/>
+						</button>
+					)}
 				</div>
 			</div>
 		</header>

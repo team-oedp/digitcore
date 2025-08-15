@@ -13,7 +13,8 @@ const mockSendSuggestionEmail = vi.mocked(sendSuggestionEmail);
 // Setup the mock to return an object with a create method
 mockCreateClient.mockReturnValue({
 	create: mockCreate,
-} as { create: typeof mockCreate });
+	// biome-ignore lint/suspicious/noExplicitAny: Mocking Sanity client requires any type
+} as any);
 
 // Mock Sanity environment variables
 vi.mock("~/sanity/env", () => ({

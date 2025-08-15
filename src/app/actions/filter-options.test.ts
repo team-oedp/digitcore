@@ -56,7 +56,7 @@ describe("fetchFilterOptions", () => {
 
 	it("should successfully fetch filter options", async () => {
 		const mockData = createMockFilterData();
-		mockFetch.mockResolvedValue(mockData);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockData });
 
 		const result = await fetchFilterOptions();
 
@@ -97,7 +97,7 @@ describe("fetchFilterOptions", () => {
 	});
 
 	it("should handle empty data from Sanity", async () => {
-		mockFetch.mockResolvedValue(null);
+		mockFetch.mockResolvedValue({ ms: 100, result: null });
 
 		const result = await fetchFilterOptions();
 
@@ -120,7 +120,7 @@ describe("fetchFilterOptions", () => {
 	});
 
 	it("should filter out items with null labels", async () => {
-		const mockData = createMockFilterData({
+		const mockData = {
 			audiences: [
 				{ value: "students", label: "Students" },
 				{ value: "invalid", label: null },
@@ -135,9 +135,9 @@ describe("fetchFilterOptions", () => {
 				{ value: "invalid-tag", label: null },
 				{ value: "water-management", label: "Water Management" },
 			],
-		});
+		};
 
-		mockFetch.mockResolvedValue(mockData);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockData });
 
 		const result = await fetchFilterOptions();
 
@@ -169,7 +169,7 @@ describe("fetchFilterOptions", () => {
 			tags: [{ value: "renewable-energy", label: "Renewable Energy" }],
 		};
 
-		mockFetch.mockResolvedValue(mockData);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockData });
 
 		const result = await fetchFilterOptions();
 
@@ -198,7 +198,7 @@ describe("fetchFilterOptions", () => {
 			tags: [],
 		};
 
-		mockFetch.mockResolvedValue(mockData);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockData });
 
 		const result = await fetchFilterOptions();
 
@@ -267,7 +267,10 @@ describe("fetchFilterOptions", () => {
 	it("should measure and log execution time", async () => {
 		const mockData = createMockFilterData();
 		mockFetch.mockImplementation(
-			() => new Promise((resolve) => setTimeout(() => resolve(mockData), 50)),
+			() =>
+				new Promise((resolve) =>
+					setTimeout(() => resolve({ ms: 100, result: mockData }), 50),
+				),
 		);
 
 		await fetchFilterOptions();
@@ -298,7 +301,7 @@ describe("fetchFilterOptions", () => {
 			tags: [{ value: "valid-tag", label: "Valid Tag" }],
 		};
 
-		mockFetch.mockResolvedValue(mockData);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockData });
 
 		const result = await fetchFilterOptions();
 
@@ -331,7 +334,7 @@ describe("fetchFilterOptions", () => {
 			structure: true,
 		};
 
-		mockFetch.mockResolvedValue(mockData);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockData });
 
 		const result = await fetchFilterOptions();
 
@@ -354,7 +357,7 @@ describe("fetchFilterOptions", () => {
 	});
 
 	it("should handle undefined response from Sanity", async () => {
-		mockFetch.mockResolvedValue(undefined);
+		mockFetch.mockResolvedValue({ ms: 100, result: undefined });
 
 		const result = await fetchFilterOptions();
 
@@ -384,7 +387,7 @@ describe("fetchFilterOptions", () => {
 			tags: [{ value: "invalid4", label: null }],
 		};
 
-		mockFetch.mockResolvedValue(mockData);
+		mockFetch.mockResolvedValue({ ms: 100, result: mockData });
 
 		const result = await fetchFilterOptions();
 

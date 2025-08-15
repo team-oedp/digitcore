@@ -34,9 +34,9 @@ export function SiteLayout({ children }: SiteLayoutProps) {
 							isCarrierBagRoute ? "bg-neutral-200" : "bg-primary-foreground",
 						)}
 					>
-					<div className="flex min-h-screen flex-col">
-						<main className="flex-1">{children}</main>
-						{!isCarrierBagRoute && <SiteFooter />}
+						<div className="flex min-h-screen flex-col">
+							<main className="flex-1">{children}</main>
+							{!isCarrierBagRoute && <SiteFooter />}
 						</div>
 					</div>
 				</SidebarInset>
