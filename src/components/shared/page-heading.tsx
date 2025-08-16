@@ -6,7 +6,7 @@ export function PageHeading({
 	description,
 }: { title: string; description: PortableTextBlock[] }) {
 	return (
-		<header className="flex flex-col gap-5">
+		<header id="page-header" className="flex flex-col gap-5">
 			<h1 className="text-heading">{title}</h1>
 			<CustomPortableText value={description as PortableTextBlock[]} />
 		</header>

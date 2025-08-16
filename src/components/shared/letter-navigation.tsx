@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useActiveLetter } from "~/hooks/use-section-in-view";
+import { useSectionInViewStore } from "~/stores/section-in-view";
 
 type LetterNavigationProps<T> = {
 	itemsByLetter: Partial<Record<string, T[]>>;
@@ -16,6 +17,7 @@ export function LetterNavigation<T>({
 }: LetterNavigationProps<T>) {
 	// Read active letter from shared store
 	const activeLetter = useActiveLetter();
+	const setActiveLetter = useSectionInViewStore((s) => s.setActiveLetter);
 
 	// Determine initial fallback if no active letter yet
 	const firstAvailableLetter = useMemo(
@@ -24,7 +26,19 @@ export function LetterNavigation<T>({
 			null,
 		[itemsByLetter],
 	);
-	const effectiveActive = activeLetter ?? firstAvailableLetter ?? undefined;
+	// Ignore activeLetter if it doesn’t belong to this data set (possible after
+	// route transitions that share the same global store).
+	const effectiveActive =
+		activeLetter && (itemsByLetter[activeLetter]?.length ?? 0) > 0
+			? activeLetter
+			: (firstAvailableLetter ?? undefined);
+
+	// Debug logging
+	console.log('🧭 LetterNavigation render:', {
+		activeLetter,
+		effectiveActive,
+		firstAvailableLetter
+	});
 
 	return (
 		<div className="z-20 hidden lg:block">
@@ -62,14 +76,19 @@ export function LetterNavigation<T>({
 									e.preventDefault();
 									const element = document.getElementById(`letter-${letter}`);
 									if (element) {
-										// Use scrollIntoView for reliable scrolling
+										// Smooth scroll to the section
 										element.scrollIntoView({
 											behavior: "smooth",
 											block: "start",
 											inline: "nearest",
 										});
 
-										// Update the URL with the hash
+										// Immediately update the shared store so the indicator
+										// and navigation reflect the selection while scrolling
+										// is taking place.
+										setActiveLetter(letter);
+
+										// Update URL hash for deep-linking.
 										const url = new URL(window.location.href);
 										url.hash = `letter-${letter}`;
 										window.history.pushState({}, "", url.toString());
