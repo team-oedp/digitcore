@@ -46,7 +46,7 @@ export function SearchResultsHeaderClient({
 		return (
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
-					<span className="text-zinc-400">Ready to search</span>
+					<span className="text-sm text-zinc-400">Ready to search</span>
 				</div>
 			</div>
 		);

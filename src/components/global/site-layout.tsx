@@ -5,12 +5,13 @@ import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-s
 import { SiteHeader } from "~/components/global/site-header";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
+import { SiteFooter } from "./site-footer";
 
-type LayoutUIProps = {
+type SiteLayoutProps = {
 	children: React.ReactNode;
 };
 
-export function LayoutUI({ children }: LayoutUIProps) {
+export function SiteLayout({ children }: SiteLayoutProps) {
 	const pathname = usePathname();
 	const isCarrierBagRoute = pathname === "/carrier-bag";
 	return (
@@ -18,7 +19,7 @@ export function LayoutUI({ children }: LayoutUIProps) {
 			className="flex h-full min-h-0 w-full flex-col gap-2"
 			style={
 				{
-					"--sidebar-width": "24rem",
+					"--sidebar-width": "28rem",
 				} as React.CSSProperties
 			}
 			defaultOpen={false}
@@ -27,14 +28,17 @@ export function LayoutUI({ children }: LayoutUIProps) {
 			<div className="flex min-h-0 flex-1 flex-row-reverse gap-2 overflow-hidden bg-neutral-200 pt-14 transition-[gap] md:[&:has([data-slot=sidebar][data-state=collapsed])]:gap-0 md:[&:has([data-slot=sidebar][data-state=collapsed])]:delay-200 md:[&:has([data-slot=sidebar][data-state=collapsed])]:duration-0">
 				<CarrierBagSidebar className="peer" />
 				<SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden bg-neutral-200">
-					<main
+					<div
 						className={cn(
-							"flex min-h-0 flex-1 flex-col overflow-y-auto",
+							"flex h-full min-h-0 flex-1 flex-col overflow-y-auto",
 							isCarrierBagRoute ? "bg-neutral-200" : "bg-primary-foreground",
 						)}
 					>
-						{children}
-					</main>
+						<div className="flex min-h-screen flex-col">
+							<main className="flex-1">{children}</main>
+							{!isCarrierBagRoute && <SiteFooter />}
+						</div>
+					</div>
 				</SidebarInset>
 			</div>
 		</SidebarProvider>

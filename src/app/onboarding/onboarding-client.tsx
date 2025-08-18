@@ -1,19 +1,19 @@
 "use client";
 
 import { SearchList02Icon, Share02Icon } from "@hugeicons/core-free-icons";
-import Icon01 from "@icons/digitcore/icon-01";
-import Icon02 from "@icons/digitcore/icon-02";
-import Icon03 from "@icons/digitcore/icon-03";
-import Icon04 from "@icons/digitcore/icon-04";
-import Icon05 from "@icons/digitcore/icon-05";
-import Icon06 from "@icons/digitcore/icon-06";
-import Icon07 from "@icons/digitcore/icon-07";
-import Icon08 from "@icons/digitcore/icon-08";
-import Icon09 from "@icons/digitcore/icon-09";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { FilterOption } from "~/app/actions/filter-options";
+import Icon01 from "~/components/icons/shapes/icon-01";
+import Icon02 from "~/components/icons/shapes/icon-02";
+import Icon03 from "~/components/icons/shapes/icon-03";
+import Icon04 from "~/components/icons/shapes/icon-04";
+import Icon05 from "~/components/icons/shapes/icon-05";
+import Icon06 from "~/components/icons/shapes/icon-06";
+import Icon07 from "~/components/icons/shapes/icon-07";
+import Icon08 from "~/components/icons/shapes/icon-08";
+import Icon09 from "~/components/icons/shapes/icon-09";
 import { Icon } from "~/components/shared/icon";
 import {
 	Breadcrumb,

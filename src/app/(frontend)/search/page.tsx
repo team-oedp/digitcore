@@ -8,22 +8,27 @@ import {
 	SearchInterfaceSkeleton,
 	SearchInterfaceWrapper,
 } from "~/components/pages/search/search-interface-wrapper";
-import { PageHeader } from "~/components/shared/page-header";
+import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
 import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
+import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "Search | DIGITCORE Toolkit",
 	description: "Search patterns, tags, glossary terms, and resources.",
 };
 
-export default async function SearchPage() {
+export default async function SearchPage({
+	searchParams,
+}: {
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
 	const isDraftMode = (await draftMode()).isEnabled;
 
 	// Fetch page data
-	const pageData = await client.fetch(
+	const pageData = (await client.fetch(
 		SEARCH_PAGE_QUERY,
 		{},
 		isDraftMode
@@ -37,7 +42,7 @@ export default async function SearchPage() {
 					perspective: "published",
 					useCdn: true,
 				},
-	);
+	)) as Page | null;
 
 	if (!pageData) {
 		console.log("No page found, returning 404");
@@ -46,9 +51,10 @@ export default async function SearchPage() {
 
 	return (
 		<PageWrapper>
-			<div className="space-y-12">
-				{pageData.description && (
-					<PageHeader
+			<div className="flex flex-col gap-10 pb-44">
+				{pageData.title && pageData.description && (
+					<PageHeading
+						title={pageData.title}
 						description={pageData.description as PortableTextBlock[]}
 					/>
 				)}

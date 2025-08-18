@@ -9,7 +9,7 @@ export function PageWrapper({
 	className?: string;
 }) {
 	return (
-		<div className={cn("min-h-screen max-w-4xl px-5 pb-5", className)}>
+		<div className={cn("min-h-screen max-w-4xl px-5 py-5", className)}>
 			{children}
 		</div>
 	);

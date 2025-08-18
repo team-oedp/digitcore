@@ -137,15 +137,15 @@ export function SearchInterfaceSkeleton() {
 			{/* Filter Tools Skeleton */}
 			<div className="flex w-full max-w-4xl gap-3 p-0.5">
 				<div className="min-w-0 flex-1">
-					<div className="mb-1 text-primary text-xs">Audiences</div>
+					<div className="mb-1 text-base text-primary">Audiences</div>
 					<div className="h-[34px] w-full animate-pulse rounded-lg bg-zinc-100" />
 				</div>
 				<div className="min-w-0 flex-1">
-					<div className="mb-1 text-primary text-xs">Themes</div>
+					<div className="mb-1 text-base text-primary">Themes</div>
 					<div className="h-[34px] w-full animate-pulse rounded-lg bg-zinc-100" />
 				</div>
 				<div className="min-w-0 flex-1">
-					<div className="mb-1 text-primary text-xs">Tags</div>
+					<div className="mb-1 text-base text-primary">Tags</div>
 					<div className="h-[34px] w-full animate-pulse rounded-lg bg-zinc-100" />
 				</div>
 			</div>

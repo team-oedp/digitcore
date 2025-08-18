@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useActiveLetter } from "~/hooks/use-section-in-view";
+import { useSectionInViewStore } from "~/stores/section-in-view";
 
 type LetterNavigationProps<T> = {
 	itemsByLetter: Partial<Record<string, T[]>>;
@@ -16,6 +17,7 @@ export function LetterNavigation<T>({
 }: LetterNavigationProps<T>) {
 	// Read active letter from shared store
 	const activeLetter = useActiveLetter();
+	const setActiveLetter = useSectionInViewStore((s) => s.setActiveLetter);
 
 	// Determine initial fallback if no active letter yet
 	const firstAvailableLetter = useMemo(
@@ -24,10 +26,15 @@ export function LetterNavigation<T>({
 			null,
 		[itemsByLetter],
 	);
-	const effectiveActive = activeLetter ?? firstAvailableLetter ?? undefined;
+	// Ignore activeLetter if it doesn’t belong to this data set (possible after
+	// route transitions that share the same global store).
+	const effectiveActive =
+		activeLetter && (itemsByLetter[activeLetter]?.length ?? 0) > 0
+			? activeLetter
+			: (firstAvailableLetter ?? undefined);
 
 	return (
-		<div className="fixed left-8 z-20 hidden lg:block">
+		<div className="z-20 hidden lg:block">
 			<div className="flex flex-col">
 				{ALPHABET.map((letter) => {
 					const hasItems = (itemsByLetter[letter]?.length ?? 0) > 0;
@@ -62,14 +69,24 @@ export function LetterNavigation<T>({
 									e.preventDefault();
 									const element = document.getElementById(`letter-${letter}`);
 									if (element) {
-										// Use scrollIntoView for reliable scrolling
+										// Use scrollIntoView first, then add small offset for higher positioning
 										element.scrollIntoView({
 											behavior: "smooth",
 											block: "start",
 											inline: "nearest",
 										});
 
-										// Update the URL with the hash
+										// Add small offset after scroll completes to position higher
+										setTimeout(() => {
+											window.scrollBy(0, -30);
+										}, 100);
+
+										// Delay setting active letter to avoid race with IntersectionObserver
+										setTimeout(() => {
+											setActiveLetter(letter);
+										}, 500);
+
+										// Update URL hash for deep-linking.
 										const url = new URL(window.location.href);
 										url.hash = `letter-${letter}`;
 										window.history.pushState({}, "", url.toString());

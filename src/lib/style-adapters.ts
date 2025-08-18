@@ -23,7 +23,7 @@ export const toTailwindClasses = (styleKey: PatternStyleKey): string => {
 
 		// Table of contents
 		tocTitle: "font-light text-2xl text-primary mb-8",
-		tocItem: "py-2 border-b border-zinc-100",
+		tocItem: "py-2 border-b border-neutral-100",
 		tocItemTitle: "text-sm text-primary capitalize",
 		tocItemPage: "text-xs text-zinc-500",
 
@@ -37,8 +37,8 @@ export const toTailwindClasses = (styleKey: PatternStyleKey): string => {
 		// Connections/tags
 		connectionContainer: "mb-8",
 		connectionSection: "mb-4",
-		connectionTitle: "text-xs font-semibold text-gray-700 uppercase mb-2",
-		tag: "bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded",
+		connectionTitle: "text-xs font-semibold text-neutral-700 uppercase mb-2",
+		tag: "bg-gray-200 text-neutral-700 text-xs px-2 py-1 rounded",
 
 		// Solutions
 		solutionContainer: "mb-6",
@@ -49,15 +49,15 @@ export const toTailwindClasses = (styleKey: PatternStyleKey): string => {
 			"bg-blue-100 border border-blue-200 text-blue-800 text-sm px-2 py-1 rounded-md",
 
 		// Resources
-		resourceContainer: "border-t border-dashed border-zinc-300 pt-5 pb-5",
+		resourceContainer: "border-t border-dashed border-neutral-300 pt-5 pb-5",
 		resourceTitle: "text-base font-semibold text-primary mb-2",
 		resourceDescription: "text-sm text-zinc-500 leading-normal mb-3",
-		resourceSolutions: "text-xs text-gray-600 italic",
+		resourceSolutions: "text-xs text-neutral-600 italic",
 
 		// Notes
 		notesContainer: "mt-5 pt-4 border-t border-gray-200",
-		notesTitle: "text-sm font-semibold text-gray-700 mb-2",
-		notesText: "text-xs text-gray-600 leading-normal",
+		notesTitle: "text-sm font-semibold text-neutral-700 mb-2",
+		notesText: "text-xs text-neutral-600 leading-normal",
 
 		// Page elements
 		pageNumber: "text-xs text-zinc-400",

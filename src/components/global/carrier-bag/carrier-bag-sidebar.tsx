@@ -1,6 +1,7 @@
 "use client";
 
 import type * as React from "react";
+import { useEffect } from "react";
 
 import {
 	Cancel01Icon,
@@ -34,20 +35,24 @@ export function CarrierBagSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
 	const isHydrated = useCarrierBagStore((state) => state.isHydrated);
 	const isOpen = useCarrierBagStore((state) => state.isOpen);
+	const setOpen = useCarrierBagStore((state) => state.setOpen);
+	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
 	const items = useCarrierBagStore((state) => state.items);
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
 	const setItems = useCarrierBagStore((state) => state.setItems);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const documentData = useCarrierBagDocument(items);
-	const { toggleSidebar } = useSidebar();
+	const { setOpen: setSidebarOpen } = useSidebar();
+
+	// Sync Zustand store state to Sidebar component state
+	// This is a one-way sync: Zustand store → Sidebar component
+	useEffect(() => {
+		if (!isHydrated) return;
+		setSidebarOpen(isOpen);
+	}, [isOpen, setSidebarOpen, isHydrated]);
 
 	const handleRemoveItem = (patternId: string) => {
 		removePattern(patternId);
-	};
-
-	const handleExpandItem = (slug: string) => {
-		// Navigate to pattern page
-		window.location.href = `/pattern/${slug}`;
 	};
 
 	const handleDownloadJson = () => {
@@ -111,7 +116,7 @@ export function CarrierBagSidebar({
 								type="button"
 								aria-label="Expand Sidebar"
 								tabIndex={0}
-								onClick={toggleSidebar}
+								onClick={toggleOpen}
 							>
 								<Icon icon={FolderLibraryIcon} size={16} />
 							</Button>
@@ -122,7 +127,7 @@ export function CarrierBagSidebar({
 							className="h-8 w-8 p-0"
 							type="button"
 							aria-label="Close Sidebar"
-							onClick={toggleSidebar}
+							onClick={() => setOpen(false)}
 						>
 							<Icon icon={Cancel01Icon} size={16} />
 						</Button>
@@ -159,10 +164,14 @@ export function CarrierBagSidebar({
 								}}
 							>
 								{items.map((item) => {
+									const slug =
+										typeof item.pattern.slug === "string"
+											? item.pattern.slug
+											: item.pattern.slug?.current;
 									const itemData: CarrierBagItemData = {
 										id: item.pattern._id,
 										title: item.pattern.title || "Untitled Pattern",
-										slug: item.pattern.slug?.current,
+										slug: slug,
 									};
 									return (
 										<Reorder.Item
@@ -174,9 +183,6 @@ export function CarrierBagSidebar({
 											<CarrierBagItem
 												item={itemData}
 												onRemove={() => handleRemoveItem(item.pattern._id)}
-												onExpand={() =>
-													handleExpandItem(item.pattern.slug?.current || "")
-												}
 											/>
 										</Reorder.Item>
 									);

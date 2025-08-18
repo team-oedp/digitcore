@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
-import { PageHeader } from "~/components/shared/page-header";
+import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import {
 	Accordion,
@@ -11,8 +11,9 @@ import {
 	AccordionTrigger,
 } from "~/components/ui/accordion";
 import { client } from "~/sanity/lib/client";
-import { FAQS_QUERY } from "~/sanity/lib/queries";
+import { FAQS_QUERY, FAQ_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
+import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "FAQ | DIGITCORE Toolkit",
@@ -28,6 +29,15 @@ type FAQFromSanity = {
 
 export default async function FAQPage() {
 	const isDraftMode = (await draftMode()).isEnabled;
+
+	// Fetch page data from Sanity
+	const pageData = (await client.fetch(
+		FAQ_PAGE_QUERY,
+		{},
+		isDraftMode
+			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
+			: { perspective: "published", useCdn: true },
+	)) as Page | null;
 
 	// Fetch FAQs from Sanity
 	const faqs = await client.fetch<FAQFromSanity[]>(
@@ -48,63 +58,45 @@ export default async function FAQPage() {
 
 	return (
 		<PageWrapper>
-			<div className="space-y-16 pb-16">
-				<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
-					<div className="flex items-start justify-between gap-6">
-						<div className="flex-1">
-							<PageHeader title="Frequently Asked Questions" description="" />
-						</div>
-					</div>
-				</div>
+			<div className="flex flex-col gap-10 pb-44">
+				{pageData?.title && pageData?.description && (
+					<PageHeading
+						title={pageData.title}
+						description={pageData.description as PortableTextBlock[]}
+					/>
+				)}
 
-				<div className="space-y-16 lg:pl-20">
-					<section className="max-w-4xl space-y-4">
-						<p className="text-2xl text-neutral-500 leading-snug">
-							Welcome to our FAQ page. Here, we aim to clarify important
-							concepts that connect technology, environmental justice, and
-							community collaboration in the context of using the Digital
-							Toolkit for Collaborative Environmental Research. This glossary
-							serves as a helpful resource for researchers, developers,
-							community organizations, and advocates, guiding you through the
-							intricate world of participatory science and the development of
-							open infrastructure.
-						</p>
-					</section>
-
-					{/* FAQ Accordions */}
-					<section className="max-w-4xl space-y-4">
-						{faqs && faqs.length > 0 ? (
-							<Accordion type="single" collapsible className="w-full">
-								{faqs.map((faq) => (
-									<AccordionItem
-										key={faq._id}
-										value={faq._id}
-										className="border-zinc-300 border-b border-dashed last:border-b"
+				{/* FAQ Accordions */}
+				<section className="max-w-4xl">
+					{faqs && faqs.length > 0 ? (
+						<Accordion type="single" collapsible className="w-full">
+							{faqs.map((faq) => (
+								<AccordionItem
+									key={faq._id}
+									value={faq._id}
+									className="border-zinc-300 border-b border-dashed last:border-b"
+								>
+									<AccordionTrigger
+										showPlusMinus
+										className="items-center justify-between py-4 text-left font-normal text-lg text-primary hover:no-underline"
 									>
-										<AccordionTrigger
-											showPlusMinus
-											className="items-center justify-between py-4 text-left font-normal text-neutral-500 text-xl hover:no-underline"
-										>
-											<span className="text-left">{faq.title}</span>
-										</AccordionTrigger>
-										<AccordionContent className="pt-2 pb-4">
-											<div className="prose prose-neutral max-w-none text-base text-neutral-500 leading-relaxed">
-												<CustomPortableText
-													value={faq.description}
-													className="[&>*]:text-neutral-500"
-												/>
-											</div>
-										</AccordionContent>
-									</AccordionItem>
-								))}
-							</Accordion>
-						) : (
-							<p className="text-neutral-500">
-								No FAQs available at the moment. Please check back later.
-							</p>
-						)}
-					</section>
-				</div>
+										<span className="text-left">{faq.title}</span>
+									</AccordionTrigger>
+									<AccordionContent className="pt-2 pb-4">
+										<CustomPortableText
+											value={faq.description}
+											className="accordion-detail"
+										/>
+									</AccordionContent>
+								</AccordionItem>
+							))}
+						</Accordion>
+					) : (
+						<p className="text-neutral-500">
+							No FAQs available at the moment. Please check back later.
+						</p>
+					)}
+				</section>
 			</div>
 		</PageWrapper>
 	);

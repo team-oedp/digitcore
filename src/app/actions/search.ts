@@ -7,12 +7,78 @@ import { client } from "~/sanity/lib/client";
 import {
 	PATTERN_FILTER_QUERY,
 	PATTERN_SEARCH_QUERY,
+	PATTERN_SIMPLE_SEARCH_QUERY,
+	RESOURCE_SEARCH_QUERY,
+	SOLUTION_SEARCH_QUERY,
+	TAG_SEARCH_QUERY,
 } from "~/sanity/lib/queries";
+
+// Base content type for all search results
+export type SearchBaseContent = {
+	_id: string;
+	_type: string;
+	_score?: number;
+	title: string | null;
+	description?: Array<unknown> | null;
+};
+
+// Direct solution search result
+export type SearchSolution = SearchBaseContent & {
+	_type: "solution";
+	audiences?: Array<{
+		_id: string;
+		title?: string;
+	}> | null;
+	patterns?: Array<{
+		_id: string;
+		title?: string;
+		slug: string;
+	}> | null;
+};
+
+// Direct resource search result
+export type SearchResource = SearchBaseContent & {
+	_type: "resource";
+	links?: Array<unknown> | null;
+	solutions?: Array<{
+		_id: string;
+		title?: string;
+	}> | null;
+	patterns?: Array<{
+		_id: string;
+		title?: string;
+		slug: string;
+	}> | null;
+};
+
+// Direct tag search result
+export type SearchTag = SearchBaseContent & {
+	_type: "tag";
+	patterns?: Array<{
+		_id: string;
+		title?: string;
+		slug: string;
+	}> | null;
+};
 
 // Result type for search action
 export type SearchResult = {
 	success: boolean;
 	data?: SearchPattern[];
+	error?: string;
+	totalCount: number;
+	searchParams: ParsedSearchParams;
+};
+
+// Comprehensive search result for all content types
+export type ComprehensiveSearchResult = {
+	success: boolean;
+	data?: {
+		patterns: SearchPattern[];
+		solutions: SearchSolution[];
+		resources: SearchResource[];
+		tags: SearchTag[];
+	};
 	error?: string;
 	totalCount: number;
 	searchParams: ParsedSearchParams;
@@ -276,4 +342,127 @@ export async function searchPatternsWithParams(
 			searchParams: parseSearchParams({ page: 1, limit: 20 }),
 		};
 	}
+}
+
+/**
+ * Direct search function for command modal - no URL params needed
+ */
+export async function searchContentForCommandModal(
+	searchTerm: string,
+): Promise<ComprehensiveSearchResult> {
+	const location = createLogLocation("search.ts", "searchAllContent");
+
+	try {
+		if (!searchTerm.trim()) {
+			return {
+				success: true,
+				data: { patterns: [], solutions: [], resources: [], tags: [] },
+				totalCount: 0,
+				searchParams: parseSearchParams({ page: 1, limit: 20 }),
+			};
+		}
+
+		logger.searchInfo("Starting direct search", { searchTerm }, location);
+
+		// Escape search term for GROQ
+		const escapedSearchTerm = searchTerm.trim().replace(/["\\]/g, "\\$&");
+		const queryParams = { searchTerm: escapedSearchTerm };
+
+		logger.search(
+			"Executing direct GROQ queries",
+			{ escapedSearchTerm },
+			location,
+		);
+
+		// Execute all searches directly against Sanity
+		const [patternsResult, solutionsResult, resourcesResult, tagsResult] =
+			await Promise.allSettled([
+				client.fetch(PATTERN_SIMPLE_SEARCH_QUERY, queryParams),
+				client.fetch(SOLUTION_SEARCH_QUERY, queryParams),
+				client.fetch(RESOURCE_SEARCH_QUERY, queryParams),
+				client.fetch(TAG_SEARCH_QUERY, queryParams),
+			]);
+
+		// Extract results with error handling
+		const patterns =
+			patternsResult.status === "fulfilled" ? patternsResult.value || [] : [];
+		const solutions =
+			solutionsResult.status === "fulfilled" ? solutionsResult.value || [] : [];
+		const resources =
+			resourcesResult.status === "fulfilled" ? resourcesResult.value || [] : [];
+		const tags =
+			tagsResult.status === "fulfilled" ? tagsResult.value || [] : [];
+
+		// Log any failed searches
+		if (patternsResult.status === "rejected") {
+			logger.searchError(
+				"Patterns search failed",
+				patternsResult.reason,
+				location,
+			);
+		}
+		if (solutionsResult.status === "rejected") {
+			logger.searchError(
+				"Solutions search failed",
+				solutionsResult.reason,
+				location,
+			);
+		}
+		if (resourcesResult.status === "rejected") {
+			logger.searchError(
+				"Resources search failed",
+				resourcesResult.reason,
+				location,
+			);
+		}
+		if (tagsResult.status === "rejected") {
+			logger.searchError("Tags search failed", tagsResult.reason, location);
+		}
+
+		const totalCount =
+			patterns.length + solutions.length + resources.length + tags.length;
+
+		logger.searchInfo(
+			"Direct search completed",
+			{
+				patterns: patterns.length,
+				solutions: solutions.length,
+				resources: resources.length,
+				tags: tags.length,
+				totalCount,
+			},
+			location,
+		);
+
+		return {
+			success: true,
+			data: { patterns, solutions, resources, tags },
+			totalCount,
+			searchParams: parseSearchParams({
+				q: searchTerm,
+				page: 1,
+				limit: 20,
+			}),
+		};
+	} catch (error) {
+		logger.searchError("Direct search failed", error, location);
+
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : "Search failed",
+			totalCount: 0,
+			searchParams: parseSearchParams({ page: 1, limit: 20 }),
+		};
+	}
+}
+
+/**
+ * Original comprehensive search function preserved for search page compatibility
+ */
+export async function searchAllContent(
+	searchParams: URLSearchParams,
+): Promise<ComprehensiveSearchResult> {
+	// Delegate to the direct search function by extracting the search term
+	const searchTerm = searchParams.get("q")?.trim() || "";
+	return await searchContentForCommandModal(searchTerm);
 }

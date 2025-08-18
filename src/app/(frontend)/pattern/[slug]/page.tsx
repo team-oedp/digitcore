@@ -8,8 +8,8 @@ import { PatternContentProvider } from "~/components/pages/pattern/pattern-conte
 import type { DereferencedResource } from "~/components/pages/pattern/resources";
 import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
-import { PageHeader } from "~/components/shared/page-header";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { PatternHeading } from "~/components/shared/pattern-heading";
 import { client } from "~/sanity/lib/client";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -96,27 +96,21 @@ export default async function PatternPage({ params }: PatternPageProps) {
 
 	return (
 		<PatternContentProvider pattern={pattern}>
-			<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
-				<div className="flex items-start justify-between gap-6">
-					<div className="flex-1">
-						<PageHeader
-							title={pattern.title || ""}
-							slug={
-								typeof pattern.slug === "string"
-									? pattern.slug
-									: (pattern.slug as Slug | null)?.current || ""
-							}
-							pattern={pattern as unknown as Pattern}
-						/>
-					</div>
-				</div>
-			</div>
-
-			<PageWrapper>
-				<div className="space-y-12 pt-28">
-					<div className="lg:pl-20">
+			<PageWrapper className="flex flex-col gap-5 pb-40">
+				<PatternHeading
+					title={pattern.title || ""}
+					slug={
+						typeof pattern.slug === "string"
+							? pattern.slug
+							: (pattern.slug as Slug | null)?.current || ""
+					}
+					pattern={pattern as unknown as Pattern}
+				/>
+				<div className="space-y-12">
+					<div>
 						<CustomPortableText
 							value={pattern.description as PortableTextBlock[]}
+							className="prose"
 						/>
 						<PatternConnections
 							tags={(pattern.tags as Tag[]) || undefined}
@@ -135,6 +129,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
 						}
 					/>
 				</div>
+				<div className="h-20" />
 			</PageWrapper>
 		</PatternContentProvider>
 	);

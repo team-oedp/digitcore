@@ -2,30 +2,30 @@ import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
 
 // Dynamically import all Digitcore icons
-const Icon01 = dynamic(() => import("~/components/icons/digitcore/icon-01"));
-const Icon02 = dynamic(() => import("~/components/icons/digitcore/icon-02"));
-const Icon03 = dynamic(() => import("~/components/icons/digitcore/icon-03"));
-const Icon04 = dynamic(() => import("~/components/icons/digitcore/icon-04"));
-const Icon05 = dynamic(() => import("~/components/icons/digitcore/icon-05"));
-const Icon06 = dynamic(() => import("~/components/icons/digitcore/icon-06"));
-const Icon07 = dynamic(() => import("~/components/icons/digitcore/icon-07"));
-const Icon08 = dynamic(() => import("~/components/icons/digitcore/icon-08"));
-const Icon09 = dynamic(() => import("~/components/icons/digitcore/icon-09"));
-const Icon10 = dynamic(() => import("~/components/icons/digitcore/icon-10"));
-const Icon11 = dynamic(() => import("~/components/icons/digitcore/icon-11"));
-const Icon12 = dynamic(() => import("~/components/icons/digitcore/icon-12"));
-const Icon13 = dynamic(() => import("~/components/icons/digitcore/icon-13"));
-const Icon14 = dynamic(() => import("~/components/icons/digitcore/icon-14"));
-const Icon15 = dynamic(() => import("~/components/icons/digitcore/icon-15"));
-const Icon16 = dynamic(() => import("~/components/icons/digitcore/icon-16"));
-const Icon17 = dynamic(() => import("~/components/icons/digitcore/icon-17"));
-const Icon18 = dynamic(() => import("~/components/icons/digitcore/icon-18"));
-const Icon19 = dynamic(() => import("~/components/icons/digitcore/icon-19"));
-const Icon20 = dynamic(() => import("~/components/icons/digitcore/icon-20"));
-const Icon21 = dynamic(() => import("~/components/icons/digitcore/icon-21"));
-const Icon22 = dynamic(() => import("~/components/icons/digitcore/icon-22"));
-const Icon23 = dynamic(() => import("~/components/icons/digitcore/icon-23"));
-const Icon24 = dynamic(() => import("~/components/icons/digitcore/icon-24"));
+const Icon01 = dynamic(() => import("~/components/icons/shapes/icon-01"));
+const Icon02 = dynamic(() => import("~/components/icons/shapes/icon-02"));
+const Icon03 = dynamic(() => import("~/components/icons/shapes/icon-03"));
+const Icon04 = dynamic(() => import("~/components/icons/shapes/icon-04"));
+const Icon05 = dynamic(() => import("~/components/icons/shapes/icon-05"));
+const Icon06 = dynamic(() => import("~/components/icons/shapes/icon-06"));
+const Icon07 = dynamic(() => import("~/components/icons/shapes/icon-07"));
+const Icon08 = dynamic(() => import("~/components/icons/shapes/icon-08"));
+const Icon09 = dynamic(() => import("~/components/icons/shapes/icon-09"));
+const Icon10 = dynamic(() => import("~/components/icons/shapes/icon-10"));
+const Icon11 = dynamic(() => import("~/components/icons/shapes/icon-11"));
+const Icon12 = dynamic(() => import("~/components/icons/shapes/icon-12"));
+const Icon13 = dynamic(() => import("~/components/icons/shapes/icon-13"));
+const Icon14 = dynamic(() => import("~/components/icons/shapes/icon-14"));
+const Icon15 = dynamic(() => import("~/components/icons/shapes/icon-15"));
+const Icon16 = dynamic(() => import("~/components/icons/shapes/icon-16"));
+const Icon17 = dynamic(() => import("~/components/icons/shapes/icon-17"));
+const Icon18 = dynamic(() => import("~/components/icons/shapes/icon-18"));
+const Icon19 = dynamic(() => import("~/components/icons/shapes/icon-19"));
+const Icon20 = dynamic(() => import("~/components/icons/shapes/icon-20"));
+const Icon21 = dynamic(() => import("~/components/icons/shapes/icon-21"));
+const Icon22 = dynamic(() => import("~/components/icons/shapes/icon-22"));
+const Icon23 = dynamic(() => import("~/components/icons/shapes/icon-23"));
+const Icon24 = dynamic(() => import("~/components/icons/shapes/icon-24"));
 
 // Array of all available icons
 const icons: ComponentType<React.ComponentPropsWithoutRef<"svg">>[] = [

@@ -61,10 +61,10 @@ export function Resources({ resources }: ResourcesProps) {
 						<div
 							key={resource.title || resource._id}
 							className={`relative w-full ${
-								index === 0 ? "border-zinc-300 border-t border-dashed" : ""
+								index === 0 ? "border-neutral-300 border-t border-dashed" : ""
 							} ${
 								index === resources.length - 1
-									? "border-zinc-300 border-b border-dashed"
+									? "border-neutral-300 border-b border-dashed"
 									: ""
 							}`}
 						>
@@ -96,7 +96,7 @@ export function Resources({ resources }: ResourcesProps) {
 									{resource.description && (
 										<CustomPortableText
 											value={resource.description as PortableTextBlock[]}
-											className="prose-sm prose-p:font-normal prose-p:text-[14px] prose-p:text-zinc-500 prose-p:leading-normal"
+											className="prose prose-neutral max-w-none prose-p:text-[14px] prose-p:leading-normal"
 										/>
 									)}
 								</div>
@@ -137,7 +137,7 @@ export function Resources({ resources }: ResourcesProps) {
 								</div>
 							</div>
 							{index < resources.length - 1 && (
-								<div className="absolute right-0 bottom-0 left-0 border-zinc-300 border-b border-dashed" />
+								<div className="absolute right-0 bottom-0 left-0 border-neutral-300 border-b border-dashed" />
 							)}
 						</div>
 					) : null,
