@@ -52,69 +52,53 @@ export function CurrentLetterIndicator({
 	// We create a sentinel element positioned at the header's bottom (using CSS sticky container on page)
 	const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-	// Use IntersectionObserver to track which letter section is currently visible
+	// Use IntersectionObserver to detect when sections are at the top
 	useEffect(() => {
-		console.log('🔍 Setting up IntersectionObserver for letters:', letters);
-
-		// Create observer that triggers when sections cross the top of viewport
 		const observer = new IntersectionObserver(
 			(entries) => {
-				console.log('📊 IntersectionObserver callback triggered with', entries.length, 'entries');
-				
-				entries.forEach(entry => {
-					console.log(`📍 Entry ${entry.target.id}: intersecting=${entry.isIntersecting}, ratio=${entry.intersectionRatio.toFixed(2)}, top=${entry.boundingClientRect.top.toFixed(1)}`);
-				});
+				// Find which sections are currently visible
+				const visibleSections: { letter: string; top: number }[] = [];
 
-				// Find entries that are currently intersecting and sort by position
-				const intersecting = entries
-					.filter((entry) => entry.isIntersecting)
-					.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+				for (const entry of entries) {
+					const letter = entry.target.id.replace("letter-", "");
+					const top = entry.boundingClientRect.top;
 
-				console.log('✅ Intersecting sections:', intersecting.map(e => e.target.id));
+					if (entry.isIntersecting) {
+						visibleSections.push({ letter, top });
+					}
+				}
 
-				if (intersecting.length > 0) {
-					// The topmost intersecting section determines the active letter
-					const topEntry = intersecting[0];
-					if (topEntry) {
-						const sectionId = topEntry.target.id; // format: "letter-X"
-						const letter = sectionId.replace("letter-", "");
-						
+				if (visibleSections.length > 0) {
+					// Sort by position and pick the topmost
+					visibleSections.sort((a, b) => a.top - b.top);
+					const topSection = visibleSections[0];
+
+					if (topSection) {
 						const currentActive = useSectionInViewStore.getState().activeLetter;
-						console.log(`🎯 Would set active letter: ${currentActive} -> ${letter}`);
-						
-						if (letter && letter !== currentActive) {
-							console.log(`✨ Actually setting active letter to: ${letter}`);
-							setActiveLetter(letter);
+						if (topSection.letter !== currentActive) {
+							setActiveLetter(topSection.letter);
 						}
 					}
 				}
 			},
 			{
-				// Use viewport as root (null)
-				root: null,
-				// Trigger when section is in the top half of viewport
-				rootMargin: "0px 0px -50% 0px",
+				root: null, // Use viewport
+				rootMargin: "0px 0px -70% 0px", // Trigger when section is in top 30% of viewport
 				threshold: 0.1,
-			}
+			},
 		);
 
-		// Observe all letter sections
-		let observedCount = 0;
-		letters.forEach((letter) => {
+		// Observe all sections
+		for (const letter of letters) {
 			const element = document.getElementById(`letter-${letter}`);
 			if (element) {
-				console.log(`👀 Observing element: letter-${letter}`, element);
 				observer.observe(element);
-				observedCount++;
 			} else {
 				console.warn(`❌ Element not found: letter-${letter}`);
 			}
-		});
-
-		console.log(`📢 Total elements observed: ${observedCount}/${letters.length}`);
+		}
 
 		return () => {
-			console.log('🧹 Disconnecting IntersectionObserver');
 			observer.disconnect();
 		};
 	}, [letters, setActiveLetter]);
@@ -122,9 +106,9 @@ export function CurrentLetterIndicator({
 	// Handle URL hash on initial load and browser navigation
 	useEffect(() => {
 		const handleHashChange = () => {
-			const hash = window.location.hash.replace('#', '');
-			if (hash.startsWith('letter-')) {
-				const letter = hash.replace('letter-', '');
+			const hash = window.location.hash.replace("#", "");
+			if (hash.startsWith("letter-")) {
+				const letter = hash.replace("letter-", "");
 				if (letters.includes(letter)) {
 					setActiveLetter(letter);
 				}
@@ -135,8 +119,8 @@ export function CurrentLetterIndicator({
 		handleHashChange();
 
 		// Listen for hash changes (back/forward navigation)
-		window.addEventListener('hashchange', handleHashChange);
-		return () => window.removeEventListener('hashchange', handleHashChange);
+		window.addEventListener("hashchange", handleHashChange);
+		return () => window.removeEventListener("hashchange", handleHashChange);
 	}, [letters, setActiveLetter]);
 
 	const activeLetter = useSectionInViewStore((s) => s.activeLetter);
@@ -167,20 +151,11 @@ export function CurrentLetterIndicator({
 		}
 	}, [letters]);
 
-	// Debug logging
-	console.log('📊 CurrentLetterIndicator render:', {
-		activeLetter,
-		isActiveValid,
-		fallback,
-		letters,
-		display: isActiveValid ? activeLetter : (fallback ?? "")
-	});
-
 	return (
 		<div className="max-w-4xl">
 			{/* Sentinel positioned at the header bottom to align our measurement */}
 			<div ref={sentinelRef} style={{ height: 1, marginTop: 0 }} />
-			<div className="mb-8 w-32 font-light text-8xl text-neutral-300 leading-none">
+			<div className="mb-8 w-32 font-light text-8xl text-neutral-300 leading-none transition-opacity duration-200">
 				{isActiveValid ? activeLetter : (fallback ?? "")}
 			</div>
 		</div>

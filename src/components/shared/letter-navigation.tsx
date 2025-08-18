@@ -33,13 +33,6 @@ export function LetterNavigation<T>({
 			? activeLetter
 			: (firstAvailableLetter ?? undefined);
 
-	// Debug logging
-	console.log('🧭 LetterNavigation render:', {
-		activeLetter,
-		effectiveActive,
-		firstAvailableLetter
-	});
-
 	return (
 		<div className="z-20 hidden lg:block">
 			<div className="flex flex-col">
@@ -76,17 +69,22 @@ export function LetterNavigation<T>({
 									e.preventDefault();
 									const element = document.getElementById(`letter-${letter}`);
 									if (element) {
-										// Smooth scroll to the section
+										// Use scrollIntoView first, then add small offset for higher positioning
 										element.scrollIntoView({
 											behavior: "smooth",
 											block: "start",
 											inline: "nearest",
 										});
 
-										// Immediately update the shared store so the indicator
-										// and navigation reflect the selection while scrolling
-										// is taking place.
-										setActiveLetter(letter);
+										// Add small offset after scroll completes to position higher
+										setTimeout(() => {
+											window.scrollBy(0, -30);
+										}, 100);
+
+										// Delay setting active letter to avoid race with IntersectionObserver
+										setTimeout(() => {
+											setActiveLetter(letter);
+										}, 500);
 
 										// Update URL hash for deep-linking.
 										const url = new URL(window.location.href);
