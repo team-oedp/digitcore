@@ -15,14 +15,26 @@ export const tagType = defineType({
 					if (!title) return true;
 
 					const { document, getClient } = context;
-					const client = getClient({ apiVersion: "2023-05-03" });
-					const id = document?._id?.replace(/^drafts\./, "");
-
-					const query = '*[_type == "tag" && title == $title && _id != $id][0]';
-					const params = { title, id };
+					const client = getClient({ apiVersion: "2025-07-23" });
+					
+					// Get the current document ID (could be draft or published)
+					const currentId = document?._id;
+					if (!currentId) {
+						// For new documents, just check if any document with this title exists
+						const query = '*[_type == "tag" && title == $title][0]';
+						const existing = await client.fetch(query, { title });
+						return existing ? `A tag with this title already exists` : true;
+					}
+					
+					// For existing documents, exclude both draft and published versions of the same document
+					const baseId = currentId.replace(/^drafts\./, "");
+					const draftId = `drafts.${baseId}`;
+					
+					const query = '*[_type == "tag" && title == $title && _id != $currentId && _id != $baseId && _id != $draftId][0]';
+					const params = { title, currentId, baseId, draftId };
+					
 					const existing = await client.fetch(query, params);
-
-					return existing ? "A tag with this title already exists" : true;
+					return existing ? `A tag with this title already exists` : true;
 				}),
 		}),
 	],
