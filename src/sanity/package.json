@@ -20,7 +20,7 @@
 		"html-react-parser": "^5.2.6",
 		"react": "^19.1",
 		"react-dom": "^19.1",
-		"sanity": "^4.3.0",
+		"sanity": "^4.4.1",
 		"styled-components": "^6.1.18"
 	},
 	"devDependencies": {

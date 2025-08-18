@@ -383,19 +383,19 @@ function Slide1({
 		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-8">
 			<div className="relative">
 				<Icon01
-					className="absolute inset-0 max-h-full max-w-full fill-icon/10 text-icon/30"
-					width={400}
-					height={400}
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_130s_linear_infinite] fill-icon/10 text-icon/30"
+					width={600}
+					height={600}
 				/>
 				<Icon04
-					className="absolute inset-0 max-h-full max-w-full fill-icon/15 text-icon/40"
-					width={400}
-					height={400}
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_110s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					width={600}
+					height={600}
 				/>
 				<Icon07
-					className="relative max-h-full max-w-full fill-icon/20 text-icon/50"
-					width={400}
-					height={400}
+					className="relative max-h-full max-w-full animate-[spin_150s_linear_infinite] fill-icon/20 text-icon/50"
+					width={600}
+					height={600}
 				/>
 			</div>
 		</div>
@@ -515,19 +515,19 @@ function Slide2({
 		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-8">
 			<div className="relative">
 				<Icon02
-					className="absolute inset-0 max-h-full max-w-full fill-icon/10 text-icon/30"
-					width={400}
-					height={400}
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_140s_linear_infinite] fill-icon/10 text-icon/30"
+					width={600}
+					height={600}
 				/>
 				<Icon05
-					className="absolute inset-0 max-h-full max-w-full fill-icon/15 text-icon/40"
-					width={400}
-					height={400}
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_120s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					width={600}
+					height={600}
 				/>
 				<Icon08
-					className="relative max-h-full max-w-full fill-icon/20 text-icon/50"
-					width={400}
-					height={400}
+					className="relative max-h-full max-w-full animate-[spin_160s_linear_infinite] fill-icon/20 text-icon/50"
+					width={600}
+					height={600}
 				/>
 			</div>
 		</div>
@@ -646,19 +646,19 @@ function Slide3({
 		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-8">
 			<div className="relative">
 				<Icon03
-					className="absolute inset-0 max-h-full max-w-full fill-icon/10 text-icon/30"
-					width={400}
-					height={400}
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_135s_linear_infinite] fill-icon/10 text-icon/30"
+					width={600}
+					height={600}
 				/>
 				<Icon06
-					className="absolute inset-0 max-h-full max-w-full fill-icon/15 text-icon/40"
-					width={400}
-					height={400}
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_115s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					width={600}
+					height={600}
 				/>
 				<Icon09
-					className="relative max-h-full max-w-full fill-icon/20 text-icon/50"
-					width={400}
-					height={400}
+					className="relative max-h-full max-w-full animate-[spin_155s_linear_infinite] fill-icon/20 text-icon/50"
+					width={600}
+					height={600}
 				/>
 			</div>
 		</div>
