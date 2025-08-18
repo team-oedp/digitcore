@@ -1,5 +1,6 @@
 import { DocumentTextIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { validateUniqueTitle } from "../../lib/validation";
 
 export const patternType = defineType({
 	name: "pattern",
@@ -16,6 +17,7 @@ export const patternType = defineType({
 			title: "Title",
 			type: "string",
 			group: "content",
+			validation: (Rule) => Rule.required().custom(validateUniqueTitle()),
 		}),
 		defineField({
 			name: "slug",
