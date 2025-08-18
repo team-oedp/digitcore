@@ -73,7 +73,7 @@
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",
 		"resend": "^2.0.0",
-		"sanity": "^4.3.0",
+		"sanity": "^4.4.1",
 		"server-only": "^0.0.1",
 		"sonner": "^2.0.6",
 		"styled-components": "^6.1.19",
