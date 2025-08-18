@@ -1,5 +1,6 @@
 import { BulbOutlineIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { validateUniqueTitle } from "../../lib/validation";
 
 export const solutionType = defineType({
 	name: "solution",
@@ -10,6 +11,7 @@ export const solutionType = defineType({
 		defineField({
 			name: "title",
 			type: "string",
+			validation: (Rule) => Rule.required().custom(validateUniqueTitle()),
 		}),
 		defineField({
 			name: "description",
