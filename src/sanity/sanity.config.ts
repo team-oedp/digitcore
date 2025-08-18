@@ -7,7 +7,6 @@ import { schema } from "./schemaTypes/index";
 import { structure } from "./structure";
 
 export default defineConfig({
-	name: "default",
 	title: "Digitcore",
 	projectId,
 	dataset,
