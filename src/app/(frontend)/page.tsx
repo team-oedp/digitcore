@@ -45,7 +45,7 @@ export default async function Home() {
 				{data?.description && (
 					<CustomPortableText
 						value={data.description as PortableTextBlock[]}
-						className="text-heading"
+						className="text-page-heading"
 					/>
 				)}
 				<div className="h-64 w-64">

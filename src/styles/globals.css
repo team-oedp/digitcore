@@ -113,6 +113,8 @@
 	--color-green-default: oklch(0.8 0.15 120);
 	--color-green-light: oklch(0.9 0.1 120);
 
+	--color-green-brand: oklch(0.5344 0.0889 146.94);
+
 	--radius: 0.625rem;
 	--background: var(--color-neutral-100);
 	--foreground: var(--color-neutral-950);
@@ -280,6 +282,15 @@
 		font-weight: 500; /* medium */
 		text-transform: capitalize;
 		color: var(--text-primary);
+		text-align: left;
+	}
+
+	.text-page-heading {
+		font-size: var(--text-heading);
+		line-height: var(--text-heading--line-height);
+		font-weight: 500; /* medium */
+		text-transform: capitalize;
+		color: var(--color-green-brand);
 		text-align: left;
 	}
 
