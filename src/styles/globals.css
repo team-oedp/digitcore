@@ -267,11 +267,11 @@
 	}
 
 	.accordion-heading {
-		@apply prose text-primary text-lg hover:no-underline text-left;
+		@apply prose text-primary text-base md:text-lg hover:no-underline text-left;
 	}
 
 	.accordion-detail {
-		@apply prose text-primary text-base text-left;
+		@apply prose text-primary text-base md:text-base text-left;
 	}
 
 	.text-button {

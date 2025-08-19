@@ -107,17 +107,11 @@ export default async function GlossaryPage() {
 	const defaultDescription =
 		"Building equitable open digital infrastructure requires a shared understanding of key concepts that bridge technology, environmental justice, and community collaboration. This glossary defines essential terms from the DIGITCORE Toolkit, helping researchers, developers, community organizations, and advocates navigate the complex landscape of participatory science and open infrastructure development.";
 
-	// Prepare description for PageHeader - it handles both string and PortableTextBlock[]
-	const pageDescription = pageData?.description as
-		| PortableTextBlock[]
-		| string
-		| undefined;
-
 	return (
 		<div className="relative">
-			<PageWrapper className="flex gap-20">
+			<PageWrapper className="flex min-h-0 flex-col gap-0 md:min-h-screen md:flex-row md:gap-20">
 				{/* Sticky nav and section indicator */}
-				<div className="sticky top-6 z-10 h-full self-start">
+				<div className="sticky top-6 z-10 hidden h-full self-start md:block">
 					<div className="flex flex-col items-start justify-start gap-5">
 						<CurrentLetterIndicator
 							availableLetters={Object.keys(termsByLetter)}
@@ -132,7 +126,7 @@ export default async function GlossaryPage() {
 					</div>
 				</div>
 
-				<div className="flex w-full flex-col gap-40">
+				<div className="flex min-w-0 flex-1 flex-col gap-20 md:gap-40">
 					{pageData?.title && pageData?.description && (
 						<PageHeading
 							title={pageData.title}
