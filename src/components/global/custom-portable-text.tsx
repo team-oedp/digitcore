@@ -1,5 +1,5 @@
 /**
- * This component uses Portable Text to render a post body.
+ * This component uses Portable Text to render rich text.
  *
  * You can learn more about Portable Text on:
  * https://www.sanity.io/docs/block-content
@@ -14,6 +14,7 @@ import {
 	type PortableTextComponents,
 } from "next-sanity";
 
+import { cn } from "~/lib/utils";
 import ResolvedLink from "./resolved-link";
 
 export function CustomPortableText({
@@ -89,10 +90,8 @@ export function CustomPortableText({
 		},
 	};
 
-	const combinedClasses = className ?? undefined;
-
 	return (
-		<Component className={combinedClasses}>
+		<Component className={cn(className, "prose max-w-none")}>
 			<PortableText components={components} value={value} />
 		</Component>
 	);
