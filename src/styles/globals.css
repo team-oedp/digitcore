@@ -50,6 +50,16 @@
 	--text-heading: 2rem; /* 32px */
 	--text-heading--line-height: calc(2.25 / 2); /* 1.125 */
 
+	--text-page-heading-mobile: 1.5rem; /* 24px */
+	--text-page-heading-mobile--line-height: calc(2 / 1.5); /* 1.333 */
+	--text-page-heading-desktop: 2rem; /* 32px */
+	--text-page-heading-desktop--line-height: calc(2.25 / 2); /* 1.125 */
+
+	--text-section-heading-mobile: 1.25rem; /* 20px */
+	--text-section-heading-mobile--line-height: calc(1.5 / 1.25); /* 1.2 */
+	--text-section-heading-desktop: 2rem; /* 32px */
+	--text-section-heading-desktop--line-height: calc(2.25 / 2); /* 1.125 */
+
 	--text-pattern-list-item-title: 1.5rem; /* 24px */
 	--text-pattern-list-item-title--line-height: calc(2 / 1.5); /* 1.333 */
 }
@@ -245,11 +255,11 @@
 	}
 
 	.text-body {
-		@apply text-base text-primary prose;
+		@apply text-sm md:text-base text-primary prose prose-sm md:prose-base;
 	}
 
 	.text-minor {
-		@apply text-sm text-neutral-300 prose;
+		@apply text-xs md:text-sm text-neutral-300 prose prose-sm;
 	}
 
 	.text-subheading {
@@ -286,21 +296,31 @@
 	}
 
 	.text-page-heading {
-		font-size: var(--text-heading);
-		line-height: var(--text-heading--line-height);
+		font-size: var(--text-page-heading-mobile);
+		line-height: var(--text-page-heading-mobile--line-height);
 		font-weight: 500; /* medium */
 		text-transform: capitalize;
 		color: var(--color-green-brand);
 		text-align: left;
+
+		@media (min-width: 768px) {
+			font-size: var(--text-page-heading-desktop);
+			line-height: var(--text-page-heading-desktop--line-height);
+		}
 	}
 
 	.text-section-heading {
-		font-size: var(--text-heading);
-		line-height: var(--text-heading--line-height);
+		font-size: var(--text-section-heading-mobile);
+		line-height: var(--text-section-heading-mobile--line-height);
 		font-weight: 500; /* medium */
 		text-transform: capitalize;
 		color: var(--text-primary);
 		text-align: left;
+
+		@media (min-width: 768px) {
+			font-size: var(--text-section-heading-desktop);
+			line-height: var(--text-section-heading-desktop--line-height);
+		}
 	}
 
 	.text-pattern-list-item-title {
