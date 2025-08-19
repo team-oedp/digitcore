@@ -228,13 +228,16 @@ export async function searchPatterns(
 			location,
 		);
 		const startTime = Date.now();
-		const results = await client.fetch(query, queryParams);
+		const response = await client.fetch(query, queryParams);
 		const endTime = Date.now();
+
+		// Extract results from Sanity client response
+		const results = response?.result || response;
 
 		logger.groq(
 			"GROQ query completed",
 			{
-				resultCount: results.length,
+				resultCount: results?.length || 0,
 				executionTime: `${endTime - startTime}ms`,
 			},
 			location,
@@ -242,14 +245,14 @@ export async function searchPatterns(
 
 		logger.searchInfo(
 			"Search completed successfully",
-			{ resultCount: results.length },
+			{ resultCount: results?.length || 0 },
 			location,
 		);
 
 		return {
 			success: true,
-			data: results,
-			totalCount: results.length,
+			data: results || [],
+			totalCount: results?.length || 0,
 			searchParams: parsedParams,
 		};
 	} catch (error) {

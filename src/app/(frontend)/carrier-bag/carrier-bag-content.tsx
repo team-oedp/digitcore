@@ -58,7 +58,9 @@ function getSlugString(p: PatternWithFlexibleSlug): string | undefined {
 	return typeof s === "string" ? s : s.current;
 }
 
-export function CarrierBagContent() {
+export function CarrierBagContent({
+	mobileTrigger,
+}: { mobileTrigger?: React.ReactNode }) {
 	const items = useCarrierBagStore((state) => state.items);
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
 	const setItems = useCarrierBagStore((state) => state.setItems);
@@ -182,6 +184,7 @@ export function CarrierBagContent() {
 						<h2 className="font-normal text-2xl">Carrier Bag</h2>
 						<p className="font-normal text-sm">{`${items.length} saved items`}</p>
 					</div>
+					{mobileTrigger && mobileTrigger}
 				</div>
 			</div>
 

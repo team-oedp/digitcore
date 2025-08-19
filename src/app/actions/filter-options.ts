@@ -9,6 +9,13 @@ export type FilterOption = {
 	label: string;
 };
 
+export type SanityFilterOption = {
+	_id: string;
+	title: string | null;
+	value: string;
+	label: string | null;
+};
+
 export type FilterOptionsResult = {
 	success: boolean;
 	data?: {
@@ -33,28 +40,44 @@ export async function fetchFilterOptions(): Promise<FilterOptionsResult> {
 		);
 
 		const startTime = Date.now();
-		const data = await client.fetch(FILTER_OPTIONS_QUERY);
+		const response = await client.fetch(FILTER_OPTIONS_QUERY);
 		const endTime = Date.now();
+
+		// Extract data from Sanity client response
+		const data = response;
 
 		logger.groq(
 			"Filter options query completed",
 			{
 				executionTime: `${endTime - startTime}ms`,
-				dataReceived: !!data,
+				dataReceived: !!(
+					data &&
+					typeof data === "object" &&
+					(data.audiences || data.themes || data.tags)
+				),
 			},
 			location,
 		);
 
 		// Provide default options if fetch fails and filter out null labels
-		const audiences = (data?.audiences || []).filter(
-			(item): item is typeof item & { label: string } => item.label !== null,
-		);
-		const themes = (data?.themes || []).filter(
-			(item): item is typeof item & { label: string } => item.label !== null,
-		);
-		const tags = (data?.tags || []).filter(
-			(item): item is typeof item & { label: string } => item.label !== null,
-		);
+		const audiences = (data?.audiences || [])
+			.filter((item: SanityFilterOption) => item.label !== null)
+			.map((item: SanityFilterOption) => ({
+				value: item.value,
+				label: item.label as string,
+			}));
+		const themes = (data?.themes || [])
+			.filter((item: SanityFilterOption) => item.label !== null)
+			.map((item: SanityFilterOption) => ({
+				value: item.value,
+				label: item.label as string,
+			}));
+		const tags = (data?.tags || [])
+			.filter((item: SanityFilterOption) => item.label !== null)
+			.map((item: SanityFilterOption) => ({
+				value: item.value,
+				label: item.label as string,
+			}));
 
 		const result = { audiences, themes, tags };
 

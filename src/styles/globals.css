@@ -60,8 +60,10 @@
 	--text-section-heading-desktop: 2rem; /* 32px */
 	--text-section-heading-desktop--line-height: calc(2.25 / 2); /* 1.125 */
 
-	--text-pattern-list-item-title: 1.5rem; /* 24px */
-	--text-pattern-list-item-title--line-height: calc(2 / 1.5); /* 1.333 */
+	--text-pattern-list-item-title-mobile: 1.25rem; /* 20px */
+	--text-pattern-list-item-title-mobile--line-height: calc(1.5 / 1.25); /* 1.2 */
+	--text-pattern-list-item-title-desktop: 1.5rem; /* 24px */
+	--text-pattern-list-item-title-desktop--line-height: calc(2 / 1.5); /* 1.333 */
 }
 
 @theme {
@@ -255,11 +257,11 @@
 	}
 
 	.text-body {
-		@apply text-sm md:text-base text-primary prose prose-sm md:prose-base;
+		@apply text-sm md:text-base text-primary prose max-w-none prose-sm md:prose-base;
 	}
 
 	.text-minor {
-		@apply text-xs md:text-sm text-neutral-300 prose prose-sm;
+		@apply text-xs md:text-sm text-neutral-300 prose max-w-none prose-sm;
 	}
 
 	.text-subheading {
@@ -267,11 +269,11 @@
 	}
 
 	.accordion-heading {
-		@apply prose text-primary text-base md:text-lg hover:no-underline text-left;
+		@apply prose max-w-none text-primary text-base md:text-lg hover:no-underline text-left;
 	}
 
 	.accordion-detail {
-		@apply prose text-primary text-base md:text-base text-left;
+		@apply prose max-w-none text-primary text-base md:text-base text-left;
 	}
 
 	.text-button {
@@ -324,12 +326,17 @@
 	}
 
 	.text-pattern-list-item-title {
-		font-size: var(--text-pattern-list-item-title);
-		line-height: var(--text-pattern-list-item-title--line-height);
+		font-size: var(--text-pattern-list-item-title-mobile);
+		line-height: var(--text-pattern-list-item-title-mobile--line-height);
 		font-weight: 500; /* medium */
 		text-transform: capitalize;
 		color: var(--text-primary);
 		text-align: left;
+
+		@media (min-width: 768px) {
+			font-size: var(--text-pattern-list-item-title-desktop);
+			line-height: var(--text-pattern-list-item-title-desktop--line-height);
+		}
 	}
 }
 

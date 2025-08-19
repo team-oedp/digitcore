@@ -96,8 +96,8 @@ export default async function PatternsPage() {
 				<>
 					{Array.from(themeGroups.values()).map(({ theme, patterns }) => (
 						<div key={theme._id}>
-							<div className="flex flex-col gap-5 pt-36 pb-18">
-								<h2 className="text-heading">{theme.title}</h2>
+							<div className="flex flex-col gap-5 pt-12 pb-12 md:pt-36 md:pb-18">
+								<h2 className="text-section-heading">{theme.title}</h2>
 								<CustomPortableText
 									value={theme.description as PortableTextBlock[]}
 									className="prose"

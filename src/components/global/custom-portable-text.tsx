@@ -91,9 +91,7 @@ export function CustomPortableText({
 	};
 
 	return (
-		<Component
-			className={cn(className, "prose prose-sm md:prose-base max-w-none")}
-		>
+		<Component className={cn(className, "prose max-w-none")}>
 			<PortableText components={components} value={value} />
 		</Component>
 	);

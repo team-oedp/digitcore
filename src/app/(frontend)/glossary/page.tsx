@@ -111,8 +111,8 @@ export default async function GlossaryPage() {
 		<div className="relative">
 			<PageWrapper className="flex min-h-0 flex-col gap-0 md:min-h-screen md:flex-row md:gap-20">
 				{/* Sticky nav and section indicator */}
-				<div className="sticky top-6 z-10 hidden h-full self-start md:block">
-					<div className="flex flex-col items-start justify-start gap-5">
+				<div className="sticky top-5 z-10 hidden h-full self-start md:block">
+					<div className="flex flex-col items-start justify-start gap-0">
 						<CurrentLetterIndicator
 							availableLetters={Object.keys(termsByLetter)}
 							contentId="glossary-content"
@@ -142,7 +142,7 @@ export default async function GlossaryPage() {
 								return (
 									<section
 										key={letter}
-										className="w-full scroll-mt-40 space-y-4"
+										className="w-full scroll-mt-[29px] space-y-4"
 										id={`letter-${letter}`}
 									>
 										<h2 className="text-subheading">{letter}</h2>

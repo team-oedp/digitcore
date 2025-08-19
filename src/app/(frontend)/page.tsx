@@ -61,10 +61,10 @@ export default async function Home() {
 							className="flex flex-col gap-16"
 						>
 							<div className="flex flex-col gap-5">
-								{section.heading && (
+								{section._type === "content" && section.heading && (
 									<SectionHeading heading={section.heading} />
 								)}
-								{section.body && (
+								{section._type === "content" && section.body && (
 									<CustomPortableText
 										value={section.body as PortableTextBlock[]}
 										className="prose max-w-none"
