@@ -112,9 +112,12 @@ export async function searchPatternContent(
     }
   }`;
 
-		const result = await client.fetch(PATTERN_CONTENT_QUERY, queryParams);
+		const response = await client.fetch(PATTERN_CONTENT_QUERY, queryParams);
 
-		console.log("Query result:", result);
+		console.log("Query result:", response);
+
+		// Extract result from Sanity client response
+		const result = response?.result !== undefined ? response.result : response;
 
 		if (!result) {
 			return {

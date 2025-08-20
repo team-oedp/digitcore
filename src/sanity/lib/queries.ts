@@ -503,6 +503,24 @@ export const ONBOARDING_QUERY = defineQuery(`
     _type,
     title,
     description,
+    skipLabel,
+    backLabel,
+    footerText,
+    breadcrumbs,
+    slide1{
+      title,
+      body,
+      primaryCtaLabel,
+      secondaryCtaText
+    },
+    slide2{
+      title,
+      body
+    },
+    slide3{
+      title,
+      body
+    }
   }
 `);
 
@@ -525,7 +543,19 @@ export const TAGS_PAGE_QUERY = defineQuery(`
     title,
     "slug": slug.current,
     description,
-    content[]
+    content[]{
+      _key,
+      _type,
+      heading,
+      body,
+      // For cardCarousel type
+      title,
+      cards[]{
+        _key,
+        title,
+        description
+      }
+    }
   }
 `);
 
@@ -585,7 +615,19 @@ export const VALUES_PAGE_QUERY = defineQuery(`
     title,
     "slug": slug.current,
     description,
-    content[]
+    content[]{
+      _key,
+      _type,
+      heading,
+      body,
+      // For cardCarousel type
+      title,
+      cards[]{
+        _key,
+        title,
+        description
+      }
+    }
   }
 `);
 
@@ -596,7 +638,19 @@ export const PATTERNS_PAGE_QUERY = defineQuery(`
     title,
     "slug": slug.current,
     description,
-    content[]
+    content[]{
+      _key,
+      _type,
+      heading,
+      body,
+      // For cardCarousel type
+      title,
+      cards[]{
+        _key,
+        title,
+        description
+      }
+    }
   }
 `);
 
@@ -607,7 +661,19 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
     title,
     "slug": slug.current,
     description,
-    content[]
+    content[]{
+      _key,
+      _type,
+      heading,
+      body,
+      // For cardCarousel type
+      title,
+      cards[]{
+        _key,
+        title,
+        description
+      }
+    }
   }
 `);
 
@@ -618,7 +684,19 @@ export const HOME_PAGE_QUERY = defineQuery(`
     title,
     "slug": slug.current,
     description,
-    content[]
+    content[]{
+      _key,
+      _type,
+      heading,
+      body,
+      // For cardCarousel type
+      title,
+      cards[]{
+        _key,
+        title,
+        description
+      }
+    }
   }
 `);
 
@@ -629,7 +707,19 @@ export const FAQ_PAGE_QUERY = defineQuery(`
     title,
     "slug": slug.current,
     description,
-    content[]
+    content[]{
+      _key,
+      _type,
+      heading,
+      body,
+      // For cardCarousel type
+      title,
+      cards[]{
+        _key,
+        title,
+        description
+      }
+    }
   }
 `);
 

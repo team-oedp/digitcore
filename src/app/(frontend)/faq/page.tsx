@@ -78,7 +78,7 @@ export default async function FAQPage() {
 								>
 									<AccordionTrigger
 										showPlusMinus
-										className="items-center justify-between py-4 text-left font-normal text-lg text-primary hover:no-underline"
+										className="accordion-heading items-center justify-between py-4"
 									>
 										<span className="text-left">{faq.title}</span>
 									</AccordionTrigger>
