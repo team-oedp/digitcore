@@ -472,7 +472,7 @@ describe("useCarrierBagDocument", () => {
 		const { result } = renderHook(() => useCarrierBagDocument(items));
 
 		const document = result.current;
-		expect(document.title).toBe("Your Carrier Bag");
+		expect(document.title).toBe("Carrier Bag");
 		expect(document.subtitle).toBe(
 			"A collection of patterns from the DIGITCORE Toolkit",
 		);

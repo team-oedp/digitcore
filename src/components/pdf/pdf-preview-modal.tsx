@@ -1,7 +1,8 @@
 "use client";
 
 import { Download03Icon, EyeIcon } from "@hugeicons/core-free-icons";
-import { useState } from "react";
+import { pdf } from "@react-pdf/renderer";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
@@ -14,12 +15,13 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "~/components/ui/dialog";
-import { ScrollArea } from "~/components/ui/scroll-area";
+import { Skeleton } from "~/components/ui/skeleton";
 import type {
 	CarrierBagDocumentData,
 	PatternContentData,
 } from "~/hooks/use-pattern-content";
-import { downloadCarrierBagPDF } from "./pdf-components";
+import { svgToPngCached } from "~/lib/svg-to-png";
+import { CarrierBagPDFDocument, downloadCarrierBagPDF } from "./pdf-components";
 
 type PDFPreviewModalProps = {
 	documentData: CarrierBagDocumentData;
@@ -27,42 +29,66 @@ type PDFPreviewModalProps = {
 	children?: React.ReactNode;
 };
 
+// A4 dimensions: 595px x 842px (scaled down for preview)
+const A4_WIDTH = 420; // Scaled down from 595px for better fit in modal
+const A4_HEIGHT = 594; // Scaled down from 842px for better fit in modal
+
 // Web preview components that match the PDF layout
 const PreviewCoverPage = ({
 	documentData,
 }: { documentData: CarrierBagDocumentData }) => (
-	<div className="flex min-h-[500px] flex-col items-center justify-center bg-white p-10 text-center">
-		<h1 className="mb-5 font-light text-3xl text-primary capitalize">
-			{documentData.title}
-		</h1>
-		<p className="mb-10 text-muted-foreground">{documentData.subtitle}</p>
-		<p className="mb-2 text-muted-foreground text-sm">
-			Generated on {documentData.date}
-		</p>
-		<p className="text-muted-foreground text-sm">
-			{documentData.patternCount} pattern
-			{documentData.patternCount !== 1 ? "s" : ""} collected
-		</p>
+	<div
+		className="relative flex flex-col items-center justify-center bg-white text-center"
+		style={{ width: A4_WIDTH, height: A4_HEIGHT, padding: "28px" }}
+	>
+		<div className="text-center text-muted-foreground">
+			<div className="mb-3 text-sm">A collection of patterns from the</div>
+			<div className="mb-3 flex items-center justify-center gap-2">
+				<img src="/pattern-logo.svg" alt="Digitcore Logo" className="h-5 w-5" />
+				<span className="text-base uppercase">DIGITCORE</span>
+			</div>
+			<div className="text-sm">Toolkit</div>
+		</div>
+		<div className="absolute right-0 bottom-5 left-0 flex justify-between px-7 text-gray-400 text-xs">
+			<span>Open Environmental Data Project</span>
+			<span>
+				1/
+				{documentData.hasTableOfContents
+					? documentData.patterns.length + 2
+					: documentData.patterns.length + 1}
+			</span>
+			<span>{documentData.date}</span>
+		</div>
 	</div>
 );
 
 const PreviewTableOfContents = ({
 	documentData,
 }: { documentData: CarrierBagDocumentData }) => (
-	<div className="bg-white p-10">
-		<h2 className="mb-8 font-light text-2xl text-primary">Contents</h2>
+	<div
+		className="relative bg-white"
+		style={{ width: A4_WIDTH, height: A4_HEIGHT, padding: "28px" }}
+	>
+		<h2 className="mb-7 font-light text-primary text-xl">Contents</h2>
 		<div className="space-y-2">
 			{documentData.patterns.map((pattern, index) => (
 				<div
 					key={pattern.header.title}
 					className="flex justify-between border-neutral-100 border-b py-2"
 				>
-					<span className="text-primary text-sm capitalize">
+					<span className="mr-3 flex-1 text-primary text-sm capitalize">
 						{pattern.header.title}
 					</span>
 					<span className="text-muted-foreground text-xs">{index + 3}</span>
 				</div>
 			))}
+		</div>
+
+		{/* Page Footer */}
+		<div className="absolute right-0 bottom-5 left-0 flex justify-between px-7 text-gray-400 text-xs">
+			<span>Open Environmental Data Project</span>
+			<span>2/{documentData.patterns.length + 2}</span>
+			<span>{new Date().toLocaleDateString()}</span>
 		</div>
 	</div>
 );
@@ -101,29 +127,29 @@ const PreviewSolutions = ({
 	if (solutions.length === 0) return null;
 
 	return (
-		<div className="mb-8">
-			<h3 className="mt-8 mb-4 font-light text-3xl text-primary">Solutions</h3>
-			<div className="space-y-6">
+		<div className="mb-6">
+			<h3 className="mt-6 mb-3 font-light text-primary text-xl">Solutions</h3>
+			<div className="space-y-4">
 				{solutions.map((solution) => (
-					<div key={solution.id} className="flex gap-8">
-						<div className="w-10 font-normal text-lg text-primary">
+					<div key={solution.id} className="flex gap-5">
+						<div className="w-7 font-normal text-base text-primary">
 							{solution.number}
 						</div>
 						<div className="flex-1">
-							<h4 className="mb-3 font-normal text-lg text-primary">
+							<h4 className="mb-2 font-normal text-base text-primary">
 								{solution.title}
 							</h4>
 							{solution.description && (
-								<p className="mb-3 text-sm text-zinc-500 leading-normal">
+								<p className="mb-2 text-xs text-zinc-500 leading-relaxed">
 									{solution.description}
 								</p>
 							)}
 							{solution.audiences.length > 0 && (
-								<div className="flex flex-wrap gap-2">
+								<div className="flex flex-wrap gap-1">
 									{solution.audiences.map((audience) => (
 										<span
 											key={audience.id}
-											className="rounded-md border border-blue-200 bg-blue-100 px-2 py-1 text-blue-800 text-sm"
+											className="rounded border border-blue-200 bg-blue-100 px-2 py-1 text-blue-800 text-xs"
 										>
 											{audience.title}
 										</span>
@@ -144,21 +170,21 @@ const PreviewResources = ({
 	if (resources.length === 0) return null;
 
 	return (
-		<div className="mb-8">
-			<h3 className="mt-8 mb-4 font-light text-3xl text-primary">Resources</h3>
-			<div className="space-y-5">
+		<div className="mb-6">
+			<h3 className="mt-6 mb-3 font-light text-primary text-xl">Resources</h3>
+			<div className="space-y-4">
 				{resources.map((resource, index) => (
 					<div
 						key={resource.id}
-						className={`border-neutral-300 border-t border-dashed pt-5 pb-5 ${
+						className={`border-neutral-300 border-t border-dashed pt-4 pb-4 ${
 							index === resources.length - 1 ? "border-b" : ""
 						}`}
 					>
-						<h4 className="mb-2 font-semibold text-base text-primary">
+						<h4 className="mb-2 font-semibold text-primary text-sm">
 							{resource.title}
 						</h4>
 						{resource.description && (
-							<p className="mb-3 text-sm text-zinc-500 leading-normal">
+							<p className="mb-2 text-xs text-zinc-500 leading-relaxed">
 								{resource.description}
 							</p>
 						)}
@@ -178,41 +204,38 @@ const PreviewPatternNotes = ({
 	notes,
 	dateAdded,
 }: { notes?: string; dateAdded?: string }) => {
-	if (!notes && !dateAdded) return null;
+	if (!notes) return null;
 
 	return (
 		<div className="mt-5 border-gray-200 border-t pt-4">
-			{dateAdded && (
-				<div className="mb-2">
-					<h5 className="mb-2 font-semibold text-neutral-700 text-sm">
-						Added to Carrier Bag
-					</h5>
-					<p className="text-neutral-600 text-xs leading-normal">
-						{new Date(dateAdded).toLocaleDateString()}
-					</p>
-				</div>
-			)}
-			{notes && (
-				<div>
-					<h5 className="mb-2 font-semibold text-neutral-700 text-sm">
-						Your Notes
-					</h5>
-					<p className="text-neutral-600 text-xs leading-normal">{notes}</p>
-				</div>
-			)}
+			<h5 className="mb-2 font-semibold text-neutral-700 text-sm">
+				Your Notes
+			</h5>
+			<p className="text-neutral-600 text-xs leading-normal">{notes}</p>
 		</div>
 	);
 };
 
-const PreviewPatternPage = ({ pattern }: { pattern: PatternContentData }) => (
-	<div className="bg-white p-10">
+const PreviewPatternPage = ({
+	pattern,
+	pageNumber,
+	totalPages,
+}: {
+	pattern: PatternContentData;
+	pageNumber: number;
+	totalPages: number;
+}) => (
+	<div
+		className="relative overflow-auto bg-white"
+		style={{ width: A4_WIDTH, minHeight: A4_HEIGHT, padding: "28px" }}
+	>
 		{/* Pattern Header */}
-		<h2 className="mb-5 font-light text-3xl text-primary capitalize">
+		<h2 className="mb-4 font-light text-2xl text-primary capitalize">
 			{pattern.header.title}
 		</h2>
 
 		{pattern.header.description && (
-			<p className="mb-6 text-primary text-sm leading-normal">
+			<p className="mb-5 text-primary text-sm leading-normal">
 				{pattern.header.description}
 			</p>
 		)}
@@ -228,6 +251,15 @@ const PreviewPatternPage = ({ pattern }: { pattern: PatternContentData }) => (
 
 		{/* Personal Notes */}
 		<PreviewPatternNotes notes={pattern.notes} dateAdded={pattern.dateAdded} />
+
+		{/* Page Footer */}
+		<div className="absolute right-0 bottom-5 left-0 flex justify-between px-7 text-gray-400 text-xs">
+			<span>Open Environmental Data Project</span>
+			<span>
+				{pageNumber}/{totalPages}
+			</span>
+			<span>{new Date().toLocaleDateString()}</span>
+		</div>
 	</div>
 );
 
@@ -238,6 +270,78 @@ export function PDFPreviewModal({
 }: PDFPreviewModalProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isDownloading, setIsDownloading] = useState(false);
+
+	// Generate PNG logo once for preview so it matches the downloaded PDF
+	const [logoDataUri, setLogoDataUri] = useState<string | undefined>();
+	const [previewUrl, setPreviewUrl] = useState<string | undefined>();
+	const previewUrlRef = useRef<string | undefined>(undefined);
+	const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
+
+	useEffect(() => {
+		// Only run in browser
+		svgToPngCached("/pattern-logo.svg", {
+			width: 16,
+			height: 16,
+			scale: 2,
+		})
+			.then(setLogoDataUri)
+			.catch(() => {
+				/* silently ignore logo failures */
+			});
+	}, []);
+
+	// Generate PDF when the modal is opened or when the pattern count changes.
+	const patternCountRef = useRef<number | undefined>(undefined);
+	useEffect(() => {
+		if (!isOpen) return;
+
+		// Avoid regenerating continuously if parent re-renders
+		if (
+			patternCountRef.current === documentData.patterns.length &&
+			previewUrlRef.current
+		) {
+			return;
+		}
+		patternCountRef.current = documentData.patterns.length;
+
+		(async () => {
+			setIsGeneratingPreview(true);
+			try {
+				const blob = await pdf(
+					<CarrierBagPDFDocument
+						documentData={documentData}
+						logoDataUri={logoDataUri}
+					/>,
+				).toBlob();
+
+				// Revoke old URL (if any) to avoid leaks
+				if (previewUrlRef.current) {
+					URL.revokeObjectURL(previewUrlRef.current);
+				}
+
+				const url = URL.createObjectURL(blob);
+
+				previewUrlRef.current = url;
+				setPreviewUrl(url);
+			} catch (error) {
+				console.error("Failed to generate PDF preview", error);
+				toast.error("Failed to render PDF preview");
+			} finally {
+				setIsGeneratingPreview(false);
+			}
+		})();
+	}, [isOpen, documentData, logoDataUri]);
+
+	// Revoke the object URL when the modal closes or component unmounts
+	useEffect(() => {
+		if (isOpen) return;
+
+		if (previewUrlRef.current) {
+			URL.revokeObjectURL(previewUrlRef.current);
+			previewUrlRef.current = undefined;
+			setPreviewUrl(undefined);
+		}
+	}, [isOpen]);
 
 	const handleDownloadPDF = async () => {
 		if (documentData.patterns.length === 0) {
@@ -285,38 +389,23 @@ export function PDFPreviewModal({
 					</DialogDescription>
 				</DialogHeader>
 
-				<ScrollArea className="h-[60vh] rounded-lg border">
-					<div className="space-y-1">
-						{/* Cover Page */}
-						<div className="border-gray-200 border-b-2">
-							<PreviewCoverPage documentData={documentData} />
+				<div className="h-[60vh] overflow-auto rounded-md border bg-white">
+					{isGeneratingPreview && (
+						<div className="flex h-full w-full flex-col gap-4 p-6">
+							<Skeleton className="h-full w-full rounded-md" />
 						</div>
+					)}
+					{!isGeneratingPreview && previewUrl && (
+						<embed
+							src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+							type="application/pdf"
+							className="h-full w-full"
+							style={{ backgroundColor: "white" }}
+						/>
+					)}
+				</div>
 
-						{/* Table of Contents */}
-						{documentData.hasTableOfContents && (
-							<div className="border-gray-200 border-b-2">
-								<PreviewTableOfContents documentData={documentData} />
-							</div>
-						)}
-
-						{/* Pattern Pages */}
-						{documentData.patterns.map((pattern, index) => (
-							<div
-								key={pattern.header.title}
-								className="border-gray-200 border-b-2"
-							>
-								<PreviewPatternPage pattern={pattern} />
-								{index < documentData.patterns.length - 1 && (
-									<div className="bg-gray-100 px-10 py-2 text-center text-neutral-500 text-xs">
-										— Page Break —
-									</div>
-								)}
-							</div>
-						))}
-					</div>
-				</ScrollArea>
-
-				<DialogFooter className="flex items-center justify-between">
+				<DialogFooter className="flex items-center justify-between py-4">
 					<div className="text-muted-foreground text-sm">
 						{documentData.patterns.length} pattern
 						{documentData.patterns.length !== 1 ? "s" : ""} •

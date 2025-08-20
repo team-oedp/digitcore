@@ -128,7 +128,6 @@ export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
 	const { setContent, setPatternSlug } = usePageContentStore();
 
 	useEffect(() => {
-		console.log("usePatternContentStore - Pattern data received:", pattern);
 		if (!pattern) {
 			console.log("No pattern data, clearing content");
 			// Clear content if no pattern
@@ -355,7 +354,7 @@ export const useCarrierBagDocument = (
 	);
 
 	return {
-		title: "Your Carrier Bag",
+		title: "Carrier Bag",
 		subtitle: "A collection of patterns from the DIGITCORE Toolkit",
 		date: currentDate,
 		patternCount: items.length,
