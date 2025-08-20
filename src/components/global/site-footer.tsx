@@ -55,6 +55,7 @@ export function SiteFooter() {
 									width={24}
 									height={24}
 									className="mt-1 mr-3 md:mt-0"
+									style={{ height: "auto" }}
 									priority
 								/>
 								<h2 className="text-balance font-normal text-md md:text-lg">

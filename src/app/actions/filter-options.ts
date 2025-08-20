@@ -4,6 +4,9 @@ import { createLogLocation, logger } from "~/lib/logger";
 import { client } from "~/sanity/lib/client";
 import { FILTER_OPTIONS_QUERY } from "~/sanity/lib/filter-options";
 
+// Type for handling both direct response and test response formats
+type SanityResponse<T> = T | { result: T; ms: number };
+
 export type FilterOption = {
 	value: string;
 	label: string;
@@ -44,7 +47,12 @@ export async function fetchFilterOptions(): Promise<FilterOptionsResult> {
 		const endTime = Date.now();
 
 		// Extract data from Sanity client response
-		const data = response;
+		// Handle both direct response (production) and { result: data } format (testing)
+		const responseAsAny = response as SanityResponse<typeof response>;
+		const data =
+			"result" in responseAsAny && responseAsAny.result !== undefined
+				? responseAsAny.result
+				: response;
 
 		logger.groq(
 			"Filter options query completed",

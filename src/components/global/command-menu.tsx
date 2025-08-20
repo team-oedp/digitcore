@@ -2,6 +2,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { Search02Icon } from "@hugeicons/core-free-icons";
 import { useTheme } from "next-themes";
 import { useDebounce } from "use-debounce";
 import type {
@@ -33,6 +34,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "~/lib/utils";
+import { Icon } from "../shared/icon";
 
 import {
 	CommandDialog,
@@ -357,7 +359,7 @@ export function CommandMenu() {
 			<CommandDialog
 				open={isOpen}
 				onOpenChange={setIsOpen}
-				className="data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 top-[10%] max-w-2xl translate-y-0 transition-all duration-200 ease-out data-[state=closed]:animate-out data-[state=open]:animate-in"
+				className="data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 max-w-2xl transition-all duration-200 ease-out data-[state=closed]:animate-out data-[state=open]:animate-in"
 			>
 				<div className="flex items-center gap-1.5 pt-3 pl-4">
 					<div className="flex h-6 w-fit items-center justify-center rounded-md bg-neutral-200 px-2 dark:bg-neutral-900">
@@ -371,7 +373,7 @@ export function CommandMenu() {
 					value={query}
 					onValueChange={handleQueryChange}
 				/>
-				<CommandList className="max-h-[400px] overflow-y-auto transition-all duration-300 ease-in-out">
+				<CommandList className="max-h-[400px] min-h-[120px] overflow-y-auto transition-all duration-300 ease-in-out">
 					{isLoading ? (
 						<div className="flex items-center justify-center py-6">
 							<div className="text-muted-foreground text-sm">Searching...</div>
@@ -716,6 +718,7 @@ export function CommandMenu() {
 function CommandMenuIcon() {
 	return (
 		<span className={cn("flex items-center gap-0.5 text-primary text-sm")}>
+			<Icon icon={Search02Icon} size={14} />
 			<CommandIcon size={14} /> K
 		</span>
 	);
