@@ -41,21 +41,21 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 
 	return (
 		<header id="page-header" className="relative max-w-4xl">
-			<div className="flex flex-col gap-4">
-				<div className="flex items-center gap-3">
+			<div className="flex flex-col gap-3 md:gap-4">
+				<div className="flex items-center gap-2 md:gap-3">
 					{PatternIcon && (
-						<div className="h-10 w-10 flex-shrink-0">
+						<div className="h-8 w-8 flex-shrink-0 md:h-10 md:w-10">
 							<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
 						</div>
 					)}
-					<h1 className="text-heading">{title}</h1>
+					<h1 className="text-page-heading">{title}</h1>
 				</div>
 				<div>
 					{pattern && (
 						<button
 							type="button"
 							className={cn(
-								"flex items-center gap-2.5 rounded-lg border px-2 py-1 transition-colors",
+								"flex items-center gap-2 rounded-lg border px-2 py-1 transition-colors md:gap-2.5",
 								isInBag
 									? "cursor-default border-green-200 bg-green-50"
 									: "cursor-pointer border-border bg-white hover:bg-secondary",
@@ -63,7 +63,7 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 							onClick={isInBag ? undefined : handleSaveToCarrierBag}
 							disabled={isInBag || false}
 						>
-							<span className="font-normal text-primary text-sm uppercase">
+							<span className="font-normal text-primary text-xs uppercase md:text-sm">
 								{isInBag ? "Saved to Carrier Bag" : "Save to Carrier Bag"}
 							</span>
 							<Icon

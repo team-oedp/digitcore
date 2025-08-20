@@ -96,7 +96,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
 
 	return (
 		<PatternContentProvider pattern={pattern}>
-			<PageWrapper className="flex flex-col gap-5 pb-40">
+			<PageWrapper className="flex flex-col gap-5 pb-20 md:pb-40">
 				<PatternHeading
 					title={pattern.title || ""}
 					slug={
@@ -106,11 +106,11 @@ export default async function PatternPage({ params }: PatternPageProps) {
 					}
 					pattern={pattern as unknown as Pattern}
 				/>
-				<div className="space-y-12">
+				<div className="space-y-8 md:space-y-12">
 					<div>
 						<CustomPortableText
 							value={pattern.description as PortableTextBlock[]}
-							className="prose"
+							className="prose prose-sm md:prose-base max-w-none"
 						/>
 						<PatternConnections
 							tags={(pattern.tags as Tag[]) || undefined}
@@ -129,7 +129,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
 						}
 					/>
 				</div>
-				<div className="h-20" />
+				<div className="h-10 md:h-20" />
 			</PageWrapper>
 		</PatternContentProvider>
 	);
