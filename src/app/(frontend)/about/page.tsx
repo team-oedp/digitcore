@@ -1,13 +1,13 @@
+import { PresentationLineChart01Icon } from "@hugeicons/core-free-icons";
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
-import { PresentationLineChart01Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { Icon } from "~/components/shared/icon";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
-import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
 import { client } from "~/sanity/lib/client";
 import { ABOUT_PAGE_QUERY } from "~/sanity/lib/queries";
