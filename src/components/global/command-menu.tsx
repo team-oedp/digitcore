@@ -2,6 +2,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { Search02Icon } from "@hugeicons/core-free-icons";
 import { useTheme } from "next-themes";
 import { useDebounce } from "use-debounce";
 import type {
@@ -33,6 +34,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "~/lib/utils";
+import { Icon } from "../shared/icon";
 
 import {
 	CommandDialog,
@@ -716,6 +718,7 @@ export function CommandMenu() {
 function CommandMenuIcon() {
 	return (
 		<span className={cn("flex items-center gap-0.5 text-primary text-sm")}>
+			<Icon icon={Search02Icon} size={14} />
 			<CommandIcon size={14} /> K
 		</span>
 	);
