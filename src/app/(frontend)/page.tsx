@@ -41,14 +41,14 @@ export default async function Home() {
 
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-16 pb-44">
+			<div className="flex flex-col gap-12 pb-44">
 				{data?.description && (
 					<CustomPortableText
 						value={data.description as PortableTextBlock[]}
-						className="prose prose-neutral max-w-none"
+						className="text-page-heading"
 					/>
 				)}
-				<div className="h-64 w-64">
+				<div className="h-32 w-32 md:h-64 md:w-64">
 					<DigitcoreLogoIcon
 						className="h-full w-full stroke-icon/20 text-icon/20"
 						stroke="currentColor"
@@ -61,10 +61,10 @@ export default async function Home() {
 							className="flex flex-col gap-16"
 						>
 							<div className="flex flex-col gap-5">
-								{section.heading && (
+								{section._type === "content" && section.heading && (
 									<SectionHeading heading={section.heading} />
 								)}
-								{section.body && (
+								{section._type === "content" && section.body && (
 									<CustomPortableText
 										value={section.body as PortableTextBlock[]}
 										className="prose max-w-none"
@@ -78,7 +78,7 @@ export default async function Home() {
 									>
 										{getIconByIndex(
 											index,
-											"h-[256px] w-[256px] fill-icon/20 object-contain text-icon/50",
+											"h-32 w-32 md:h-64 md:w-64 fill-icon/20 object-contain text-icon/50",
 										)}
 									</div>
 								)}

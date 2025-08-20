@@ -49,10 +49,12 @@ export function Resources({ resources }: ResourcesProps) {
 		<section
 			id="resources"
 			data-section="resources"
-			className="flex flex-col gap-5"
+			className="flex flex-col gap-4 md:gap-5"
 		>
-			<header className="flex flex-row items-center gap-2.5">
-				<h2 className="font-normal text-[32px] text-primary">Resources</h2>
+			<header className="flex flex-row items-center gap-2 md:gap-2.5">
+				<h2 className="font-normal text-[24px] text-primary md:text-[32px]">
+					Resources
+				</h2>
 			</header>
 
 			<div className="flex flex-col">
@@ -68,11 +70,11 @@ export function Resources({ resources }: ResourcesProps) {
 									: ""
 							}`}
 						>
-							<div className="flex flex-col gap-3 py-3 pb-9">
+							<div className="flex flex-col gap-2.5 py-3 pb-6 md:gap-3 md:pb-9">
 								<div className="flex flex-col gap-2">
 									<div className="flex flex-row items-center gap-2">
-										<div className="flex h-8 flex-row items-center gap-2.5">
-											<h3 className="font-normal text-[18px] text-primary">
+										<div className="flex h-7 flex-row items-center gap-2 md:h-8 md:gap-2.5">
+											<h3 className="font-normal text-[16px] text-primary md:text-[18px]">
 												{resource.title}
 											</h3>
 										</div>
@@ -81,14 +83,14 @@ export function Resources({ resources }: ResourcesProps) {
 												href={resource.links?.[0]?.href}
 												target="_blank"
 												rel="noopener noreferrer"
-												className="flex h-8 w-8 items-center justify-center rounded-full bg-background transition-colors hover:bg-secondary"
+												className="flex h-7 w-7 items-center justify-center rounded-full bg-background transition-colors hover:bg-secondary md:h-8 md:w-8"
 											>
 												<HugeiconsIcon
 													icon={Link02Icon}
-													size={20}
+													size={16}
 													color="currentColor"
 													strokeWidth={1.5}
-													className="z-10"
+													className="z-10 md:h-5 md:w-5"
 												/>
 											</a>
 										)}
@@ -96,21 +98,22 @@ export function Resources({ resources }: ResourcesProps) {
 									{resource.description && (
 										<CustomPortableText
 											value={resource.description as PortableTextBlock[]}
-											className="prose prose-neutral max-w-none prose-p:text-[14px] prose-p:leading-normal"
+											className="prose prose-neutral max-w-none prose-p:text-[12px] prose-p:leading-normal md:prose-p:text-[14px]"
 										/>
 									)}
 								</div>
-								<div className="flex flex-row items-center gap-2.5">
-									<span className="font-normal text-[#c4c4c8] text-[14px] tracking-[-0.14px]">
+								<div className="flex flex-col items-start gap-2 md:flex-row md:items-center md:gap-2.5">
+									<span className="font-normal text-[#c4c4c8] text-[12px] tracking-[-0.14px] md:text-[14px]">
 										From <span className="uppercase">SOLUTION</span>
 									</span>
 									<HugeiconsIcon
 										icon={ArrowRight02Icon}
-										size={24}
+										size={20}
 										color="#c4c4c8"
 										strokeWidth={1.5}
+										className="hidden md:block md:h-6 md:w-6"
 									/>
-									<div className="flex gap-2.5">
+									<div className="flex flex-wrap gap-1.5 md:gap-2.5">
 										{resource.solutionRefs?.map((solution, index) =>
 											isSolutionReference(solution) ? (
 												<SolutionPreview
@@ -119,15 +122,16 @@ export function Resources({ resources }: ResourcesProps) {
 													solutionTitle={"Linked Solution"}
 													solutionDescription={"No description available"}
 												>
-													<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-[#a2e636] bg-[#e6fbc5] px-2 py-1.5">
-														<span className="font-normal text-[#95b661] text-[14px] tracking-[-0.14px]">
+													<div className="flex h-6 cursor-pointer items-center gap-1.5 rounded-lg border border-[#a2e636] bg-[#e6fbc5] px-1.5 py-1.5 md:gap-2.5 md:px-2">
+														<span className="font-normal text-[#95b661] text-[12px] tracking-[-0.14px] md:text-[14px]">
 															{`Solution ${index + 1}`}
 														</span>
 														<HugeiconsIcon
 															icon={ChartRelationshipIcon}
-															size={14}
+															size={12}
 															color="#95b661"
 															strokeWidth={1.5}
+															className="md:h-[14px] md:w-[14px]"
 														/>
 													</div>
 												</SolutionPreview>

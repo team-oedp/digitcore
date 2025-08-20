@@ -1,10 +1,12 @@
 "use client";
 
 import { SearchList02Icon, Share02Icon } from "@hugeicons/core-free-icons";
+import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { FilterOption } from "~/app/actions/filter-options";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
 import Icon01 from "~/components/icons/shapes/icon-01";
 import Icon02 from "~/components/icons/shapes/icon-02";
 import Icon03 from "~/components/icons/shapes/icon-03";
@@ -103,14 +105,17 @@ function ActionButton({
 	onClick,
 	children,
 	dashed = true,
+	preserveSize = false,
 }: {
 	href?: string;
 	onClick?: () => void;
 	children: React.ReactNode;
 	dashed?: boolean;
+	preserveSize?: boolean;
 }) {
-	const baseClass =
-		"relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-2 text-left text-foreground text-lg uppercase font-light transition-colors hover:bg-neutral-100";
+	const baseClass = preserveSize
+		? "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-2 text-left text-foreground text-sm uppercase font-light transition-colors hover:bg-neutral-100 md:text-lg"
+		: "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 text-left text-foreground text-xs uppercase font-light transition-colors hover:bg-neutral-100 md:px-3 md:py-2 md:text-lg";
 
 	if (href) {
 		return (
@@ -218,10 +223,12 @@ function OnboardingInner({
 	return (
 		<div className="m-2 rounded-md bg-neutral-200">
 			<div className="relative h-[calc(100vh-1rem)] overflow-clip rounded-md bg-primary-foreground p-2">
-				<div className="absolute top-4 right-4 z-10">
+				{/* Desktop skip button - top right */}
+				<div className="absolute top-4 right-4 z-10 hidden md:block">
 					<ActionButton
 						href="/"
 						dashed={false}
+						preserveSize={true}
 						onClick={() => {
 							try {
 								document.cookie =
@@ -229,7 +236,9 @@ function OnboardingInner({
 							} catch {}
 						}}
 					>
-						<span className="text-xs">Skip onboarding</span>
+						<span className="text-xs">
+							{onboarding?.skipLabel || "Skip onboarding"}
+						</span>
 					</ActionButton>
 				</div>
 
@@ -241,7 +250,7 @@ function OnboardingInner({
 				>
 					{currentSlide === 1 && (
 						<Slide1
-							onboardingTitle={onboarding?.title || null}
+							onboarding={onboarding}
 							patternSlug={patternSlug}
 							patternTitle={patternTitle}
 							returnToPath={returnToPath}
@@ -255,6 +264,7 @@ function OnboardingInner({
 							goToSlide3={goToSlide3}
 							onNavigateSlide={goToSlide}
 							audienceOptions={audienceOptions}
+							onboarding={onboarding}
 						/>
 					)}
 					{currentSlide === 3 && (
@@ -262,6 +272,7 @@ function OnboardingInner({
 							goToSlide2={goToSlide2}
 							onNavigateSlide={goToSlide}
 							themeOptions={themeOptions}
+							onboarding={onboarding}
 						/>
 					)}
 				</div>
@@ -273,52 +284,70 @@ function OnboardingInner({
 function OnboardingBreadcrumb({
 	currentSlide,
 	onNavigateSlide,
+	breadcrumbs,
 }: {
 	currentSlide: 1 | 2 | 3;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
+	breadcrumbs?: {
+		slide1?: string;
+		slide2?: string;
+		slide3?: string;
+	};
 }) {
 	return (
 		<Breadcrumb className="mb-8">
 			<BreadcrumbList>
 				<BreadcrumbItem>
 					{currentSlide === 1 ? (
-						<BreadcrumbPage>Introduction</BreadcrumbPage>
+						<BreadcrumbPage>
+							{breadcrumbs?.slide1 || "Introduction"}
+						</BreadcrumbPage>
 					) : onNavigateSlide ? (
 						<BreadcrumbLink asChild>
 							<button type="button" onClick={() => onNavigateSlide(1)}>
-								Introduction
+								{breadcrumbs?.slide1 || "Introduction"}
 							</button>
 						</BreadcrumbLink>
 					) : (
-						<BreadcrumbLink href="#">Introduction</BreadcrumbLink>
+						<BreadcrumbLink href="#">
+							{breadcrumbs?.slide1 || "Introduction"}
+						</BreadcrumbLink>
 					)}
 				</BreadcrumbItem>
 				<BreadcrumbSeparator />
 				<BreadcrumbItem>
 					{currentSlide === 2 ? (
-						<BreadcrumbPage>Audiences</BreadcrumbPage>
+						<BreadcrumbPage>
+							{breadcrumbs?.slide2 || "Audiences"}
+						</BreadcrumbPage>
 					) : onNavigateSlide ? (
 						<BreadcrumbLink asChild>
 							<button type="button" onClick={() => onNavigateSlide(2)}>
-								Audiences
+								{breadcrumbs?.slide2 || "Audiences"}
 							</button>
 						</BreadcrumbLink>
 					) : (
-						<BreadcrumbLink href="#">Audiences</BreadcrumbLink>
+						<BreadcrumbLink href="#">
+							{breadcrumbs?.slide2 || "Audiences"}
+						</BreadcrumbLink>
 					)}
 				</BreadcrumbItem>
 				<BreadcrumbSeparator />
 				<BreadcrumbItem>
 					{currentSlide === 3 ? (
-						<BreadcrumbPage>Interests</BreadcrumbPage>
+						<BreadcrumbPage>
+							{breadcrumbs?.slide3 || "Interests"}
+						</BreadcrumbPage>
 					) : onNavigateSlide ? (
 						<BreadcrumbLink asChild>
 							<button type="button" onClick={() => onNavigateSlide(3)}>
-								Interests
+								{breadcrumbs?.slide3 || "Interests"}
 							</button>
 						</BreadcrumbLink>
 					) : (
-						<BreadcrumbLink href="#">Interests</BreadcrumbLink>
+						<BreadcrumbLink href="#">
+							{breadcrumbs?.slide3 || "Interests"}
+						</BreadcrumbLink>
 					)}
 				</BreadcrumbItem>
 			</BreadcrumbList>
@@ -331,26 +360,56 @@ function Slide({
 	children,
 	asset,
 	onNavigateSlide,
+	breadcrumbs,
+	footerText,
+	onboarding,
 }: {
 	currentSlide: 1 | 2 | 3;
 	children: React.ReactNode;
 	asset?: React.ReactNode;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
+	breadcrumbs?: {
+		slide1?: string;
+		slide2?: string;
+		slide3?: string;
+	};
+	footerText?: string;
+	onboarding?: Onboarding;
 }) {
 	return (
-		<div className="flex h-full">
-			<div className="flex w-1/2 flex-col justify-start py-4 pr-4 pl-4">
+		<div className="flex h-full flex-col md:flex-row">
+			<div className="flex w-full flex-col justify-start px-3 py-3 md:w-1/2 md:py-4 md:pr-4 md:pl-4">
 				<OnboardingBreadcrumb
 					currentSlide={currentSlide}
 					onNavigateSlide={onNavigateSlide}
+					breadcrumbs={breadcrumbs}
 				/>
 				<div className="min-h-0 flex-1">{children}</div>
-				<footer className="pt-8 text-left text-foreground text-sm">
-					Open Environmental Data Project
+				<footer className="hidden pt-4 text-left text-foreground text-sm md:block md:pt-8">
+					{footerText || "Open Environmental Data Project"}
 				</footer>
 			</div>
-			<div className="w-1/2 rounded-md bg-icon/20 pl-2">
+			<div className="relative w-full flex-1 rounded-md bg-icon/20 p-2 md:h-full md:w-1/2 md:flex-none md:pl-2">
 				{asset || <div className="h-full w-full rounded-md bg-icon/60" />}
+
+				{/* Mobile skip button - bottom right of icon container */}
+				<div className="absolute right-2 bottom-2 z-20 md:hidden">
+					<ActionButton
+						href="/"
+						dashed={false}
+						preserveSize={true}
+						onClick={() => {
+							try {
+								document.cookie =
+									"onboarding_completed=1; path=/; max-age=31536000";
+							} catch {}
+						}}
+					>
+						<span className="text-xs">
+							{onboarding?.skipLabel || "Skip onboarding"}
+						</span>
+					</ActionButton>
+				</div>
 			</div>
 		</div>
 	);
@@ -361,14 +420,14 @@ function Slide1({
 	patternTitle,
 	returnToPath,
 	goToSlide2,
-	onboardingTitle,
+	onboarding,
 	onNavigateSlide,
 }: {
 	patternSlug: string | undefined;
 	patternTitle?: string;
 	returnToPath?: string;
 	goToSlide2: () => void;
-	onboardingTitle?: string | null;
+	onboarding?: Onboarding;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
 }) {
 	const toTitleCase = (s: string) =>
@@ -380,8 +439,27 @@ function Slide1({
 			.join(" ");
 
 	const asset = (
-		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-8">
-			<div className="relative">
+		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-2 md:p-8">
+			{/* Mobile icons */}
+			<div className="relative md:hidden">
+				<Icon01
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_130s_linear_infinite] fill-icon/10 text-icon/30"
+					width={120}
+					height={120}
+				/>
+				<Icon04
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_110s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					width={120}
+					height={120}
+				/>
+				<Icon07
+					className="relative max-h-full max-w-full animate-[spin_150s_linear_infinite] fill-icon/20 text-icon/50"
+					width={120}
+					height={120}
+				/>
+			</div>
+			{/* Desktop icons */}
+			<div className="relative hidden md:block">
 				<Icon01
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_130s_linear_infinite] fill-icon/10 text-icon/30"
 					width={600}
@@ -402,37 +480,34 @@ function Slide1({
 	);
 
 	return (
-		<Slide currentSlide={1} onNavigateSlide={onNavigateSlide} asset={asset}>
-			<div className="space-y-8">
-				<h1 className="font-light text-2xl text-foreground leading-relaxed">
-					{onboardingTitle ||
-						"Welcome to the Digital Toolkit for Collaborative Environmental Research, or, DIGITCORE!"}
-				</h1>
+		<Slide
+			currentSlide={1}
+			onNavigateSlide={onNavigateSlide}
+			asset={asset}
+			breadcrumbs={onboarding?.breadcrumbs}
+			footerText={onboarding?.footerText}
+			onboarding={onboarding}
+		>
+			<div className="space-y-4 md:space-y-8">
+				{onboarding?.slide1?.title && (
+					<h1 className="font-light text-foreground text-xl leading-relaxed md:text-2xl">
+						{onboarding.slide1.title}
+					</h1>
+				)}
 
-				<div className="space-y-6 font-light text-foreground text-lg leading-relaxed">
-					<p>
-						DIGITCORE outlines challenges, problems, and phenomena experienced
-						or observed by community organizations, researchers, and open source
-						technologists working on collaborative environmental research. This
-						toolkit is designed to help you make decisions about tools, modes of
-						interaction, research design, and process.
-					</p>
-
-					{patternSlug ? (
-						<p>
-							You're seeing this message because you followed a link to a
-							pattern in the DIGITCORE toolkit.
-						</p>
-					) : (
-						<p>
-							Use this short onboarding to tailor the toolkit to your needs.
-						</p>
-					)}
-				</div>
+				{onboarding?.slide1?.body && (
+					<CustomPortableText
+						value={onboarding.slide1.body as PortableTextBlock[]}
+						className="space-y-4 font-light text-foreground text-sm leading-relaxed md:space-y-6 md:text-lg"
+					/>
+				)}
 
 				<div className="space-y-4">
 					<ActionButton onClick={goToSlide2}>
-						<span>Tell me more about the DIGITCORE toolkit</span>
+						<span>
+							{onboarding?.slide1?.primaryCtaLabel ||
+								"Tell me about the DIGITCORE toolkit"}
+						</span>
 						<Icon
 							icon={SearchList02Icon}
 							size={20}
@@ -442,7 +517,9 @@ function Slide1({
 					</ActionButton>
 
 					<div>
-						<p className="mb-2 text-foreground text-sm">Or, go directly to:</p>
+						<p className="mb-2 font-light text-foreground text-sm leading-relaxed md:text-lg">
+							{onboarding?.slide1?.secondaryCtaText || "Or, go directly to:"}
+						</p>
 						{patternSlug ? (
 							<ActionButton
 								href={`/pattern/${patternSlug}`}
@@ -492,11 +569,13 @@ function Slide2({
 	goToSlide3,
 	onNavigateSlide,
 	audienceOptions,
+	onboarding,
 }: {
 	goToSlide1: () => void;
 	goToSlide3: () => void;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
 	audienceOptions: FilterOption[];
+	onboarding?: Onboarding;
 }) {
 	const selectedAudienceIds = useOnboardingStore((s) => s.selectedAudienceIds);
 	const setSelectedAudiences = useOnboardingStore(
@@ -512,8 +591,27 @@ function Slide2({
 	};
 
 	const asset = (
-		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-8">
-			<div className="relative">
+		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-2 md:p-8">
+			{/* Mobile icons */}
+			<div className="relative md:hidden">
+				<Icon02
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_140s_linear_infinite] fill-icon/10 text-icon/30"
+					width={120}
+					height={120}
+				/>
+				<Icon05
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_120s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					width={120}
+					height={120}
+				/>
+				<Icon08
+					className="relative max-h-full max-w-full animate-[spin_160s_linear_infinite] fill-icon/20 text-icon/50"
+					width={120}
+					height={120}
+				/>
+			</div>
+			{/* Desktop icons */}
+			<div className="relative hidden md:block">
 				<Icon02
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_140s_linear_infinite] fill-icon/10 text-icon/30"
 					width={600}
@@ -534,16 +632,29 @@ function Slide2({
 	);
 
 	return (
-		<Slide currentSlide={2} onNavigateSlide={onNavigateSlide} asset={asset}>
+		<Slide
+			currentSlide={2}
+			onNavigateSlide={onNavigateSlide}
+			asset={asset}
+			breadcrumbs={onboarding?.breadcrumbs}
+			footerText={onboarding?.footerText}
+			onboarding={onboarding}
+		>
 			<div className="space-y-6">
-				<h1 className="font-light text-2xl text-foreground leading-relaxed">
-					The toolkit groups together distinct needs, practices, and realities
-					that different audiences experience and navigate.
-				</h1>
+				{onboarding?.slide2?.title && (
+					<h1 className="font-light text-foreground text-xl leading-relaxed md:text-2xl">
+						{onboarding.slide2.title}
+					</h1>
+				)}
 
-				<div className="space-y-4 font-light text-foreground text-lg leading-relaxed">
-					<p>Please select which audience groups are most relevant to you.</p>
+				{onboarding?.slide2?.body && (
+					<CustomPortableText
+						value={onboarding.slide2.body as PortableTextBlock[]}
+						className="space-y-4 font-light text-foreground text-sm leading-relaxed md:text-lg"
+					/>
+				)}
 
+				<div className="space-y-4 font-light text-base text-foreground leading-relaxed md:text-lg">
 					{/* Audience buttons embedded in the text flow */}
 					<div className="flex flex-wrap items-center gap-2">
 						{audienceOptions.map((opt, idx) => (
@@ -552,7 +663,7 @@ function Slide2({
 								type="button"
 								onClick={() => toggleAudience(opt.value)}
 								className={cn(
-									"relative overflow-hidden rounded-lg border-2 border-transparent px-3 py-1.5 text-base text-foreground uppercase transition-colors",
+									"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 text-foreground text-xs uppercase transition-colors md:px-3 md:py-2 md:text-lg",
 									selectedAudienceIds.includes(opt.value)
 										? "bg-neutral-300"
 										: "bg-primary-foreground hover:bg-neutral-100",
@@ -569,31 +680,31 @@ function Slide2({
 					<div className="flex items-center gap-2">
 						{selectedAudienceIds.length === 0 ? (
 							<>
-								<span className="font-light text-foreground text-xl">
+								<span className="font-light text-foreground text-lg md:text-xl">
 									Select your
 								</span>
-								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-1.5 font-light text-base text-foreground uppercase">
+								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light text-foreground text-xs uppercase md:px-3 md:py-2 md:text-base">
 									AUDIENCE TYPE
 									<DashedBorder />
 								</span>
-								<span className="font-light text-foreground text-xl">
+								<span className="font-light text-foreground text-lg md:text-xl">
 									to continue.
 								</span>
 							</>
 						) : (
 							<>
-								<span className="font-light text-foreground text-xl capitalize">
+								<span className="font-light text-foreground text-lg capitalize md:text-xl">
 									Click
 								</span>
 								<button
 									type="button"
 									onClick={goToSlide3}
-									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-1.5 font-light text-base text-foreground uppercase transition-colors hover:bg-neutral-100"
+									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-100 md:px-3 md:py-2 md:text-lg"
 								>
 									NEXT
 									<DashedBorder />
 								</button>
-								<span className="font-light text-foreground text-xl">
+								<span className="font-light text-foreground text-lg md:text-xl">
 									to continue.
 								</span>
 							</>
@@ -601,16 +712,18 @@ function Slide2({
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="font-light text-foreground text-xl">Or, go</span>
+						<span className="font-light text-foreground text-lg md:text-xl">
+							Or, go
+						</span>
 						<button
 							type="button"
 							onClick={goToSlide1}
-							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-1.5 font-light text-base text-foreground uppercase transition-colors hover:bg-neutral-100"
+							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-100 md:px-3 md:py-2 md:text-lg"
 						>
-							BACK
+							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
 						</button>
-						<span className="font-light text-foreground text-xl">
+						<span className="font-light text-foreground text-lg md:text-xl">
 							to the previous step.
 						</span>
 					</div>
@@ -624,10 +737,12 @@ function Slide3({
 	goToSlide2,
 	onNavigateSlide,
 	themeOptions,
+	onboarding,
 }: {
 	goToSlide2: () => void;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
 	themeOptions: FilterOption[];
+	onboarding?: Onboarding;
 }) {
 	const selectedThemeIds = useOnboardingStore((s) => s.selectedThemeIds);
 	const selectedAudienceIds = useOnboardingStore((s) => s.selectedAudienceIds);
@@ -643,8 +758,27 @@ function Slide3({
 	};
 
 	const asset = (
-		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-8">
-			<div className="relative">
+		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-2 md:p-8">
+			{/* Mobile icons */}
+			<div className="relative md:hidden">
+				<Icon03
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_135s_linear_infinite] fill-icon/10 text-icon/30"
+					width={120}
+					height={120}
+				/>
+				<Icon06
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_115s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					width={120}
+					height={120}
+				/>
+				<Icon09
+					className="relative max-h-full max-w-full animate-[spin_155s_linear_infinite] fill-icon/20 text-icon/50"
+					width={120}
+					height={120}
+				/>
+			</div>
+			{/* Desktop icons */}
+			<div className="relative hidden md:block">
 				<Icon03
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_135s_linear_infinite] fill-icon/10 text-icon/30"
 					width={600}
@@ -665,16 +799,27 @@ function Slide3({
 	);
 
 	return (
-		<Slide currentSlide={3} onNavigateSlide={onNavigateSlide} asset={asset}>
-			<div className="space-y-8">
-				<h1 className="font-light text-2xl text-foreground leading-relaxed">
-					Through our research, several themes emerged that have helped organize
-					the patterns we surfaced.
-				</h1>
+		<Slide
+			currentSlide={3}
+			onNavigateSlide={onNavigateSlide}
+			asset={asset}
+			breadcrumbs={onboarding?.breadcrumbs}
+			footerText={onboarding?.footerText}
+			onboarding={onboarding}
+		>
+			<div className="space-y-4 md:space-y-8">
+				{onboarding?.slide3?.title && (
+					<h1 className="font-light text-foreground text-xl leading-relaxed md:text-2xl">
+						{onboarding.slide3.title}
+					</h1>
+				)}
 
-				<h2 className="font-light text-2xl text-foreground leading-relaxed">
-					What interests you?
-				</h2>
+				{onboarding?.slide3?.body && (
+					<CustomPortableText
+						value={onboarding.slide3.body as PortableTextBlock[]}
+						className="space-y-4 font-light text-base text-foreground leading-relaxed md:text-lg"
+					/>
+				)}
 
 				{/* Theme buttons embedded in the text flow */}
 				<div className="flex flex-wrap items-center gap-2">
@@ -684,7 +829,7 @@ function Slide3({
 							key={opt.value}
 							onClick={() => toggleTheme(opt.value)}
 							className={cn(
-								"relative overflow-hidden rounded-lg border-2 border-transparent px-3 py-1.5 font-light text-base text-foreground uppercase transition-colors",
+								"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors md:px-3 md:py-2 md:text-lg",
 								selectedThemeIds.includes(opt.value)
 									? "bg-neutral-300"
 									: "bg-primary-foreground hover:bg-neutral-100",
@@ -700,20 +845,20 @@ function Slide3({
 					<div className="flex items-center gap-2">
 						{selectedThemeIds.length === 0 ? (
 							<>
-								<span className="font-light text-foreground text-xl">
+								<span className="font-light text-foreground text-lg md:text-xl">
 									Select a
 								</span>
-								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-1.5 font-light text-base text-foreground uppercase">
+								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-2 font-light text-base text-foreground uppercase">
 									THEME
 									<DashedBorder />
 								</span>
-								<span className="font-light text-foreground text-xl">
+								<span className="font-light text-foreground text-lg md:text-xl">
 									that interests you to continue.
 								</span>
 							</>
 						) : (
 							<>
-								<span className="font-light text-foreground text-xl capitalize">
+								<span className="font-light text-foreground text-lg capitalize md:text-xl">
 									click
 								</span>
 								<Link
@@ -733,12 +878,12 @@ function Slide3({
 												"onboarding_completed=1; path=/; max-age=31536000";
 										} catch {}
 									}}
-									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-1.5 font-light text-base text-foreground uppercase transition-colors hover:bg-neutral-100"
+									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-100 md:px-3 md:py-2 md:text-lg"
 								>
 									FINISH
 									<DashedBorder />
 								</Link>
-								<span className="font-light text-foreground text-xl">
+								<span className="font-light text-foreground text-lg md:text-xl">
 									to continue to the toolkit.
 								</span>
 							</>
@@ -746,16 +891,18 @@ function Slide3({
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="font-light text-foreground text-xl">Or, go</span>
+						<span className="font-light text-foreground text-lg md:text-xl">
+							Or, go
+						</span>
 						<button
 							type="button"
 							onClick={goToSlide2}
-							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-1.5 font-light text-base text-foreground uppercase transition-colors hover:bg-neutral-100"
+							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-100 md:px-3 md:py-2 md:text-lg"
 						>
-							BACK
+							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
 						</button>
-						<span className="font-light text-foreground text-xl">
+						<span className="font-light text-foreground text-lg md:text-xl">
 							to the previous step.
 						</span>
 					</div>
