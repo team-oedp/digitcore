@@ -88,12 +88,6 @@ export const onboardingType = defineType({
 					type: "string",
 					initialValue: "Or, go directly to the pattern:",
 				}),
-				defineField({
-					name: "asset",
-					title: "Asset",
-					type: "image",
-					options: { hotspot: true },
-				}),
 			],
 		}),
 		// Slide 2
@@ -111,12 +105,6 @@ export const onboardingType = defineType({
 					name: "body",
 					title: "Body",
 					type: "blockContent",
-				}),
-				defineField({
-					name: "asset",
-					title: "Asset",
-					type: "image",
-					options: { hotspot: true },
 				}),
 			],
 		}),
@@ -137,12 +125,6 @@ export const onboardingType = defineType({
 					name: "body",
 					title: "Body",
 					type: "blockContent",
-				}),
-				defineField({
-					name: "asset",
-					title: "Asset",
-					type: "image",
-					options: { hotspot: true },
 				}),
 			],
 		}),

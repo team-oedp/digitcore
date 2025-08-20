@@ -29,7 +29,7 @@ export function TagsList({
 	alphabet,
 }: { tagsByLetter: TagsByLetter; alphabet: string[] }) {
 	return (
-		<div className="space-y-8 pb-[800px]" data-scroll-container>
+		<div className="space-y-8 pb-[200px] md:pb-[800px]" data-scroll-container>
 			<div id="tags-content" className="flex-1 space-y-16">
 				{alphabet.map((letter) => {
 					const tags = tagsByLetter[letter];
@@ -38,7 +38,7 @@ export function TagsList({
 					return (
 						<section
 							key={letter}
-							className="max-w-4xl scroll-mt-40 space-y-8"
+							className="w-full max-w-4xl scroll-mt-[29px] space-y-8"
 							id={`letter-${letter}`}
 						>
 							<h2 className="font-normal text-lg text-neutral-500 uppercase tracking-wide">
@@ -61,11 +61,9 @@ export function TagsList({
 											<Link
 												key={resource.id}
 												href={`/pattern/${resource.slug}`}
-												className="flex h-6 items-center gap-2.5 rounded-lg border border-neutral-300 bg-neutral-100 py-2 pr-3 pl-[9px] transition-opacity hover:opacity-80"
+												className="inline-block w-max whitespace-normal break-words rounded-md border border-neutral-300 bg-neutral-100 px-3 py-1 text-primary text-sm transition-opacity hover:opacity-80"
 											>
-												<span className="whitespace-nowrap text-primary text-sm">
-													{resource.title}
-												</span>
+												{resource.title}
 											</Link>
 										))}
 									</div>

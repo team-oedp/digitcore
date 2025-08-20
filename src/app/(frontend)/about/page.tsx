@@ -49,8 +49,10 @@ export default async function AboutPage() {
 				</Button>
 				{data.content?.map((section) => (
 					<section key={section._key} className="flex flex-col gap-5">
-						{section.heading && <SectionHeading heading={section.heading} />}
-						{section.body && (
+						{section._type === "content" && section.heading && (
+							<SectionHeading heading={section.heading} />
+						)}
+						{section._type === "content" && section.body && (
 							<CustomPortableText
 								value={section.body as PortableTextBlock[]}
 								className="prose"
