@@ -100,26 +100,12 @@ export function SiteHeader() {
 									asChild
 									className={cn(
 										"h-auto px-3 py-2",
-										pathname === "/onboarding"
-											? "text-foreground"
-											: "text-muted-foreground",
-									)}
-								>
-									<Link href="/onboarding?via=header">Onboarding</Link>
-								</Button>
-							</li>
-							<li>
-								<Button
-									variant="link"
-									asChild
-									className={cn(
-										"h-auto px-3 py-2",
 										pathname === "/search"
 											? "text-foreground"
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href="/search">Search</Link>
+									<Link href="/search">Explore</Link>
 								</Button>
 							</li>
 							<li>
