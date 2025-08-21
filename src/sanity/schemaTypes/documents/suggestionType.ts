@@ -1,11 +1,11 @@
-import { FeedbackIcon } from "@sanity/icons";
+import { EnvelopeIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
 
 export const suggestionType = defineType({
 	name: "suggestion",
 	title: "Suggestion",
 	type: "document",
-	icon: FeedbackIcon,
+	icon: EnvelopeIcon,
 	fields: [
 		defineField({
 			name: "patternName",

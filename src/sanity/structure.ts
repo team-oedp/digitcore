@@ -23,6 +23,7 @@ export const structure: StructureResolver = (S) =>
 			S.documentTypeListItem("page").title("Pages"),
 			S.documentTypeListItem("glossary").title("Glossary"),
 			S.documentTypeListItem("faq").title("FAQ"),
+			S.documentTypeListItem("suggestion").title("Suggestions"),
 			S.listItem()
 				.title("Carrier Bag")
 				.child(S.document().schemaType("carrierBag").documentId("carrierBag"))
@@ -59,6 +60,7 @@ export const structure: StructureResolver = (S) =>
 						"siteSettings",
 						"footer",
 						"icon",
+						"suggestion",
 					].includes(item.getId() ?? ""),
 			),
 		]);
