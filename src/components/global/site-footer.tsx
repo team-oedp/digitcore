@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 type SocialLink = {
 	name: string;
@@ -70,6 +71,22 @@ export function SiteFooter() {
 							aria-label="Social media links"
 						>
 							<ul className="space-y-1">
+								<li>
+									<Link
+										href="/faq"
+										className="text-sm hover:underline focus:underline focus:outline-none"
+									>
+										FAQ
+									</Link>
+								</li>
+								<li>
+									<Link
+										href="/glossary"
+										className="text-sm hover:underline focus:underline focus:outline-none"
+									>
+										Glossary
+									</Link>
+								</li>
 								{SOCIAL_LINKS.map((link) => (
 									<li key={link.name}>
 										<a
