@@ -32,15 +32,11 @@ export const resourceType = defineType({
 			of: [defineArrayMember({ type: "reference", to: { type: "solution" } })],
 		}),
 		defineField({
-			name: "links",
-			title: "Links",
-			description: "(Optional) Add any links to the resource.",
-			type: "array",
-			of: [
-				defineArrayMember({
-					type: "link",
-				}),
-			],
+			name: "mainLink",
+			title: "Main Link",
+			description:
+				"(Optional) Add the main link to the resource. When there is no main link set (for instance when there are multiple links), the links will exist in the rich text without a main link icon.",
+			type: "url",
 		}),
 	],
 	preview: {
