@@ -57,6 +57,7 @@ export const structure: StructureResolver = (S) =>
 						"carrierBag",
 						"onboarding",
 						"siteSettings",
+						"footer",
 						"icon",
 					].includes(item.getId() ?? ""),
 			),
