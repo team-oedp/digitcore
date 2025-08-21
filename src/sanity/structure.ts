@@ -3,6 +3,7 @@ import {
 	CogIcon,
 	PresentationIcon,
 	SparklesIcon,
+	StackCompactIcon,
 } from "@sanity/icons";
 import type { StructureResolver } from "sanity/structure";
 
@@ -31,6 +32,10 @@ export const structure: StructureResolver = (S) =>
 				.child(S.document().schemaType("onboarding").documentId("onboarding"))
 				.icon(PresentationIcon),
 			S.listItem()
+				.title("Footer")
+				.child(S.document().schemaType("footer").documentId("footer"))
+				.icon(StackCompactIcon),
+			S.listItem()
 				.title("Site Settings")
 				.child(
 					S.document().schemaType("siteSettings").documentId("siteSettings"),
@@ -52,6 +57,7 @@ export const structure: StructureResolver = (S) =>
 						"carrierBag",
 						"onboarding",
 						"siteSettings",
+						"footer",
 						"icon",
 					].includes(item.getId() ?? ""),
 			),

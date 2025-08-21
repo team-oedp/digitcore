@@ -485,11 +485,7 @@ export type Resource = {
     _key: string
     [internalGroqTypeReferenceTo]?: 'solution'
   }>
-  links?: Array<
-    {
-      _key: string
-    } & Link
-  >
+  mainLink?: string
 }
 
 export type Audience = {
@@ -1175,11 +1171,7 @@ export type PATTERNS_QUERYResult = Array<{
         [internalGroqTypeReferenceTo]?: 'audience'
       }>
     }> | null
-    links?: Array<
-      {
-        _key: string
-      } & Link
-    >
+    mainLink?: string
   }> | null
 }>
 // Variable: PATTERN_QUERY
@@ -1325,11 +1317,7 @@ export type PATTERN_QUERYResult = {
       _type: 'block'
       _key: string
     }> | null
-    links: Array<
-      {
-        _key: string
-      } & Link
-    > | null
+    links: null
     solutions: Array<{
       _id: string
       _type: 'solution'
@@ -1464,11 +1452,7 @@ export type RESOURCES_BY_IDS_QUERYResult = Array<{
     _type: 'block'
     _key: string
   }> | null
-  links: Array<
-    {
-      _key: string
-    } & Link
-  > | null
+  links: null
   solutionIds: Array<string> | null
 }>
 // Variable: TAGS_BY_IDS_QUERY
@@ -1735,11 +1719,7 @@ export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
         [internalGroqTypeReferenceTo]?: 'audience'
       }>
     }> | null
-    links?: Array<
-      {
-        _key: string
-      } & Link
-    >
+    mainLink?: string
   }> | null
 }>
 // Variable: PATTERNS_GROUPED_BY_THEME_QUERY
@@ -1913,11 +1893,7 @@ export type PATTERNS_GROUPED_BY_THEME_QUERYResult = Array<{
           [internalGroqTypeReferenceTo]?: 'audience'
         }>
       }> | null
-      links?: Array<
-        {
-          _key: string
-        } & Link
-      >
+      mainLink?: string
     }> | null
   }>
 }>
@@ -2455,11 +2431,7 @@ export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
       _type: 'block'
       _key: string
     }> | null
-    links: Array<
-      {
-        _key: string
-      } & Link
-    > | null
+    links: null
     solutions: Array<{
       _id: string
       title: string | null
@@ -2747,7 +2719,7 @@ export type ABOUT_PAGE_QUERYResult = {
   > | null
 } | null
 // Variable: HOME_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == '/'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
+// Query: *[_type == 'page' && slug.current == '/'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    // Full content blocks, including cardCarousel sections    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    },    // Convenience projections for specific card sets by title    "audiences": content[_type == 'cardCarousel' && title == 'Audiences'][0].cards[]{      _key,      title,      description    },    "values": content[_type == 'cardCarousel' && title == 'Values'][0].cards[]{      _key,      title,      description    }  }
 export type HOME_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -2838,6 +2810,78 @@ export type HOME_PAGE_QUERYResult = {
         cards: null
       }
   > | null
+  audiences: Array<{
+    _key: string
+    title: string | null
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }> | null
+  }> | null
+  values: Array<{
+    _key: string
+    title: string | null
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }> | null
+  }> | null
 } | null
 // Variable: FAQ_PAGE_QUERY
 // Query: *[_type == 'page' && slug.current == 'frequently-asked-questions'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
@@ -3029,7 +3073,7 @@ declare module '@sanity/client' {
     "\n  *[_type == 'page' && slug.current == 'values'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": VALUES_PAGE_QUERYResult
     "\n  *[_type == 'page' && slug.current == 'patterns'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": PATTERNS_PAGE_QUERYResult
     "\n  *[_type == 'page' && slug.current == 'about'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": ABOUT_PAGE_QUERYResult
-    "\n  *[_type == 'page' && slug.current == '/'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": HOME_PAGE_QUERYResult
+    "\n  *[_type == 'page' && slug.current == '/'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    // Full content blocks, including cardCarousel sections\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    },\n    // Convenience projections for specific card sets by title\n    \"audiences\": content[_type == 'cardCarousel' && title == 'Audiences'][0].cards[]{\n      _key,\n      title,\n      description\n    },\n    \"values\": content[_type == 'cardCarousel' && title == 'Values'][0].cards[]{\n      _key,\n      title,\n      description\n    }\n  }\n": HOME_PAGE_QUERYResult
     "\n  *[_type == 'page' && slug.current == 'frequently-asked-questions'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": FAQ_PAGE_QUERYResult
     '\n  *[_type == "faq"] | order(_createdAt asc) {\n    _id,\n    title,\n    description\n  }\n': FAQS_QUERYResult
     '\n  *[_type == "icon"] | order(title asc) {\n    _id,\n    _type,\n    title,\n    svg\n  }\n': ICONS_QUERYResult

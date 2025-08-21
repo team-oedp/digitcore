@@ -18,6 +18,7 @@ import { linkType } from "./objects/linkType";
 import { carrierBagType } from "./singletons/carrierBagType";
 import { onboardingType } from "./singletons/onboardingType";
 import { siteSettingsType } from "./singletons/siteSettingsType";
+import { footerType } from "./singletons/footerType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
 	types: [
@@ -38,6 +39,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 		carrierBagType,
 		onboardingType,
 		siteSettingsType,
+		footerType,
 		iconType,
 	],
 };
