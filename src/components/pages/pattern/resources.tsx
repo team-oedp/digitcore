@@ -6,6 +6,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { Badge } from "~/components/ui/badge";
 import { SolutionPreview } from "./solution-preview";
 
 // Because references in Sanity have to be derefenced in order to get access to the fields of the referenced type, we are keying the Pattern query result by "resources"
@@ -122,18 +123,20 @@ export function Resources({ resources }: ResourcesProps) {
 													solutionTitle={"Linked Solution"}
 													solutionDescription={"No description available"}
 												>
-													<div className="flex h-6 cursor-pointer items-center gap-1.5 rounded-lg border border-[#a2e636] bg-[#e6fbc5] px-1.5 py-1.5 md:gap-2.5 md:px-2">
-														<span className="font-normal text-[#95b661] text-[12px] tracking-[-0.14px] md:text-[14px]">
-															{`Solution ${index + 1}`}
-														</span>
-														<HugeiconsIcon
-															icon={ChartRelationshipIcon}
-															size={12}
-															color="#95b661"
-															strokeWidth={1.5}
-															className="md:h-[14px] md:w-[14px]"
-														/>
-													</div>
+													<Badge
+														variant="solution"
+														icon={
+															<HugeiconsIcon
+																icon={ChartRelationshipIcon}
+																size={12}
+																color="currentColor"
+																strokeWidth={1.5}
+																className="md:h-[14px] md:w-[14px]"
+															/>
+														}
+													>
+														{`Solution ${index + 1}`}
+													</Badge>
 												</SolutionPreview>
 											) : null,
 										)}

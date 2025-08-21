@@ -65,7 +65,7 @@ export async function fetchPatternWithRelations(
 
 	// 4. For each resource, fetch its related solutions
 	const enrichedResources = await Promise.all(
-		resources.map(async (resource) => {
+		resources.map(async (resource: RESOURCES_BY_IDS_QUERYResult[number]) => {
 			const resourceSolutionIds = resource.solutionIds?.filter(Boolean) || [];
 			const resourceSolutions =
 				resourceSolutionIds.length > 0
@@ -177,7 +177,12 @@ export async function fetchPatternWithRelationsBatched(
 			: [];
 
 	// 5. Create lookup map for resource solutions
-	const solutionMap = new Map(resourceSolutions.map((sol) => [sol._id, sol]));
+	const solutionMap = new Map(
+		resourceSolutions.map((sol: SOLUTIONS_BY_IDS_QUERYResult[number]) => [
+			sol._id,
+			sol,
+		]),
+	);
 
 	// 6. Enrich resources with their solutions
 	const enrichedResources = resourceDocs.map(
