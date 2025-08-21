@@ -358,3 +358,12 @@
 	--tw-prose-th-borders: var(--border);
 	--tw-prose-td-borders: var(--border);
 }
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+}

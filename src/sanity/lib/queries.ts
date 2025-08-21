@@ -684,6 +684,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
     title,
     "slug": slug.current,
     description,
+    // Full content blocks, including cardCarousel sections
     content[]{
       _key,
       _type,
@@ -696,6 +697,17 @@ export const HOME_PAGE_QUERY = defineQuery(`
         title,
         description
       }
+    },
+    // Convenience projections for specific card sets by title
+    "audiences": content[_type == 'cardCarousel' && title == 'Audiences'][0].cards[]{
+      _key,
+      title,
+      description
+    },
+    "values": content[_type == 'cardCarousel' && title == 'Values'][0].cards[]{
+      _key,
+      title,
+      description
     }
   }
 `);
