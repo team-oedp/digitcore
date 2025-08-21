@@ -109,13 +109,14 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	watermarkCenter: {
-		fontSize: 9,
-		color: "#6b7280",
+		fontSize: 8,
+		color: "#9ca3af",
+		textAlign: "center",
 	},
-	// Add watermarkIcon style
 	watermarkIcon: {
 		width: 10,
 		height: 10,
+		marginRight: 4,
 	},
 	// Cover page styles
 	coverPage: {
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
 		lineHeight: 1.2,
 	},
 	coverSubtitle: {
-		fontSize: 14,
+		fontSize: 17, // 20% larger than 14
 		color: "#71717a",
 		marginBottom: 40,
 		lineHeight: 1.4,
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		gap: 8,
 		marginBottom: 12,
-		fontSize: 16,
+		fontSize: 19, // 20% larger than 16
 	},
 	coverSubtitleText: {
 		textAlign: "center",
@@ -294,8 +295,8 @@ const styles = StyleSheet.create({
 		paddingBottom: 20,
 	},
 	resourceTitle: {
-		fontSize: 16,
-		fontWeight: 600,
+		fontSize: 18, // Match solution title size
+		fontWeight: 400, // Lighter weight for consistency
 		color: "#000000",
 		marginBottom: 8,
 		lineHeight: 1.4,
@@ -348,9 +349,9 @@ const PDFCoverPage = ({ documentData, logoDataUri }: PDFCoverPageProps) => (
 				</Text>
 				<View style={styles.coverSubtitleRow}>
 					{logoDataUri && (
-						<Image src={logoDataUri} style={{ width: 20, height: 20 }} />
+						<Image src={logoDataUri} style={{ width: 24, height: 24 }} />
 					)}
-					<Text style={{ textTransform: "uppercase", fontSize: 16 }}>
+					<Text style={{ textTransform: "uppercase", fontSize: 19 }}>
 						DIGITCORE
 					</Text>
 				</View>
@@ -358,16 +359,11 @@ const PDFCoverPage = ({ documentData, logoDataUri }: PDFCoverPageProps) => (
 			</View>
 		</View>
 		<View style={styles.watermark} fixed>
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+			<View style={{ flexDirection: "row", alignItems: "center" }}>
 				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
 				<Text>Open Environmental Data Project</Text>
 			</View>
-			<Text
-				style={styles.watermarkCenter}
-				render={({ pageNumber, totalPages }) => `${pageNumber}/${totalPages}`}
-			>
-				{" "}
-			</Text>
+			<Text style={styles.watermarkCenter}>1</Text>
 			<Text>{documentData.date}</Text>
 		</View>
 	</Page>
@@ -390,16 +386,11 @@ const PDFTableOfContents = ({ documentData }: PDFTableOfContentsProps) => (
 			</View>
 		))}
 		<View style={styles.watermark} fixed>
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+			<View style={{ flexDirection: "row", alignItems: "center" }}>
 				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
 				<Text>Open Environmental Data Project</Text>
 			</View>
-			<Text
-				style={styles.watermarkCenter}
-				render={({ pageNumber, totalPages }) => `${pageNumber}/${totalPages}`}
-			>
-				{" "}
-			</Text>
+			<Text style={styles.watermarkCenter}>2</Text>
 			<Text>{new Date().toLocaleDateString()}</Text>
 		</View>
 	</Page>
@@ -536,9 +527,10 @@ const PDFPatternNotes = ({ notes, dateAdded }: PDFPatternNotesProps) => {
 // Individual Pattern Page Component
 type PDFPatternPageProps = {
 	pattern: PatternContentData;
+	pageIndex: number;
 };
 
-const PDFPatternPage = ({ pattern }: PDFPatternPageProps) => (
+const PDFPatternPage = ({ pattern, pageIndex }: PDFPatternPageProps) => (
 	<Page size="A4" style={styles.page} break>
 		{/* Pattern Header */}
 		<Text style={styles.patternTitle}>
@@ -565,16 +557,11 @@ const PDFPatternPage = ({ pattern }: PDFPatternPageProps) => (
 
 		{/* Footer */}
 		<View style={styles.watermark} fixed>
-			<View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+			<View style={{ flexDirection: "row", alignItems: "center" }}>
 				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
 				<Text>Open Environmental Data Project</Text>
 			</View>
-			<Text
-				style={styles.watermarkCenter}
-				render={({ pageNumber, totalPages }) => `${pageNumber}/${totalPages}`}
-			>
-				{" "}
-			</Text>
+			<Text style={styles.watermarkCenter}>{pageIndex + 3}</Text>
 			<Text>{new Date().toLocaleDateString()}</Text>
 		</View>
 	</Page>
@@ -601,8 +588,8 @@ export const CarrierBagPDFDocument = ({
 			)}
 
 			{/* Pattern Pages - Each pattern starts on a new page */}
-			{documentData.patterns.map((pattern) => (
-				<PDFPatternPage key={pattern.header.title} pattern={pattern} />
+			{documentData.patterns.map((pattern, index) => (
+				<PDFPatternPage key={pattern.header.title} pattern={pattern} pageIndex={index} />
 			))}
 		</Document>
 	);

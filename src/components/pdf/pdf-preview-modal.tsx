@@ -5,6 +5,7 @@ import { pdf } from "@react-pdf/renderer";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "~/components/shared/icon";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -276,6 +277,7 @@ export function PDFPreviewModal({
 	const [previewUrl, setPreviewUrl] = useState<string | undefined>();
 	const previewUrlRef = useRef<string | undefined>(undefined);
 	const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
+	const [actualPageCount, setActualPageCount] = useState<number | null>(null);
 
 	useEffect(() => {
 		// Only run in browser
@@ -307,12 +309,27 @@ export function PDFPreviewModal({
 		(async () => {
 			setIsGeneratingPreview(true);
 			try {
-				const blob = await pdf(
+				const pdfDoc = pdf(
 					<CarrierBagPDFDocument
 						documentData={documentData}
 						logoDataUri={logoDataUri}
 					/>,
-				).toBlob();
+				);
+				
+				const blob = await pdfDoc.toBlob();
+
+				// Get page count from the PDF
+				const pageCount = await new Promise<number>((resolve) => {
+					const reader = new FileReader();
+					reader.onload = () => {
+						const text = reader.result as string;
+						const matches = text.match(/\/Type\s*\/Page\s/g);
+						resolve(matches ? matches.length : 1);
+					};
+					reader.readAsText(blob);
+				});
+				
+				setActualPageCount(pageCount);
 
 				// Revoke old URL (if any) to avoid leaks
 				if (previewUrlRef.current) {
@@ -377,7 +394,7 @@ export function PDFPreviewModal({
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>{trigger}</DialogTrigger>
-			<DialogContent className="max-h-[90vh] max-w-4xl">
+			<DialogContent className="flex max-h-[90vh] max-w-4xl flex-col">
 				<DialogHeader>
 					<DialogTitle className="flex items-center gap-2">
 						<Icon icon={EyeIcon} size={20} />
@@ -389,7 +406,7 @@ export function PDFPreviewModal({
 					</DialogDescription>
 				</DialogHeader>
 
-				<div className="h-[60vh] overflow-auto rounded-md border bg-white">
+				<div className="flex-1 overflow-auto rounded-md border bg-white" style={{ aspectRatio: '1 / 1.414', maxHeight: '75vh' }}>
 					{isGeneratingPreview && (
 						<div className="flex h-full w-full flex-col gap-4 p-6">
 							<Skeleton className="h-full w-full rounded-md" />
@@ -405,14 +422,15 @@ export function PDFPreviewModal({
 					)}
 				</div>
 
-				<DialogFooter className="flex items-center justify-between py-4">
-					<div className="text-muted-foreground text-sm">
-						{documentData.patterns.length} pattern
-						{documentData.patterns.length !== 1 ? "s" : ""} •
-						{documentData.hasTableOfContents
-							? documentData.patterns.length + 2
-							: documentData.patterns.length + 1}{" "}
-						pages
+				<DialogFooter className="mt-auto flex items-center justify-between border-t px-6 py-4">
+					<div className="flex items-center gap-2">
+						<Badge variant="secondary" className="h-4 px-1.5 py-0 text-[10px]">
+							{documentData.patterns.length} pattern
+							{documentData.patterns.length !== 1 ? "s" : ""}
+						</Badge>
+						<Badge variant="secondary" className="h-4 px-1.5 py-0 text-[10px]">
+							{actualPageCount ? `${actualPageCount} pages` : 'Multi-page'}
+						</Badge>
 					</div>
 					<div className="flex gap-2">
 						<Button
