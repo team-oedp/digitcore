@@ -105,18 +105,25 @@ const styles = StyleSheet.create({
 		right: 40,
 		color: "#9ca3af",
 		flexDirection: "row",
-		justifyContent: "space-between",
+		justifyContent: "center",
 		alignItems: "center",
-	},
-	watermarkCenter: {
-		fontSize: 8,
-		color: "#9ca3af",
-		textAlign: "center",
 	},
 	watermarkIcon: {
 		width: 10,
 		height: 10,
 		marginRight: 4,
+	},
+	// Style for rotated pattern name in margin
+	patternMarginLabel: {
+		position: "absolute",
+		right: 15, // Position in the right margin area (A4 width is 595px, content ends at ~555px, so right 15px puts it in margin)
+		top: 400, // Fixed position from top instead of percentage
+		transform: "rotate(90deg)",
+		transformOrigin: "left center", // Anchor point for rotation
+		fontSize: 8,
+		color: "#9ca3af",
+		textTransform: "uppercase",
+		letterSpacing: 1,
 	},
 	// Cover page styles
 	coverPage: {
@@ -359,12 +366,12 @@ const PDFCoverPage = ({ documentData, logoDataUri }: PDFCoverPageProps) => (
 			</View>
 		</View>
 		<View style={styles.watermark} fixed>
-			<View style={{ flexDirection: "row", alignItems: "center" }}>
-				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
-				<Text>Open Environmental Data Project</Text>
+			<View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+				<Image src="/oedp-icon.png" style={{ ...styles.watermarkIcon, alignSelf: "flex-end" }} />
+				<Text style={{ marginRight: 8, lineHeight: 1 }}>Open Environmental Data Project</Text>
+				<Text style={{ marginRight: 8, lineHeight: 1 }}>•</Text>
+				<Text style={{ lineHeight: 1 }}>{documentData.date}</Text>
 			</View>
-			<Text style={styles.watermarkCenter}>1</Text>
-			<Text>{documentData.date}</Text>
 		</View>
 	</Page>
 );
@@ -386,12 +393,12 @@ const PDFTableOfContents = ({ documentData }: PDFTableOfContentsProps) => (
 			</View>
 		))}
 		<View style={styles.watermark} fixed>
-			<View style={{ flexDirection: "row", alignItems: "center" }}>
-				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
-				<Text>Open Environmental Data Project</Text>
+			<View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+				<Image src="/oedp-icon.png" style={{ ...styles.watermarkIcon, alignSelf: "flex-end" }} />
+				<Text style={{ marginRight: 8, lineHeight: 1 }}>Open Environmental Data Project</Text>
+				<Text style={{ marginRight: 8, lineHeight: 1 }}>•</Text>
+				<Text style={{ lineHeight: 1 }}>{new Date().toLocaleDateString()}</Text>
 			</View>
-			<Text style={styles.watermarkCenter}>2</Text>
-			<Text>{new Date().toLocaleDateString()}</Text>
 		</View>
 	</Page>
 );
@@ -555,14 +562,19 @@ const PDFPatternPage = ({ pattern, pageIndex }: PDFPatternPageProps) => (
 		{/* Personal Notes */}
 		<PDFPatternNotes notes={pattern.notes} dateAdded={pattern.dateAdded} />
 
+		{/* Rotated Pattern Name in Right Margin */}
+		<Text style={styles.patternMarginLabel} fixed>
+			{applyTextTransform(pattern.header.title, "capitalize")}
+		</Text>
+
 		{/* Footer */}
 		<View style={styles.watermark} fixed>
-			<View style={{ flexDirection: "row", alignItems: "center" }}>
-				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
-				<Text>Open Environmental Data Project</Text>
+			<View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+				<Image src="/oedp-icon.png" style={{ ...styles.watermarkIcon, alignSelf: "flex-end" }} />
+				<Text style={{ marginRight: 8, lineHeight: 1 }}>Open Environmental Data Project</Text>
+				<Text style={{ marginRight: 8, lineHeight: 1 }}>•</Text>
+				<Text style={{ lineHeight: 1 }}>{new Date().toLocaleDateString()}</Text>
 			</View>
-			<Text style={styles.watermarkCenter}>{pageIndex + 3}</Text>
-			<Text>{new Date().toLocaleDateString()}</Text>
 		</View>
 	</Page>
 );
