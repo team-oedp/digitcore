@@ -70,12 +70,12 @@ export function SiteHeader() {
 									asChild
 									className={cn(
 										"h-auto px-3 py-2 capitalize",
-										pathname === "/search"
+										pathname === "/explore"
 											? "text-foreground"
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href="/search">Explore</Link>
+									<Link href="/explore">Explore</Link>
 								</Button>
 							</li>
 							<li>
