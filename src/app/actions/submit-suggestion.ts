@@ -16,8 +16,13 @@ export type SuggestionFormData = {
 };
 
 export async function submitSuggestion(form: SuggestionFormData) {
+	const writeToken = process.env.SANITY_API_WRITE_TOKEN;
+	const readToken = process.env.SANITY_API_READ_TOKEN;
+
+	// Handle both undefined and string "undefined" for test environment
 	const token =
-		process.env.SANITY_API_WRITE_TOKEN ?? process.env.SANITY_API_READ_TOKEN;
+		(writeToken && writeToken !== "undefined" ? writeToken : null) ??
+		(readToken && readToken !== "undefined" ? readToken : null);
 
 	if (!token) {
 		throw new Error("Missing SANITY_API_WRITE_TOKEN environment variable");

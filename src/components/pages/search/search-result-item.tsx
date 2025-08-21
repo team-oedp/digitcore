@@ -125,9 +125,9 @@ function SearchResultBase({
 }) {
 	return (
 		<div className="relative w-full border-border border-t border-dashed pb-9">
-			<div className="flex items-start justify-between py-4">
-				<div className="w-full max-w-[600px] flex-shrink-0 space-y-4">
-					<div className="flex items-center gap-3">
+			<div className="flex flex-col py-4 md:flex-row md:items-start md:justify-between">
+				<div className="w-full flex-shrink-0 space-y-4 md:max-w-[600px]">
+					<div className="flex items-start gap-3 md:items-center">
 						{showPatternIcon && (
 							<Icon
 								icon={Share02Icon}
@@ -138,8 +138,11 @@ function SearchResultBase({
 						<h3 className="w-full text-pattern-list-item-title">{title}</h3>
 					</div>
 					{children}
+					<div className="pt-2 md:hidden">{buttonElement}</div>
 				</div>
-				<div className="flex-shrink-0 pt-2">{buttonElement}</div>
+				<div className="hidden flex-shrink-0 pt-2 md:block">
+					{buttonElement}
+				</div>
 			</div>
 		</div>
 	);
@@ -183,9 +186,9 @@ function PatternSearchResult({
 	const buttonElement = (
 		<a
 			href={`/pattern/${pattern.slug}`}
-			className="flex items-center gap-2 rounded-md border border-[#d1a7f3] bg-[#ead1fa] px-[9px] py-[5px] text-[#4f065f] transition-opacity hover:opacity-80"
+			className="inline-flex items-center gap-2 rounded-md border border-[#d1a7f3] bg-[#ead1fa] px-[9px] py-[5px] text-[#4f065f] transition-opacity hover:opacity-80"
 		>
-			<span className="text-button">Visit Pattern</span>
+			<span className="text-button text-sm">Visit Pattern</span>
 		</a>
 	);
 
@@ -213,13 +216,13 @@ function PatternSearchResult({
 						{/* Smooth expand/collapse using CSS max-height + line clamp */}
 						<div
 							className={cn(
-								"relative overflow-hidden pr-10 transition-[max-height] duration-600 ease-[cubic-bezier(0.22,1,0.36,1)]",
+								"relative overflow-hidden transition-[max-height] duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] md:pr-10",
 								showFullDescription
 									? "max-h-[1500px]"
 									: "line-clamp-3 max-h-[96px]",
 							)}
 						>
-							<span className="block text-base text-zinc-600 leading-relaxed">
+							<span className="block text-sm text-zinc-600 leading-relaxed md:text-base">
 								{renderHighlightedText(
 									extractTextFromPortableText(rawDescription),
 									searchTerm,
@@ -236,7 +239,7 @@ function PatternSearchResult({
 											? "Collapse description"
 											: "Expand description"
 									}
-									className="absolute right-0 bottom-0 inline-flex h-6 w-6 items-center justify-center rounded-md text-blue-600 transition-colors hover:border hover:border-current/40 hover:bg-blue-50/10 focus:outline-none"
+									className="mt-2 inline-flex h-6 w-6 items-center justify-center rounded-md text-blue-600 transition-colors hover:border hover:border-current/40 hover:bg-blue-50/10 focus:outline-none md:absolute md:right-0 md:bottom-0 md:mt-0"
 								>
 									{showFullDescription ? (
 										<MinusIcon className="size-4" aria-hidden="true" />
@@ -279,9 +282,9 @@ function PatternSearchResult({
 						{tags.map((tag) => (
 							<div
 								key={tag._id}
-								className="flex h-6 items-center gap-2.5 rounded-md border border-green-200 bg-green-100 py-2 pr-3 pl-[9px]"
+								className="flex h-5 items-center gap-2.5 rounded-md border border-green-200 bg-green-100 py-1.5 pr-2 pl-[9px] md:h-6 md:py-2 md:pr-3"
 							>
-								<span className="whitespace-nowrap text-[#166534] text-[14px] capitalize">
+								<span className="whitespace-nowrap text-[#166534] text-xs capitalize md:text-sm">
 									{tag.title}
 								</span>
 								<Icon icon={Tag01Icon} className="h-3.5 w-3.5 text-[#166534]" />
@@ -296,9 +299,9 @@ function PatternSearchResult({
 						{audiences.map((audience) => (
 							<div
 								key={audience._id}
-								className="flex h-6 items-center gap-2.5 rounded-md border border-blue-200 bg-blue-100 py-2 pr-3 pl-[9px]"
+								className="flex h-5 items-center gap-2.5 rounded-md border border-blue-200 bg-blue-100 py-1.5 pr-2 pl-[9px] md:h-6 md:py-2 md:pr-3"
 							>
-								<span className="whitespace-nowrap text-[#1e40ae] text-[14px]">
+								<span className="whitespace-nowrap text-[#1e40ae] text-xs md:text-sm">
 									{audience.title}
 								</span>
 								<Icon

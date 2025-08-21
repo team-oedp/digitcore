@@ -9,8 +9,10 @@ import {
 	Download05Icon,
 	FileDownloadIcon,
 	Link05Icon,
+	MoreHorizontalCircle01Icon,
 	Tick02Icon,
 } from "@hugeicons/core-free-icons";
+import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -99,6 +101,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 	const router = useRouter();
 
 	const [shareOpen, setShareOpen] = useState(false);
+	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
 	const bagSlugs = useMemo(() => {
 		return items
@@ -198,32 +201,39 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 		}
 	};
 
-	return (
-		<SidebarProvider
-			className="flex h-full min-h-0 w-full gap-2 bg-neutral-200"
-			style={
-				{
-					"--sidebar-width": "24rem",
-				} as React.CSSProperties
-			}
-			defaultOpen={true}
-		>
-			<Sidebar
-				collapsible="none"
-				className="hidden h-full min-h-0 flex-col overflow-hidden rounded-md bg-primary-foreground md:flex"
-			>
-				<SidebarContent>
-					<SidebarGroup>
-						<SidebarGroupContent>
-							<SidebarGroupLabel>Utilities</SidebarGroupLabel>
-							<SidebarMenu>
-								{uiData.nav.map((item) => (
-									<SidebarMenuItem key={item.label}>
-										{item.label === "Export Patterns As PDF" ? (
-											<PDFPreviewModal
-												documentData={documentData}
-												disabled={items.length === 0}
-											>
+	// Sidebar content component that can be reused in both desktop and mobile views
+	const SidebarContentComponent = () => (
+		<>
+			<SidebarContent>
+				<SidebarGroup>
+					<SidebarGroupContent>
+						<SidebarGroupLabel>Utilities</SidebarGroupLabel>
+						<SidebarMenu>
+							{uiData.nav.map((item) => (
+								<SidebarMenuItem key={item.label}>
+									{item.label === "Export Patterns As PDF" ? (
+										<PDFPreviewModal
+											documentData={documentData}
+											disabled={items.length === 0}
+										>
+											<SidebarMenuButton asChild>
+												<button
+													type="button"
+													className="w-full"
+													disabled={items.length === 0}
+												>
+													<div className="flex items-center gap-2">
+														<Icon icon={item.icon} />
+														<span className="text-sm capitalize">
+															{item.label}
+														</span>
+													</div>
+												</button>
+											</SidebarMenuButton>
+										</PDFPreviewModal>
+									) : item.label === "Share To Socials" ? (
+										<Popover open={shareOpen} onOpenChange={setShareOpen}>
+											<PopoverTrigger asChild>
 												<SidebarMenuButton asChild>
 													<button
 														type="button"
@@ -238,156 +248,192 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 														</div>
 													</button>
 												</SidebarMenuButton>
-											</PDFPreviewModal>
-										) : item.label === "Share To Socials" ? (
-											<Popover open={shareOpen} onOpenChange={setShareOpen}>
-												<PopoverTrigger asChild>
-													<SidebarMenuButton asChild>
-														<button
-															type="button"
-															className="w-full"
-															disabled={items.length === 0}
+											</PopoverTrigger>
+											<PopoverContent className="w-80">
+												<div className="space-y-2">
+													<p className="font-normal text-sm">
+														Share this carrier bag
+													</p>
+													<input
+														readOnly
+														value={shareUrl}
+														className="w-full rounded-md border border-border bg-muted px-2 py-1 text-base"
+													/>
+													<div className="grid grid-cols-3 gap-2">
+														<Button
+															variant="secondary"
+															size="sm"
+															onClick={() =>
+																window.open(
+																	`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+																	"_blank",
+																)
+															}
+															className="flex items-center justify-center p-2"
 														>
-															<div className="flex items-center gap-2">
-																<Icon icon={item.icon} />
-																<span className="text-sm capitalize">
-																	{item.label}
-																</span>
-															</div>
-														</button>
-													</SidebarMenuButton>
-												</PopoverTrigger>
-												<PopoverContent className="w-80">
-													<div className="space-y-2">
-														<p className="font-normal text-sm">
-															Share this carrier bag
-														</p>
-														<input
-															readOnly
-															value={shareUrl}
-															className="w-full rounded-md border border-border bg-muted px-2 py-1 text-base"
-														/>
-														<div className="grid grid-cols-3 gap-2">
-															<Button
-																variant="secondary"
-																size="sm"
-																onClick={() =>
-																	window.open(
-																		`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
-																		"_blank",
-																	)
-																}
-																className="flex items-center justify-center p-2"
-															>
-																<FacebookIcon />
-															</Button>
-															<Button
-																variant="secondary"
-																size="sm"
-																onClick={() =>
-																	window.open(
-																		`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
-																		"_blank",
-																	)
-																}
-																className="flex items-center justify-center p-2"
-															>
-																<LinkedInIcon />
-															</Button>
-															<Button
-																variant="secondary"
-																size="sm"
-																onClick={() =>
-																	window.open(
-																		`https://x.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`,
-																		"_blank",
-																	)
-																}
-																className="flex items-center justify-center p-2"
-															>
-																<XIcon />
-															</Button>
-														</div>
+															<FacebookIcon />
+														</Button>
+														<Button
+															variant="secondary"
+															size="sm"
+															onClick={() =>
+																window.open(
+																	`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+																	"_blank",
+																)
+															}
+															className="flex items-center justify-center p-2"
+														>
+															<LinkedInIcon />
+														</Button>
+														<Button
+															variant="secondary"
+															size="sm"
+															onClick={() =>
+																window.open(
+																	`https://x.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`,
+																	"_blank",
+																)
+															}
+															className="flex items-center justify-center p-2"
+														>
+															<XIcon />
+														</Button>
 													</div>
-												</PopoverContent>
-											</Popover>
-										) : item.label === "Generate Link" ? (
-											<SidebarMenuButton asChild>
-												<CopyButton
-													className="w-full"
-													value={shareUrl}
-													disabled={items.length === 0}
-													copiedChildren={
-														<div className="flex items-start justify-start gap-2">
-															<Icon icon={Tick02Icon} />
-															<span className="w-fit text-sm capitalize">
-																Link Copied
-															</span>
-														</div>
-													}
-												>
-													<div className="flex items-center gap-2">
-														<Icon icon={item.icon} />
-														<span className="text-sm capitalize">
-															{item.label}
+												</div>
+											</PopoverContent>
+										</Popover>
+									) : item.label === "Generate Link" ? (
+										<SidebarMenuButton asChild>
+											<CopyButton
+												className="w-full"
+												value={shareUrl}
+												disabled={items.length === 0}
+												copiedChildren={
+													<div className="flex items-start justify-start gap-2">
+														<Icon icon={Tick02Icon} />
+														<span className="w-fit text-sm capitalize">
+															Link Copied
 														</span>
 													</div>
-												</CopyButton>
-											</SidebarMenuButton>
-										) : (
-											<SidebarMenuButton asChild>
-												<button
-													type="button"
-													className="w-full"
-													onClick={() => handleNavClick(item.label)}
-													disabled={
-														item.label !== "Guide" && items.length === 0
-													}
-												>
-													<div className="flex items-center gap-2">
-														<Icon icon={item.icon} />
-														<span className="text-sm capitalize">
-															{item.label}
-														</span>
-													</div>
-												</button>
-											</SidebarMenuButton>
-										)}
-									</SidebarMenuItem>
-								))}
-							</SidebarMenu>
-							<SidebarGroupLabel>Context</SidebarGroupLabel>
-							<Card className="gap-2 py-4 shadow-none">
-								<CardHeader className="px-4">
-									<Icon icon={AiIdeaIcon} />
-								</CardHeader>
-								<CardContent className="px-4">
-									{data?.information && data.information.length > 0 ? (
-										<CustomPortableText
-											className="text-sm"
-											value={data.information as unknown as never}
-										/>
+												}
+											>
+												<div className="flex items-center gap-2">
+													<Icon icon={item.icon} />
+													<span className="text-sm capitalize">
+														{item.label}
+													</span>
+												</div>
+											</CopyButton>
+										</SidebarMenuButton>
 									) : (
-										<p className="text-sm">{uiData.context.text}</p>
+										<SidebarMenuButton asChild>
+											<button
+												type="button"
+												className="w-full"
+												onClick={() => handleNavClick(item.label)}
+												disabled={item.label !== "Guide" && items.length === 0}
+											>
+												<div className="flex items-center gap-2">
+													<Icon icon={item.icon} />
+													<span className="text-sm capitalize">
+														{item.label}
+													</span>
+												</div>
+											</button>
+										</SidebarMenuButton>
 									)}
-								</CardContent>
-								<CardFooter className="m-0 flex justify-start px-4 pt-2">
-									<Button variant="link" size="inline" asChild>
-										<Link href="/">
-											<Icon icon={Book02Icon} />
-											<span className="text-xs uppercase">Read more</span>
-										</Link>
-									</Button>
-								</CardFooter>
-							</Card>
-						</SidebarGroupContent>
-					</SidebarGroup>
-				</SidebarContent>
-				<SidebarFooter className="mt-auto flex flex-col items-start">
-					<CloseCarrierBagButton />
-				</SidebarFooter>
+								</SidebarMenuItem>
+							))}
+						</SidebarMenu>
+						<SidebarGroupLabel>Context</SidebarGroupLabel>
+						<Card className="gap-2 py-4 shadow-none">
+							<CardHeader className="px-4">
+								<Icon icon={AiIdeaIcon} />
+							</CardHeader>
+							<CardContent className="px-4">
+								{data?.information && data.information.length > 0 ? (
+									<CustomPortableText
+										className="my-0 text-minor"
+										value={data.information as PortableTextBlock[]}
+									/>
+								) : (
+									<p className="text-xs">{uiData.context.text}</p>
+								)}
+							</CardContent>
+							<CardFooter className="m-0 flex justify-start px-4 pt-2">
+								<Button variant="link" size="inline" asChild>
+									<Link href="/">
+										<Icon icon={Book02Icon} />
+										<span className="text-xs uppercase">Read more</span>
+									</Link>
+								</Button>
+							</CardFooter>
+						</Card>
+					</SidebarGroupContent>
+				</SidebarGroup>
+			</SidebarContent>
+			<SidebarFooter className="mt-auto flex flex-col items-start">
+				<CloseCarrierBagButton />
+			</SidebarFooter>
+		</>
+	);
+
+	return (
+		<SidebarProvider
+			className="flex h-full min-h-0 w-full gap-2 bg-neutral-200"
+			style={
+				{
+					"--sidebar-width": "24rem",
+				} as React.CSSProperties
+			}
+			defaultOpen={true}
+		>
+			{/* Desktop Sidebar */}
+			<Sidebar
+				collapsible="none"
+				className="hidden h-full min-h-0 flex-col overflow-hidden rounded-md bg-primary-foreground md:flex"
+			>
+				<SidebarContentComponent />
 			</Sidebar>
-			<CarrierBagContent />
+
+			{/* Carrier Bag Content with mobile trigger */}
+			<CarrierBagContent
+				mobileTrigger={
+					<div className="md:hidden">
+						<Popover
+							open={mobileSidebarOpen}
+							onOpenChange={setMobileSidebarOpen}
+						>
+							<PopoverTrigger asChild>
+								<Button
+									variant="ghost"
+									size="icon"
+									aria-label="Open utilities menu"
+								>
+									<Icon icon={MoreHorizontalCircle01Icon} size={24} />
+								</Button>
+							</PopoverTrigger>
+							<PopoverContent
+								className="mx-4 h-[80vh] w-[calc(100vw-2rem)] max-w-md overflow-y-auto p-0"
+								align="end"
+								sideOffset={5}
+							>
+								<div className="flex h-full flex-col bg-primary-foreground">
+									<SidebarProvider>
+										<Sidebar
+											collapsible="none"
+											className="flex h-full min-h-0 flex-col"
+										>
+											<SidebarContentComponent />
+										</Sidebar>
+									</SidebarProvider>
+								</div>
+							</PopoverContent>
+						</Popover>
+					</div>
+				}
+			/>
 		</SidebarProvider>
 	);
 }

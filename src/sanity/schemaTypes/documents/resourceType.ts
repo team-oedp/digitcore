@@ -1,5 +1,6 @@
 import { WrenchIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { validateUniqueTitle } from "../../lib/validation";
 
 export const resourceType = defineType({
 	name: "resource",
@@ -10,6 +11,7 @@ export const resourceType = defineType({
 		defineField({
 			name: "title",
 			type: "string",
+			validation: (Rule) => Rule.required().custom(validateUniqueTitle()),
 		}),
 		defineField({
 			name: "description",

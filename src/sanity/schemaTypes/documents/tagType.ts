@@ -1,5 +1,6 @@
 import { TagIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
+import { validateUniqueTitle } from "../../lib/validation";
 
 export const tagType = defineType({
 	name: "tag",
@@ -10,20 +11,7 @@ export const tagType = defineType({
 		defineField({
 			name: "title",
 			type: "string",
-			validation: (Rule) =>
-				Rule.required().custom(async (title, context) => {
-					if (!title) return true;
-
-					const { document, getClient } = context;
-					const client = getClient({ apiVersion: "2023-05-03" });
-					const id = document?._id?.replace(/^drafts\./, "");
-
-					const query = '*[_type == "tag" && title == $title && _id != $id][0]';
-					const params = { title, id };
-					const existing = await client.fetch(query, params);
-
-					return existing ? "A tag with this title already exists" : true;
-				}),
+			validation: (Rule) => Rule.required().custom(validateUniqueTitle()),
 		}),
 	],
 	preview: {

@@ -223,7 +223,7 @@ export function SearchInterface({
 							value={searchTerm}
 							onChange={(e) => handleSearchChange(e.target.value)}
 							onKeyDown={handleKeyDown}
-							placeholder="Start typing to search patterns, solutions, and resources..."
+							placeholder="Search patterns, solutions, resources..."
 							className="h-8 rounded-none border-0 border-neutral-300 border-b bg-transparent px-0 py-1 pr-16 text-sm text-zinc-500 shadow-none placeholder:text-zinc-500 focus-visible:border-neutral-300 focus-visible:ring-0 focus-visible:ring-offset-0"
 						/>
 						{searchTerm && (
@@ -237,6 +237,11 @@ export function SearchInterface({
 							</button>
 						)}
 					</div>
+				</div>
+				{/* Helper text */}
+				<div className="-mt-2 mb-2 text-xs text-zinc-400">
+					Start typing to search patterns, solutions, and resources across the
+					toolkit
 				</div>
 			</div>
 

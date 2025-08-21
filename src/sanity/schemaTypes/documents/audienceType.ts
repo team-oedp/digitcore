@@ -1,5 +1,6 @@
 import { UserIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { validateUniqueTitle } from "../../lib/validation";
 
 export const audienceType = defineType({
 	name: "audience",
@@ -10,6 +11,7 @@ export const audienceType = defineType({
 		defineField({
 			name: "title",
 			type: "string",
+			validation: (Rule) => Rule.required().custom(validateUniqueTitle()),
 		}),
 		defineField({
 			name: "description",

@@ -42,14 +42,19 @@ export function CarrierBagSidebar({
 	const setItems = useCarrierBagStore((state) => state.setItems);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const documentData = useCarrierBagDocument(items);
-	const { setOpen: setSidebarOpen } = useSidebar();
+	const { setOpen: setSidebarOpen, setOpenMobile, isMobile } = useSidebar();
 
 	// Sync Zustand store state to Sidebar component state
 	// This is a one-way sync: Zustand store → Sidebar component
+	// Handle both desktop and mobile sidebar states
 	useEffect(() => {
 		if (!isHydrated) return;
-		setSidebarOpen(isOpen);
-	}, [isOpen, setSidebarOpen, isHydrated]);
+		if (isMobile) {
+			setOpenMobile(isOpen);
+		} else {
+			setSidebarOpen(isOpen);
+		}
+	}, [isOpen, setSidebarOpen, setOpenMobile, isMobile, isHydrated]);
 
 	const handleRemoveItem = (patternId: string) => {
 		removePattern(patternId);

@@ -100,7 +100,21 @@ export type SiteSettings = {
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
     markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
       href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
       _type: 'link'
       _key: string
     }>
@@ -127,7 +141,21 @@ export type Onboarding = {
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
     markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
       href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
       _type: 'link'
       _key: string
     }>
@@ -135,6 +163,121 @@ export type Onboarding = {
     _type: 'block'
     _key: string
   }>
+  skipLabel?: string
+  backLabel?: string
+  footerText?: string
+  breadcrumbs?: {
+    slide1?: string
+    slide2?: string
+    slide3?: string
+  }
+  slide1?: {
+    title?: string
+    body?: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }>
+    primaryCtaLabel?: string
+    secondaryCtaText?: string
+  }
+  slide2?: {
+    title?: string
+    body?: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }>
+  }
+  slide3?: {
+    title?: string
+    body?: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }>
+  }
 }
 
 export type CarrierBag = {
@@ -154,7 +297,21 @@ export type CarrierBag = {
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
     markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
       href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
       _type: 'link'
       _key: string
     }>
@@ -181,7 +338,21 @@ export type Faq = {
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
     markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
       href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
       _type: 'link'
       _key: string
     }>
@@ -208,7 +379,21 @@ export type Glossary = {
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
     markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
       href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
       _type: 'link'
       _key: string
     }>
@@ -216,6 +401,22 @@ export type Glossary = {
     _type: 'block'
     _key: string
   }>
+}
+
+export type Suggestion = {
+  _id: string
+  _type: 'suggestion'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  patternName?: string
+  patternSlug?: string
+  newSolutions?: string
+  newResources?: string
+  additionalFeedback?: string
+  nameAndAffiliation?: string
+  email?: string
+  submittedAt?: string
 }
 
 export type Solution = {
@@ -327,6 +528,48 @@ export type Tag = {
   title?: string
 }
 
+export type CardCarousel = {
+  _type: 'cardCarousel'
+  title?: string
+  cards?: Array<{
+    title?: string
+    description?: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }>
+    _type: 'card'
+    _key: string
+  }>
+}
+
 export type Content = {
   _type: 'content'
   heading?: string
@@ -340,7 +583,21 @@ export type Content = {
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
     markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
       href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
       _type: 'link'
       _key: string
     }>
@@ -360,7 +617,21 @@ export type BlockContent = Array<{
   style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
   listItem?: 'bullet'
   markDefs?: Array<{
+    linkType?: 'href' | 'page' | 'pattern'
     href?: string
+    page?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'page'
+    }
+    pattern?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'pattern'
+    }
+    openInNewTab?: boolean
     _type: 'link'
     _key: string
   }>
@@ -386,6 +657,25 @@ export type Link = {
     _weak?: boolean
     [internalGroqTypeReferenceTo]?: 'pattern'
   }
+}
+
+export type Page = {
+  _id: string
+  _type: 'page'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  slug?: Slug
+  description?: BlockContent
+  content?: Array<
+    | ({
+        _key: string
+      } & Content)
+    | ({
+        _key: string
+      } & CardCarousel)
+  >
 }
 
 export type Pattern = {
@@ -414,6 +704,13 @@ export type Pattern = {
     _type: 'block'
     _key: string
   }>
+  icon?: {
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
+    [internalGroqTypeReferenceTo]?: 'icon'
+  }
+  svgIcon?: Code
   tags?: Array<{
     _ref: string
     _type: 'reference'
@@ -478,20 +775,33 @@ export type Theme = {
   }>
 }
 
-export type Page = {
+export type Icon = {
   _id: string
-  _type: 'page'
+  _type: 'icon'
   _createdAt: string
   _updatedAt: string
   _rev: string
   title?: string
-  slug?: Slug
-  description?: BlockContent
-  content?: Array<
-    {
-      _key: string
-    } & Content
-  >
+  svg?: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+}
+
+export type Code = {
+  _type: 'code'
+  language?: string
+  filename?: string
+  code?: string
+  highlightedLines?: Array<number>
 }
 
 export type SanityImagePaletteSwatch = {
@@ -618,16 +928,20 @@ export type AllSanitySchemaTypes =
   | CarrierBag
   | Faq
   | Glossary
+  | Suggestion
   | Solution
   | Resource
   | Audience
   | Tag
+  | CardCarousel
   | Content
   | BlockContent
   | Link
+  | Page
   | Pattern
   | Theme
-  | Page
+  | Icon
+  | Code
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -1188,7 +1502,21 @@ export type GLOSSARY_TERMS_QUERYResult = Array<{
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
     markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
       href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
       _type: 'link'
       _key: string
     }>
@@ -1594,8 +1922,20 @@ export type PATTERNS_GROUPED_BY_THEME_QUERYResult = Array<{
   }>
 }>
 // Variable: PATTERN_SEARCH_QUERY
-// Query: *[_type == "pattern" && defined(slug.current)    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Apply search scoring with both exact and partial matching  | score(      // Exact matches get highest scores      boost(title match $searchTerm, 10),      boost(pt::text(description) match $searchTerm, 8),      // Partial/prefix matches get lower scores      boost(title match ($searchTerm + "*"), 6),      boost(pt::text(description) match ($searchTerm + "*"), 4),      // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solution[]->{        _id,        title      }    }  }
+// Query: *[_type == "pattern" && defined(slug.current)    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Enhanced search scoring across relevant fields  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solution[]->{        _id,        title      }    }  }
 export type PATTERN_SEARCH_QUERYResult = Array<never>
+// Variable: SOLUTION_SEARCH_QUERY
+// Query: *[_type == "solution"]  | score(      // Exact matches get highest scores      boost(title match $searchTerm, 12),      boost(pt::text(description) match $searchTerm, 10),            // Partial matches      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  [_score > 0]  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    description,    audiences[]->{      _id,      title    },    // Find parent patterns for navigation    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{      _id,      title,      "slug": slug.current    }[0...3]  }
+export type SOLUTION_SEARCH_QUERYResult = Array<never>
+// Variable: RESOURCE_SEARCH_QUERY
+// Query: *[_type == "resource"]  | score(      // Exact matches get highest scores      boost(title match $searchTerm, 12),      boost(pt::text(description) match $searchTerm, 10),            // Partial matches      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  [_score > 0]  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    description,    links,    solutions[]->{      _id,      title    },    // Find parent patterns for navigation    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{      _id,      title,      "slug": slug.current    }[0...3]  }
+export type RESOURCE_SEARCH_QUERYResult = Array<never>
+// Variable: TAG_SEARCH_QUERY
+// Query: *[_type == "tag" && title match ($searchTerm + "*")]  | score(      boost(title match $searchTerm, 15),      boost(title match ($searchTerm + "*"), 10),      title match ($searchTerm + "*")    )  [_score > 0]  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    // Find patterns that use this tag    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{      _id,      title,      "slug": slug.current    }[0...5]  }
+export type TAG_SEARCH_QUERYResult = Array<never>
+// Variable: PATTERN_SIMPLE_SEARCH_QUERY
+// Query: *[_type == "pattern" && defined(slug.current)]  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solution[]->{        _id,        title      }    }  }
+export type PATTERN_SIMPLE_SEARCH_QUERYResult = Array<never>
 // Variable: PATTERN_FILTER_QUERY
 // Query: *[_type == "pattern" && defined(slug.current)    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Order by title only  | order(title asc)  {    _id,    _type,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solution[]->{        _id,        title      }    }  }
 export type PATTERN_FILTER_QUERYResult = Array<{
@@ -1698,7 +2038,7 @@ export type PATTERN_FILTER_QUERYResult = Array<{
   }> | null
 }>
 // Variable: ONBOARDING_QUERY
-// Query: *[_type == 'onboarding'][0]{    _id,    _type,    title,    description,  }
+// Query: *[_type == 'onboarding'][0]{    _id,    _type,    title,    description,    skipLabel,    backLabel,    footerText,    breadcrumbs,    slide1{      title,      body,      primaryCtaLabel,      secondaryCtaText    },    slide2{      title,      body    },    slide3{      title,      body    }  }
 export type ONBOARDING_QUERYResult = {
   _id: string
   _type: 'onboarding'
@@ -1713,7 +2053,21 @@ export type ONBOARDING_QUERYResult = {
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
     markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
       href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
       _type: 'link'
       _key: string
     }>
@@ -1721,6 +2075,121 @@ export type ONBOARDING_QUERYResult = {
     _type: 'block'
     _key: string
   }> | null
+  skipLabel: string | null
+  backLabel: string | null
+  footerText: string | null
+  breadcrumbs: {
+    slide1?: string
+    slide2?: string
+    slide3?: string
+  } | null
+  slide1: {
+    title: string | null
+    body: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }> | null
+    primaryCtaLabel: string | null
+    secondaryCtaText: string | null
+  } | null
+  slide2: {
+    title: string | null
+    body: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }> | null
+  } | null
+  slide3: {
+    title: string | null
+    body: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }> | null
+  } | null
 } | null
 // Variable: TAGS_WITH_PATTERNS_QUERY
 // Query: *[_type == "tag"] | order(title asc) {    _id,    title,    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)] | order(title asc) {      _id,      title,      "slug": slug.current    }  }[count(patterns) > 0]
@@ -1733,6 +2202,99 @@ export type TAGS_WITH_PATTERNS_QUERYResult = Array<{
     slug: string | null
   }>
 }>
+// Variable: TAGS_PAGE_QUERY
+// Query: *[_type == 'page' && slug.current == 'tags'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
+export type TAGS_PAGE_QUERYResult = {
+  _id: string
+  _type: 'page'
+  title: string | null
+  slug: string | null
+  description: BlockContent | null
+  content: Array<
+    | {
+        _key: string
+        _type: 'cardCarousel'
+        heading: null
+        body: null
+        title: string | null
+        cards: Array<{
+          _key: string
+          title: string | null
+          description: Array<{
+            children?: Array<{
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }>
+            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+            listItem?: 'bullet'
+            markDefs?: Array<{
+              linkType?: 'href' | 'page' | 'pattern'
+              href?: string
+              page?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'page'
+              }
+              pattern?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'pattern'
+              }
+              openInNewTab?: boolean
+              _type: 'link'
+              _key: string
+            }>
+            level?: number
+            _type: 'block'
+            _key: string
+          }> | null
+        }> | null
+      }
+    | {
+        _key: string
+        _type: 'content'
+        heading: string | null
+        body: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+          listItem?: 'bullet'
+          markDefs?: Array<{
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }>
+          level?: number
+          _type: 'block'
+          _key: string
+        }> | null
+        title: null
+        cards: null
+      }
+  > | null
+} | null
 // Variable: CARRIER_BAG_QUERY
 // Query: *[_type == 'carrierBag'][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    information,  }
 export type CARRIER_BAG_QUERYResult = {
@@ -1752,7 +2314,21 @@ export type CARRIER_BAG_QUERYResult = {
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
     markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
       href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
       _type: 'link'
       _key: string
     }>
@@ -1789,6 +2365,13 @@ export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
     _type: 'block'
     _key: string
   }> | null
+  icon?: {
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
+    [internalGroqTypeReferenceTo]?: 'icon'
+  }
+  svgIcon?: Code
   tags: Array<{
     _id: string
     _type: 'tag'
@@ -1885,7 +2468,7 @@ export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
   publishedAt?: string
 }>
 // Variable: VALUES_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'values'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]  }
+// Query: *[_type == 'page' && slug.current == 'values'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
 export type VALUES_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -1893,13 +2476,278 @@ export type VALUES_PAGE_QUERYResult = {
   slug: string | null
   description: BlockContent | null
   content: Array<
-    {
-      _key: string
-    } & Content
+    | {
+        _key: string
+        _type: 'cardCarousel'
+        heading: null
+        body: null
+        title: string | null
+        cards: Array<{
+          _key: string
+          title: string | null
+          description: Array<{
+            children?: Array<{
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }>
+            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+            listItem?: 'bullet'
+            markDefs?: Array<{
+              linkType?: 'href' | 'page' | 'pattern'
+              href?: string
+              page?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'page'
+              }
+              pattern?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'pattern'
+              }
+              openInNewTab?: boolean
+              _type: 'link'
+              _key: string
+            }>
+            level?: number
+            _type: 'block'
+            _key: string
+          }> | null
+        }> | null
+      }
+    | {
+        _key: string
+        _type: 'content'
+        heading: string | null
+        body: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+          listItem?: 'bullet'
+          markDefs?: Array<{
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }>
+          level?: number
+          _type: 'block'
+          _key: string
+        }> | null
+        title: null
+        cards: null
+      }
+  > | null
+} | null
+// Variable: PATTERNS_PAGE_QUERY
+// Query: *[_type == 'page' && slug.current == 'patterns'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
+export type PATTERNS_PAGE_QUERYResult = {
+  _id: string
+  _type: 'page'
+  title: string | null
+  slug: string | null
+  description: BlockContent | null
+  content: Array<
+    | {
+        _key: string
+        _type: 'cardCarousel'
+        heading: null
+        body: null
+        title: string | null
+        cards: Array<{
+          _key: string
+          title: string | null
+          description: Array<{
+            children?: Array<{
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }>
+            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+            listItem?: 'bullet'
+            markDefs?: Array<{
+              linkType?: 'href' | 'page' | 'pattern'
+              href?: string
+              page?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'page'
+              }
+              pattern?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'pattern'
+              }
+              openInNewTab?: boolean
+              _type: 'link'
+              _key: string
+            }>
+            level?: number
+            _type: 'block'
+            _key: string
+          }> | null
+        }> | null
+      }
+    | {
+        _key: string
+        _type: 'content'
+        heading: string | null
+        body: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+          listItem?: 'bullet'
+          markDefs?: Array<{
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }>
+          level?: number
+          _type: 'block'
+          _key: string
+        }> | null
+        title: null
+        cards: null
+      }
+  > | null
+} | null
+// Variable: ABOUT_PAGE_QUERY
+// Query: *[_type == 'page' && slug.current == 'about'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
+export type ABOUT_PAGE_QUERYResult = {
+  _id: string
+  _type: 'page'
+  title: string | null
+  slug: string | null
+  description: BlockContent | null
+  content: Array<
+    | {
+        _key: string
+        _type: 'cardCarousel'
+        heading: null
+        body: null
+        title: string | null
+        cards: Array<{
+          _key: string
+          title: string | null
+          description: Array<{
+            children?: Array<{
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }>
+            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+            listItem?: 'bullet'
+            markDefs?: Array<{
+              linkType?: 'href' | 'page' | 'pattern'
+              href?: string
+              page?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'page'
+              }
+              pattern?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'pattern'
+              }
+              openInNewTab?: boolean
+              _type: 'link'
+              _key: string
+            }>
+            level?: number
+            _type: 'block'
+            _key: string
+          }> | null
+        }> | null
+      }
+    | {
+        _key: string
+        _type: 'content'
+        heading: string | null
+        body: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+          listItem?: 'bullet'
+          markDefs?: Array<{
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }>
+          level?: number
+          _type: 'block'
+          _key: string
+        }> | null
+        title: null
+        cards: null
+      }
   > | null
 } | null
 // Variable: HOME_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == '/'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]  }
+// Query: *[_type == 'page' && slug.current == '/'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
 export type HOME_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -1907,9 +2755,181 @@ export type HOME_PAGE_QUERYResult = {
   slug: string | null
   description: BlockContent | null
   content: Array<
-    {
-      _key: string
-    } & Content
+    | {
+        _key: string
+        _type: 'cardCarousel'
+        heading: null
+        body: null
+        title: string | null
+        cards: Array<{
+          _key: string
+          title: string | null
+          description: Array<{
+            children?: Array<{
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }>
+            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+            listItem?: 'bullet'
+            markDefs?: Array<{
+              linkType?: 'href' | 'page' | 'pattern'
+              href?: string
+              page?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'page'
+              }
+              pattern?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'pattern'
+              }
+              openInNewTab?: boolean
+              _type: 'link'
+              _key: string
+            }>
+            level?: number
+            _type: 'block'
+            _key: string
+          }> | null
+        }> | null
+      }
+    | {
+        _key: string
+        _type: 'content'
+        heading: string | null
+        body: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+          listItem?: 'bullet'
+          markDefs?: Array<{
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }>
+          level?: number
+          _type: 'block'
+          _key: string
+        }> | null
+        title: null
+        cards: null
+      }
+  > | null
+} | null
+// Variable: FAQ_PAGE_QUERY
+// Query: *[_type == 'page' && slug.current == 'frequently-asked-questions'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
+export type FAQ_PAGE_QUERYResult = {
+  _id: string
+  _type: 'page'
+  title: string | null
+  slug: string | null
+  description: BlockContent | null
+  content: Array<
+    | {
+        _key: string
+        _type: 'cardCarousel'
+        heading: null
+        body: null
+        title: string | null
+        cards: Array<{
+          _key: string
+          title: string | null
+          description: Array<{
+            children?: Array<{
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }>
+            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+            listItem?: 'bullet'
+            markDefs?: Array<{
+              linkType?: 'href' | 'page' | 'pattern'
+              href?: string
+              page?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'page'
+              }
+              pattern?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'pattern'
+              }
+              openInNewTab?: boolean
+              _type: 'link'
+              _key: string
+            }>
+            level?: number
+            _type: 'block'
+            _key: string
+          }> | null
+        }> | null
+      }
+    | {
+        _key: string
+        _type: 'content'
+        heading: string | null
+        body: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+          listItem?: 'bullet'
+          markDefs?: Array<{
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }>
+          level?: number
+          _type: 'block'
+          _key: string
+        }> | null
+        title: null
+        cards: null
+      }
   > | null
 } | null
 // Variable: FAQS_QUERY
@@ -1927,7 +2947,21 @@ export type FAQS_QUERYResult = Array<{
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
     markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
       href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
       _type: 'link'
       _key: string
     }>
@@ -1938,7 +2972,23 @@ export type FAQS_QUERYResult = Array<{
 }>
 // Variable: ICONS_QUERY
 // Query: *[_type == "icon"] | order(title asc) {    _id,    _type,    title,    svg  }
-export type ICONS_QUERYResult = Array<never>
+export type ICONS_QUERYResult = Array<{
+  _id: string
+  _type: 'icon'
+  title: string | null
+  svg: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  } | null
+}>
 
 // Query TypeMap
 import '@sanity/client'
@@ -1965,14 +3015,22 @@ declare module '@sanity/client' {
     "\n  *[_type == 'page' && slug.current == 'search'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n  }": SEARCH_PAGE_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current)][]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->,\n    resources[]->{\n      ...,\n      solutions[]->{...},\n    },\n  }': PATTERNS_WITH_THEMES_QUERYResult
     '\n  *[_type == "theme" && defined(_id)] | order(title asc) {\n    _id,\n    title,\n    description,\n    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id)] {\n      _id,\n      _type,\n      title,\n      description,\n      "slug": slug.current,\n      tags[]->,\n      audiences[]->{\n        _id,\n        title\n      },\n      theme->{\n        _id,\n        title,\n        description\n      },\n      solutions[]->,\n      resources[]->{\n        ...,\n        solutions[]->{...},\n      },\n    }\n  }[count(patterns) > 0]\n': PATTERNS_GROUPED_BY_THEME_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Apply search scoring with both exact and partial matching\n  | score(\n      // Exact matches get highest scores\n      boost(title match $searchTerm, 10),\n      boost(pt::text(description) match $searchTerm, 8),\n      // Partial/prefix matches get lower scores\n      boost(title match ($searchTerm + "*"), 6),\n      boost(pt::text(description) match ($searchTerm + "*"), 4),\n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Enhanced search scoring across relevant fields\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_QUERYResult
+    '\n  *[_type == "solution"]\n  | score(\n      // Exact matches get highest scores\n      boost(title match $searchTerm, 12),\n      boost(pt::text(description) match $searchTerm, 10),\n      \n      // Partial matches\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    audiences[]->{\n      _id,\n      title\n    },\n    // Find parent patterns for navigation\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...3]\n  }\n': SOLUTION_SEARCH_QUERYResult
+    '\n  *[_type == "resource"]\n  | score(\n      // Exact matches get highest scores\n      boost(title match $searchTerm, 12),\n      boost(pt::text(description) match $searchTerm, 10),\n      \n      // Partial matches\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    links,\n    solutions[]->{\n      _id,\n      title\n    },\n    // Find parent patterns for navigation\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...3]\n  }\n': RESOURCE_SEARCH_QUERYResult
+    '\n  *[_type == "tag" && title match ($searchTerm + "*")]\n  | score(\n      boost(title match $searchTerm, 15),\n      boost(title match ($searchTerm + "*"), 10),\n      title match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    // Find patterns that use this tag\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...5]\n  }\n': TAG_SEARCH_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current)]\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SIMPLE_SEARCH_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Order by title only\n  | order(title asc)\n  {\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_FILTER_QUERYResult
-    "\n  *[_type == 'onboarding'][0]{\n    _id,\n    _type,\n    title,\n    description,\n  }\n": ONBOARDING_QUERYResult
+    "\n  *[_type == 'onboarding'][0]{\n    _id,\n    _type,\n    title,\n    description,\n    skipLabel,\n    backLabel,\n    footerText,\n    breadcrumbs,\n    slide1{\n      title,\n      body,\n      primaryCtaLabel,\n      secondaryCtaText\n    },\n    slide2{\n      title,\n      body\n    },\n    slide3{\n      title,\n      body\n    }\n  }\n": ONBOARDING_QUERYResult
     '\n  *[_type == "tag"] | order(title asc) {\n    _id,\n    title,\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current\n    }\n  }[count(patterns) > 0]\n': TAGS_WITH_PATTERNS_QUERYResult
+    "\n  *[_type == 'page' && slug.current == 'tags'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": TAGS_PAGE_QUERYResult
     "\n  *[_type == 'carrierBag'][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    information,\n  }\n": CARRIER_BAG_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs]{\n    ...,\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      _type,\n      title,\n      description,\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      title,\n      description,\n      links,\n      solutions[]->{ _id, title }\n    }\n  }\n': PATTERNS_BY_SLUGS_QUERYResult
-    "\n  *[_type == 'page' && slug.current == 'values'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]\n  }\n": VALUES_PAGE_QUERYResult
-    "\n  *[_type == 'page' && slug.current == '/'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]\n  }\n": HOME_PAGE_QUERYResult
+    "\n  *[_type == 'page' && slug.current == 'values'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": VALUES_PAGE_QUERYResult
+    "\n  *[_type == 'page' && slug.current == 'patterns'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": PATTERNS_PAGE_QUERYResult
+    "\n  *[_type == 'page' && slug.current == 'about'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": ABOUT_PAGE_QUERYResult
+    "\n  *[_type == 'page' && slug.current == '/'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": HOME_PAGE_QUERYResult
+    "\n  *[_type == 'page' && slug.current == 'frequently-asked-questions'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": FAQ_PAGE_QUERYResult
     '\n  *[_type == "faq"] | order(_createdAt asc) {\n    _id,\n    title,\n    description\n  }\n': FAQS_QUERYResult
     '\n  *[_type == "icon"] | order(title asc) {\n    _id,\n    _type,\n    title,\n    svg\n  }\n': ICONS_QUERYResult
   }

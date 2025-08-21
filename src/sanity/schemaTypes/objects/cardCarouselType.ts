@@ -1,13 +1,13 @@
-import { VersionsIcon } from "@sanity/icons";
+import { StringIcon, VersionsIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const cardCarouselType = defineType({
 	name: "cardCarousel",
-	title: "Card Carousel",
+	title: "Card set",
 	type: "object",
 	icon: VersionsIcon,
 	description:
-		"A horizontal carousel of cards. Each card has a title and a portable-text description.",
+		"A display of cards. Each card has a title and a portable-text description.",
 	fields: [
 		defineField({
 			name: "title",
@@ -23,6 +23,7 @@ export const cardCarouselType = defineType({
 					name: "card",
 					title: "Card",
 					type: "object",
+					icon: StringIcon,
 					fields: [
 						defineField({ name: "title", title: "Title", type: "string" }),
 						defineField({
@@ -47,7 +48,7 @@ export const cardCarouselType = defineType({
 				cards?: unknown[];
 			};
 			return {
-				title: title || "Card Carousel",
+				title: title || "Card",
 				subtitle:
 					cards && Array.isArray(cards) ? `${cards.length} card(s)` : "",
 			};
