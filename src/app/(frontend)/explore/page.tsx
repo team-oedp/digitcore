@@ -11,16 +11,16 @@ import {
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
-import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
+import { EXPLORE_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
-	title: "Search | DIGITCORE Toolkit",
-	description: "Search patterns, tags, glossary terms, and resources.",
+	title: "Explore | DIGITCORE Toolkit",
+	description: "Explore patterns, tags, glossary terms, and resources.",
 };
 
-export default async function SearchPage({
+export default async function ExplorePage({
 	searchParams,
 }: {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -29,7 +29,7 @@ export default async function SearchPage({
 
 	// Fetch page data
 	const pageData = (await client.fetch(
-		SEARCH_PAGE_QUERY,
+		EXPLORE_PAGE_QUERY,
 		{},
 		isDraftMode
 			? {

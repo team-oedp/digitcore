@@ -57,7 +57,8 @@ function friendlyLabelFromPath(path?: string) {
 		const segments = pathname.split("/").filter(Boolean);
 		if (segments[0] === "pattern" && segments[1]) return "Pattern Page";
 		if (segments[0] === "patterns") return "Patterns Page";
-		if (segments[0] === "search") return "Search Page";
+		if (segments[0] === "search") return "Explore Page";
+		if (segments[0] === "explore") return "Explore Page";
 		if (segments[0] === "tags") return "Tags Page";
 		if (segments[0] === "faq") return "FAQ Page";
 		if (segments[0] === "glossary") return "Glossary Page";
@@ -862,7 +863,7 @@ function Slide3({
 									click
 								</span>
 								<Link
-									href={`/search?themes=${encodeURIComponent(
+									href={`/explore?themes=${encodeURIComponent(
 										selectedThemeIds.join(","),
 									)}${
 										selectedAudienceIds.length
