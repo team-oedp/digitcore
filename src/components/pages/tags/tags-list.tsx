@@ -1,6 +1,9 @@
 "use client";
 
+import { FlowConnectionIcon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
+import { Icon } from "~/components/shared/icon";
+import { Badge } from "~/components/ui/badge";
 
 // Type definitions
 type Tag = {
@@ -52,7 +55,7 @@ export function TagsList({
 									</h3>
 
 									<p className="mb-4 text-primary text-sm leading-relaxed">
-										Tagged to the following pages. Showing first{" "}
+										Tagged to the following pages. Showing{" "}
 										{Math.min(tag.resources.length, 10)} links.
 									</p>
 
@@ -61,9 +64,21 @@ export function TagsList({
 											<Link
 												key={resource.id}
 												href={`/pattern/${resource.slug}`}
-												className="inline-block w-max whitespace-normal break-words rounded-md border border-neutral-300 bg-neutral-100 px-3 py-1 text-primary text-sm transition-opacity hover:opacity-80"
+												className="inline-block w-max whitespace-normal break-words transition-opacity hover:opacity-80"
 											>
-												{resource.title}
+												<Badge
+													variant="page"
+													icon={
+														<Icon
+															icon={FlowConnectionIcon}
+															size={12}
+															color="currentColor"
+															strokeWidth={1.5}
+														/>
+													}
+												>
+													{resource.title}
+												</Badge>
 											</Link>
 										))}
 									</div>
