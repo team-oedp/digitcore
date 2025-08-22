@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
 	watermark: {
 		position: "absolute",
 		fontSize: 8,
-		bottom: 20,
+		bottom: 12, // Moved down by 8px
 		left: 40,
 		right: 40,
 		color: "#9ca3af",
@@ -112,17 +112,23 @@ const styles = StyleSheet.create({
 		width: 10,
 		height: 10,
 		marginRight: 4,
+		paddingTop: 2,
+		alignSelf: "flex-start",
+	},
+	watermarkRow: {
+		flexDirection: "row",
+		alignItems: "baseline", // Align items on their text baseline
+		justifyContent: "center",
 	},
 	// Style for rotated pattern name in margin
 	patternMarginLabel: {
 		position: "absolute",
-		right: 15, // Position in the right margin area (A4 width is 595px, content ends at ~555px, so right 15px puts it in margin)
-		top: 400, // Fixed position from top instead of percentage
-		transform: "rotate(90deg)",
-		transformOrigin: "left center", // Anchor point for rotation
+		top: 14,
+		left: 0,
+		right: 0,
+		textAlign: "center",
 		fontSize: 8,
 		color: "#9ca3af",
-		textTransform: "uppercase",
 		letterSpacing: 1,
 	},
 	// Cover page styles
@@ -366,11 +372,11 @@ const PDFCoverPage = ({ documentData, logoDataUri }: PDFCoverPageProps) => (
 			</View>
 		</View>
 		<View style={styles.watermark} fixed>
-			<View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-				<Image src="/oedp-icon.png" style={{ ...styles.watermarkIcon, alignSelf: "flex-end" }} />
-				<Text style={{ marginRight: 8, lineHeight: 1 }}>Open Environmental Data Project</Text>
-				<Text style={{ marginRight: 8, lineHeight: 1 }}>•</Text>
-				<Text style={{ lineHeight: 1 }}>{documentData.date}</Text>
+			<View style={styles.watermarkRow}>
+				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
+				<Text style={{ marginRight: 8 }}>Open Environmental Data Project</Text>
+				<Text style={{ marginRight: 8 }}>•</Text>
+				<Text>{documentData.date}</Text>
 			</View>
 		</View>
 	</Page>
@@ -393,10 +399,10 @@ const PDFTableOfContents = ({ documentData }: PDFTableOfContentsProps) => (
 			</View>
 		))}
 		<View style={styles.watermark} fixed>
-			<View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-				<Image src="/oedp-icon.png" style={{ ...styles.watermarkIcon, alignSelf: "flex-end" }} />
-				<Text style={{ marginRight: 8, lineHeight: 1 }}>Open Environmental Data Project</Text>
-				<Text style={{ marginRight: 8, lineHeight: 1 }}>•</Text>
+			<View style={styles.watermarkRow}>
+				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
+				<Text style={{ marginRight: 8 }}>Open Environmental Data Project</Text>
+				<Text style={{ marginRight: 8 }}>•</Text>
 				<Text style={{ lineHeight: 1 }}>{new Date().toLocaleDateString()}</Text>
 			</View>
 		</View>
@@ -442,7 +448,7 @@ const PDFSolutions = ({ solutions }: PDFSolutionsProps) => {
 	return (
 		<View>
 			<Text style={styles.sectionTitle}>Solutions</Text>
-			{solutions.map((solution) => (
+			{solutions.map((solution, index) => (
 				<View key={solution.id} style={styles.solutionContainer}>
 					<View style={styles.solutionHeader}>
 						<Text style={styles.solutionNumber}>{solution.number}</Text>
@@ -569,10 +575,10 @@ const PDFPatternPage = ({ pattern, pageIndex }: PDFPatternPageProps) => (
 
 		{/* Footer */}
 		<View style={styles.watermark} fixed>
-			<View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-				<Image src="/oedp-icon.png" style={{ ...styles.watermarkIcon, alignSelf: "flex-end" }} />
-				<Text style={{ marginRight: 8, lineHeight: 1 }}>Open Environmental Data Project</Text>
-				<Text style={{ marginRight: 8, lineHeight: 1 }}>•</Text>
+			<View style={styles.watermarkRow}>
+				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
+				<Text style={{ marginRight: 8 }}>Open Environmental Data Project</Text>
+				<Text style={{ marginRight: 8 }}>•</Text>
 				<Text style={{ lineHeight: 1 }}>{new Date().toLocaleDateString()}</Text>
 			</View>
 		</View>
@@ -601,7 +607,11 @@ export const CarrierBagPDFDocument = ({
 
 			{/* Pattern Pages - Each pattern starts on a new page */}
 			{documentData.patterns.map((pattern, index) => (
-				<PDFPatternPage key={pattern.header.title} pattern={pattern} pageIndex={index} />
+				<PDFPatternPage
+					key={pattern.header.title}
+					pattern={pattern}
+					pageIndex={index}
+				/>
 			))}
 		</Document>
 	);

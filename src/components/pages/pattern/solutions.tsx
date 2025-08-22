@@ -23,21 +23,9 @@ export function Solutions({
 	patternName,
 	patternSlug,
 }: SolutionsProps) {
-	// Generate numbering for solutions (i., ii., iii., etc.)
+	// Generate numbering for solutions (1., 2., 3., etc.)
 	const getSolutionNumber = (index: number): string => {
-		const romanNumerals = [
-			"i",
-			"ii",
-			"iii",
-			"iv",
-			"v",
-			"vi",
-			"vii",
-			"viii",
-			"ix",
-			"x",
-		];
-		return `${romanNumerals[index]}.`;
+		return `${index + 1}.`;
 	};
 
 	if (!solutions || solutions.length === 0) {

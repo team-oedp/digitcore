@@ -5,7 +5,6 @@ import { pdf } from "@react-pdf/renderer";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "~/components/shared/icon";
-import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -315,7 +314,7 @@ export function PDFPreviewModal({
 						logoDataUri={logoDataUri}
 					/>,
 				);
-				
+
 				const blob = await pdfDoc.toBlob();
 
 				// Get page count from the PDF
@@ -328,7 +327,7 @@ export function PDFPreviewModal({
 					};
 					reader.readAsText(blob);
 				});
-				
+
 				setActualPageCount(pageCount);
 
 				// Revoke old URL (if any) to avoid leaks
@@ -406,7 +405,10 @@ export function PDFPreviewModal({
 					</DialogDescription>
 				</DialogHeader>
 
-				<div className="flex-1 overflow-auto rounded-md border bg-white" style={{ aspectRatio: '1 / 1.414', maxHeight: '75vh' }}>
+				<div
+					className="flex-1 overflow-auto rounded-sm border bg-white"
+					style={{ aspectRatio: "1 / 1.414", maxHeight: "75vh" }}
+				>
 					{isGeneratingPreview && (
 						<div className="flex h-full w-full flex-col gap-4 p-6">
 							<Skeleton className="h-full w-full rounded-md" />
@@ -422,28 +424,20 @@ export function PDFPreviewModal({
 					)}
 				</div>
 
-				<DialogFooter className="mt-auto flex items-center justify-between border-t px-6 py-4">
-					<div className="flex items-center gap-2">
-						<Badge variant="secondary" className="h-4 px-1.5 py-0 text-[10px]">
-							{documentData.patterns.length} pattern
-							{documentData.patterns.length !== 1 ? "s" : ""}
-						</Badge>
-						<Badge variant="secondary" className="h-4 px-1.5 py-0 text-[10px]">
-							{actualPageCount ? `${actualPageCount} pages` : 'Multi-page'}
-						</Badge>
-					</div>
-					<div className="flex gap-2">
+				<DialogFooter className="mt-auto flex items-center border-t py-4">
+					<div className="flex w-full gap-2">
 						<Button
 							variant="outline"
 							onClick={() => setIsOpen(false)}
 							disabled={isDownloading}
+							className="flex-1"
 						>
 							Cancel
 						</Button>
 						<Button
 							onClick={handleDownloadPDF}
 							disabled={isDownloading || documentData.patterns.length === 0}
-							className="flex items-center gap-2"
+							className="flex flex-1 items-center gap-2"
 						>
 							<Icon icon={Download03Icon} size={14} />
 							{isDownloading ? "Generating..." : "Download PDF"}

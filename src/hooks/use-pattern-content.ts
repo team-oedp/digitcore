@@ -48,21 +48,9 @@ export const portableTextToString = (blocks?: PortableTextBlock[]): string => {
 		.join("\n\n");
 };
 
-// Roman numerals helper
-export const getRomanNumeral = (index: number): string => {
-	const romanNumerals = [
-		"i",
-		"ii",
-		"iii",
-		"iv",
-		"v",
-		"vi",
-		"vii",
-		"viii",
-		"ix",
-		"x",
-	];
-	return `${romanNumerals[index] || `${index + 1}`}.`;
+// Solution numbering helper (changed from roman numerals to regular numbers)
+export const getSolutionNumber = (index: number): string => {
+	return `${index + 1}`;
 };
 
 // Pattern header data structure
@@ -284,7 +272,7 @@ export const usePatternContent = (
 		(pattern.solutions as SolutionEntity[]) || []
 	).map((solution: SolutionEntity, index) => ({
 		id: (solution as SolutionEntity)._id ?? `solution-${index}`,
-		number: getRomanNumeral(index),
+		number: getSolutionNumber(index),
 		title: solution.title || "Untitled Solution",
 		description: portableTextToString(
 			solution.description as PortableTextBlock[],
