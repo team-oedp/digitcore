@@ -18,13 +18,13 @@ export function SuggestSolutionButton({
 			trigger={
 				<button
 					type="button"
-					className="inline-flex items-center gap-1 rounded-md border border-gray-800 border-dashed bg-white px-3 py-1 text-neutral-600 text-sm uppercase transition-colors hover:bg-gray-50"
+					className="group inline-flex items-center gap-1 rounded-md border border-gray-800 border-dashed bg-white px-3 py-1 text-neutral-600 text-sm uppercase transition-all duration-500 ease-in-out hover:bg-gray-800 hover:text-white"
 				>
 					<span>Know of another resource or solution? Suggest one</span>
 					<HugeiconsIcon
 						icon={PlusSignIcon}
 						size={16}
-						color="#525252"
+						color="currentColor"
 						strokeWidth={1.5}
 					/>
 				</button>
