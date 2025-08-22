@@ -113,7 +113,7 @@ describe('Navigation', () => {
 
   it('should navigate to each page correctly', () => {
     const pages = [
-      { selector: '[data-testid="nav-carrier-bag"]', url: '/carrier-bag', heading: 'Your Carrier Bag' },
+      { selector: '[data-testid="nav-carrier-bag"]', url: '/carrier-bag', heading: 'Carrier Bag' },
       { selector: '[data-testid="nav-glossary"]', url: '/glossary', heading: 'Glossary' },
       { selector: '[data-testid="nav-search"]', url: '/search', heading: 'Search' }
     ]

@@ -7,6 +7,7 @@
 import {
 	Document,
 	Font,
+	Image,
 	Page,
 	StyleSheet,
 	Text,
@@ -21,6 +22,7 @@ import type {
 	SolutionData,
 } from "~/hooks/use-pattern-content";
 import { applyTextTransform } from "~/lib/style-adapters";
+import { svgToPngCached } from "~/lib/svg-to-png";
 
 // Register UntitledSans font variants for PDF rendering
 Font.register({
@@ -95,12 +97,39 @@ const styles = StyleSheet.create({
 		lineHeight: 1.6, // Increased for better readability
 		color: "#000000",
 	},
-	pageNumber: {
+	watermark: {
 		position: "absolute",
-		fontSize: 10,
-		bottom: 20,
+		fontSize: 8,
+		bottom: 12, // Moved down by 8px
+		left: 40,
 		right: 40,
 		color: "#9ca3af",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	watermarkIcon: {
+		width: 10,
+		height: 10,
+		marginRight: 4,
+		paddingTop: 2,
+		alignSelf: "flex-start",
+	},
+	watermarkRow: {
+		flexDirection: "row",
+		alignItems: "baseline", // Align items on their text baseline
+		justifyContent: "center",
+	},
+	// Style for rotated pattern name in margin
+	patternMarginLabel: {
+		position: "absolute",
+		top: 14,
+		left: 0,
+		right: 0,
+		textAlign: "center",
+		fontSize: 8,
+		color: "#9ca3af",
+		letterSpacing: 1,
 	},
 	// Cover page styles
 	coverPage: {
@@ -117,10 +146,24 @@ const styles = StyleSheet.create({
 		lineHeight: 1.2,
 	},
 	coverSubtitle: {
-		fontSize: 14,
+		fontSize: 17, // 20% larger than 14
 		color: "#71717a",
 		marginBottom: 40,
 		lineHeight: 1.4,
+		textAlign: "center",
+		alignItems: "center",
+	},
+	coverSubtitleRow: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		gap: 8,
+		marginBottom: 12,
+		fontSize: 19, // 20% larger than 16
+	},
+	coverSubtitleText: {
+		textAlign: "center",
+		marginBottom: 12,
 	},
 	coverMeta: {
 		fontSize: 12,
@@ -265,8 +308,8 @@ const styles = StyleSheet.create({
 		paddingBottom: 20,
 	},
 	resourceTitle: {
-		fontSize: 16,
-		fontWeight: 600,
+		fontSize: 18, // Match solution title size
+		fontWeight: 400, // Lighter weight for consistency
 		color: "#000000",
 		marginBottom: 8,
 		lineHeight: 1.4,
@@ -307,20 +350,34 @@ const styles = StyleSheet.create({
 // Cover Page Component
 type PDFCoverPageProps = {
 	documentData: CarrierBagDocumentData;
+	logoDataUri?: string;
 };
 
-const PDFCoverPage = ({ documentData }: PDFCoverPageProps) => (
+const PDFCoverPage = ({ documentData, logoDataUri }: PDFCoverPageProps) => (
 	<Page size="A4" style={styles.page}>
 		<View style={styles.coverPage}>
-			<Text style={styles.coverTitle}>
-				{applyTextTransform(documentData.title, "capitalize")}
-			</Text>
-			<Text style={styles.coverSubtitle}>{documentData.subtitle}</Text>
-			<Text style={styles.coverMeta}>Generated on {documentData.date}</Text>
-			<Text style={styles.coverMeta}>
-				{documentData.patternCount} pattern
-				{documentData.patternCount !== 1 ? "s" : ""} collected
-			</Text>
+			<View style={styles.coverSubtitle}>
+				<Text style={styles.coverSubtitleText}>
+					A collection of patterns from the
+				</Text>
+				<View style={styles.coverSubtitleRow}>
+					{logoDataUri && (
+						<Image src={logoDataUri} style={{ width: 24, height: 24 }} />
+					)}
+					<Text style={{ textTransform: "uppercase", fontSize: 19 }}>
+						DIGITCORE
+					</Text>
+				</View>
+				<Text style={styles.coverSubtitleText}>Toolkit</Text>
+			</View>
+		</View>
+		<View style={styles.watermark} fixed>
+			<View style={styles.watermarkRow}>
+				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
+				<Text style={{ marginRight: 8 }}>Open Environmental Data Project</Text>
+				<Text style={{ marginRight: 8 }}>•</Text>
+				<Text>{documentData.date}</Text>
+			</View>
 		</View>
 	</Page>
 );
@@ -341,6 +398,14 @@ const PDFTableOfContents = ({ documentData }: PDFTableOfContentsProps) => (
 				<Text style={styles.tocItemPage}>{index + 3}</Text>
 			</View>
 		))}
+		<View style={styles.watermark} fixed>
+			<View style={styles.watermarkRow}>
+				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
+				<Text style={{ marginRight: 8 }}>Open Environmental Data Project</Text>
+				<Text style={{ marginRight: 8 }}>•</Text>
+				<Text style={{ lineHeight: 1 }}>{new Date().toLocaleDateString()}</Text>
+			</View>
+		</View>
 	</Page>
 );
 
@@ -383,7 +448,7 @@ const PDFSolutions = ({ solutions }: PDFSolutionsProps) => {
 	return (
 		<View>
 			<Text style={styles.sectionTitle}>Solutions</Text>
-			{solutions.map((solution) => (
+			{solutions.map((solution, index) => (
 				<View key={solution.id} style={styles.solutionContainer}>
 					<View style={styles.solutionHeader}>
 						<Text style={styles.solutionNumber}>{solution.number}</Text>
@@ -462,24 +527,12 @@ type PDFPatternNotesProps = {
 };
 
 const PDFPatternNotes = ({ notes, dateAdded }: PDFPatternNotesProps) => {
-	if (!notes && !dateAdded) return null;
+	if (!notes) return null;
 
 	return (
 		<View style={styles.notesContainer}>
-			{dateAdded && (
-				<>
-					<Text style={styles.notesTitle}>Added to Carrier Bag</Text>
-					<Text style={styles.notesText}>
-						{new Date(dateAdded).toLocaleDateString()}
-					</Text>
-				</>
-			)}
-			{notes && (
-				<>
-					<Text style={styles.notesTitle}>Your Notes</Text>
-					<Text style={styles.notesText}>{notes}</Text>
-				</>
-			)}
+			<Text style={styles.notesTitle}>Your Notes</Text>
+			<Text style={styles.notesText}>{notes}</Text>
 		</View>
 	);
 };
@@ -487,17 +540,11 @@ const PDFPatternNotes = ({ notes, dateAdded }: PDFPatternNotesProps) => {
 // Individual Pattern Page Component
 type PDFPatternPageProps = {
 	pattern: PatternContentData;
-	pageNumber?: number;
+	pageIndex: number;
 };
 
-const PDFPatternPage = ({ pattern }: PDFPatternPageProps) => (
+const PDFPatternPage = ({ pattern, pageIndex }: PDFPatternPageProps) => (
 	<Page size="A4" style={styles.page} break>
-		<Text
-			style={styles.pageNumber}
-			render={({ pageNumber }) => `${pageNumber}`}
-			fixed
-		/>
-
 		{/* Pattern Header */}
 		<Text style={styles.patternTitle}>
 			{applyTextTransform(pattern.header.title, "capitalize")}
@@ -520,32 +567,55 @@ const PDFPatternPage = ({ pattern }: PDFPatternPageProps) => (
 
 		{/* Personal Notes */}
 		<PDFPatternNotes notes={pattern.notes} dateAdded={pattern.dateAdded} />
+
+		{/* Rotated Pattern Name in Right Margin */}
+		<Text style={styles.patternMarginLabel} fixed>
+			{applyTextTransform(pattern.header.title, "capitalize")}
+		</Text>
+
+		{/* Footer */}
+		<View style={styles.watermark} fixed>
+			<View style={styles.watermarkRow}>
+				<Image src="/oedp-icon.png" style={styles.watermarkIcon} />
+				<Text style={{ marginRight: 8 }}>Open Environmental Data Project</Text>
+				<Text style={{ marginRight: 8 }}>•</Text>
+				<Text style={{ lineHeight: 1 }}>{new Date().toLocaleDateString()}</Text>
+			</View>
+		</View>
 	</Page>
 );
 
 // Main Document Component
 type CarrierBagPDFDocumentProps = {
 	documentData: CarrierBagDocumentData;
+	logoDataUri?: string;
 };
 
 export const CarrierBagPDFDocument = ({
 	documentData,
-}: CarrierBagPDFDocumentProps) => (
-	<Document title={`${documentData.title} - ${documentData.date}`}>
-		{/* Cover Page */}
-		<PDFCoverPage documentData={documentData} />
+	logoDataUri,
+}: CarrierBagPDFDocumentProps) => {
+	return (
+		<Document title={`${documentData.title} - ${documentData.date}`}>
+			{/* Cover Page */}
+			<PDFCoverPage documentData={documentData} logoDataUri={logoDataUri} />
 
-		{/* Table of Contents (only if more than 1 pattern) */}
-		{documentData.hasTableOfContents && (
-			<PDFTableOfContents documentData={documentData} />
-		)}
+			{/* Table of Contents (only if more than 1 pattern) */}
+			{documentData.hasTableOfContents && (
+				<PDFTableOfContents documentData={documentData} />
+			)}
 
-		{/* Pattern Pages - Each pattern starts on a new page */}
-		{documentData.patterns.map((pattern) => (
-			<PDFPatternPage key={pattern.header.title} pattern={pattern} />
-		))}
-	</Document>
-);
+			{/* Pattern Pages - Each pattern starts on a new page */}
+			{documentData.patterns.map((pattern, index) => (
+				<PDFPatternPage
+					key={pattern.header.title}
+					pattern={pattern}
+					pageIndex={index}
+				/>
+			))}
+		</Document>
+	);
+};
 
 // Export function to generate and download PDF
 export const downloadCarrierBagPDF = async (
@@ -556,8 +626,24 @@ export const downloadCarrierBagPDF = async (
 	}
 
 	try {
+		// Convert SVG logo to PNG data URI for PDF compatibility
+		let logoDataUri: string | undefined;
+		try {
+			logoDataUri = await svgToPngCached("/pattern-logo.svg", {
+				width: 16,
+				height: 16,
+				scale: 2, // High resolution for crisp rendering
+			});
+		} catch (logoError) {
+			console.warn("Failed to convert logo for PDF:", logoError);
+			// Continue without logo rather than failing the entire PDF
+		}
+
 		const blob = await pdf(
-			<CarrierBagPDFDocument documentData={documentData} />,
+			<CarrierBagPDFDocument
+				documentData={documentData}
+				logoDataUri={logoDataUri}
+			/>,
 		).toBlob();
 		const url = URL.createObjectURL(blob);
 		const link = document.createElement("a");

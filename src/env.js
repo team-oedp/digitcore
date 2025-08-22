@@ -8,6 +8,15 @@ export const env = createEnv({
 	 */
 	server: {
 		NODE_ENV: z.enum(["development", "test", "production"]),
+		/**
+		 * Token that allows write access to Sanity. Must have at least `create` permission on the target dataset.
+		 */
+		SANITY_API_WRITE_TOKEN: z
+			.string()
+			.min(1, "Missing SANITY_API_WRITE_TOKEN env var"),
+		RESEND_API_KEY: z.string().optional(),
+		SUGGESTION_NOTIFICATION_EMAIL: z.string().email().optional(),
+		EMAIL_FROM: z.string().optional(),
 	},
 
 	/**
@@ -25,6 +34,10 @@ export const env = createEnv({
 	 */
 	runtimeEnv: {
 		NODE_ENV: process.env.NODE_ENV,
+		SANITY_API_WRITE_TOKEN: process.env.SANITY_API_WRITE_TOKEN,
+		RESEND_API_KEY: process.env.RESEND_API_KEY,
+		SUGGESTION_NOTIFICATION_EMAIL: process.env.SUGGESTION_NOTIFICATION_EMAIL,
+		EMAIL_FROM: process.env.EMAIL_FROM,
 		// NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 	},
 	/**
