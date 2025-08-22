@@ -165,8 +165,8 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
     description,
   }`);
 
-export const SEARCH_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'search'][0]{
+export const EXPLORE_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'explore'][0]{
     _id,
     _type,
     title,

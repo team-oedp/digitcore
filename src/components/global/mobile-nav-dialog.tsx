@@ -19,7 +19,7 @@ import { cn } from "~/lib/utils";
 
 const navItems = [
 	{ href: "/onboarding", label: "Start here", isIndented: false },
-	{ href: "/search", label: "Explore", isIndented: false },
+	{ href: "/explore", label: "Explore", isIndented: false },
 	{ href: "/patterns", label: "Patterns", isIndented: true },
 	{ href: "/tags", label: "Tags", isIndented: true },
 	{ href: "/values", label: "Values", isIndented: true },
