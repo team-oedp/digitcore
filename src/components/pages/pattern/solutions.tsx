@@ -85,7 +85,7 @@ export function Solutions({
 							{solution.description && (
 								<CustomPortableText
 									value={solution.description as PortableTextBlock[]}
-									className="prose prose-neutral max-w-none prose-p:text-[12px] prose-p:leading-normal md:prose-p:text-[14px]"
+									className="prose max-w-none text-xs leading-normal md:text-sm"
 								/>
 							)}
 

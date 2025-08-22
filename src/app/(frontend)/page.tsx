@@ -138,7 +138,7 @@ export default async function Home() {
 																		value={
 																			card.description as PortableTextBlock[]
 																		}
-																		className="prose prose-sm max-w-none leading-snug"
+																		className="prose max-w-none text-sm leading-snug"
 																	/>
 																)}
 															</CardContent>

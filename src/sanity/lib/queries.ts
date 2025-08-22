@@ -751,3 +751,53 @@ export const ICONS_QUERY = defineQuery(`
     svg
   }
 `);
+
+export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'acknowledgements'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]{
+      _key,
+      _type,
+      heading,
+      body,
+      // For cardCarousel type
+      title,
+      cards[]{
+        _key,
+        title,
+        description
+      }
+    }
+  }
+`);
+
+export const FOOTER_QUERY = defineQuery(`
+  *[_type == 'footer'][0]{
+    _id,
+    _type,
+    _createdAt,
+    _updatedAt,
+    _rev,
+    title,
+    externalLinks[]{
+      _key,
+      label,
+      url
+    },
+    internalLinks[]{
+      _key,
+      label,
+      page->{
+        _id,
+        _type,
+        title,
+        "slug": slug.current
+      }
+    },
+    license
+  }
+`);

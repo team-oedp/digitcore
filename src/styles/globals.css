@@ -269,11 +269,11 @@
 	}
 
 	.text-body {
-		@apply text-sm md:text-base text-primary prose max-w-none prose-sm md:prose-base;
+		@apply text-sm md:text-base text-primary prose max-w-none;
 	}
 
 	.text-minor {
-		@apply text-xs md:text-sm text-neutral-300 prose max-w-none prose-sm;
+		@apply text-xs md:text-sm text-neutral-300 prose max-w-none;
 	}
 
 	.text-subheading {
@@ -352,6 +352,12 @@
 	}
 }
 
+@layer utilities {
+	.link {
+		@apply text-primary no-underline hover:no-underline focus:no-underline transition-colors hover:text-secondary focus:text-secondary;
+	}
+}
+
 @utility prose {
 	--tw-prose-body: var(--foreground);
 	--tw-prose-headings: var(--foreground);
@@ -369,6 +375,27 @@
 	--tw-prose-pre-bg: var(--card);
 	--tw-prose-th-borders: var(--border);
 	--tw-prose-td-borders: var(--border);
+}
+
+/* Override Tailwind Typography font size defaults */
+@utility prose {
+	font-size: inherit;
+	line-height: inherit;
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p,
+	li,
+	blockquote,
+	pre,
+	code {
+		font-size: inherit;
+		line-height: inherit;
+	}
 }
 
 @layer base {
