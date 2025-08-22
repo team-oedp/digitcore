@@ -5,8 +5,8 @@ import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-s
 import { SiteHeader } from "~/components/global/site-header";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
-import { SiteFooter } from "./site-footer";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
+import { SiteFooter } from "./site-footer";
 
 type SiteLayoutProps = {
 	children: React.ReactNode;

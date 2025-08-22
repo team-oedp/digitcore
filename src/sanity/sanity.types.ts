@@ -1649,9 +1649,9 @@ export type PAGE_BY_SLUG_QUERYResult = {
   slug: string | null
   description: BlockContent | null
 } | null
-// Variable: SEARCH_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'search'][0]{    _id,    _type,    title,    "slug": slug.current,    description,  }
-export type SEARCH_PAGE_QUERYResult = {
+// Variable: EXPLORE_PAGE_QUERY
+// Query: *[_type == 'page' && slug.current == 'explore'][0]{    _id,    _type,    title,    "slug": slug.current,    description,  }
+export type EXPLORE_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
   title: string | null
@@ -3295,7 +3295,7 @@ declare module '@sanity/client' {
     '*[_type == $type && defined(slug.current)]{\n    "slug": slug.current\n  }': SLUGS_BY_TYPE_QUERYResult
     '*[_type == "page" && defined(slug.current)]{\n    "slug": slug.current\n  }': PAGES_SLUGS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description,\n  }': PAGE_BY_SLUG_QUERYResult
-    "\n  *[_type == 'page' && slug.current == 'search'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n  }": SEARCH_PAGE_QUERYResult
+    "\n  *[_type == 'page' && slug.current == 'explore'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n  }": EXPLORE_PAGE_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current)][]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->,\n    resources[]->{\n      ...,\n      solutions[]->{...},\n    },\n  }': PATTERNS_WITH_THEMES_QUERYResult
     '\n  *[_type == "theme" && defined(_id)] | order(title asc) {\n    _id,\n    title,\n    description,\n    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id)] {\n      _id,\n      _type,\n      title,\n      description,\n      "slug": slug.current,\n      tags[]->,\n      audiences[]->{\n        _id,\n        title\n      },\n      theme->{\n        _id,\n        title,\n        description\n      },\n      solutions[]->,\n      resources[]->{\n        ...,\n        solutions[]->{...},\n      },\n    }\n  }[count(patterns) > 0]\n': PATTERNS_GROUPED_BY_THEME_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Enhanced search scoring across relevant fields\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_QUERYResult

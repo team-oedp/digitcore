@@ -379,23 +379,23 @@
 
 /* Override Tailwind Typography font size defaults */
 @utility prose {
-  font-size: inherit;
-  line-height: inherit;
+	font-size: inherit;
+	line-height: inherit;
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p,
-  li,
-  blockquote,
-  pre,
-  code {
-    font-size: inherit;
-    line-height: inherit;
-  }
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p,
+	li,
+	blockquote,
+	pre,
+	code {
+		font-size: inherit;
+		line-height: inherit;
+	}
 }
 
 @layer base {

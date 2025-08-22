@@ -8,13 +8,13 @@ import { DisableDraftMode } from "~/components/global/disable-draft-mode";
 import { SiteLayout } from "~/components/global/site-layout";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
-import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
-import { PageContentStoreProvider } from "~/stores/page-content";
-import { TRPCReactProvider } from "~/trpc/react";
 import { client } from "~/sanity/lib/client";
 import { FOOTER_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
+import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
+import { PageContentStoreProvider } from "~/stores/page-content";
+import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
 	title: "Digitcore",
