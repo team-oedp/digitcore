@@ -6,12 +6,14 @@ import { SiteHeader } from "~/components/global/site-header";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
 import { SiteFooter } from "./site-footer";
+import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
 
 type SiteLayoutProps = {
 	children: React.ReactNode;
+	footerData: FOOTER_QUERYResult;
 };
 
-export function SiteLayout({ children }: SiteLayoutProps) {
+export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 	const pathname = usePathname();
 	const isCarrierBagRoute = pathname === "/carrier-bag";
 	return (
@@ -36,7 +38,7 @@ export function SiteLayout({ children }: SiteLayoutProps) {
 					>
 						<div className="flex min-h-screen flex-col">
 							<main className="flex-1">{children}</main>
-							{!isCarrierBagRoute && <SiteFooter />}
+							{!isCarrierBagRoute && <SiteFooter footerData={footerData} />}
 						</div>
 					</div>
 				</SidebarInset>

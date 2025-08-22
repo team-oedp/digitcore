@@ -97,10 +97,10 @@ export function Resources({ resources }: ResourcesProps) {
 										)}
 									</div>
 									{resource.description && (
-										<CustomPortableText
-											value={resource.description as PortableTextBlock[]}
-											className="prose prose-neutral max-w-none prose-p:text-[12px] prose-p:leading-normal md:prose-p:text-[14px]"
-										/>
+									<CustomPortableText
+										value={resource.description as PortableTextBlock[]}
+										className="prose max-w-none text-xs leading-normal md:text-sm"
+									/>
 									)}
 								</div>
 								<div className="flex flex-col items-start gap-2 md:flex-row md:items-center md:gap-2.5">

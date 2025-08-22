@@ -3122,6 +3122,156 @@ export type ICONS_QUERYResult = Array<{
     _type: 'image'
   } | null
 }>
+// Variable: ACKNOWLEDGEMENTS_PAGE_QUERY
+// Query: *[_type == 'page' && slug.current == 'acknowledgements'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
+export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
+  _id: string
+  _type: 'page'
+  title: string | null
+  slug: string | null
+  description: BlockContent | null
+  content: Array<
+    | {
+        _key: string
+        _type: 'cardCarousel'
+        heading: null
+        body: null
+        title: string | null
+        cards: Array<{
+          _key: string
+          title: string | null
+          description: Array<{
+            children?: Array<{
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }>
+            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+            listItem?: 'bullet'
+            markDefs?: Array<{
+              linkType?: 'href' | 'page' | 'pattern'
+              href?: string
+              page?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'page'
+              }
+              pattern?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'pattern'
+              }
+              openInNewTab?: boolean
+              _type: 'link'
+              _key: string
+            }>
+            level?: number
+            _type: 'block'
+            _key: string
+          }> | null
+        }> | null
+      }
+    | {
+        _key: string
+        _type: 'content'
+        heading: string | null
+        body: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+          listItem?: 'bullet'
+          markDefs?: Array<{
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }>
+          level?: number
+          _type: 'block'
+          _key: string
+        }> | null
+        title: null
+        cards: null
+      }
+  > | null
+} | null
+// Variable: FOOTER_QUERY
+// Query: *[_type == 'footer'][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    externalLinks[]{      _key,      label,      url    },    internalLinks[]{      _key,      label,      page->{        _id,        _type,        title,        "slug": slug.current      }    },    license  }
+export type FOOTER_QUERYResult = {
+  _id: string
+  _type: 'footer'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string | null
+  externalLinks: Array<{
+    _key: string
+    label: string | null
+    url: string | null
+  }> | null
+  internalLinks: Array<{
+    _key: string
+    label: string | null
+    page: {
+      _id: string
+      _type: 'page'
+      title: string | null
+      slug: string | null
+    } | null
+  }> | null
+  license: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+    listItem?: 'bullet'
+    markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
+      href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
+} | null
 
 // Query TypeMap
 import '@sanity/client'
@@ -3166,5 +3316,7 @@ declare module '@sanity/client' {
     "\n  *[_type == 'page' && slug.current == 'frequently-asked-questions'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": FAQ_PAGE_QUERYResult
     '\n  *[_type == "faq"] | order(_createdAt asc) {\n    _id,\n    title,\n    description\n  }\n': FAQS_QUERYResult
     '\n  *[_type == "icon"] | order(title asc) {\n    _id,\n    _type,\n    title,\n    svg\n  }\n': ICONS_QUERYResult
+    "\n  *[_type == 'page' && slug.current == 'acknowledgements'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": ACKNOWLEDGEMENTS_PAGE_QUERYResult
+    '\n  *[_type == \'footer\'][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    externalLinks[]{\n      _key,\n      label,\n      url\n    },\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n    license\n  }\n': FOOTER_QUERYResult
   }
 }
