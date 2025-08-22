@@ -20,7 +20,7 @@ export function SuggestSolutionButton({
 					type="button"
 					className="inline-flex items-center gap-1 rounded-md border border-gray-800 border-dashed bg-white px-3 py-1 text-neutral-600 text-sm uppercase transition-colors hover:bg-gray-50"
 				>
-					<span>Know of another solution? Suggest One</span>
+					<span>Know of another resource or solution? Suggest one</span>
 					<HugeiconsIcon
 						icon={PlusSignIcon}
 						size={16}

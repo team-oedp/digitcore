@@ -11,6 +11,7 @@ import type { SearchPattern } from "~/app/actions/search";
 
 import { Icon } from "~/components/shared/icon";
 import { Badge } from "~/components/ui/badge";
+import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	extractTextFromPortableText,
 	getMatchExplanation,
@@ -19,7 +20,6 @@ import {
 	truncateWithContext,
 } from "~/lib/search-utils";
 import { cn } from "~/lib/utils";
-import { getPatternIconWithMapping } from "~/utils/pattern-icons";
 import { SearchResultPreview } from "./search-result-preview";
 
 // Base search result type
