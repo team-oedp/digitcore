@@ -1,12 +1,15 @@
+import type { PortableTextBlock } from "next-sanity";
 import Image from "next/image";
+import Link from "next/link";
+import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
+import { CustomPortableText } from "./custom-portable-text";
 
-type SocialLink = {
-	name: string;
-	href: string;
-	isExternal: boolean;
+type SiteFooterProps = {
+	footerData: FOOTER_QUERYResult;
 };
 
-const SOCIAL_LINKS: SocialLink[] = [
+// Fallback data in case Sanity data is not available
+const FALLBACK_SOCIAL_LINKS = [
 	{
 		name: "Instagram",
 		href: "https://www.instagram.com/openenvirodata/",
@@ -39,7 +42,24 @@ const SOCIAL_LINKS: SocialLink[] = [
 	},
 ];
 
-export function SiteFooter() {
+export function SiteFooter({ footerData }: SiteFooterProps) {
+	// Use Sanity data if available, otherwise fall back to hardcoded data
+	const title =
+		footerData?.title || "Digital Toolkit for Open Environmental Research";
+	const internalLinks = footerData?.internalLinks || [];
+	const externalLinks = footerData?.externalLinks || [];
+	const license = footerData?.license;
+
+	// Combine internal and external links, fallback to hardcoded social links if no external links from Sanity
+	const allExternalLinks =
+		externalLinks.length > 0
+			? externalLinks
+			: FALLBACK_SOCIAL_LINKS.map((link) => ({
+					_key: link.name.toLowerCase(),
+					label: link.name,
+					url: link.href,
+				}));
+
 	return (
 		<footer className="mx-3 mt-auto h-[400px] rounded-md bg-background">
 			<div className="pb-3">
@@ -59,40 +79,66 @@ export function SiteFooter() {
 									priority
 								/>
 								<h2 className="text-balance font-normal text-md md:text-lg">
-									Digital Toolkit for Open Environmental Research
+									{title}
 								</h2>
 							</div>
 						</div>
 
-						{/* Social media navigation */}
+						{/* Navigation links */}
 						<nav
 							className="md:col-span-4 md:col-start-9"
-							aria-label="Social media links"
+							aria-label="Footer navigation links"
 						>
 							<ul className="space-y-1">
-								{SOCIAL_LINKS.map((link) => (
-									<li key={link.name}>
-										<a
-											href={link.href}
-											className="text-sm hover:underline focus:underline focus:outline-none"
-											{...(link.isExternal && {
-												target: "_blank",
-												rel: "noopener noreferrer",
-												"aria-label": `${link.name} (opens in new tab)`,
-											})}
+								{/* Internal links from Sanity */}
+								{internalLinks.map((link) => (
+									<li key={link._key}>
+										<Link
+											href={`/${link.page?.slug || "#"}`}
+											className="link text-sm focus:outline-none"
 										>
-											{link.name}
-										</a>
+											{link.label}
+										</Link>
 									</li>
 								))}
+
+								{/* External links from Sanity or fallback social links */}
+								{allExternalLinks.map((link) => {
+									const isExternal =
+										link.url?.startsWith("http") ||
+										link.url?.startsWith("mailto");
+									return (
+										<li key={link._key}>
+											<a
+												href={link.url || "#"}
+												className="link text-sm focus:outline-none"
+												{...(isExternal && {
+													target: "_blank",
+													rel: "noopener noreferrer",
+													"aria-label": `${link.label} (opens in new tab)`,
+												})}
+											>
+												{link.label}
+											</a>
+										</li>
+									);
+								})}
 							</ul>
 						</nav>
 					</div>
 
-					{/* Copyright text */}
-					<p className="mt-auto text-left text-primary text-xs">
-						Open Environmental Data Project 2025
-					</p>
+					{/* License/Copyright text */}
+					<div className="mt-auto text-left text-primary text-xs">
+						{license ? (
+							<CustomPortableText
+								value={license as PortableTextBlock[]}
+								className="prose max-w-none text-primary text-xs"
+								as="div"
+							/>
+						) : (
+							<p>Open Environmental Data Project 2025</p>
+						)}
+					</div>
 				</div>
 			</div>
 		</footer>

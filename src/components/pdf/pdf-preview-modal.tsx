@@ -5,6 +5,7 @@ import { pdf } from "@react-pdf/renderer";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "~/components/shared/icon";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
 	Dialog,
@@ -147,12 +148,9 @@ const PreviewSolutions = ({
 							{solution.audiences.length > 0 && (
 								<div className="flex flex-wrap gap-1">
 									{solution.audiences.map((audience) => (
-										<span
-											key={audience.id}
-											className="rounded border border-blue-200 bg-blue-100 px-2 py-1 text-blue-800 text-xs"
-										>
+										<Badge key={audience.id} variant="audience">
 											{audience.title}
-										</span>
+										</Badge>
 									))}
 								</div>
 							)}

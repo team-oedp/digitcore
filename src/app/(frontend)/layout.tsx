@@ -8,6 +8,10 @@ import { DisableDraftMode } from "~/components/global/disable-draft-mode";
 import { SiteLayout } from "~/components/global/site-layout";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
+import { client } from "~/sanity/lib/client";
+import { FOOTER_QUERY } from "~/sanity/lib/queries";
+import { token } from "~/sanity/lib/token";
+import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
@@ -31,6 +35,23 @@ export default async function Layout({
 }: Readonly<{ children: React.ReactNode }>) {
 	const isDraftMode = (await draftMode()).isEnabled;
 
+	// Fetch footer data
+	const footerData = (await client.fetch(
+		FOOTER_QUERY,
+		{},
+		isDraftMode
+			? {
+					perspective: "previewDrafts",
+					useCdn: false,
+					stega: true,
+					token,
+				}
+			: {
+					perspective: "published",
+					useCdn: true,
+				},
+	)) as FOOTER_QUERYResult;
+
 	return (
 		<section className={cn(sans.variable)}>
 			<div className="h-screen text-foreground antialiased [--header-height:calc(--spacing(14))]">
@@ -43,7 +64,7 @@ export default async function Layout({
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
 							<PageContentStoreProvider>
-								<SiteLayout>{children}</SiteLayout>
+								<SiteLayout footerData={footerData}>{children}</SiteLayout>
 							</PageContentStoreProvider>
 						</CarrierBagStoreProvider>
 					</TRPCReactProvider>

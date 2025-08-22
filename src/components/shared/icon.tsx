@@ -1,6 +1,6 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 
-type IconSvgObject =
+export type IconSvgObject =
 	| [
 			string,
 			{
