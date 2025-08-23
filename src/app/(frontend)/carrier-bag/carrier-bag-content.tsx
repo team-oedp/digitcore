@@ -195,7 +195,10 @@ export function CarrierBagContent({
 				<Select
 					value={sortBy}
 					onValueChange={(v) => {
-						if (v === "az" || v === "za") setSortBy(v);
+						if (v === "az" || v === "za") {
+							setSortBy(v);
+							setManualOrderActive(false);
+						}
 					}}
 				>
 					<SelectTrigger aria-label="Sort by">
@@ -211,7 +214,10 @@ export function CarrierBagContent({
 				<Toggle
 					variant="outline"
 					pressed={groupByTheme}
-					onPressedChange={setGroupByTheme}
+					onPressedChange={(pressed) => {
+						setGroupByTheme(pressed);
+						setManualOrderActive(false);
+					}}
 					aria-label="Group by theme"
 					className="px-3 font-normal"
 				>
@@ -219,7 +225,13 @@ export function CarrierBagContent({
 				</Toggle>
 
 				{/* Tags multi-select */}
-				<MultiSelect values={selectedTagIds} onValuesChange={setSelectedTagIds}>
+				<MultiSelect 
+					values={selectedTagIds} 
+					onValuesChange={(values) => {
+						setSelectedTagIds(values);
+						setManualOrderActive(false);
+					}}
+				>
 					<MultiSelectTrigger aria-label="Filter by tags">
 						<MultiSelectValue placeholder="Filter by tags" />
 					</MultiSelectTrigger>
@@ -239,7 +251,10 @@ export function CarrierBagContent({
 				{/* Audiences multi-select */}
 				<MultiSelect
 					values={selectedAudienceIds}
-					onValuesChange={setSelectedAudienceIds}
+					onValuesChange={(values) => {
+						setSelectedAudienceIds(values);
+						setManualOrderActive(false);
+					}}
 				>
 					<MultiSelectTrigger aria-label="Filter by audiences">
 						<MultiSelectValue placeholder="Filter by audiences" />
@@ -302,14 +317,6 @@ export function CarrierBagContent({
 									slug: getSlugString(pattern),
 									subtitle: themeTitle,
 								};
-								try {
-									console.log("[CarrierBag] item", {
-										id: pattern._id,
-										title: pattern.title,
-										theme: (pattern as unknown as { theme?: unknown }).theme,
-										themeTitle,
-									});
-								} catch (_err) {}
 								return (
 									<CarrierBagItem
 										key={pattern._id}
@@ -325,16 +332,20 @@ export function CarrierBagContent({
 					<Reorder.Group
 						axis="y"
 						values={items}
-						onReorder={(newOrder) => setItems(newOrder)}
+						onReorder={(newOrder) => {
+							setItems(newOrder);
+							// Activate manual order when items are actually reordered
+							if (!manualOrderActive) {
+								setManualOrderActive(true);
+								// Clear filters when switching to manual order
+								setSelectedTagIds([]);
+								setSelectedAudienceIds([]);
+								setGroupByTheme(false);
+							}
+						}}
 						layoutScroll
 						as="div"
 						style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-						onPointerDown={() => {
-							if (!manualOrderActive) setManualOrderActive(true);
-							setSelectedTagIds([]);
-							setSelectedAudienceIds([]);
-							setGroupByTheme(false);
-						}}
 					>
 						{processed.flat.map((item) => {
 							type RefTheme = { _ref: string };
@@ -355,14 +366,6 @@ export function CarrierBagContent({
 								slug: getSlugString(pattern),
 								subtitle: themeTitle,
 							};
-							try {
-								console.log("[CarrierBag] item", {
-									id: pattern._id,
-									title: pattern.title,
-									theme: (pattern as unknown as { theme?: unknown }).theme,
-									themeTitle,
-								});
-							} catch (_err) {}
 							return (
 								<Reorder.Item
 									as="div"

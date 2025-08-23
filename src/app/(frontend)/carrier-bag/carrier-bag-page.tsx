@@ -1,11 +1,8 @@
 "use client";
 
 import {
-	AiIdeaIcon,
-	Book02Icon,
 	Chatting01Icon,
 	CleaningBucketIcon,
-	Directions01Icon,
 	Download05Icon,
 	FileDownloadIcon,
 	Link05Icon,
@@ -13,23 +10,17 @@ import {
 	Tick02Icon,
 } from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
-import { FacebookIcon } from "~/components/icons/logos/facebook-icon";
+import { BlueskyIcon } from "~/components/icons/logos/bluesky-icon";
+import { InstagramIcon } from "~/components/icons/logos/instagram-icon";
 import { LinkedInIcon } from "~/components/icons/logos/linkedin-icon";
-import { XIcon } from "~/components/icons/logos/x-icon";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import { CopyButton } from "~/components/shared/copy-button";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-} from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import {
 	Popover,
 	PopoverContent,
@@ -56,12 +47,11 @@ import { CarrierBagContent } from "./carrier-bag-content";
 
 const uiData = {
 	nav: [
-		{ label: "Guide", icon: Directions01Icon },
-		{ label: "Remove All", icon: CleaningBucketIcon },
-		{ label: "Download List As JSON", icon: Download05Icon },
 		{ label: "Export Patterns As PDF", icon: FileDownloadIcon },
 		{ label: "Generate Link", icon: Link05Icon },
 		{ label: "Share To Socials", icon: Chatting01Icon },
+		{ label: "Download List As JSON", icon: Download05Icon },
+		{ label: "Remove All", icon: CleaningBucketIcon },
 	],
 	context: {
 		text: "Ursula Le Guin's carrier bag theory of fiction suggests that stories are like carrier bags, designed to hold a variety of experiences and ideas. Instead of focusing solely on traditional narratives of conflict and heroism, Le Guin emphasizes the importance of inclusivity and the diverse elements that make up human experience. She argues that fiction should reflect the complexity of life, serving as a container for the multitude of voices and perspectives that shape our understanding of the world.",
@@ -73,7 +63,7 @@ function CloseCarrierBagButton() {
 
 	return (
 		<Button
-			variant="secondary"
+			variant="ghost"
 			onClick={() => {
 				const ref = document.referrer;
 				if (ref) {
@@ -182,9 +172,6 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 
 	const handleNavClick = (label: string) => {
 		switch (label) {
-			case "Guide":
-				router.push("/");
-				break;
 			case "Remove All":
 				clearBag();
 				break;
@@ -204,36 +191,19 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 	// Sidebar content component that can be reused in both desktop and mobile views
 	const SidebarContentComponent = () => (
 		<>
-			<SidebarContent>
-				<SidebarGroup>
-					<SidebarGroupContent>
-						<SidebarGroupLabel>Utilities</SidebarGroupLabel>
-						<SidebarMenu>
-							{uiData.nav.map((item) => (
-								<SidebarMenuItem key={item.label}>
-									{item.label === "Export Patterns As PDF" ? (
-										<PDFPreviewModal
-											documentData={documentData}
-											disabled={items.length === 0}
-										>
-											<SidebarMenuButton asChild>
-												<button
-													type="button"
-													className="w-full"
-													disabled={items.length === 0}
-												>
-													<div className="flex items-center gap-2">
-														<Icon icon={item.icon} />
-														<span className="text-sm capitalize">
-															{item.label}
-														</span>
-													</div>
-												</button>
-											</SidebarMenuButton>
-										</PDFPreviewModal>
-									) : item.label === "Share To Socials" ? (
-										<Popover open={shareOpen} onOpenChange={setShareOpen}>
-											<PopoverTrigger asChild>
+			<SidebarContent className="flex h-full flex-col">
+				<SidebarGroup className="flex h-full flex-col">
+					<SidebarGroupContent className="flex flex-col">
+						<div>
+							<SidebarGroupLabel>Utilities</SidebarGroupLabel>
+							<SidebarMenu>
+								{uiData.nav.map((item) => (
+									<SidebarMenuItem key={item.label}>
+										{item.label === "Export Patterns As PDF" ? (
+											<PDFPreviewModal
+												documentData={documentData}
+												disabled={items.length === 0}
+											>
 												<SidebarMenuButton asChild>
 													<button
 														type="button"
@@ -248,128 +218,142 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 														</div>
 													</button>
 												</SidebarMenuButton>
-											</PopoverTrigger>
-											<PopoverContent className="w-80">
-												<div className="space-y-2">
-													<p className="font-normal text-sm">
-														Share this carrier bag
-													</p>
-													<input
-														readOnly
-														value={shareUrl}
-														className="w-full rounded-md border border-border bg-muted px-2 py-1 text-base"
-													/>
-													<div className="grid grid-cols-3 gap-2">
-														<Button
-															variant="secondary"
-															size="sm"
-															onClick={() =>
-																window.open(
-																	`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
-																	"_blank",
-																)
-															}
-															className="flex items-center justify-center p-2"
+											</PDFPreviewModal>
+										) : item.label === "Share To Socials" ? (
+											<Popover open={shareOpen} onOpenChange={setShareOpen}>
+												<PopoverTrigger asChild>
+													<SidebarMenuButton asChild>
+														<button
+															type="button"
+															className="w-full"
+															disabled={items.length === 0}
 														>
-															<FacebookIcon />
-														</Button>
-														<Button
-															variant="secondary"
-															size="sm"
-															onClick={() =>
-																window.open(
-																	`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
-																	"_blank",
-																)
-															}
-															className="flex items-center justify-center p-2"
-														>
-															<LinkedInIcon />
-														</Button>
-														<Button
-															variant="secondary"
-															size="sm"
-															onClick={() =>
-																window.open(
-																	`https://x.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`,
-																	"_blank",
-																)
-															}
-															className="flex items-center justify-center p-2"
-														>
-															<XIcon />
-														</Button>
+															<div className="flex items-center gap-2">
+																<Icon icon={item.icon} />
+																<span className="text-sm capitalize">
+																	{item.label}
+																</span>
+															</div>
+														</button>
+													</SidebarMenuButton>
+												</PopoverTrigger>
+												<PopoverContent className="w-80 p-4">
+													<div className="space-y-4">
+														<p className="mb-6 text-primary text-sm">
+															Share this carrier bag
+														</p>
+														<input
+															readOnly
+															value={shareUrl}
+															className="w-full rounded-md border border-border bg-muted px-2 py-1 text-base"
+														/>
+														<div className="grid grid-cols-3 gap-2">
+															<Button
+																variant="secondary"
+																size="sm"
+																onClick={() =>
+																	window.open(
+																		`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+																		"_blank",
+																	)
+																}
+																className="flex items-center justify-center p-2"
+															>
+																<LinkedInIcon />
+															</Button>
+															<Button
+																variant="secondary"
+																size="sm"
+																onClick={() =>
+																	window.open(
+																		`https://bsky.app/intent/compose?text=${encodeURIComponent(`Check out this carrier bag: ${shareUrl}`)}`,
+																		"_blank",
+																	)
+																}
+																className="flex items-center justify-center p-2"
+															>
+																<BlueskyIcon />
+															</Button>
+															<Button
+																variant="secondary"
+																size="sm"
+																onClick={() => {
+																	// Instagram doesn't have a direct web share URL, so copy to clipboard
+																	navigator.clipboard
+																		.writeText(shareUrl)
+																		.then(() => {
+																			alert(
+																				"Link copied! You can now paste it in your Instagram story or bio.",
+																			);
+																		});
+																}}
+																className="flex items-center justify-center p-2"
+															>
+																<InstagramIcon />
+															</Button>
+														</div>
 													</div>
-												</div>
-											</PopoverContent>
-										</Popover>
-									) : item.label === "Generate Link" ? (
-										<SidebarMenuButton asChild>
-											<CopyButton
-												className="w-full"
-												value={shareUrl}
-												disabled={items.length === 0}
-												copiedChildren={
-													<div className="flex items-start justify-start gap-2">
-														<Icon icon={Tick02Icon} />
-														<span className="w-fit text-sm capitalize">
-															Link Copied
+												</PopoverContent>
+											</Popover>
+										) : item.label === "Generate Link" ? (
+											<SidebarMenuButton asChild>
+												<CopyButton
+													className="w-full"
+													value={shareUrl}
+													disabled={items.length === 0}
+													copiedChildren={
+														<div className="flex items-start justify-start gap-2">
+															<Icon icon={Tick02Icon} />
+															<span className="w-fit text-sm capitalize">
+																Link Copied
+															</span>
+														</div>
+													}
+												>
+													<div className="flex items-center gap-2">
+														<Icon icon={item.icon} />
+														<span className="text-sm capitalize">
+															{item.label}
 														</span>
 													</div>
-												}
-											>
-												<div className="flex items-center gap-2">
-													<Icon icon={item.icon} />
-													<span className="text-sm capitalize">
-														{item.label}
-													</span>
-												</div>
-											</CopyButton>
-										</SidebarMenuButton>
+												</CopyButton>
+											</SidebarMenuButton>
+										) : (
+											<SidebarMenuButton asChild>
+												<button
+													type="button"
+													className="w-full"
+													onClick={() => handleNavClick(item.label)}
+													disabled={items.length === 0}
+												>
+													<div className="flex items-center gap-2">
+														<Icon icon={item.icon} />
+														<span className="text-sm capitalize">
+															{item.label}
+														</span>
+													</div>
+												</button>
+											</SidebarMenuButton>
+										)}
+									</SidebarMenuItem>
+								))}
+							</SidebarMenu>
+						</div>
+						<div className="mt-6">
+							<SidebarGroupLabel>Context</SidebarGroupLabel>
+							<Card className="gap-2 py-4 shadow-none">
+								<CardContent className="px-4">
+									{data?.information && data.information.length > 0 ? (
+										<CustomPortableText
+											className="my-0 text-minor"
+											value={data.information as PortableTextBlock[]}
+										/>
 									) : (
-										<SidebarMenuButton asChild>
-											<button
-												type="button"
-												className="w-full"
-												onClick={() => handleNavClick(item.label)}
-												disabled={item.label !== "Guide" && items.length === 0}
-											>
-												<div className="flex items-center gap-2">
-													<Icon icon={item.icon} />
-													<span className="text-sm capitalize">
-														{item.label}
-													</span>
-												</div>
-											</button>
-										</SidebarMenuButton>
+										<p className="text-xs">{uiData.context.text}</p>
 									)}
-								</SidebarMenuItem>
-							))}
-						</SidebarMenu>
-						<SidebarGroupLabel>Context</SidebarGroupLabel>
-						<Card className="gap-2 py-4 shadow-none">
-							<CardHeader className="px-4">
-								<Icon icon={AiIdeaIcon} />
-							</CardHeader>
-							<CardContent className="px-4">
-								{data?.information && data.information.length > 0 ? (
-									<CustomPortableText
-										className="my-0 text-minor"
-										value={data.information as PortableTextBlock[]}
-									/>
-								) : (
-									<p className="text-xs">{uiData.context.text}</p>
-								)}
-							</CardContent>
-							<CardFooter className="m-0 flex justify-start px-4 pt-2">
-								<Button variant="link" size="inline" asChild>
-									<Link href="/">
-										<Icon icon={Book02Icon} />
-										<span className="text-xs uppercase">Read more</span>
-									</Link>
-								</Button>
-							</CardFooter>
-						</Card>
+								</CardContent>
+							</Card>
+						</div>
 					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarContent>

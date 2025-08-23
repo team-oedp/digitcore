@@ -136,7 +136,7 @@ function SearchResultBase({
 			<div className="flex flex-col py-4">
 				{/* Header with title and button */}
 				<div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-					<div className="flex items-start gap-3 md:items-center">
+					<div className="flex items-start gap-3">
 						{showPatternIcon && patternIcon && (
 							<div className="h-8 w-8 flex-shrink-0 text-neutral-500">
 								{React.createElement(patternIcon, {

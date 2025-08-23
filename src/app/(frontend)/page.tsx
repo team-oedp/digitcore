@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
-import { DigitcoreLogoIcon } from "~/components/icons/logos/digitcore";
+import { DigitcoreIcon } from "~/components/icons/logos/digitcore-icon";
 import Icon01 from "~/components/icons/shapes/icon-01";
 import Icon02 from "~/components/icons/shapes/icon-02";
 import Icon03 from "~/components/icons/shapes/icon-03";
@@ -64,7 +64,7 @@ export default async function Home() {
 					/>
 				)}
 				<div className="h-32 w-32 md:h-64 md:w-64">
-					<DigitcoreLogoIcon
+					<DigitcoreIcon
 						className="h-full w-full stroke-icon/20 text-icon/20 opacity-40"
 						stroke="currentColor"
 					/>
