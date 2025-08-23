@@ -54,7 +54,9 @@ export type Footer = {
   }>
   externalLinks?: Array<{
     label?: string
+    linkType?: 'url' | 'email'
     url?: string
+    email?: string
     _key: string
   }>
   internalLinks?: Array<{

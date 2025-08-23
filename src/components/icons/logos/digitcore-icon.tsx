@@ -1,8 +1,6 @@
 import type React from "react";
 
-export function DigitcoreLogoIcon(
-	props: React.ComponentPropsWithoutRef<"svg">,
-) {
+export function DigitcoreIcon(props: React.ComponentPropsWithoutRef<"svg">) {
 	return (
 		<svg
 			width="201"
