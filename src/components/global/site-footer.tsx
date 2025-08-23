@@ -1,12 +1,12 @@
+import { Mail01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
-import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
-import { CustomPortableText } from "./custom-portable-text";
 import { GitHubIcon } from "~/components/icons/logos/github-icon";
 import { ZenodoIcon } from "~/components/icons/logos/zenodo-icon";
-import { Mail01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
+import { CustomPortableText } from "./custom-portable-text";
 
 type SiteFooterProps = {
 	footerData: FOOTER_QUERYResult;
@@ -59,7 +59,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 			<div className="pb-3">
 				<div className="flex h-[400px] flex-col px-4 py-3 md:px-8 md:py-6">
 					{/* Mobile Layout - Vertical Stack */}
-					<div className="flex flex-col justify-between h-full md:hidden">
+					<div className="flex h-full flex-col justify-between md:hidden">
 						{/* 1. Logo + Title */}
 						<div className="flex items-start">
 							<Image
@@ -71,9 +71,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 								style={{ height: "auto" }}
 								priority
 							/>
-							<h2 className="text-balance font-normal text-md">
-								{title}
-							</h2>
+							<h2 className="text-balance font-normal text-md">{title}</h2>
 						</div>
 
 						{/* 2. Internal Links */}
@@ -103,9 +101,9 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 									target="_blank"
 									rel="noopener noreferrer"
 									aria-label="GitHub (opens in new tab)"
-									className="text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+									className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 								>
-									<GitHubIcon className="w-6 h-6" />
+									<GitHubIcon className="h-6 w-6" />
 								</a>
 
 								{/* Zenodo Icon */}
@@ -114,16 +112,16 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 									target="_blank"
 									rel="noopener noreferrer"
 									aria-label="Zenodo (opens in new tab)"
-									className="text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+									className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 								>
-									<ZenodoIcon className="w-6 h-6" />
+									<ZenodoIcon className="h-6 w-6" />
 								</a>
 
 								{/* Email Icon */}
 								<a
 									href="mailto:info@openenvironmentaldata.org"
 									aria-label="Email Open Environmental Data Project"
-									className="text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+									className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 								>
 									<HugeiconsIcon
 										icon={Mail01Icon}
@@ -150,10 +148,10 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 					</div>
 
 					{/* Desktop Layout - Grid */}
-					<div className="hidden md:flex md:flex-col md:h-full">
+					<div className="hidden md:flex md:h-full md:flex-col">
 						{/* Top section with logo + title on left, external icon links on right */}
-						<div className="grid grid-cols-12 gap-16 mb-8">
-							<div className="flex items-start col-span-8">
+						<div className="mb-8 grid grid-cols-12 gap-16">
+							<div className="col-span-8 flex items-start">
 								<div className="flex items-center">
 									<Image
 										src="/oedp-icon.png"
@@ -164,9 +162,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 										style={{ height: "auto" }}
 										priority
 									/>
-									<h2 className="text-balance font-normal text-lg">
-										{title}
-									</h2>
+									<h2 className="text-balance font-normal text-lg">{title}</h2>
 								</div>
 							</div>
 
@@ -182,9 +178,9 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 										target="_blank"
 										rel="noopener noreferrer"
 										aria-label="GitHub (opens in new tab)"
-										className="text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+										className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 									>
-										<GitHubIcon className="w-6 h-6" />
+										<GitHubIcon className="h-6 w-6" />
 									</a>
 
 									{/* Zenodo Icon */}
@@ -193,16 +189,16 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 										target="_blank"
 										rel="noopener noreferrer"
 										aria-label="Zenodo (opens in new tab)"
-										className="text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+										className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 									>
-										<ZenodoIcon className="w-6 h-6" />
+										<ZenodoIcon className="h-6 w-6" />
 									</a>
 
 									{/* Email Icon */}
 									<a
 										href="mailto:info@openenvironmentaldata.org"
 										aria-label="Email Open Environmental Data Project"
-										className="text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+										className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 									>
 										<HugeiconsIcon
 											icon={Mail01Icon}
@@ -218,7 +214,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 						{/* Bottom section with internal text links column anchored to bottom, and license */}
 						<div className="mt-auto grid grid-cols-12 items-end">
 							{/* License bottom-left */}
-							<div className="col-span-4 col-start-1 text-left text-primary text-xs self-end">
+							<div className="col-span-4 col-start-1 self-end text-left text-primary text-xs">
 								{license ? (
 									<CustomPortableText
 										value={license as PortableTextBlock[]}

@@ -55,7 +55,7 @@ export function CarrierBagItem({
 					onClick={(e) => e.stopPropagation()}
 					onPointerDown={(e) => e.stopPropagation()}
 				>
-					<div className="flex-shrink-0 mt-0.5">
+					<div className="mt-0.5 flex-shrink-0">
 						{PatternIcon ? (
 							<div className="h-4 w-4 flex-shrink-0">
 								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
@@ -77,7 +77,7 @@ export function CarrierBagItem({
 				</Link>
 			) : (
 				<>
-					<div className="flex-shrink-0 mt-0.5">
+					<div className="mt-0.5 flex-shrink-0">
 						{PatternIcon ? (
 							<div className="h-4 w-4 flex-shrink-0">
 								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />

@@ -33,17 +33,25 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 					<div
 						className={cn(
 							"flex h-full min-h-0 flex-1 flex-col",
-							isCarrierBagRoute ? "bg-neutral-200 overflow-hidden" : "bg-primary-foreground overflow-y-auto",
+							isCarrierBagRoute
+								? "overflow-hidden bg-neutral-200"
+								: "overflow-y-auto bg-primary-foreground",
 						)}
 					>
-						<div className={cn(
-							"flex flex-col",
-							isCarrierBagRoute ? "h-full" : "min-h-screen"
-						)}>
-							<main className={cn(
-								"flex-1",
-								isCarrierBagRoute ? "h-full min-h-0 overflow-hidden" : ""
-							)}>{children}</main>
+						<div
+							className={cn(
+								"flex flex-col",
+								isCarrierBagRoute ? "h-full" : "min-h-screen",
+							)}
+						>
+							<main
+								className={cn(
+									"flex-1",
+									isCarrierBagRoute ? "h-full min-h-0 overflow-hidden" : "",
+								)}
+							>
+								{children}
+							</main>
 							{!isCarrierBagRoute && <SiteFooter footerData={footerData} />}
 						</div>
 					</div>

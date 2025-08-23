@@ -225,8 +225,8 @@ export function CarrierBagContent({
 				</Toggle>
 
 				{/* Tags multi-select */}
-				<MultiSelect 
-					values={selectedTagIds} 
+				<MultiSelect
+					values={selectedTagIds}
 					onValuesChange={(values) => {
 						setSelectedTagIds(values);
 						setManualOrderActive(false);
@@ -306,10 +306,8 @@ export function CarrierBagContent({
 								};
 
 								const pattern = item.pattern as PatternMaybePopulatedTheme;
-								const themeTitle =
-									pattern.theme && "title" in pattern.theme
-										? pattern.theme.title || undefined
-										: undefined;
+								// Don't show theme as subtitle when grouping by theme (redundant)
+								const themeTitle = undefined;
 
 								const itemData: CarrierBagItemData = {
 									id: pattern._id,
@@ -355,10 +353,8 @@ export function CarrierBagContent({
 							};
 
 							const pattern = item.pattern as PatternMaybePopulatedTheme;
-							const themeTitle =
-								pattern.theme && "title" in pattern.theme
-									? pattern.theme.title || undefined
-									: undefined;
+							// Don't show theme as subtitle when not grouping
+							const themeTitle = undefined;
 
 							const itemData: CarrierBagItemData = {
 								id: pattern._id,
