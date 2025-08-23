@@ -51,11 +51,11 @@ export function CarrierBagItem({
 			{item.slug ? (
 				<Link
 					href={`/pattern/${item.slug}`}
-					className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+					className="flex min-w-0 flex-1 cursor-pointer items-start gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 					onClick={(e) => e.stopPropagation()}
 					onPointerDown={(e) => e.stopPropagation()}
 				>
-					<div className="flex-shrink-0">
+					<div className="flex-shrink-0 mt-0.5">
 						{PatternIcon ? (
 							<div className="h-4 w-4 flex-shrink-0">
 								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
@@ -77,7 +77,7 @@ export function CarrierBagItem({
 				</Link>
 			) : (
 				<>
-					<div className="flex-shrink-0">
+					<div className="flex-shrink-0 mt-0.5">
 						{PatternIcon ? (
 							<div className="h-4 w-4 flex-shrink-0">
 								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
