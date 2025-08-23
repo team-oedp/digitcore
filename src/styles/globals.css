@@ -161,29 +161,41 @@
 	--sidebar-ring: var(--color-neutral-300);
 	--icon: oklch(0.6902 0.0515 134.87);
 
-	--theme-badge-text: var(--color-orche-dark);
-	--theme-badge-background: var(--color-ochre-default);
-	--theme-badge-border: var(--color-ochre-light);
+	--theme-badge-text: var(--color-ochre-dark);
+	--theme-badge-background: var(--color-ochre-light);
+	--theme-badge-border: var(--color-ochre-default);
 
 	--tag-badge-text: var(--color-purple-dark);
-	--tag-badge-background: var(--color-purple-default);
-	--tag-badge-border: var(--color-purple-light);
+	--tag-badge-background: var(--color-purple-light);
+	--tag-badge-border: var(--color-purple-default);
 
 	--audience-badge-text: var(--color-cerulean-dark);
-	--audience-badge-background: var(--color-cerulean-default);
-	--audience-badge-border: var(--color-cerulean-light);
+	--audience-badge-background: var(--color-cerulean-light);
+	--audience-badge-border: var(--color-cerulean-default);
 
 	--solution-badge-text: var(--color-coral-dark);
-	--solution-badge-background: var(--color-coral-default);
-	--solution-badge-border: var(--color-coral-light);
+	--solution-badge-background: var(--color-coral-light);
+	--solution-badge-border: var(--color-coral-default);
 
 	--resource-badge-text: var(--color-fuschia-dark);
-	--resource-badge-background: var(--color-fuschia-default);
-	--resource-badge-border: var(--color-fuschia-light);
+	--resource-badge-background: var(--color-fuschia-light);
+	--resource-badge-border: var(--color-fuschia-default);
 
 	--pattern-badge-text: var(--color-teal-dark);
-	--pattern-badge-background: var(--color-teal-default);
-	--pattern-badge-border: var(--color-teal-light);
+	--pattern-badge-background: var(--color-teal-light);
+	--pattern-badge-border: var(--color-teal-default);
+
+	--pattern-button-text: oklch(0.25 0.15 140);
+	--pattern-button-background: oklch(0.9 0.12 140);
+	--pattern-button-border: oklch(0.8 0.15 140);
+
+	--solution-button-text: oklch(0.3 0.2 300);
+	--solution-button-background: oklch(0.9 0.08 300);
+	--solution-button-border: oklch(0.8 0.12 300);
+
+	--resource-button-text: oklch(0.35 0.15 330);
+	--resource-button-background: oklch(0.9 0.1 330);
+	--resource-button-border: oklch(0.8 0.15 330);
 }
 
 .dark {
@@ -257,11 +269,11 @@
 	}
 
 	.text-body {
-		@apply text-sm md:text-base text-primary prose max-w-none prose-sm md:prose-base;
+		@apply text-sm md:text-base text-primary prose max-w-none;
 	}
 
 	.text-minor {
-		@apply text-xs md:text-sm text-neutral-300 prose max-w-none prose-sm;
+		@apply text-xs md:text-sm text-neutral-300 prose max-w-none;
 	}
 
 	.text-subheading {
@@ -340,6 +352,12 @@
 	}
 }
 
+@layer utilities {
+	.link {
+		@apply text-primary no-underline hover:no-underline focus:no-underline transition-colors hover:text-secondary focus:text-secondary;
+	}
+}
+
 @utility prose {
 	--tw-prose-body: var(--foreground);
 	--tw-prose-headings: var(--foreground);
@@ -357,4 +375,34 @@
 	--tw-prose-pre-bg: var(--card);
 	--tw-prose-th-borders: var(--border);
 	--tw-prose-td-borders: var(--border);
+}
+
+/* Override Tailwind Typography font size defaults */
+@utility prose {
+	font-size: inherit;
+	line-height: inherit;
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p,
+	li,
+	blockquote,
+	pre,
+	code {
+		font-size: inherit;
+		line-height: inherit;
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
 }

@@ -2,6 +2,7 @@ import { ChartRelationshipIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { Badge } from "~/components/ui/badge";
 import type { Solution } from "~/sanity/sanity.types";
 import { SuggestSolutionButton } from "./suggest-solution-button";
 
@@ -23,21 +24,9 @@ export function Solutions({
 	patternName,
 	patternSlug,
 }: SolutionsProps) {
-	// Generate numbering for solutions (i., ii., iii., etc.)
+	// Generate numbering for solutions (1., 2., 3., etc.)
 	const getSolutionNumber = (index: number): string => {
-		const romanNumerals = [
-			"i",
-			"ii",
-			"iii",
-			"iv",
-			"v",
-			"vi",
-			"vii",
-			"viii",
-			"ix",
-			"x",
-		];
-		return `${romanNumerals[index]}.`;
+		return `${index + 1}.`;
 	};
 
 	if (!solutions || solutions.length === 0) {
@@ -84,28 +73,28 @@ export function Solutions({
 							{solution.description && (
 								<CustomPortableText
 									value={solution.description as PortableTextBlock[]}
-									className="prose prose-neutral max-w-none prose-p:text-[12px] prose-p:leading-normal md:prose-p:text-[14px]"
+									className="prose max-w-none text-xs leading-normal md:text-sm"
 								/>
 							)}
 
 							{solution.audiences && solution.audiences.length > 0 && (
 								<div className="flex flex-wrap gap-1.5 md:gap-2">
 									{solution.audiences.map((audience: AudienceDisplay) => (
-										<div
+										<Badge
 											key={audience._id ?? audience._key ?? audience._ref}
-											className="flex h-6 items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-100 px-[7px] py-2 md:gap-2.5 md:px-[9px]"
+											variant="audience"
+											icon={
+												<HugeiconsIcon
+													icon={ChartRelationshipIcon}
+													size={12}
+													color="currentColor"
+													strokeWidth={1.5}
+													className="md:h-[14px] md:w-[14px]"
+												/>
+											}
 										>
-											<span className="text-nowrap font-normal text-[#1e40ae] text-[12px] md:text-[14px]">
-												{audience.title ?? audience._ref}
-											</span>
-											<HugeiconsIcon
-												icon={ChartRelationshipIcon}
-												size={12}
-												color="#1e40ae"
-												strokeWidth={1.5}
-												className="md:h-[14px] md:w-[14px]"
-											/>
-										</div>
+											{audience.title ?? audience._ref}
+										</Badge>
 									))}
 								</div>
 							)}

@@ -5,7 +5,7 @@ import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag
 import {
 	type PatternContentData,
 	type PopulatedPattern,
-	getRomanNumeral,
+	getSolutionNumber,
 	portableTextToString,
 	useCarrierBagDocument,
 	usePatternConnections,
@@ -235,23 +235,23 @@ describe("usePatternContent hook utilities", () => {
 		});
 	});
 
-	describe("getRomanNumeral", () => {
-		it("should return correct roman numerals for indices 0-9", () => {
-			expect(getRomanNumeral(0)).toBe("i.");
-			expect(getRomanNumeral(1)).toBe("ii.");
-			expect(getRomanNumeral(2)).toBe("iii.");
-			expect(getRomanNumeral(3)).toBe("iv.");
-			expect(getRomanNumeral(4)).toBe("v.");
-			expect(getRomanNumeral(5)).toBe("vi.");
-			expect(getRomanNumeral(6)).toBe("vii.");
-			expect(getRomanNumeral(7)).toBe("viii.");
-			expect(getRomanNumeral(8)).toBe("ix.");
-			expect(getRomanNumeral(9)).toBe("x.");
+	describe("getSolutionNumber", () => {
+		it("should return correct solution numbers for indices 0-9", () => {
+			expect(getSolutionNumber(0)).toBe("1");
+			expect(getSolutionNumber(1)).toBe("2");
+			expect(getSolutionNumber(2)).toBe("3");
+			expect(getSolutionNumber(3)).toBe("4");
+			expect(getSolutionNumber(4)).toBe("5");
+			expect(getSolutionNumber(5)).toBe("6");
+			expect(getSolutionNumber(6)).toBe("7");
+			expect(getSolutionNumber(7)).toBe("8");
+			expect(getSolutionNumber(8)).toBe("9");
+			expect(getSolutionNumber(9)).toBe("10");
 		});
 
-		it("should return numeric fallback for indices beyond 9", () => {
-			expect(getRomanNumeral(10)).toBe("11.");
-			expect(getRomanNumeral(15)).toBe("16.");
+		it("should return correct numbers for indices beyond 9", () => {
+			expect(getSolutionNumber(10)).toBe("11");
+			expect(getSolutionNumber(15)).toBe("16");
 		});
 	});
 });
@@ -293,7 +293,7 @@ describe("usePatternContent", () => {
 		// Check solutions
 		expect(content.solutions).toHaveLength(1);
 		expect(content.solutions[0]?.title).toBe("Test Solution");
-		expect(content.solutions[0]?.number).toBe("i.");
+		expect(content.solutions[0]?.number).toBe("1");
 		expect(content.solutions[0]?.description).toBe("Test solution description");
 		expect(content.solutions[0]?.audiences).toHaveLength(1);
 		expect(content.solutions[0]?.audiences[0]?.title).toBe("Solution Audience");
@@ -472,7 +472,7 @@ describe("useCarrierBagDocument", () => {
 		const { result } = renderHook(() => useCarrierBagDocument(items));
 
 		const document = result.current;
-		expect(document.title).toBe("Your Carrier Bag");
+		expect(document.title).toBe("Carrier Bag");
 		expect(document.subtitle).toBe(
 			"A collection of patterns from the DIGITCORE Toolkit",
 		);
@@ -538,7 +538,7 @@ describe("utility hooks", () => {
 
 			expect(result.current).toHaveLength(1);
 			expect(result.current[0]?.title).toBe("Test Solution");
-			expect(result.current[0]?.number).toBe("i.");
+			expect(result.current[0]?.number).toBe("1");
 		});
 	});
 
@@ -554,7 +554,7 @@ describe("utility hooks", () => {
 });
 
 describe("edge cases and error handling", () => {
-	it("should handle multiple solutions with correct roman numerals", () => {
+	it("should handle multiple solutions with correct numbers", () => {
 		const pattern = createMockPattern({
 			solutions: Array.from({ length: 12 }, (_, i) => ({
 				_id: `solution${i + 1}`,
@@ -570,10 +570,10 @@ describe("edge cases and error handling", () => {
 
 		const { result } = renderHook(() => usePatternContent(pattern));
 
-		expect(result.current.solutions[0]?.number).toBe("i.");
-		expect(result.current.solutions[9]?.number).toBe("x.");
-		expect(result.current.solutions[10]?.number).toBe("11.");
-		expect(result.current.solutions[11]?.number).toBe("12.");
+		expect(result.current.solutions[0]?.number).toBe("1");
+		expect(result.current.solutions[9]?.number).toBe("10");
+		expect(result.current.solutions[10]?.number).toBe("11");
+		expect(result.current.solutions[11]?.number).toBe("12");
 	});
 
 	it("should handle resources with no related solutions", () => {

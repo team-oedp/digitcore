@@ -19,6 +19,12 @@ const buttonVariants = cva(
 				ghost:
 					"hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
 				link: "text-muted-foreground hover:text-foreground",
+				pattern:
+					"border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] text-[var(--pattern-button-text)] hover:opacity-80",
+				solution:
+					"border-[var(--solution-button-border)] bg-[var(--solution-button-background)] text-[var(--solution-button-text)] hover:opacity-80",
+				resource:
+					"border-[var(--resource-button-border)] bg-[var(--resource-button-background)] text-[var(--resource-button-text)] hover:opacity-80",
 			},
 			size: {
 				default: "h-9 px-4 py-2 has-[>svg]:px-3",

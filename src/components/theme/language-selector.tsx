@@ -12,12 +12,10 @@ import {
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
+// Restrict available languages to English and a disabled Spanish option
 const languages = [
-	{ code: "EN", label: "English" },
-	{ code: "ES", label: "Spanish" },
-	{ code: "PT", label: "Português" },
-	{ code: "FR", label: "Français" },
-	{ code: "KR", label: "한국어" },
+	{ code: "EN", label: "English", disabled: false },
+	{ code: "ES", label: "Spanish", disabled: true },
 ];
 
 interface LanguageSelectorProps {
@@ -55,7 +53,10 @@ export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
 					{languages.map((language) => (
 						<DropdownMenuItem
 							key={language.code}
-							onClick={() => setSelectedLanguage(language)}
+							disabled={language.disabled}
+							onClick={() => {
+								if (!language.disabled) setSelectedLanguage(language);
+							}}
 							className="flex items-center gap-3"
 						>
 							<span

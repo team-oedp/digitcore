@@ -165,8 +165,8 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
     description,
   }`);
 
-export const SEARCH_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'search'][0]{
+export const EXPLORE_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'explore'][0]{
     _id,
     _type,
     title,
@@ -684,6 +684,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
     title,
     "slug": slug.current,
     description,
+    // Full content blocks, including cardCarousel sections
     content[]{
       _key,
       _type,
@@ -696,6 +697,17 @@ export const HOME_PAGE_QUERY = defineQuery(`
         title,
         description
       }
+    },
+    // Convenience projections for specific card sets by title
+    "audiences": content[_type == 'cardCarousel' && title == 'Audiences'][0].cards[]{
+      _key,
+      title,
+      description
+    },
+    "values": content[_type == 'cardCarousel' && title == 'Values'][0].cards[]{
+      _key,
+      title,
+      description
     }
   }
 `);
@@ -737,5 +749,55 @@ export const ICONS_QUERY = defineQuery(`
     _type,
     title,
     svg
+  }
+`);
+
+export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'acknowledgements'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description,
+    content[]{
+      _key,
+      _type,
+      heading,
+      body,
+      // For cardCarousel type
+      title,
+      cards[]{
+        _key,
+        title,
+        description
+      }
+    }
+  }
+`);
+
+export const FOOTER_QUERY = defineQuery(`
+  *[_type == 'footer'][0]{
+    _id,
+    _type,
+    _createdAt,
+    _updatedAt,
+    _rev,
+    title,
+    externalLinks[]{
+      _key,
+      label,
+      url
+    },
+    internalLinks[]{
+      _key,
+      label,
+      page->{
+        _id,
+        _type,
+        title,
+        "slug": slug.current
+      }
+    },
+    license
   }
 `);

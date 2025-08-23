@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Resend } from "resend";
+import { EmailTemplate } from "~/components/email-template";
+import { env } from "~/env";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const SUGGESTION_NOTIFICATION_EMAIL = process.env.SUGGESTION_NOTIFICATION_EMAIL;
-const EMAIL_FROM =
-	process.env.EMAIL_FROM ?? "Digital Toolkit <noreply@digitcore.local>";
+const SUGGESTION_NOTIFICATION_EMAIL = env.SUGGESTION_NOTIFICATION_EMAIL;
+const DEFAULT_EMAIL_FROM =
+	env.EMAIL_FROM ?? "Digital Toolkit <noreply@digitcore.local>";
 
 if (!RESEND_API_KEY) {
 	console.warn("Missing RESEND_API_KEY – suggestion emails will not be sent");
@@ -24,6 +27,13 @@ export type SuggestionEmailPayload = {
 export async function sendSuggestionEmail(payload: SuggestionEmailPayload) {
 	if (!resend) return;
 
+	if (!SUGGESTION_NOTIFICATION_EMAIL) {
+		console.warn(
+			"[SuggestionEmail] SUGGESTION_NOTIFICATION_EMAIL env var not set – skipping email send",
+		);
+		return;
+	}
+
 	const {
 		patternName,
 		patternSlug,
@@ -34,24 +44,62 @@ export async function sendSuggestionEmail(payload: SuggestionEmailPayload) {
 		email,
 	} = payload;
 
-	await resend.emails.send({
-		from: EMAIL_FROM,
-		to: [SUGGESTION_NOTIFICATION_EMAIL ?? "maintainers@digitcore.local"],
-		subject: `New suggestion for ${patternName}`,
-		html: `
-		  <h2>New suggestion submitted</h2>
-		  <p><strong>Pattern:</strong> ${patternName} (${patternSlug})</p>
-		  <p><strong>New Solutions</strong><br/>${formatMultiline(newSolutions)}</p>
-		  <p><strong>New Resources</strong><br/>${formatMultiline(newResources)}</p>
-		  ${additionalFeedback ? `<p><strong>Additional Feedback</strong><br/>${formatMultiline(additionalFeedback)}</p>` : ""}
-		  <p><strong>Name & Affiliation:</strong> ${nameAndAffiliation}</p>
-		  <p><strong>Email:</strong> ${email}</p>
-		  <hr/>
-		  <p>This email was generated automatically by the Digital Toolkit website.</p>
-		`,
-	});
-}
+	// Build From header. If the user provided an email address (and didn't enter N/A),
+	// send from that address so the recipient sees it directly. Resend will accept any
+	// email as "from" but will only deliver if the domain is verified. The caller is
+	// responsible for verifying the domain used by submitters.
+	const fromAddress =
+		email && email.toLowerCase() !== "n/a"
+			? `${nameAndAffiliation || "Suggestion Submitter"} <${email}>`
+			: DEFAULT_EMAIL_FROM;
 
-function formatMultiline(text: string) {
-	return text.replace(/\n/g, "<br/>");
+	console.log(SUGGESTION_NOTIFICATION_EMAIL.split(",").map((e) => e.trim()));
+	const options = {
+		from: fromAddress,
+		to: SUGGESTION_NOTIFICATION_EMAIL.split(",").map((e) => e.trim()),
+		subject: `New suggestion for ${patternName}`,
+		react: EmailTemplate({
+			patternName,
+			patternSlug,
+			newSolutions,
+			newResources,
+			additionalFeedback,
+			nameAndAffiliation,
+			email,
+		}),
+	} as Record<string, unknown>;
+
+	// If we're using the fallback sender, still set reply_to to the submitter so
+	// maintainers can reach them.
+	if (
+		fromAddress === DEFAULT_EMAIL_FROM &&
+		email &&
+		email.toLowerCase() !== "n/a"
+	) {
+		options.reply_to = email;
+	}
+
+	const toList = Array.isArray(options.to)
+		? options.to.join(", ")
+		: String(options.to);
+	console.log(
+		`[SuggestionEmail] Sending suggestion notification to: ${toList}`,
+	);
+
+	try {
+		const response = (await resend.emails.send(
+			options as unknown as Parameters<typeof resend.emails.send>[0],
+		)) as { data?: { id?: string }; error?: unknown };
+
+		if (response?.data?.id) {
+			console.log(
+				`[SuggestionEmail] Email sent successfully. id=${response.data.id}`,
+			);
+		} else {
+			console.warn("[SuggestionEmail] Email sent but no id returned", response);
+		}
+	} catch (err) {
+		console.error("[SuggestionEmail] Failed to send suggestion email", err);
+		throw err;
+	}
 }

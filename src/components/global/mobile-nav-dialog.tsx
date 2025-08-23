@@ -18,14 +18,12 @@ import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { cn } from "~/lib/utils";
 
 const navItems = [
-	{ href: "/values", label: "Values" },
-	{ href: "/about", label: "About" },
-	{ href: "/patterns", label: "Patterns" },
-	{ href: "/search", label: "Explore" },
-	{ href: "/tags", label: "Tags" },
-	{ href: "/faq", label: "FAQ" },
-	{ href: "/glossary", label: "Glossary" },
-	{ href: "/carrier-bag", label: "Carrier Bag" },
+	{ href: "/onboarding", label: "Start here", isIndented: false },
+	{ href: "/explore", label: "Explore", isIndented: false },
+	{ href: "/patterns", label: "Patterns", isIndented: true },
+	{ href: "/tags", label: "Tags", isIndented: true },
+	{ href: "/values", label: "Values", isIndented: true },
+	{ href: "/about", label: "About", isIndented: false },
 ];
 
 const languages = [
@@ -75,7 +73,8 @@ export function MobileNavDialog() {
 									variant="ghost"
 									asChild
 									className={cn(
-										"w-full justify-start px-1.5 font-normal text-base",
+										"w-full justify-start font-normal text-base",
+										item.isIndented ? "pr-1.5 pl-8" : "px-1.5",
 										pathname === item.href
 											? "bg-accent text-foreground"
 											: "text-muted-foreground hover:text-foreground",

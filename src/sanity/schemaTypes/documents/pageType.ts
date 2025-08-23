@@ -1,4 +1,4 @@
-import { DesktopIcon } from "@sanity/icons";
+import { DesktopIcon, StringIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const pageType = defineType({
@@ -37,6 +37,7 @@ export const pageType = defineType({
 				}),
 				defineArrayMember({
 					type: "cardCarousel",
+					icon: StringIcon,
 				}),
 			],
 		}),

@@ -13,6 +13,94 @@
  */
 
 // Source: schema.json
+export type Footer = {
+  _id: string
+  _type: 'footer'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  information?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
+    listItem?: 'bullet'
+    markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
+      href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+  externalLinks?: Array<{
+    label?: string
+    url?: string
+    _key: string
+  }>
+  internalLinks?: Array<{
+    label?: string
+    page?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'page'
+    }
+    _key: string
+  }>
+  license?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
+    listItem?: 'bullet'
+    markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
+      href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+}
+
 export type SiteSettings = {
   _id: string
   _type: 'siteSettings'
@@ -485,11 +573,7 @@ export type Resource = {
     _key: string
     [internalGroqTypeReferenceTo]?: 'solution'
   }>
-  links?: Array<
-    {
-      _key: string
-    } & Link
-  >
+  mainLink?: string
 }
 
 export type Audience = {
@@ -923,6 +1007,7 @@ export type SanityAssetSourceData = {
 }
 
 export type AllSanitySchemaTypes =
+  | Footer
   | SiteSettings
   | Onboarding
   | CarrierBag
@@ -1175,11 +1260,7 @@ export type PATTERNS_QUERYResult = Array<{
         [internalGroqTypeReferenceTo]?: 'audience'
       }>
     }> | null
-    links?: Array<
-      {
-        _key: string
-      } & Link
-    >
+    mainLink?: string
   }> | null
 }>
 // Variable: PATTERN_QUERY
@@ -1325,11 +1406,7 @@ export type PATTERN_QUERYResult = {
       _type: 'block'
       _key: string
     }> | null
-    links: Array<
-      {
-        _key: string
-      } & Link
-    > | null
+    links: null
     solutions: Array<{
       _id: string
       _type: 'solution'
@@ -1464,11 +1541,7 @@ export type RESOURCES_BY_IDS_QUERYResult = Array<{
     _type: 'block'
     _key: string
   }> | null
-  links: Array<
-    {
-      _key: string
-    } & Link
-  > | null
+  links: null
   solutionIds: Array<string> | null
 }>
 // Variable: TAGS_BY_IDS_QUERY
@@ -1576,9 +1649,9 @@ export type PAGE_BY_SLUG_QUERYResult = {
   slug: string | null
   description: BlockContent | null
 } | null
-// Variable: SEARCH_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'search'][0]{    _id,    _type,    title,    "slug": slug.current,    description,  }
-export type SEARCH_PAGE_QUERYResult = {
+// Variable: EXPLORE_PAGE_QUERY
+// Query: *[_type == 'page' && slug.current == 'explore'][0]{    _id,    _type,    title,    "slug": slug.current,    description,  }
+export type EXPLORE_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
   title: string | null
@@ -1735,11 +1808,7 @@ export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
         [internalGroqTypeReferenceTo]?: 'audience'
       }>
     }> | null
-    links?: Array<
-      {
-        _key: string
-      } & Link
-    >
+    mainLink?: string
   }> | null
 }>
 // Variable: PATTERNS_GROUPED_BY_THEME_QUERY
@@ -1913,11 +1982,7 @@ export type PATTERNS_GROUPED_BY_THEME_QUERYResult = Array<{
           [internalGroqTypeReferenceTo]?: 'audience'
         }>
       }> | null
-      links?: Array<
-        {
-          _key: string
-        } & Link
-      >
+      mainLink?: string
     }> | null
   }>
 }>
@@ -2455,11 +2520,7 @@ export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
       _type: 'block'
       _key: string
     }> | null
-    links: Array<
-      {
-        _key: string
-      } & Link
-    > | null
+    links: null
     solutions: Array<{
       _id: string
       title: string | null
@@ -2747,7 +2808,7 @@ export type ABOUT_PAGE_QUERYResult = {
   > | null
 } | null
 // Variable: HOME_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == '/'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
+// Query: *[_type == 'page' && slug.current == '/'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    // Full content blocks, including cardCarousel sections    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    },    // Convenience projections for specific card sets by title    "audiences": content[_type == 'cardCarousel' && title == 'Audiences'][0].cards[]{      _key,      title,      description    },    "values": content[_type == 'cardCarousel' && title == 'Values'][0].cards[]{      _key,      title,      description    }  }
 export type HOME_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -2838,6 +2899,78 @@ export type HOME_PAGE_QUERYResult = {
         cards: null
       }
   > | null
+  audiences: Array<{
+    _key: string
+    title: string | null
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }> | null
+  }> | null
+  values: Array<{
+    _key: string
+    title: string | null
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }> | null
+  }> | null
 } | null
 // Variable: FAQ_PAGE_QUERY
 // Query: *[_type == 'page' && slug.current == 'frequently-asked-questions'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
@@ -2989,6 +3122,156 @@ export type ICONS_QUERYResult = Array<{
     _type: 'image'
   } | null
 }>
+// Variable: ACKNOWLEDGEMENTS_PAGE_QUERY
+// Query: *[_type == 'page' && slug.current == 'acknowledgements'][0]{    _id,    _type,    title,    "slug": slug.current,    description,    content[]{      _key,      _type,      heading,      body,      // For cardCarousel type      title,      cards[]{        _key,        title,        description      }    }  }
+export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
+  _id: string
+  _type: 'page'
+  title: string | null
+  slug: string | null
+  description: BlockContent | null
+  content: Array<
+    | {
+        _key: string
+        _type: 'cardCarousel'
+        heading: null
+        body: null
+        title: string | null
+        cards: Array<{
+          _key: string
+          title: string | null
+          description: Array<{
+            children?: Array<{
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }>
+            style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+            listItem?: 'bullet'
+            markDefs?: Array<{
+              linkType?: 'href' | 'page' | 'pattern'
+              href?: string
+              page?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'page'
+              }
+              pattern?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'pattern'
+              }
+              openInNewTab?: boolean
+              _type: 'link'
+              _key: string
+            }>
+            level?: number
+            _type: 'block'
+            _key: string
+          }> | null
+        }> | null
+      }
+    | {
+        _key: string
+        _type: 'content'
+        heading: string | null
+        body: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+          listItem?: 'bullet'
+          markDefs?: Array<{
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }>
+          level?: number
+          _type: 'block'
+          _key: string
+        }> | null
+        title: null
+        cards: null
+      }
+  > | null
+} | null
+// Variable: FOOTER_QUERY
+// Query: *[_type == 'footer'][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    externalLinks[]{      _key,      label,      url    },    internalLinks[]{      _key,      label,      page->{        _id,        _type,        title,        "slug": slug.current      }    },    license  }
+export type FOOTER_QUERYResult = {
+  _id: string
+  _type: 'footer'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string | null
+  externalLinks: Array<{
+    _key: string
+    label: string | null
+    url: string | null
+  }> | null
+  internalLinks: Array<{
+    _key: string
+    label: string | null
+    page: {
+      _id: string
+      _type: 'page'
+      title: string | null
+      slug: string | null
+    } | null
+  }> | null
+  license: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+    listItem?: 'bullet'
+    markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'pattern'
+      href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      pattern?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pattern'
+      }
+      openInNewTab?: boolean
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
+} | null
 
 // Query TypeMap
 import '@sanity/client'
@@ -3012,7 +3295,7 @@ declare module '@sanity/client' {
     '*[_type == $type && defined(slug.current)]{\n    "slug": slug.current\n  }': SLUGS_BY_TYPE_QUERYResult
     '*[_type == "page" && defined(slug.current)]{\n    "slug": slug.current\n  }': PAGES_SLUGS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description,\n  }': PAGE_BY_SLUG_QUERYResult
-    "\n  *[_type == 'page' && slug.current == 'search'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n  }": SEARCH_PAGE_QUERYResult
+    "\n  *[_type == 'page' && slug.current == 'explore'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n  }": EXPLORE_PAGE_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current)][]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->,\n    resources[]->{\n      ...,\n      solutions[]->{...},\n    },\n  }': PATTERNS_WITH_THEMES_QUERYResult
     '\n  *[_type == "theme" && defined(_id)] | order(title asc) {\n    _id,\n    title,\n    description,\n    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id)] {\n      _id,\n      _type,\n      title,\n      description,\n      "slug": slug.current,\n      tags[]->,\n      audiences[]->{\n        _id,\n        title\n      },\n      theme->{\n        _id,\n        title,\n        description\n      },\n      solutions[]->,\n      resources[]->{\n        ...,\n        solutions[]->{...},\n      },\n    }\n  }[count(patterns) > 0]\n': PATTERNS_GROUPED_BY_THEME_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Enhanced search scoring across relevant fields\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_QUERYResult
@@ -3029,9 +3312,11 @@ declare module '@sanity/client' {
     "\n  *[_type == 'page' && slug.current == 'values'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": VALUES_PAGE_QUERYResult
     "\n  *[_type == 'page' && slug.current == 'patterns'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": PATTERNS_PAGE_QUERYResult
     "\n  *[_type == 'page' && slug.current == 'about'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": ABOUT_PAGE_QUERYResult
-    "\n  *[_type == 'page' && slug.current == '/'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": HOME_PAGE_QUERYResult
+    "\n  *[_type == 'page' && slug.current == '/'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    // Full content blocks, including cardCarousel sections\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    },\n    // Convenience projections for specific card sets by title\n    \"audiences\": content[_type == 'cardCarousel' && title == 'Audiences'][0].cards[]{\n      _key,\n      title,\n      description\n    },\n    \"values\": content[_type == 'cardCarousel' && title == 'Values'][0].cards[]{\n      _key,\n      title,\n      description\n    }\n  }\n": HOME_PAGE_QUERYResult
     "\n  *[_type == 'page' && slug.current == 'frequently-asked-questions'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": FAQ_PAGE_QUERYResult
     '\n  *[_type == "faq"] | order(_createdAt asc) {\n    _id,\n    title,\n    description\n  }\n': FAQS_QUERYResult
     '\n  *[_type == "icon"] | order(title asc) {\n    _id,\n    _type,\n    title,\n    svg\n  }\n': ICONS_QUERYResult
+    "\n  *[_type == 'page' && slug.current == 'acknowledgements'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For cardCarousel type\n      title,\n      cards[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": ACKNOWLEDGEMENTS_PAGE_QUERYResult
+    '\n  *[_type == \'footer\'][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    externalLinks[]{\n      _key,\n      label,\n      url\n    },\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n    license\n  }\n': FOOTER_QUERYResult
   }
 }

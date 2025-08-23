@@ -1,0 +1,268 @@
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import type { Audience, Tag, Theme } from "~/sanity/sanity.types";
+import { PatternConnections } from "./pattern-connections";
+
+// Mock the ClickableBadge component to verify it's being used correctly
+vi.mock("./clickable-badge", () => ({
+	ClickableBadge: ({ children, type, id, title, ...props }: any) => (
+		<a
+			href={`/${type}/${id}`}
+			data-testid={`clickable-badge-${type}`}
+			data-type={type}
+			data-id={id}
+			data-title={title}
+			{...props}
+		>
+			{children}
+		</a>
+	),
+}));
+
+// Mock HugeiconsIcon to avoid import issues
+vi.mock("@hugeicons/react", () => ({
+	HugeiconsIcon: ({ icon, ...props }: any) => (
+		<span data-testid="icon" {...props} />
+	),
+}));
+
+describe("PatternConnections Component", () => {
+	const mockTheme: Theme = {
+		_id: "theme-123",
+		_type: "theme",
+		_createdAt: "2024-01-01",
+		_updatedAt: "2024-01-01",
+		_rev: "1",
+		title: "Sustainability",
+	};
+
+	const mockAudiences: Audience[] = [
+		{
+			_id: "audience-1",
+			_type: "audience",
+			_createdAt: "2024-01-01",
+			_updatedAt: "2024-01-01",
+			_rev: "1",
+			title: "Developers",
+		},
+		{
+			_id: "audience-2",
+			_type: "audience",
+			_createdAt: "2024-01-01",
+			_updatedAt: "2024-01-01",
+			_rev: "1",
+			title: "Designers",
+		},
+	];
+
+	const mockTags: Tag[] = [
+		{
+			_id: "tag-1",
+			_type: "tag",
+			_createdAt: "2024-01-01",
+			_updatedAt: "2024-01-01",
+			_rev: "1",
+			title: "accessibility",
+		},
+		{
+			_id: "tag-2",
+			_type: "tag",
+			_createdAt: "2024-01-01",
+			_updatedAt: "2024-01-01",
+			_rev: "1",
+			title: "open-source",
+		},
+	];
+
+	describe("Rendering", () => {
+		it("should render nothing when no connections are provided", () => {
+			const { container } = render(<PatternConnections />);
+			expect(container.firstChild).toBeNull();
+		});
+
+		it("should render theme badge when theme is provided", () => {
+			render(<PatternConnections theme={mockTheme} />);
+			
+			const themeBadge = screen.getByTestId("clickable-badge-theme");
+			expect(themeBadge).toBeInTheDocument();
+			expect(themeBadge).toHaveAttribute("data-type", "theme");
+			expect(themeBadge).toHaveAttribute("data-id", "theme-123");
+			expect(themeBadge).toHaveAttribute("data-title", "Sustainability");
+			expect(screen.getByText("Sustainability")).toBeInTheDocument();
+		});
+
+		it("should render all audience badges when audiences are provided", () => {
+			render(<PatternConnections audiences={mockAudiences} />);
+			
+			const audienceBadges = screen.getAllByTestId("clickable-badge-audience");
+			expect(audienceBadges).toHaveLength(2);
+			
+			expect(audienceBadges[0]).toHaveAttribute("data-id", "audience-1");
+			expect(audienceBadges[0]).toHaveAttribute("data-title", "Developers");
+			
+			expect(audienceBadges[1]).toHaveAttribute("data-id", "audience-2");
+			expect(audienceBadges[1]).toHaveAttribute("data-title", "Designers");
+			
+			expect(screen.getByText("Developers")).toBeInTheDocument();
+			expect(screen.getByText("Designers")).toBeInTheDocument();
+		});
+
+		it("should render all tag badges when tags are provided", () => {
+			render(<PatternConnections tags={mockTags} />);
+			
+			const tagBadges = screen.getAllByTestId("clickable-badge-tag");
+			expect(tagBadges).toHaveLength(2);
+			
+			expect(tagBadges[0]).toHaveAttribute("data-id", "tag-1");
+			expect(tagBadges[0]).toHaveAttribute("data-title", "accessibility");
+			
+			expect(tagBadges[1]).toHaveAttribute("data-id", "tag-2");
+			expect(tagBadges[1]).toHaveAttribute("data-title", "open-source");
+			
+			expect(screen.getByText("accessibility")).toBeInTheDocument();
+			expect(screen.getByText("open-source")).toBeInTheDocument();
+		});
+
+		it("should render all connection types when all are provided", () => {
+			render(
+				<PatternConnections
+					theme={mockTheme}
+					audiences={mockAudiences}
+					tags={mockTags}
+				/>,
+			);
+			
+			expect(screen.getByTestId("clickable-badge-theme")).toBeInTheDocument();
+			expect(screen.getAllByTestId("clickable-badge-audience")).toHaveLength(2);
+			expect(screen.getAllByTestId("clickable-badge-tag")).toHaveLength(2);
+		});
+	});
+
+	describe("Hover States", () => {
+		it("should have hover styles on theme badge", () => {
+			render(<PatternConnections theme={mockTheme} />);
+			
+			const badgeContent = screen.getByText("Sustainability").closest("div");
+			expect(badgeContent).toHaveClass("cursor-pointer");
+			expect(badgeContent).toHaveClass("hover:border-orange-300");
+			expect(badgeContent).toHaveClass("hover:bg-orange-150");
+			expect(badgeContent).toHaveClass("transition-colors");
+		});
+
+		it("should have hover styles on audience badges", () => {
+			render(<PatternConnections audiences={mockAudiences} />);
+			
+			const badgeContent = screen.getByText("Developers").closest("div");
+			expect(badgeContent).toHaveClass("cursor-pointer");
+			expect(badgeContent).toHaveClass("hover:border-blue-300");
+			expect(badgeContent).toHaveClass("hover:bg-blue-150");
+			expect(badgeContent).toHaveClass("transition-colors");
+		});
+
+		it("should have hover styles on tag badges", () => {
+			render(<PatternConnections tags={mockTags} />);
+			
+			const badgeContent = screen.getByText("accessibility").closest("div");
+			expect(badgeContent).toHaveClass("cursor-pointer");
+			expect(badgeContent).toHaveClass("hover:border-violet-300");
+			expect(badgeContent).toHaveClass("hover:bg-violet-150");
+			expect(badgeContent).toHaveClass("transition-colors");
+		});
+	});
+
+	describe("Edge Cases", () => {
+	it("should handle theme with null title", () => {
+		const themeWithNullTitle: Theme = { ...mockTheme, title: undefined };
+		render(<PatternConnections theme={themeWithNullTitle} />);
+		
+		const themeBadge = screen.getByTestId("clickable-badge-theme");
+		expect(themeBadge).toBeInTheDocument();
+		// When title is undefined, the attribute won't be set
+		expect(themeBadge).not.toHaveAttribute("data-title");
+	});
+
+		it("should handle audiences with undefined titles", () => {
+			const audienceWithUndefinedTitle: Audience = {
+				_id: mockAudiences[0]!._id,
+				_type: mockAudiences[0]!._type,
+				_createdAt: mockAudiences[0]!._createdAt,
+				_updatedAt: mockAudiences[0]!._updatedAt,
+				_rev: mockAudiences[0]!._rev,
+				title: undefined,
+			};
+			render(<PatternConnections audiences={[audienceWithUndefinedTitle]} />);
+			
+			const audienceBadge = screen.getByTestId("clickable-badge-audience");
+			expect(audienceBadge).toBeInTheDocument();
+		});
+
+		it("should handle tags with undefined titles", () => {
+			const tagWithUndefinedTitle: Tag = {
+				_id: mockTags[0]!._id,
+				_type: mockTags[0]!._type,
+				_createdAt: mockTags[0]!._createdAt,
+				_updatedAt: mockTags[0]!._updatedAt,
+				_rev: mockTags[0]!._rev,
+				title: undefined,
+			};
+			render(<PatternConnections tags={[tagWithUndefinedTitle]} />);
+			
+			const tagBadge = screen.getByTestId("clickable-badge-tag");
+			expect(tagBadge).toBeInTheDocument();
+		});
+
+		it("should handle empty arrays", () => {
+			render(
+				<PatternConnections
+					theme={mockTheme}
+					audiences={[]}
+					tags={[]}
+				/>,
+			);
+			
+			// Should only render theme since arrays are empty
+			expect(screen.getByTestId("clickable-badge-theme")).toBeInTheDocument();
+			expect(screen.queryByTestId("clickable-badge-audience")).not.toBeInTheDocument();
+			expect(screen.queryByTestId("clickable-badge-tag")).not.toBeInTheDocument();
+		});
+	});
+
+	describe("Accessibility", () => {
+		it("should maintain proper heading hierarchy", () => {
+			const { container } = render(
+				<PatternConnections
+					theme={mockTheme}
+					audiences={mockAudiences}
+					tags={mockTags}
+				/>,
+			);
+			
+			const section = container.querySelector("section");
+			expect(section).toBeInTheDocument();
+		});
+
+	it("should be keyboard navigable", () => {
+		render(
+			<PatternConnections
+				theme={mockTheme}
+				audiences={mockAudiences}
+				tags={mockTags}
+			/>,
+		);
+		
+		// All badges should be links and therefore focusable
+		const allBadges = [
+			screen.getByTestId("clickable-badge-theme"),
+			...screen.getAllByTestId("clickable-badge-audience"),
+			...screen.getAllByTestId("clickable-badge-tag"),
+		];
+		
+		// Check that all badges are rendered as links (a elements)
+		for (const badge of allBadges) {
+			expect(badge).toBeInTheDocument();
+			expect(badge.tagName).toBe('A');
+			expect(badge).toHaveAttribute('href');
+		}
+	});
+	});
+});

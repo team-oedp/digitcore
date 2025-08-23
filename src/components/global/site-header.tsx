@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarRightIcon } from "@hugeicons/core-free-icons";
+import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -55,13 +55,13 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2",
-										pathname === "/values"
+										"h-auto px-3 py-2 capitalize",
+										pathname === "/onboarding"
 											? "text-foreground"
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href="/values">Values</Link>
+									<Link href="/onboarding">Start here</Link>
 								</Button>
 							</li>
 							<li>
@@ -69,13 +69,13 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2",
-										pathname === "/about"
+										"h-auto px-3 py-2 capitalize",
+										pathname === "/explore"
 											? "text-foreground"
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href="/about">About</Link>
+									<Link href="/explore">Explore</Link>
 								</Button>
 							</li>
 							<li>
@@ -83,7 +83,7 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2",
+										"h-auto px-3 py-2 capitalize",
 										pathname === "/patterns"
 											? "text-foreground"
 											: "text-muted-foreground",
@@ -97,21 +97,7 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2",
-										pathname === "/search"
-											? "text-foreground"
-											: "text-muted-foreground",
-									)}
-								>
-									<Link href="/search">Explore</Link>
-								</Button>
-							</li>
-							<li>
-								<Button
-									variant="link"
-									asChild
-									className={cn(
-										"h-auto px-3 py-2",
+										"h-auto px-3 py-2 capitalize",
 										pathname === "/tags"
 											? "text-foreground"
 											: "text-muted-foreground",
@@ -125,13 +111,13 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2",
-										pathname === "/faq"
+										"h-auto px-3 py-2 capitalize",
+										pathname === "/values"
 											? "text-foreground"
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href="/faq">FAQ</Link>
+									<Link href="/values">Values</Link>
 								</Button>
 							</li>
 							<li>
@@ -139,13 +125,13 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2",
-										pathname === "/glossary"
+										"h-auto px-3 py-2 capitalize",
+										pathname === "/about"
 											? "text-foreground"
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href="/glossary">Glossary</Link>
+									<Link href="/about">About</Link>
 								</Button>
 							</li>
 						</ul>
@@ -177,7 +163,7 @@ export function SiteHeader() {
 					}
 				>
 					<Icon
-						icon={SidebarRightIcon}
+						icon={Backpack03Icon}
 						size={14}
 						className={cn(
 							"flex items-center gap-0.5 text-sm",

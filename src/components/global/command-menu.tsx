@@ -237,7 +237,7 @@ export function CommandMenu() {
 	const getCurrentPageTitle = () => {
 		if (pathname === "/") return "Home";
 		if (pathname === "/faq") return "FAQ";
-		if (pathname === "/search") return "Search";
+		if (pathname === "/explore") return "Explore";
 		if (pathname === "/patterns") return "Patterns";
 		if (pathname === "/tags") return "Tags";
 		if (pathname === "/values") return "Values";

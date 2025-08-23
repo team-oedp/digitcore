@@ -5,7 +5,7 @@ import type * as React from "react";
 import { cn } from "~/lib/utils";
 
 const badgeVariants = cva(
-	"inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-md border px-2 py-0.5 font-medium text-xs transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
+	"inline-flex w-fit shrink-0 items-center justify-start gap-1 overflow-hidden whitespace-nowrap rounded-md border px-2 py-0.5 font-medium text-xs transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
 	{
 		variants: {
 			variant: {
@@ -17,6 +17,19 @@ const badgeVariants = cva(
 					"border-transparent bg-destructive text-white focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40 [a&]:hover:bg-destructive/90",
 				outline:
 					"text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+
+				// Site-specific badge variants wired to CSS custom properties
+				audience:
+					"border-[var(--audience-badge-border)] bg-[var(--audience-badge-background)] text-[var(--audience-badge-text)]",
+				theme:
+					"border-[var(--theme-badge-border)] bg-[var(--theme-badge-background)] text-[var(--theme-badge-text)]",
+				tag: "border-[var(--tag-badge-border)] bg-[var(--tag-badge-background)] text-[var(--tag-badge-text)]",
+				resource:
+					"border-[var(--resource-badge-border)] bg-[var(--resource-badge-background)] text-[var(--resource-badge-text)]",
+				solution:
+					"border-[var(--solution-badge-border)] bg-[var(--solution-badge-background)] text-[var(--solution-badge-text)]",
+				pattern:
+					"border-[var(--pattern-badge-border)] bg-[var(--pattern-badge-background)] text-[var(--pattern-badge-text)]",
 			},
 		},
 		defaultVariants: {
@@ -29,9 +42,14 @@ function Badge({
 	className,
 	variant,
 	asChild = false,
+	icon,
+	children,
 	...props
 }: React.ComponentProps<"span"> &
-	VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
+	VariantProps<typeof badgeVariants> & {
+		asChild?: boolean;
+		icon?: React.ReactNode;
+	}) {
 	const Comp = asChild ? Slot : "span";
 
 	return (
@@ -39,7 +57,10 @@ function Badge({
 			data-slot="badge"
 			className={cn(badgeVariants({ variant }), className)}
 			{...props}
-		/>
+		>
+			{icon && <span className="flex-shrink-0">{icon}</span>}
+			{children}
+		</Comp>
 	);
 }
 

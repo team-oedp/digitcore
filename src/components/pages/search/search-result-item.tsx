@@ -3,13 +3,15 @@
 import {
 	ArrowRight02Icon,
 	ChartRelationshipIcon,
-	Share02Icon,
 	Tag01Icon,
 } from "@hugeicons/core-free-icons";
 import { MinusIcon, PlusIcon } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
+
 import { Icon } from "~/components/shared/icon";
+import { Badge } from "~/components/ui/badge";
+import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	extractTextFromPortableText,
 	getMatchExplanation,
@@ -117,23 +119,25 @@ function SearchResultBase({
 	title,
 	buttonElement,
 	showPatternIcon = false,
+	patternIcon,
 }: {
 	children: React.ReactNode;
 	title: string;
 	buttonElement: React.ReactNode;
 	showPatternIcon?: boolean;
+	patternIcon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 }) {
 	return (
 		<div className="relative w-full border-border border-t border-dashed pb-9">
 			<div className="flex flex-col py-4 md:flex-row md:items-start md:justify-between">
 				<div className="w-full flex-shrink-0 space-y-4 md:max-w-[600px]">
 					<div className="flex items-start gap-3 md:items-center">
-						{showPatternIcon && (
-							<Icon
-								icon={Share02Icon}
-								className="h-5 w-5 flex-shrink-0 text-neutral-500"
-								strokeWidth={1.5}
-							/>
+						{showPatternIcon && patternIcon && (
+							<div className="h-8 w-8 flex-shrink-0 text-neutral-500">
+								{React.createElement(patternIcon, {
+									className: "h-full w-full fill-icon/40 text-icon/70",
+								})}
+							</div>
 						)}
 						<h3 className="w-full text-pattern-list-item-title">{title}</h3>
 					</div>
@@ -165,6 +169,9 @@ function PatternSearchResult({
 	const audiences = pattern.audiences || [];
 	const rawDescription = pattern.description || [];
 
+	// Get the pattern-specific icon
+	const PatternIcon = getPatternIconWithMapping(pattern.slug || "");
+
 	// Process description for search context
 	const descriptionResult = truncateWithContext(
 		extractTextFromPortableText(rawDescription),
@@ -186,7 +193,7 @@ function PatternSearchResult({
 	const buttonElement = (
 		<a
 			href={`/pattern/${pattern.slug}`}
-			className="inline-flex items-center gap-2 rounded-md border border-[#d1a7f3] bg-[#ead1fa] px-[9px] py-[5px] text-[#4f065f] transition-opacity hover:opacity-80"
+			className="inline-flex items-center gap-2 rounded-md border border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] px-[9px] py-[5px] text-[var(--pattern-button-text)] transition-opacity hover:opacity-80"
 		>
 			<span className="text-button text-sm">Visit Pattern</span>
 		</a>
@@ -198,18 +205,8 @@ function PatternSearchResult({
 				title={title}
 				buttonElement={buttonElement}
 				showPatternIcon={showPatternIcon}
+				patternIcon={PatternIcon}
 			>
-				{/* Theme Badge */}
-				{theme && (
-					<div className="mb-4 flex w-full items-center gap-2.5 overflow-hidden">
-						<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-md border border-neutral-300 px-2 py-1.5">
-							<span className="whitespace-nowrap text-neutral-500 text-sm capitalize tracking-[-0.28px]">
-								{theme.title}
-							</span>
-						</div>
-					</div>
-				)}
-
 				{/* Description with Search Context */}
 				{descriptionResult.text && (
 					<div className="mb-4">
@@ -276,39 +273,44 @@ function PatternSearchResult({
 					</div>
 				)}
 
-				{/* Tags */}
-				{tags.length > 0 && (
-					<div className="mb-4 flex items-center gap-2">
-						{tags.map((tag) => (
-							<div
-								key={tag._id}
-								className="flex h-5 items-center gap-2.5 rounded-md border border-green-200 bg-green-100 py-1.5 pr-2 pl-[9px] md:h-6 md:py-2 md:pr-3"
+				{/* Badges Groups */}
+				{/* Theme Badges */}
+				{theme && (
+					<div className="mb-3 flex flex-wrap items-center gap-2">
+						<Badge variant="theme" icon={<ThemeMiniBadge />}>
+							{theme.title}
+						</Badge>
+					</div>
+				)}
+
+				{/* Audience Badges */}
+				{audiences.length > 0 && (
+					<div className="mb-3 flex flex-wrap items-center gap-2">
+						{audiences.map((audience) => (
+							<Badge
+								key={audience._id}
+								variant="audience"
+								icon={
+									<Icon icon={ChartRelationshipIcon} className="h-3.5 w-3.5" />
+								}
 							>
-								<span className="whitespace-nowrap text-[#166534] text-xs capitalize md:text-sm">
-									{tag.title}
-								</span>
-								<Icon icon={Tag01Icon} className="h-3.5 w-3.5 text-[#166534]" />
-							</div>
+								{audience.title}
+							</Badge>
 						))}
 					</div>
 				)}
 
-				{/* Audiences */}
-				{audiences.length > 0 && (
-					<div className="flex items-center gap-2">
-						{audiences.map((audience) => (
-							<div
-								key={audience._id}
-								className="flex h-5 items-center gap-2.5 rounded-md border border-blue-200 bg-blue-100 py-1.5 pr-2 pl-[9px] md:h-6 md:py-2 md:pr-3"
+				{/* Tag Badges */}
+				{tags.length > 0 && (
+					<div className="mb-3 flex flex-wrap items-center gap-2">
+						{tags.map((tag) => (
+							<Badge
+								key={tag._id}
+								variant="tag"
+								icon={<Icon icon={Tag01Icon} className="h-3.5 w-3.5" />}
 							>
-								<span className="whitespace-nowrap text-[#1e40ae] text-xs md:text-sm">
-									{audience.title}
-								</span>
-								<Icon
-									icon={ChartRelationshipIcon}
-									className="h-3.5 w-3.5 text-[#1e40ae]"
-								/>
-							</div>
+								{tag.title}
+							</Badge>
 						))}
 					</div>
 				)}
@@ -328,15 +330,22 @@ function ResourceSearchResult({
 	const description =
 		pattern.description?.[0]?.children?.[0]?.text || "No description available";
 
+	// Get the pattern-specific icon
+	const PatternIcon = patternInfo
+		? getPatternIconWithMapping(patternInfo.slug || "")
+		: null;
+
 	const buttonElement = (
 		<a
 			href={`/pattern/${patternInfo?.slug}/#resource-${pattern.slug}`}
-			className="flex items-center gap-2 rounded-md border border-[#bfdbfe] bg-[#dbeafe] px-[9px] py-[5px] text-[#1e40af] transition-opacity hover:opacity-80"
+			className="flex items-center gap-2 rounded-md border border-[var(--resource-button-border)] bg-[var(--resource-button-background)] px-[9px] py-[5px] text-[var(--resource-button-text)] transition-opacity hover:opacity-80"
 		>
 			<span className="font-normal text-[14px] uppercase leading-[20px]">
 				Visit Resource
 			</span>
-			<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-[#1e40af]" />
+			{PatternIcon && (
+				<PatternIcon className="h-3.5 w-3.5 text-[var(--resource-button-text)]" />
+			)}
 		</a>
 	);
 
@@ -344,27 +353,24 @@ function ResourceSearchResult({
 		<SearchResultBase title={title} buttonElement={buttonElement}>
 			{/* Solutions */}
 			{solutions.length > 0 && (
-				<div className="mb-4 flex items-center gap-2">
+				<div className="mb-3 flex items-center gap-2">
 					{solutions.map((solution) => (
-						<div
+						<Badge
 							key={solution._id}
-							className="flex h-6 items-center gap-2.5 rounded-md border border-green-200 bg-green-100 py-2 pr-3 pl-[9px]"
+							variant="solution"
+							icon={
+								<Icon icon={ChartRelationshipIcon} className="h-3.5 w-3.5" />
+							}
 						>
-							<span className="whitespace-nowrap text-[#166534] text-[14px]">
-								{solution.title}
-							</span>
-							<Icon
-								icon={ChartRelationshipIcon}
-								className="h-3.5 w-3.5 text-[#166534]"
-							/>
-						</div>
+							{solution.title}
+						</Badge>
 					))}
 				</div>
 			)}
 
 			{/* From Pattern Line */}
 			{patternInfo && (
-				<div className="mb-4 flex w-full items-center gap-2.5 overflow-hidden">
+				<div className="mb-3 flex w-full items-center gap-2.5 overflow-hidden">
 					<div className="whitespace-nowrap text-[14px] text-neutral-500 tracking-[-0.14px]">
 						<span>From </span>
 						<span className="uppercase">PATTERN</span>
@@ -381,15 +387,12 @@ function ResourceSearchResult({
 						description={description}
 						patternTitle={patternInfo.title || "Pattern"}
 					>
-						<div className="flex h-6 cursor-pointer items-center gap-2.5 rounded-lg border border-neutral-300 px-2 py-1.5">
-							<span className="whitespace-nowrap text-[14px] text-neutral-500 capitalize tracking-[-0.28px]">
-								{patternInfo.title}
-							</span>
-							<Icon
-								icon={Share02Icon}
-								className="h-3.5 w-3.5 text-neutral-500"
-							/>
-						</div>
+						<Badge
+							variant="pattern"
+							icon={PatternIcon && <PatternIcon className="h-3.5 w-3.5" />}
+						>
+							{patternInfo.title}
+						</Badge>
 					</SearchResultPreview>
 				</div>
 			)}
@@ -408,15 +411,22 @@ function SolutionSearchResult({
 	const description =
 		pattern.description?.[0]?.children?.[0]?.text || "No description available";
 
+	// Get the pattern-specific icon
+	const PatternIcon = patternInfo
+		? getPatternIconWithMapping(patternInfo.slug || "")
+		: null;
+
 	const buttonElement = (
 		<a
 			href={`/pattern/${patternInfo?.slug}/#solution-${pattern.slug}`}
-			className="flex items-center gap-2 rounded-md border border-[#bbf7d0] bg-[#dcfce7] px-[9px] py-[5px] text-[#166534] transition-opacity hover:opacity-80"
+			className="flex items-center gap-2 rounded-md border border-[var(--solution-button-border)] bg-[var(--solution-button-background)] px-[9px] py-[5px] text-[var(--solution-button-text)] transition-opacity hover:opacity-80"
 		>
 			<span className="font-normal text-[14px] uppercase leading-[20px]">
 				Visit Solution
 			</span>
-			<Icon icon={Share02Icon} className="h-3.5 w-3.5 text-[#166534]" />
+			{PatternIcon && (
+				<PatternIcon className="h-3.5 w-3.5 text-[var(--solution-button-text)]" />
+			)}
 		</a>
 	);
 
@@ -424,27 +434,24 @@ function SolutionSearchResult({
 		<SearchResultBase title={title} buttonElement={buttonElement}>
 			{/* Audiences */}
 			{audiences.length > 0 && (
-				<div className="mb-4 flex items-center gap-2">
+				<div className="mb-3 flex items-center gap-2">
 					{audiences.map((audience) => (
-						<div
+						<Badge
 							key={audience._id}
-							className="flex h-6 items-center gap-2.5 rounded-md border border-blue-200 bg-blue-100 py-2 pr-3 pl-[9px]"
+							variant="audience"
+							icon={
+								<Icon icon={ChartRelationshipIcon} className="h-3.5 w-3.5" />
+							}
 						>
-							<span className="whitespace-nowrap text-[#1e40ae] text-[14px]">
-								{audience.title}
-							</span>
-							<Icon
-								icon={ChartRelationshipIcon}
-								className="h-3.5 w-3.5 text-[#1e40ae]"
-							/>
-						</div>
+							{audience.title}
+						</Badge>
 					))}
 				</div>
 			)}
 
 			{/* From Pattern Line */}
 			{patternInfo && (
-				<div className="mb-4 flex w-full items-center gap-2.5 overflow-hidden">
+				<div className="mb-3 flex w-full items-center gap-2.5 overflow-hidden">
 					<div className="whitespace-nowrap text-[14px] text-neutral-500 tracking-[-0.14px]">
 						<span>From </span>
 						<span className="uppercase">PATTERN</span>
@@ -465,10 +472,9 @@ function SolutionSearchResult({
 							<span className="whitespace-nowrap text-[14px] text-neutral-500 capitalize tracking-[-0.28px]">
 								{patternInfo.title}
 							</span>
-							<Icon
-								icon={Share02Icon}
-								className="h-3.5 w-3.5 text-neutral-500"
-							/>
+							{PatternIcon && (
+								<PatternIcon className="h-3.5 w-3.5 text-neutral-500" />
+							)}
 						</div>
 					</SearchResultPreview>
 				</div>
@@ -528,4 +534,13 @@ function renderHighlightedText(text: string, searchTerm: string) {
 		}
 	}
 	return result;
+}
+
+// Theme Mini Badge Component
+function ThemeMiniBadge() {
+	return (
+		<span className="inline-flex items-center justify-center rounded border border-[var(--theme-badge-text)] bg-transparent px-1 py-0.25 font-medium text-[10px] text-[var(--theme-badge-text)]">
+			Theme
+		</span>
+	);
 }

@@ -16,6 +16,7 @@ import { cardCarouselType } from "./objects/cardCarouselType";
 import { contentType } from "./objects/contentType";
 import { linkType } from "./objects/linkType";
 import { carrierBagType } from "./singletons/carrierBagType";
+import { footerType } from "./singletons/footerType";
 import { onboardingType } from "./singletons/onboardingType";
 import { siteSettingsType } from "./singletons/siteSettingsType";
 
@@ -38,6 +39,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 		carrierBagType,
 		onboardingType,
 		siteSettingsType,
+		footerType,
 		iconType,
 	],
 };
