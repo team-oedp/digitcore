@@ -48,6 +48,10 @@ export function ClickableBadge({
 			href={navigationUrl}
 			className={`inline-flex transition-all duration-200 ${className}`}
 			aria-label={`Navigate to ${type}: ${title || id}`}
+			data-testid={`clickable-badge-${type}`}
+			data-type={type}
+			data-id={id}
+			{...(title && { "data-title": title })}
 		>
 			{children}
 		</Link>

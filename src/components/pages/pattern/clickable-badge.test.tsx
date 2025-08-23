@@ -4,14 +4,26 @@ import { ClickableBadge } from "./clickable-badge";
 
 // Mock the badge-navigation module
 vi.mock("~/lib/badge-navigation", () => ({
-	getTagNavigationUrl: vi.fn((title: string) => `/tags#letter-${title?.[0]?.toUpperCase() || ''}`),
+	getTagNavigationUrl: vi.fn(
+		(title: string) => `/tags#letter-${title?.[0]?.toUpperCase() || ""}`,
+	),
 	getAudienceNavigationUrl: vi.fn((id: string) => `/explore?audiences=${id}`),
 	getThemeNavigationUrl: vi.fn((id: string) => `/explore?themes=${id}`),
 }));
 
 // Mock Next.js Link component
 vi.mock("next/link", () => ({
-	default: ({ href, children, className, ...props }: any) => (
+	default: ({
+		href,
+		children,
+		className,
+		...props
+	}: {
+		href: string;
+		children: React.ReactNode;
+		className?: string;
+		[key: string]: unknown;
+	}) => (
 		<a href={href} className={className} {...props}>
 			{children}
 		</a>
@@ -29,7 +41,10 @@ describe("ClickableBadge Component", () => {
 
 			const link = screen.getByRole("link");
 			expect(link).toHaveAttribute("href", "/tags#letter-A");
-			expect(link).toHaveAttribute("aria-label", "Navigate to tag: accessibility");
+			expect(link).toHaveAttribute(
+				"aria-label",
+				"Navigate to tag: accessibility",
+			);
 			expect(screen.getByText("accessibility")).toBeInTheDocument();
 		});
 
@@ -47,7 +62,12 @@ describe("ClickableBadge Component", () => {
 
 		it("should apply custom className", () => {
 			render(
-				<ClickableBadge type="tag" id="tag-123" title="test" className="custom-class">
+				<ClickableBadge
+					type="tag"
+					id="tag-123"
+					title="test"
+					className="custom-class"
+				>
 					<span>Test</span>
 				</ClickableBadge>,
 			);
@@ -69,7 +89,10 @@ describe("ClickableBadge Component", () => {
 
 			const link = screen.getByRole("link");
 			expect(link).toHaveAttribute("href", "/explore?audiences=audience-456");
-			expect(link).toHaveAttribute("aria-label", "Navigate to audience: Developers");
+			expect(link).toHaveAttribute(
+				"aria-label",
+				"Navigate to audience: Developers",
+			);
 			expect(screen.getByText("Developers")).toBeInTheDocument();
 		});
 
@@ -81,7 +104,10 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("aria-label", "Navigate to audience: audience-456");
+			expect(link).toHaveAttribute(
+				"aria-label",
+				"Navigate to audience: audience-456",
+			);
 		});
 	});
 
@@ -95,7 +121,10 @@ describe("ClickableBadge Component", () => {
 
 			const link = screen.getByRole("link");
 			expect(link).toHaveAttribute("href", "/explore?themes=theme-789");
-			expect(link).toHaveAttribute("aria-label", "Navigate to theme: Sustainability");
+			expect(link).toHaveAttribute(
+				"aria-label",
+				"Navigate to theme: Sustainability",
+			);
 			expect(screen.getByText("Sustainability")).toBeInTheDocument();
 		});
 
@@ -107,7 +136,10 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("aria-label", "Navigate to theme: theme-789");
+			expect(link).toHaveAttribute(
+				"aria-label",
+				"Navigate to theme: theme-789",
+			);
 		});
 	});
 

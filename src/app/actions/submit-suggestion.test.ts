@@ -8,10 +8,10 @@ vi.mock("~/lib/email");
 
 // Mock the env module to avoid server-side environment variable access
 vi.mock("~/env", () => ({
-  env: {
-    SUGGESTION_NOTIFICATION_EMAIL: "test@example.com",
-    EMAIL_FROM: "Digital Toolkit <noreply@digitcore.local>"
-  }
+	env: {
+		SUGGESTION_NOTIFICATION_EMAIL: "test@example.com",
+		EMAIL_FROM: "Digital Toolkit <noreply@digitcore.local>",
+	},
 }));
 
 const mockCreateClient = vi.mocked(createClient);

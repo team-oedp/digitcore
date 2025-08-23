@@ -100,7 +100,11 @@ describe("Badge Navigation Helper Functions", () => {
 
 		describe("theme type", () => {
 			it("should generate correct URL for theme", () => {
-				const url = getBadgeNavigationUrl("theme", "theme-012", "Sustainability");
+				const url = getBadgeNavigationUrl(
+					"theme",
+					"theme-012",
+					"Sustainability",
+				);
 				expect(url).toBe("/explore?themes=theme-012");
 			});
 

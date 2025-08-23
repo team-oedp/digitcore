@@ -1,5 +1,10 @@
 import { ChartRelationshipIcon, Tag01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import {
+	BadgeGroup,
+	BadgeGroupContainer,
+} from "~/components/shared/badge-group";
+import { Badge } from "~/components/ui/badge";
 import type { Audience, Tag, Theme } from "~/sanity/sanity.types";
 import { ClickableBadge } from "./clickable-badge";
 
@@ -20,32 +25,28 @@ export function PatternConnections({
 	}
 
 	return (
-		<section className="flex flex-col gap-3 pt-6 md:gap-4 md:pt-8">
+		<BadgeGroupContainer className="pt-6 md:pt-8">
 			{/* Theme Row */}
 			{theme && (
-				<div className="flex flex-wrap items-center gap-x-2 gap-y-2 md:gap-x-4 md:gap-y-3">
+				<BadgeGroup>
 					<ClickableBadge
 						type="theme"
 						id={theme._id}
 						title={theme.title || undefined}
 					>
-						<div className="flex h-6 items-center gap-1.5 rounded-lg border border-orange-200 bg-orange-100 py-2 pr-[3px] pl-[7px] md:gap-2.5 md:pl-[9px] cursor-pointer hover:border-orange-300 hover:bg-orange-150 transition-colors duration-200">
-							<span className="text-nowrap font-normal text-[12px] text-orange-800 md:text-[14px]">
-								{theme.title}
+						<Badge variant="theme" className="cursor-pointer">
+							<span className="flex h-[16px] items-center justify-center rounded border border-orange-200 px-1 py-0 text-[10px] tracking-[-0.14px] md:h-[18px] md:px-1.5 md:text-[12px]">
+								Theme
 							</span>
-							<div className="flex h-[16px] items-center justify-center rounded border border-orange-200 px-1 py-0 md:h-[18px] md:px-1.5">
-								<span className="font-normal text-[10px] text-orange-800 tracking-[-0.14px] md:text-[12px]">
-									Theme
-								</span>
-							</div>
-						</div>
+							<span className="text-nowrap">{theme.title}</span>
+						</Badge>
 					</ClickableBadge>
-				</div>
+				</BadgeGroup>
 			)}
 
 			{/* Audiences Row */}
 			{audiences && audiences.length > 0 && (
-				<div className="flex flex-wrap items-center gap-x-2 gap-y-2 md:gap-x-4 md:gap-y-3">
+				<BadgeGroup>
 					{audiences.map((audience) => (
 						<ClickableBadge
 							key={audience._id}
@@ -53,26 +54,29 @@ export function PatternConnections({
 							id={audience._id}
 							title={audience.title || undefined}
 						>
-							<div className="flex h-6 items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-100 py-2 pr-2 pl-[7px] md:gap-2.5 md:pr-3 md:pl-[9px] cursor-pointer hover:border-blue-300 hover:bg-blue-150 transition-colors duration-200">
-								<span className="text-nowrap font-normal text-[#1e40ae] text-[12px] md:text-[14px]">
-									{audience.title}
-								</span>
-								<HugeiconsIcon
-									icon={ChartRelationshipIcon}
-									size={12}
-									color="#1e40ae"
-									strokeWidth={1.5}
-									className="md:h-[14px] md:w-[14px]"
-								/>
-							</div>
+							<Badge
+								variant="audience"
+								className="cursor-pointer transition-colors duration-200 hover:bg-blue-150"
+								icon={
+									<HugeiconsIcon
+										icon={ChartRelationshipIcon}
+										size={12}
+										color="currentColor"
+										strokeWidth={1.5}
+										className="md:h-[14px] md:w-[14px]"
+									/>
+								}
+							>
+								<span className="text-nowrap">{audience.title}</span>
+							</Badge>
 						</ClickableBadge>
 					))}
-				</div>
+				</BadgeGroup>
 			)}
 
 			{/* Tags Row */}
 			{tags && tags.length > 0 && (
-				<div className="flex flex-wrap items-center gap-x-2 gap-y-2 md:gap-x-4 md:gap-y-3">
+				<BadgeGroup>
 					{tags.map((tag) => (
 						<ClickableBadge
 							key={tag._id}
@@ -80,22 +84,25 @@ export function PatternConnections({
 							id={tag._id}
 							title={tag.title || undefined}
 						>
-							<div className="flex h-6 items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-100 py-2 pr-2 pl-[7px] md:gap-2.5 md:pr-3 md:pl-[9px] cursor-pointer hover:border-violet-300 hover:bg-violet-150 transition-colors duration-200">
-								<span className="text-nowrap font-normal text-[#5b20b6] text-[12px] capitalize md:text-[14px]">
-									{tag.title}
-								</span>
-								<HugeiconsIcon
-									icon={Tag01Icon}
-									size={12}
-									color="#5b20b6"
-									strokeWidth={1.5}
-									className="md:h-[14px] md:w-[14px]"
-								/>
-							</div>
+							<Badge
+								variant="tag"
+								className="cursor-pointer capitalize transition-colors duration-200 hover:bg-violet-150"
+								icon={
+									<HugeiconsIcon
+										icon={Tag01Icon}
+										size={12}
+										color="currentColor"
+										strokeWidth={1.5}
+										className="md:h-[14px] md:w-[14px]"
+									/>
+								}
+							>
+								<span className="text-nowrap">{tag.title}</span>
+							</Badge>
 						</ClickableBadge>
 					))}
-				</div>
+				</BadgeGroup>
 			)}
-		</section>
+		</BadgeGroupContainer>
 	);
 }

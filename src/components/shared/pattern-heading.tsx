@@ -63,15 +63,15 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 							onClick={isInBag ? undefined : handleSaveToCarrierBag}
 							disabled={isInBag || false}
 						>
-							<span className="font-normal text-primary text-xs uppercase md:text-sm">
-								{isInBag ? "Saved to Carrier Bag" : "Save to Carrier Bag"}
-							</span>
 							<Icon
 								icon={Backpack03Icon}
 								size={14}
 								color="#71717a"
 								strokeWidth={1.5}
 							/>
+							<span className="font-normal text-primary text-xs uppercase md:text-sm">
+								{isInBag ? "Saved to Carrier Bag" : "Save to Carrier Bag"}
+							</span>
 						</button>
 					)}
 				</div>

@@ -44,19 +44,21 @@ export function TagsList({
 							className="w-full max-w-4xl scroll-mt-[29px] space-y-8"
 							id={`letter-${letter}`}
 						>
-							<h2 className="font-normal text-lg text-neutral-500 uppercase tracking-wide">
-								{letter}
-							</h2>
+							<h2 className="text-subheading">{letter}</h2>
 
 							{tags.map((tag) => (
 								<div key={tag.id} className="space-y-4">
-									<h3 className="font-normal text-lg text-primary capitalize">
-										{tag.name}
-									</h3>
+									<div className="inline-block w-fit rounded-md bg-neutral-100 px-2 py-1">
+										<h3 className="text-subheading">{tag.name}</h3>
+									</div>
 
-									<p className="mb-4 text-primary text-sm leading-relaxed">
+									<p className="mb-4 text-body-muted">
 										Tagged to the following pages. Showing{" "}
-										{Math.min(tag.resources.length, 10)} links.
+										{Math.min(tag.resources.length, 10)}{" "}
+										{Math.min(tag.resources.length, 10) === 1
+											? "link"
+											: "links"}
+										.
 									</p>
 
 									<div className="flex flex-wrap gap-2">
@@ -64,7 +66,7 @@ export function TagsList({
 											<Link
 												key={resource.id}
 												href={`/pattern/${resource.slug}`}
-												className="inline-block w-max whitespace-normal break-words transition-opacity hover:opacity-80"
+												className="inline-block w-max whitespace-normal break-words"
 											>
 												<Badge
 													variant="page"
