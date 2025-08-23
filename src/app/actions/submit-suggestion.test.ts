@@ -1,10 +1,18 @@
 import { createClient } from "next-sanity";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { sendSuggestionEmail } from "~/lib/email";
 import { type SuggestionFormData, submitSuggestion } from "./submit-suggestion";
 
 vi.mock("next-sanity");
 vi.mock("~/lib/email");
+
+// Mock the env module to avoid server-side environment variable access
+vi.mock("~/env", () => ({
+	env: {
+		SUGGESTION_NOTIFICATION_EMAIL: "test@example.com",
+		EMAIL_FROM: "Digital Toolkit <noreply@digitcore.local>",
+	},
+}));
 
 const mockCreateClient = vi.mocked(createClient);
 const mockCreate = vi.fn();

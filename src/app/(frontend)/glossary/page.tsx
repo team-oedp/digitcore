@@ -92,13 +92,12 @@ export default async function GlossaryPage() {
 			};
 		}) || [];
 
-	// Sort terms alphabetically
-	processedTerms.sort((a, b) => a.term.localeCompare(b.term));
-
-	// Group terms by letter
+	// Group terms by letter and ensure strict alphabetical ordering within each group
 	const termsByLetter = processedTerms.reduce<TermsByLetter>((acc, term) => {
 		const group = acc[term.letter] ?? [];
 		group.push(term);
+		// Sort the group alphabetically by term to ensure strict ordering
+		group.sort((a, b) => a.term.localeCompare(b.term));
 		acc[term.letter] = group;
 		return acc;
 	}, {});

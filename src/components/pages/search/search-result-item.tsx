@@ -9,8 +9,13 @@ import { MinusIcon, PlusIcon } from "lucide-react";
 import React, { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
 
+import {
+	BadgeGroup,
+	BadgeGroupContainer,
+} from "~/components/shared/badge-group";
 import { Icon } from "~/components/shared/icon";
 import { Badge } from "~/components/ui/badge";
+import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	extractTextFromPortableText,
 	getMatchExplanation,
@@ -19,7 +24,6 @@ import {
 	truncateWithContext,
 } from "~/lib/search-utils";
 import { cn } from "~/lib/utils";
-import { getPatternIconWithMapping } from "~/utils/pattern-icons";
 import { SearchResultPreview } from "./search-result-preview";
 
 // Base search result type
@@ -129,8 +133,9 @@ function SearchResultBase({
 }) {
 	return (
 		<div className="relative w-full border-border border-t border-dashed pb-9">
-			<div className="flex flex-col py-4 md:flex-row md:items-start md:justify-between">
-				<div className="w-full flex-shrink-0 space-y-4 md:max-w-[600px]">
+			<div className="flex flex-col py-4">
+				{/* Header with title and button */}
+				<div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
 					<div className="flex items-start gap-3 md:items-center">
 						{showPatternIcon && patternIcon && (
 							<div className="h-8 w-8 flex-shrink-0 text-neutral-500">
@@ -141,12 +146,10 @@ function SearchResultBase({
 						)}
 						<h3 className="w-full text-pattern-list-item-title">{title}</h3>
 					</div>
-					{children}
-					<div className="pt-2 md:hidden">{buttonElement}</div>
+					<div className="flex-shrink-0">{buttonElement}</div>
 				</div>
-				<div className="hidden flex-shrink-0 pt-2 md:block">
-					{buttonElement}
-				</div>
+				{/* Content area with full width */}
+				<div className="w-full space-y-4">{children}</div>
 			</div>
 		</div>
 	);
@@ -193,9 +196,9 @@ function PatternSearchResult({
 	const buttonElement = (
 		<a
 			href={`/pattern/${pattern.slug}`}
-			className="inline-flex items-center gap-2 rounded-md border border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] px-[9px] py-[5px] text-[var(--pattern-button-text)] transition-opacity hover:opacity-80"
+			className="inline-flex items-center gap-2 rounded-md border border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] px-2 py-1 text-[var(--pattern-button-text)] transition-opacity hover:opacity-80 md:px-3 md:py-1"
 		>
-			<span className="text-button text-sm">Visit Pattern</span>
+			<span className="text-button text-xs uppercase">Visit Pattern</span>
 		</a>
 	);
 
@@ -274,46 +277,51 @@ function PatternSearchResult({
 				)}
 
 				{/* Badges Groups */}
-				{/* Theme Badges */}
-				{theme && (
-					<div className="mb-3 flex flex-wrap items-center gap-2">
-						<Badge variant="theme" icon={<ThemeMiniBadge />}>
-							{theme.title}
-						</Badge>
-					</div>
-				)}
-
-				{/* Audience Badges */}
-				{audiences.length > 0 && (
-					<div className="mb-3 flex flex-wrap items-center gap-2">
-						{audiences.map((audience) => (
-							<Badge
-								key={audience._id}
-								variant="audience"
-								icon={
-									<Icon icon={ChartRelationshipIcon} className="h-3.5 w-3.5" />
-								}
-							>
-								{audience.title}
+				<BadgeGroupContainer>
+					{/* Theme Badges */}
+					{theme && (
+						<BadgeGroup>
+							<Badge variant="theme" icon={<ThemeMiniBadge />}>
+								{theme.title}
 							</Badge>
-						))}
-					</div>
-				)}
+						</BadgeGroup>
+					)}
 
-				{/* Tag Badges */}
-				{tags.length > 0 && (
-					<div className="mb-3 flex flex-wrap items-center gap-2">
-						{tags.map((tag) => (
-							<Badge
-								key={tag._id}
-								variant="tag"
-								icon={<Icon icon={Tag01Icon} className="h-3.5 w-3.5" />}
-							>
-								{tag.title}
-							</Badge>
-						))}
-					</div>
-				)}
+					{/* Audience Badges */}
+					{audiences.length > 0 && (
+						<BadgeGroup>
+							{audiences.map((audience) => (
+								<Badge
+									key={audience._id}
+									variant="audience"
+									icon={
+										<Icon
+											icon={ChartRelationshipIcon}
+											className="h-3.5 w-3.5"
+										/>
+									}
+								>
+									{audience.title}
+								</Badge>
+							))}
+						</BadgeGroup>
+					)}
+
+					{/* Tag Badges */}
+					{tags.length > 0 && (
+						<BadgeGroup>
+							{tags.map((tag) => (
+								<Badge
+									key={tag._id}
+									variant="tag"
+									icon={<Icon icon={Tag01Icon} className="h-3.5 w-3.5" />}
+								>
+									{tag.title}
+								</Badge>
+							))}
+						</BadgeGroup>
+					)}
+				</BadgeGroupContainer>
 			</SearchResultBase>
 		</SearchResultPreview>
 	);
@@ -338,13 +346,11 @@ function ResourceSearchResult({
 	const buttonElement = (
 		<a
 			href={`/pattern/${patternInfo?.slug}/#resource-${pattern.slug}`}
-			className="flex items-center gap-2 rounded-md border border-[var(--resource-button-border)] bg-[var(--resource-button-background)] px-[9px] py-[5px] text-[var(--resource-button-text)] transition-opacity hover:opacity-80"
+			className="flex items-center gap-2 rounded-md border border-[var(--resource-button-border)] bg-[var(--resource-button-background)] px-2 py-1 text-[var(--resource-button-text)] transition-opacity hover:opacity-80 md:px-3 md:py-1"
 		>
-			<span className="font-normal text-[14px] uppercase leading-[20px]">
-				Visit Resource
-			</span>
+			<span className="font-normal text-xs uppercase">Visit Resource</span>
 			{PatternIcon && (
-				<PatternIcon className="h-3.5 w-3.5 text-[var(--resource-button-text)]" />
+				<PatternIcon className="h-3 w-3 text-[var(--resource-button-text)]" />
 			)}
 		</a>
 	);
@@ -353,7 +359,7 @@ function ResourceSearchResult({
 		<SearchResultBase title={title} buttonElement={buttonElement}>
 			{/* Solutions */}
 			{solutions.length > 0 && (
-				<div className="mb-3 flex items-center gap-2">
+				<BadgeGroup className="mb-3">
 					{solutions.map((solution) => (
 						<Badge
 							key={solution._id}
@@ -365,7 +371,7 @@ function ResourceSearchResult({
 							{solution.title}
 						</Badge>
 					))}
-				</div>
+				</BadgeGroup>
 			)}
 
 			{/* From Pattern Line */}
@@ -419,13 +425,11 @@ function SolutionSearchResult({
 	const buttonElement = (
 		<a
 			href={`/pattern/${patternInfo?.slug}/#solution-${pattern.slug}`}
-			className="flex items-center gap-2 rounded-md border border-[var(--solution-button-border)] bg-[var(--solution-button-background)] px-[9px] py-[5px] text-[var(--solution-button-text)] transition-opacity hover:opacity-80"
+			className="flex items-center gap-2 rounded-md border border-[var(--solution-button-border)] bg-[var(--solution-button-background)] px-2 py-1 text-[var(--solution-button-text)] transition-opacity hover:opacity-80 md:px-3 md:py-1"
 		>
-			<span className="font-normal text-[14px] uppercase leading-[20px]">
-				Visit Solution
-			</span>
+			<span className="font-normal text-xs uppercase">Visit Solution</span>
 			{PatternIcon && (
-				<PatternIcon className="h-3.5 w-3.5 text-[var(--solution-button-text)]" />
+				<PatternIcon className="h-3 w-3 text-[var(--solution-button-text)]" />
 			)}
 		</a>
 	);
@@ -434,7 +438,7 @@ function SolutionSearchResult({
 		<SearchResultBase title={title} buttonElement={buttonElement}>
 			{/* Audiences */}
 			{audiences.length > 0 && (
-				<div className="mb-3 flex items-center gap-2">
+				<BadgeGroup className="mb-3">
 					{audiences.map((audience) => (
 						<Badge
 							key={audience._id}
@@ -446,7 +450,7 @@ function SolutionSearchResult({
 							{audience.title}
 						</Badge>
 					))}
-				</div>
+				</BadgeGroup>
 			)}
 
 			{/* From Pattern Line */}
@@ -539,8 +543,10 @@ function renderHighlightedText(text: string, searchTerm: string) {
 // Theme Mini Badge Component
 function ThemeMiniBadge() {
 	return (
-		<span className="inline-flex items-center justify-center rounded border border-[var(--theme-badge-text)] bg-transparent px-1 py-0.25 font-medium text-[10px] text-[var(--theme-badge-text)]">
-			Theme
-		</span>
+		<div className="flex h-[16px] items-center justify-center rounded border border-orange-200 px-1 py-0 md:h-[18px] md:px-1.5">
+			<span className="font-normal text-[10px] text-orange-800 tracking-tighter md:text-[12px]">
+				Theme
+			</span>
+		</div>
 	);
 }

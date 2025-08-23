@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
+import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import type { Pattern } from "~/sanity/sanity.types";
 
 export type CarrierBagItem = {
@@ -21,7 +22,7 @@ export type CarrierBagItemData = {
 	id: string;
 	title: string;
 	slug?: string;
-	icon?: React.ComponentType;
+	icon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 	subtitle?: string;
 };
 
@@ -36,6 +37,9 @@ export function CarrierBagItem({
 	onRemove,
 	onVisit,
 }: CarrierBagItemProps) {
+	// Get the pattern icon based on slug, fallback to Share02Icon if no slug
+	const PatternIcon = item.slug ? getPatternIconWithMapping(item.slug) : null;
+
 	return (
 		<div className="carrier-bag-item-container flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2.5 transition-colors hover:bg-muted/50 [&:hover_.item-actions]:opacity-100">
 			{/* Drag handle */}
@@ -52,10 +56,16 @@ export function CarrierBagItem({
 					onPointerDown={(e) => e.stopPropagation()}
 				>
 					<div className="flex-shrink-0">
-						<Icon icon={Share02Icon} size={16} />
+						{PatternIcon ? (
+							<div className="h-4 w-4 flex-shrink-0">
+								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
+							</div>
+						) : (
+							<Icon icon={Share02Icon} size={16} />
+						)}
 					</div>
 					<div className="min-w-0 flex-1">
-						<p className="truncate font-normal text-[13px] text-foreground hover:underline">
+						<p className="truncate font-normal text-[13px] text-foreground">
 							{item.title}
 						</p>
 						{item.subtitle ? (
@@ -68,7 +78,13 @@ export function CarrierBagItem({
 			) : (
 				<>
 					<div className="flex-shrink-0">
-						<Icon icon={Share02Icon} size={16} />
+						{PatternIcon ? (
+							<div className="h-4 w-4 flex-shrink-0">
+								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
+							</div>
+						) : (
+							<Icon icon={Share02Icon} size={16} />
+						)}
 					</div>
 					<div className="min-w-0 flex-1">
 						<p className="truncate font-normal text-foreground text-sm">
