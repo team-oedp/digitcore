@@ -310,7 +310,31 @@
                 },
                 "optional": true
               },
+              "linkType": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "union",
+                  "of": [
+                    {
+                      "type": "string",
+                      "value": "url"
+                    },
+                    {
+                      "type": "string",
+                      "value": "email"
+                    }
+                  ]
+                },
+                "optional": true
+              },
               "url": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "email": {
                 "type": "objectAttribute",
                 "value": {
                   "type": "string"

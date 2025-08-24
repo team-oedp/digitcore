@@ -32,12 +32,26 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 				<SidebarInset className="mx-2 mb-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-md bg-neutral-200 md:m-0 md:mb-0">
 					<div
 						className={cn(
-							"flex h-full min-h-0 flex-1 flex-col overflow-y-auto",
-							isCarrierBagRoute ? "bg-neutral-200" : "bg-primary-foreground",
+							"flex h-full min-h-0 flex-1 flex-col",
+							isCarrierBagRoute
+								? "overflow-hidden bg-neutral-200"
+								: "overflow-y-auto bg-primary-foreground",
 						)}
 					>
-						<div className="flex min-h-screen flex-col">
-							<main className="flex-1">{children}</main>
+						<div
+							className={cn(
+								"flex flex-col",
+								isCarrierBagRoute ? "h-full" : "min-h-screen",
+							)}
+						>
+							<main
+								className={cn(
+									"flex-1",
+									isCarrierBagRoute ? "h-full min-h-0 overflow-hidden" : "",
+								)}
+							>
+								{children}
+							</main>
 							{!isCarrierBagRoute && <SiteFooter footerData={footerData} />}
 						</div>
 					</div>

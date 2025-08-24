@@ -37,16 +37,60 @@ export const footerType = defineType({
 							validation: (Rule) => Rule.required(),
 						},
 						{
+							name: "linkType",
+							title: "Link Type",
+							type: "string",
+							initialValue: "url",
+							options: {
+								list: [
+									{ title: "URL", value: "url" },
+									{ title: "Email", value: "email" },
+								],
+								layout: "radio",
+							},
+						},
+						{
 							name: "url",
 							title: "URL",
 							type: "url",
-							validation: (Rule) => Rule.required(),
+							hidden: ({ parent }) => parent?.linkType !== "url",
+							validation: (Rule) =>
+								Rule.custom((value, context) => {
+									const parent = context.parent as { linkType?: string };
+									if (parent?.linkType === "url" && !value) {
+										return "URL is required when Link Type is URL";
+									}
+									return true;
+								}),
+						},
+						{
+							name: "email",
+							title: "Email",
+							type: "email",
+							hidden: ({ parent }) => parent?.linkType !== "email",
+							validation: (Rule) =>
+								Rule.custom((value, context) => {
+									const parent = context.parent as { linkType?: string };
+									if (parent?.linkType === "email" && !value) {
+										return "Email is required when Link Type is Email";
+									}
+									return true;
+								}),
 						},
 					],
 					preview: {
 						select: {
 							title: "label",
-							subtitle: "url",
+							url: "url",
+							email: "email",
+							linkType: "linkType",
+						},
+						prepare(selection) {
+							const { title, url, email, linkType } = selection;
+							return {
+								title,
+								subtitle: linkType === "email" ? email : url,
+							};
 						},
 					},
 				},
