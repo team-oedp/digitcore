@@ -12,8 +12,10 @@ type CarrierBagState = {
 	isOpen: boolean;
 	isPinned: boolean;
 	isModalMode: boolean;
+	stalePatternIds: string[];
 	addPattern: (pattern: Pattern, notes?: string) => void;
 	removePattern: (patternId: string) => void;
+	updatePattern: (patternId: string, updatedPattern: Pattern) => void;
 	updateNotes: (patternId: string, notes: string) => void;
 	clearBag: () => void;
 	setItems: (items: CarrierBagItem[]) => void;
@@ -26,6 +28,9 @@ type CarrierBagState = {
 	setPin: (pinned: boolean) => void;
 	toggleModalMode: () => void;
 	setModalMode: (modalMode: boolean) => void;
+	setStalePatternIds: (ids: string[]) => void;
+	isPatternStale: (patternId: string) => boolean;
+	markPatternFresh: (patternId: string, newVersion: string) => void;
 };
 
 export const createCarrierBagStore = () =>
@@ -37,6 +42,7 @@ export const createCarrierBagStore = () =>
 				isOpen: false,
 				isPinned: false,
 				isModalMode: false,
+				stalePatternIds: [],
 
 				addPattern: (pattern: Pattern, notes?: string) => {
 					const { items } = get();
@@ -49,6 +55,7 @@ export const createCarrierBagStore = () =>
 						pattern,
 						dateAdded: new Date().toISOString(),
 						notes,
+						contentVersion: pattern._updatedAt,
 					};
 
 					set({ items: [...items, newItem], isOpen: true });
@@ -58,6 +65,21 @@ export const createCarrierBagStore = () =>
 					const { items } = get();
 					set({
 						items: items.filter((item) => item.pattern._id !== patternId),
+					});
+				},
+
+				updatePattern: (patternId: string, updatedPattern: Pattern) => {
+					const { items } = get();
+					set({
+						items: items.map((item) =>
+							item.pattern._id === patternId
+								? {
+										...item,
+										pattern: updatedPattern,
+										contentVersion: updatedPattern._updatedAt,
+									}
+								: item,
+						),
 					});
 				},
 
@@ -118,6 +140,36 @@ export const createCarrierBagStore = () =>
 				setModalMode: (modalMode: boolean) => {
 					set({ isModalMode: modalMode });
 				},
+
+				setStalePatternIds: (ids: string[]) => {
+					set({ stalePatternIds: ids });
+				},
+
+				isPatternStale: (patternId: string) => {
+					const { stalePatternIds } = get();
+					return stalePatternIds.includes(patternId);
+				},
+
+				markPatternFresh: (patternId: string, newVersion: string) => {
+					const { items, stalePatternIds } = get();
+
+					// Update contentVersion for the pattern
+					const updatedItems = items.map((item) =>
+						item.pattern._id === patternId
+							? { ...item, contentVersion: newVersion }
+							: item,
+					);
+
+					// Remove from stale list
+					const updatedStaleIds = stalePatternIds.filter(
+						(id) => id !== patternId,
+					);
+
+					set({
+						items: updatedItems,
+						stalePatternIds: updatedStaleIds,
+					});
+				},
 			}),
 			{
 				name: "carrier-bag",
@@ -128,7 +180,7 @@ export const createCarrierBagStore = () =>
 					state?.setOpen(false);
 				},
 				partialize: (state) => ({
-					// Only persist items, not UI state
+					// Only persist items, not UI state or transient staleness data
 					items: state.items,
 				}),
 			},

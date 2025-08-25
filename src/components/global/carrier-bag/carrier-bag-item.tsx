@@ -9,6 +9,10 @@ import {
 import Link from "next/link";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
+import {
+	getStaleItemClasses,
+	getStaleStatusText,
+} from "~/lib/stale-content-utils";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import type { Pattern } from "~/sanity/sanity.types";
 
@@ -16,6 +20,7 @@ export type CarrierBagItem = {
 	pattern: Pattern;
 	dateAdded: string;
 	notes?: string;
+	contentVersion?: string; // Store pattern._updatedAt when added
 };
 
 export type CarrierBagItemData = {
@@ -24,6 +29,7 @@ export type CarrierBagItemData = {
 	slug?: string;
 	icon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 	subtitle?: string;
+	isStale?: boolean;
 };
 
 export type CarrierBagItemProps = {
@@ -41,7 +47,10 @@ export function CarrierBagItem({
 	const PatternIcon = item.slug ? getPatternIconWithMapping(item.slug) : null;
 
 	return (
-		<div className="carrier-bag-item-container flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2.5 transition-colors hover:bg-muted/50 [&:hover_.item-actions]:opacity-100">
+		<div
+			className={getStaleItemClasses(item.isStale)}
+			aria-label={getStaleStatusText(item.isStale)}
+		>
 			{/* Drag handle */}
 			<div className="flex-shrink-0 cursor-grab opacity-60 transition-opacity hover:opacity-100 active:cursor-grabbing">
 				<Icon icon={DragDropVerticalIcon} size={16} strokeWidth={3} />
@@ -100,7 +109,15 @@ export function CarrierBagItem({
 			)}
 
 			{/* Actions */}
-			<div className="item-actions flex items-center gap-1 opacity-0 transition-opacity">
+			<div className="item-actions flex items-center gap-1 opacity-0 transition-opacity max-sm:opacity-100 sm:opacity-0">
+				{item.isStale && (
+					/* Visual stale indicator for mobile (always visible) - content is being updated automatically */
+					<div
+						className="h-2 w-2 flex-shrink-0 rounded-full bg-amber-500 sm:hidden dark:bg-amber-400"
+						aria-hidden="true"
+						title="Content is being updated automatically"
+					/>
+				)}
 				<Button
 					variant="ghost"
 					size="sm"
@@ -110,7 +127,7 @@ export function CarrierBagItem({
 						onRemove?.(item.id);
 					}}
 					onPointerDown={(e) => e.stopPropagation()}
-					aria-label={`Remove ${item.title}`}
+					aria-label={`Remove ${item.title} from carrier bag`}
 				>
 					<Icon icon={Cancel01Icon} size={14} />
 				</Button>
