@@ -1,15 +1,25 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+// Mock next-sanity before importing it so the real implementation is never loaded
+vi.mock("next-sanity");
+
+// Import the (now-mocked) next-sanity client and the modules under test
+import { createClient } from "next-sanity";
+import { sendSuggestionEmail } from "~/lib/email";
+import { type SuggestionFormData, submitSuggestion } from "./submit-suggestion";
 
 // Mock the email module before importing anything that uses it
 vi.mock("~/lib/email", () => ({
 	sendSuggestionEmail: vi.fn(),
 }));
 
-vi.mock("next-sanity");
-
-import { createClient } from "next-sanity";
-import { sendSuggestionEmail } from "~/lib/email";
-import { type SuggestionFormData, submitSuggestion } from "./submit-suggestion";
+// Mock the env module to avoid server-side environment variable access
+vi.mock("~/env", () => ({
+	env: {
+		SUGGESTION_NOTIFICATION_EMAIL: "test@example.com",
+		EMAIL_FROM: "Digital Toolkit <noreply@digitcore.local>",
+	},
+}));
 
 const mockCreateClient = vi.mocked(createClient);
 const mockCreate = vi.fn();

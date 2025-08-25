@@ -2,8 +2,8 @@
 
 import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import { useEffect, useState } from "react";
+import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import type { Pattern } from "~/sanity/sanity.types";
-import { getPatternIconWithMapping } from "~/utils/pattern-icons";
 
 import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
@@ -42,7 +42,7 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 	return (
 		<header id="page-header" className="relative max-w-4xl">
 			<div className="flex flex-col gap-3 md:gap-4">
-				<div className="flex items-center gap-2 md:gap-3">
+				<div className="flex items-start gap-2 md:gap-3">
 					{PatternIcon && (
 						<div className="h-8 w-8 flex-shrink-0 md:h-10 md:w-10">
 							<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
@@ -63,15 +63,15 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 							onClick={isInBag ? undefined : handleSaveToCarrierBag}
 							disabled={isInBag || false}
 						>
-							<span className="font-normal text-primary text-xs uppercase md:text-sm">
-								{isInBag ? "Saved to Carrier Bag" : "Save to Carrier Bag"}
-							</span>
 							<Icon
 								icon={Backpack03Icon}
 								size={14}
 								color="#71717a"
 								strokeWidth={1.5}
 							/>
+							<span className="font-normal text-primary text-xs uppercase md:text-sm">
+								{isInBag ? "Saved to Carrier Bag" : "Save to Carrier Bag"}
+							</span>
 						</button>
 					)}
 				</div>

@@ -238,11 +238,6 @@ export function SearchInterface({
 						)}
 					</div>
 				</div>
-				{/* Helper text */}
-				<div className="-mt-2 mb-2 text-xs text-zinc-400">
-					Start typing to search patterns, solutions, and resources across the
-					toolkit
-				</div>
 			</div>
 
 			{/* Filter Tools */}

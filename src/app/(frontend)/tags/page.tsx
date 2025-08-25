@@ -93,10 +93,12 @@ export default async function Tags() {
 			};
 		}) || [];
 
-	// Group tags by letter
+	// Group tags by letter and ensure strict alphabetical ordering within each group
 	const tagsByLetter = transformedTags.reduce<TagsByLetter>((acc, tag) => {
 		const group = acc[tag.letter] ?? [];
 		group.push(tag);
+		// Sort the group alphabetically by name to ensure strict ordering
+		group.sort((a, b) => a.name.localeCompare(b.name));
 		acc[tag.letter] = group;
 		return acc;
 	}, {});

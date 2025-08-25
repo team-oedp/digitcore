@@ -13,6 +13,7 @@ import {
 	getStaleItemClasses,
 	getStaleStatusText,
 } from "~/lib/stale-content-utils";
+import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import type { Pattern } from "~/sanity/sanity.types";
 
 export type CarrierBagItem = {
@@ -26,7 +27,7 @@ export type CarrierBagItemData = {
 	id: string;
 	title: string;
 	slug?: string;
-	icon?: React.ComponentType;
+	icon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 	subtitle?: string;
 	isStale?: boolean;
 };
@@ -42,6 +43,9 @@ export function CarrierBagItem({
 	onRemove,
 	onVisit,
 }: CarrierBagItemProps) {
+	// Get the pattern icon based on slug, fallback to Share02Icon if no slug
+	const PatternIcon = item.slug ? getPatternIconWithMapping(item.slug) : null;
+
 	return (
 		<div
 			className={getStaleItemClasses(item.isStale)}
@@ -56,15 +60,21 @@ export function CarrierBagItem({
 			{item.slug ? (
 				<Link
 					href={`/pattern/${item.slug}`}
-					className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+					className="flex min-w-0 flex-1 cursor-pointer items-start gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 					onClick={(e) => e.stopPropagation()}
 					onPointerDown={(e) => e.stopPropagation()}
 				>
-					<div className="flex-shrink-0">
-						<Icon icon={Share02Icon} size={16} />
+					<div className="mt-0.5 flex-shrink-0">
+						{PatternIcon ? (
+							<div className="h-4 w-4 flex-shrink-0">
+								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
+							</div>
+						) : (
+							<Icon icon={Share02Icon} size={16} />
+						)}
 					</div>
 					<div className="min-w-0 flex-1">
-						<p className="truncate font-normal text-[13px] text-foreground hover:underline">
+						<p className="truncate font-normal text-[13px] text-foreground">
 							{item.title}
 						</p>
 						{item.subtitle ? (
@@ -76,8 +86,14 @@ export function CarrierBagItem({
 				</Link>
 			) : (
 				<>
-					<div className="flex-shrink-0">
-						<Icon icon={Share02Icon} size={16} />
+					<div className="mt-0.5 flex-shrink-0">
+						{PatternIcon ? (
+							<div className="h-4 w-4 flex-shrink-0">
+								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
+							</div>
+						) : (
+							<Icon icon={Share02Icon} size={16} />
+						)}
 					</div>
 					<div className="min-w-0 flex-1">
 						<p className="truncate font-normal text-foreground text-sm">

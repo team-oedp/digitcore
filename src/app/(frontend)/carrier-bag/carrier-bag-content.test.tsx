@@ -284,3 +284,223 @@ describe("CarrierBagContent Navigation", () => {
 		).toBeInTheDocument();
 	});
 });
+
+describe("CarrierBagContent Filtering and Ordering", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		// Mock items with populated theme data for grouping tests
+		const mockItemsWithThemes = [
+			{
+				pattern: {
+					_id: "pattern-1",
+					_type: "pattern" as const,
+					_createdAt: "2024-01-01",
+					_updatedAt: "2024-01-01",
+					_rev: "rev-1",
+					title: "Alpha Pattern",
+					slug: { current: "alpha-pattern", _type: "slug" as const },
+					theme: {
+						_id: "theme-1",
+						_type: "theme" as const,
+						_createdAt: "2024-01-01",
+						_updatedAt: "2024-01-01",
+						_rev: "rev-1",
+						title: "Design Theme",
+					},
+					tags: [
+						{
+							_id: "tag-1",
+							_type: "tag" as const,
+							_createdAt: "2024-01-01",
+							_updatedAt: "2024-01-01",
+							_rev: "rev-1",
+							title: "UX",
+						},
+					],
+					audiences: [
+						{
+							_id: "audience-1",
+							_type: "audience" as const,
+							_createdAt: "2024-01-01",
+							_updatedAt: "2024-01-01",
+							_rev: "rev-1",
+							title: "Designers",
+						},
+					],
+				},
+				dateAdded: "2024-01-01",
+			},
+			{
+				pattern: {
+					_id: "pattern-2",
+					_type: "pattern" as const,
+					_createdAt: "2024-01-02",
+					_updatedAt: "2024-01-02",
+					_rev: "rev-2",
+					title: "Beta Pattern",
+					slug: { current: "beta-pattern", _type: "slug" as const },
+					theme: {
+						_id: "theme-2",
+						_type: "theme" as const,
+						_createdAt: "2024-01-01",
+						_updatedAt: "2024-01-01",
+						_rev: "rev-1",
+						title: "Tech Theme",
+					},
+					tags: [
+						{
+							_id: "tag-2",
+							_type: "tag" as const,
+							_createdAt: "2024-01-01",
+							_updatedAt: "2024-01-01",
+							_rev: "rev-1",
+							title: "Development",
+						},
+					],
+					audiences: [
+						{
+							_id: "audience-2",
+							_type: "audience" as const,
+							_createdAt: "2024-01-01",
+							_updatedAt: "2024-01-01",
+							_rev: "rev-1",
+							title: "Developers",
+						},
+					],
+				},
+				dateAdded: "2024-01-02",
+			},
+			{
+				pattern: {
+					_id: "pattern-3",
+					_type: "pattern" as const,
+					_createdAt: "2024-01-03",
+					_updatedAt: "2024-01-03",
+					_rev: "rev-3",
+					title: "Gamma Pattern",
+					slug: { current: "gamma-pattern", _type: "slug" as const },
+					theme: {
+						_id: "theme-1",
+						_type: "theme" as const,
+						_createdAt: "2024-01-01",
+						_updatedAt: "2024-01-01",
+						_rev: "rev-1",
+						title: "Design Theme",
+					},
+				},
+				dateAdded: "2024-01-03",
+			},
+		];
+
+		(useCarrierBagStore as ReturnType<typeof vi.fn>).mockImplementation(
+			(selector: (state: unknown) => unknown) => {
+				const state = {
+					items: mockItemsWithThemes,
+					removePattern: mockRemovePattern,
+					setItems: mockSetItems,
+				};
+				return selector ? selector(state) : state;
+			},
+		);
+	});
+
+	it("sorts items alphabetically by default", () => {
+		render(<CarrierBagContent />);
+
+		const items = screen.getAllByText(/Pattern$/);
+		expect(items[0]).toHaveTextContent("Alpha Pattern");
+		expect(items[1]).toHaveTextContent("Beta Pattern");
+		expect(items[2]).toHaveTextContent("Gamma Pattern");
+	});
+
+	it("groups items by theme when toggle is clicked", async () => {
+		render(<CarrierBagContent />);
+
+		const groupByThemeButton = screen.getByRole("button", {
+			name: /Group by theme/i,
+		});
+
+		fireEvent.click(groupByThemeButton);
+
+		// Check that theme headers are displayed
+		await waitFor(() => {
+			expect(screen.getByText("Design Theme")).toBeInTheDocument();
+			expect(screen.getByText("Tech Theme")).toBeInTheDocument();
+		});
+	});
+
+	it("resets to filter/group mode when filter button is clicked after drag reordering", async () => {
+		render(<CarrierBagContent />);
+
+		// Simulate drag reordering by calling setItems
+		const reorderedItems = [mockItems[2], mockItems[0], mockItems[1]];
+		mockSetItems(reorderedItems);
+
+		// Now click the group by theme toggle
+		const groupByThemeButton = screen.getByRole("button", {
+			name: /Group by theme/i,
+		});
+
+		fireEvent.click(groupByThemeButton);
+
+		// Should see theme groups (this would previously fail due to the bug)
+		await waitFor(() => {
+			expect(screen.getByText("Design Theme")).toBeInTheDocument();
+			expect(screen.getByText("Tech Theme")).toBeInTheDocument();
+		});
+	});
+
+	it("clears manual order when sort option is changed", async () => {
+		render(<CarrierBagContent />);
+
+		// Find the sort dropdown
+		const sortTrigger = screen.getByRole("combobox", { name: /Sort by/i });
+
+		// Simulate that manual order was active
+		const reorderedItems = [mockItems[2], mockItems[0], mockItems[1]];
+		mockSetItems(reorderedItems);
+
+		// Change sort order
+		fireEvent.click(sortTrigger);
+		await waitFor(() => {
+			const zaOption = screen.getByRole("option", { name: /Title \(Z–A\)/i });
+			fireEvent.click(zaOption);
+		});
+
+		// Items should be sorted Z-A now
+		await waitFor(() => {
+			const items = screen.getAllByText(/Pattern$/);
+			expect(items[0]).toHaveTextContent("Gamma Pattern");
+			expect(items[1]).toHaveTextContent("Beta Pattern");
+			expect(items[2]).toHaveTextContent("Alpha Pattern");
+		});
+	});
+
+	it("clears all filters and manual order when clear all is clicked", async () => {
+		render(<CarrierBagContent />);
+
+		// First, enable group by theme
+		const groupByThemeButton = screen.getByRole("button", {
+			name: /Group by theme/i,
+		});
+		fireEvent.click(groupByThemeButton);
+
+		// Verify grouping is active
+		await waitFor(() => {
+			expect(screen.getByText("Design Theme")).toBeInTheDocument();
+		});
+
+		// Click clear all
+		const clearAllButton = screen.getByRole("button", { name: /Clear all/i });
+		fireEvent.click(clearAllButton);
+
+		// Grouping should be gone, items should be in default A-Z order
+		await waitFor(() => {
+			expect(screen.queryByText("Design Theme")).not.toBeInTheDocument();
+			const items = screen.getAllByText(/Pattern$/);
+			expect(items[0]).toHaveTextContent("Alpha Pattern");
+			expect(items[1]).toHaveTextContent("Beta Pattern");
+			expect(items[2]).toHaveTextContent("Gamma Pattern");
+		});
+	});
+});
