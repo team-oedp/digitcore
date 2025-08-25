@@ -82,6 +82,7 @@ describe("CarrierBagStore", () => {
 			expect(state.isOpen).toBe(false);
 			expect(state.isPinned).toBe(false);
 			expect(state.isModalMode).toBe(false);
+			expect(state.stalePatternIds).toEqual([]);
 		});
 
 		it("should expose all required methods", () => {
@@ -90,6 +91,7 @@ describe("CarrierBagStore", () => {
 
 			expect(typeof state.addPattern).toBe("function");
 			expect(typeof state.removePattern).toBe("function");
+			expect(typeof state.updatePattern).toBe("function");
 			expect(typeof state.updateNotes).toBe("function");
 			expect(typeof state.clearBag).toBe("function");
 			expect(typeof state.hasPattern).toBe("function");
@@ -97,6 +99,9 @@ describe("CarrierBagStore", () => {
 			expect(typeof state.setHydrated).toBe("function");
 			expect(typeof state.toggleOpen).toBe("function");
 			expect(typeof state.setOpen).toBe("function");
+			expect(typeof state.setStalePatternIds).toBe("function");
+			expect(typeof state.isPatternStale).toBe("function");
+			expect(typeof state.markPatternFresh).toBe("function");
 			expect(typeof state.togglePin).toBe("function");
 			expect(typeof state.setPin).toBe("function");
 			expect(typeof state.toggleModalMode).toBe("function");
@@ -577,6 +582,226 @@ describe("CarrierBagStore", () => {
 			const parsed = JSON.parse(JSON.stringify(item));
 			expect(parsed.pattern._id).toBe("pattern-1");
 			expect(parsed.notes).toBe("Test notes");
+		});
+	});
+
+	describe("stale content functionality", () => {
+		it("should store contentVersion when adding pattern", () => {
+			const store = createCarrierBagStore();
+			const { addPattern } = store.getState();
+
+			act(() => {
+				addPattern(mockPattern1, "Test notes");
+			});
+
+			const { items } = store.getState();
+			expect(items[0]?.contentVersion).toBe("2024-01-01T00:00:00Z");
+		});
+
+		it("should manage stale pattern IDs correctly", () => {
+			const store = createCarrierBagStore();
+			const { setStalePatternIds, isPatternStale } = store.getState();
+
+			// Initially no stale patterns
+			expect(isPatternStale("pattern-1")).toBe(false);
+
+			act(() => {
+				setStalePatternIds(["pattern-1", "pattern-2"]);
+			});
+
+			const { stalePatternIds } = store.getState();
+			expect(stalePatternIds).toEqual(["pattern-1", "pattern-2"]);
+			expect(store.getState().isPatternStale("pattern-1")).toBe(true);
+			expect(store.getState().isPatternStale("pattern-2")).toBe(true);
+			expect(store.getState().isPatternStale("pattern-3")).toBe(false);
+		});
+
+		it("should mark pattern as fresh and update contentVersion", () => {
+			const store = createCarrierBagStore();
+			const { addPattern, setStalePatternIds, markPatternFresh } =
+				store.getState();
+
+			// Add pattern and mark as stale
+			act(() => {
+				addPattern(mockPattern1, "Test notes");
+				setStalePatternIds(["pattern-1"]);
+			});
+
+			expect(store.getState().isPatternStale("pattern-1")).toBe(true);
+			expect(store.getState().items[0]?.contentVersion).toBe(
+				"2024-01-01T00:00:00Z",
+			);
+
+			// Mark as fresh with new version
+			act(() => {
+				markPatternFresh("pattern-1", "2024-01-02T12:00:00Z");
+			});
+
+			const { stalePatternIds, items } = store.getState();
+			expect(stalePatternIds).toEqual([]);
+			expect(store.getState().isPatternStale("pattern-1")).toBe(false);
+			expect(items[0]?.contentVersion).toBe("2024-01-02T12:00:00Z");
+		});
+
+		it("should handle marking non-existent pattern as fresh", () => {
+			const store = createCarrierBagStore();
+			const { addPattern, setStalePatternIds, markPatternFresh } =
+				store.getState();
+
+			// Add different pattern and mark as stale
+			act(() => {
+				addPattern(mockPattern1, "Test notes");
+				setStalePatternIds(["pattern-1"]);
+			});
+
+			// Try to mark non-existent pattern as fresh
+			act(() => {
+				markPatternFresh("non-existent-pattern", "2024-01-02T12:00:00Z");
+			});
+
+			const { stalePatternIds, items } = store.getState();
+			expect(stalePatternIds).toEqual(["pattern-1"]); // Should remain unchanged
+			expect(items[0]?.contentVersion).toBe("2024-01-01T00:00:00Z"); // Should remain unchanged
+		});
+
+		it("should handle multiple patterns with selective fresh marking", () => {
+			const store = createCarrierBagStore();
+			const { addPattern, setStalePatternIds, markPatternFresh } =
+				store.getState();
+
+			// Add multiple patterns
+			act(() => {
+				addPattern(mockPattern1, "Notes 1");
+				addPattern(mockPattern2, "Notes 2");
+				setStalePatternIds(["pattern-1", "pattern-2"]);
+			});
+
+			expect(store.getState().stalePatternIds).toEqual([
+				"pattern-1",
+				"pattern-2",
+			]);
+
+			// Mark only one as fresh
+			act(() => {
+				markPatternFresh("pattern-1", "2024-01-02T12:00:00Z");
+			});
+
+			const { stalePatternIds, items } = store.getState();
+			expect(stalePatternIds).toEqual(["pattern-2"]); // Only pattern-2 should remain stale
+			expect(store.getState().isPatternStale("pattern-1")).toBe(false);
+			expect(store.getState().isPatternStale("pattern-2")).toBe(true);
+
+			// Check that only pattern-1's version was updated
+			const pattern1Item = items.find(
+				(item) => item.pattern._id === "pattern-1",
+			);
+			const pattern2Item = items.find(
+				(item) => item.pattern._id === "pattern-2",
+			);
+			expect(pattern1Item?.contentVersion).toBe("2024-01-02T12:00:00Z");
+			expect(pattern2Item?.contentVersion).toBe("2024-01-01T00:00:00Z");
+		});
+
+		it("should update pattern content when updatePattern is called", () => {
+			const store = createCarrierBagStore();
+			const { addPattern, updatePattern } = store.getState();
+
+			// Add a pattern to the store
+			act(() => {
+				addPattern(mockPattern1, "Initial notes");
+			});
+
+			// Create an updated version of the pattern
+			const updatedPattern = {
+				...mockPattern1,
+				title: "Updated Pattern Title",
+				_updatedAt: "2024-01-02T12:00:00Z",
+			};
+
+			// Update the pattern
+			act(() => {
+				updatePattern("pattern-1", updatedPattern);
+			});
+
+			// Check that the pattern was updated
+			const { items } = store.getState();
+			const updatedItem = items.find(
+				(item) => item.pattern._id === "pattern-1",
+			);
+
+			expect(updatedItem).toBeDefined();
+			expect(updatedItem?.pattern.title).toBe("Updated Pattern Title");
+			expect(updatedItem?.contentVersion).toBe("2024-01-02T12:00:00Z");
+			expect(updatedItem?.notes).toBe("Initial notes"); // Notes should be preserved
+		});
+
+		it("should not update non-existent pattern", () => {
+			const store = createCarrierBagStore();
+			const { addPattern, updatePattern } = store.getState();
+
+			// Add a pattern to the store
+			act(() => {
+				addPattern(mockPattern1, "Test notes");
+			});
+
+			const originalItems = store.getState().items;
+
+			// Try to update a non-existent pattern
+			const updatedPattern = {
+				...mockPattern1,
+				_id: "non-existent-pattern",
+				title: "Updated Title",
+			};
+
+			act(() => {
+				updatePattern("non-existent-pattern", updatedPattern);
+			});
+
+			// Check that nothing changed
+			const { items } = store.getState();
+			expect(items).toEqual(originalItems);
+		});
+
+		it("should not persist stalePatternIds in localStorage", () => {
+			const store = createCarrierBagStore();
+			const { addPattern, setStalePatternIds } = store.getState();
+
+			act(() => {
+				addPattern(mockPattern1, "Test notes");
+				setStalePatternIds(["pattern-1"]);
+			});
+
+			// Trigger persistence (simulating zustand's persist middleware)
+			const persistedState = JSON.parse(
+				localStorage.getItem("carrier-bag") || "{}",
+			);
+
+			// Only items should be persisted, not stalePatternIds
+			expect(persistedState.state?.items).toBeDefined();
+			expect(persistedState.state?.stalePatternIds).toBeUndefined();
+		});
+
+		it("should clear stale patterns when setting empty array", () => {
+			const store = createCarrierBagStore();
+			const { setStalePatternIds } = store.getState();
+
+			// Set some stale patterns
+			act(() => {
+				setStalePatternIds(["pattern-1", "pattern-2"]);
+			});
+
+			expect(store.getState().stalePatternIds).toEqual([
+				"pattern-1",
+				"pattern-2",
+			]);
+
+			// Clear stale patterns
+			act(() => {
+				setStalePatternIds([]);
+			});
+
+			expect(store.getState().stalePatternIds).toEqual([]);
+			expect(store.getState().isPatternStale("pattern-1")).toBe(false);
 		});
 	});
 });

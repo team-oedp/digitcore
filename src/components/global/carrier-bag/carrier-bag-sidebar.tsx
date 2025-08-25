@@ -25,6 +25,7 @@ import {
 	useSidebar,
 } from "~/components/ui/sidebar";
 import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
+import { useStaleContentCheck } from "~/hooks/use-stale-content-check";
 import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
@@ -41,7 +42,9 @@ export function CarrierBagSidebar({
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
 	const setItems = useCarrierBagStore((state) => state.setItems);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
+	const isPatternStale = useCarrierBagStore((state) => state.isPatternStale);
 	const documentData = useCarrierBagDocument(items);
+	const { isCheckingStale, lastChecked } = useStaleContentCheck();
 	const { setOpen: setSidebarOpen, setOpenMobile, isMobile } = useSidebar();
 
 	// Sync Zustand store state to Sidebar component state
@@ -100,7 +103,19 @@ export function CarrierBagSidebar({
 		>
 			<SidebarHeader>
 				<div className="flex items-start justify-between p-2">
-					<h3 className="font-normal text-lg text-primary">Carrier Bag</h3>
+					<div className="flex flex-col">
+						<h3 className="font-normal text-lg text-primary">Carrier Bag</h3>
+						{isCheckingStale && (
+							<p className="text-muted-foreground text-xs">
+								Checking for updates...
+							</p>
+						)}
+						{lastChecked && !isCheckingStale && (
+							<p className="text-muted-foreground text-xs">
+								Last checked: {lastChecked.toLocaleTimeString()}
+							</p>
+						)}
+					</div>
 					<div className="flex items-center gap-1">
 						<Button
 							variant="ghost"
@@ -177,6 +192,7 @@ export function CarrierBagSidebar({
 										id: item.pattern._id,
 										title: item.pattern.title || "Untitled Pattern",
 										slug: slug,
+										isStale: isPatternStale(item.pattern._id),
 									};
 									return (
 										<Reorder.Item

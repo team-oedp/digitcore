@@ -203,4 +203,60 @@ describe("CarrierBagItem", () => {
 		expect(() => fireEvent.click(removeButton)).not.toThrow();
 		expect(() => fireEvent.click(visitButton)).not.toThrow();
 	});
+
+	describe("stale content functionality", () => {
+		const staleItem: CarrierBagItemData = {
+			...baseItem,
+			isStale: true,
+		};
+
+		it("shows stale styling when item is stale", () => {
+			render(<CarrierBagItem item={staleItem} />);
+
+			const container = screen.getByLabelText(
+				"Content has been updated in the system",
+			);
+			expect(container).toHaveClass("border-amber-400");
+		});
+
+		it("shows normal styling when item is not stale", () => {
+			render(<CarrierBagItem item={baseItem} />);
+
+			// Find the root container div
+			const container = screen
+				.getByText("Test Pattern")
+				.closest(".carrier-bag-item-container");
+			expect(container).toHaveClass("border-border", "bg-background");
+			expect(container).not.toHaveClass("border-amber-400");
+		});
+
+		it("shows mobile stale indicator dot when item is stale", () => {
+			render(<CarrierBagItem item={staleItem} />);
+
+			// The mobile indicator has aria-hidden="true", so it won't have a role
+			const mobileIndicator = document.querySelector(
+				".bg-amber-500.sm\\:hidden",
+			);
+			expect(mobileIndicator).toBeInTheDocument();
+			expect(mobileIndicator).toHaveClass("h-2", "w-2", "rounded-full");
+		});
+
+		it("has proper accessibility attributes for stale content", () => {
+			render(<CarrierBagItem item={staleItem} />);
+
+			const container = screen.getByLabelText(
+				"Content has been updated in the system",
+			);
+			expect(container).toBeInTheDocument();
+
+			// Mobile indicator should have helpful title for stale content
+			const mobileIndicator = document.querySelector(
+				".bg-amber-500.sm\\:hidden",
+			);
+			expect(mobileIndicator).toHaveAttribute(
+				"title",
+				"Content is being updated automatically",
+			);
+		});
+	});
 });

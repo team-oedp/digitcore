@@ -1,10 +1,15 @@
-import { createClient } from "next-sanity";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { sendSuggestionEmail } from "~/lib/email";
-import { type SuggestionFormData, submitSuggestion } from "./submit-suggestion";
+
+// Mock the email module before importing anything that uses it
+vi.mock("~/lib/email", () => ({
+	sendSuggestionEmail: vi.fn(),
+}));
 
 vi.mock("next-sanity");
-vi.mock("~/lib/email");
+
+import { createClient } from "next-sanity";
+import { sendSuggestionEmail } from "~/lib/email";
+import { type SuggestionFormData, submitSuggestion } from "./submit-suggestion";
 
 const mockCreateClient = vi.mocked(createClient);
 const mockCreate = vi.fn();
