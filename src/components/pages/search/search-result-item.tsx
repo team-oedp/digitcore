@@ -5,7 +5,6 @@ import {
 	ChartRelationshipIcon,
 	Tag01Icon,
 } from "@hugeicons/core-free-icons";
-import { MinusIcon, PlusIcon } from "lucide-react";
 import React, { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
 
@@ -15,6 +14,8 @@ import {
 } from "~/components/shared/badge-group";
 import { Icon } from "~/components/shared/icon";
 import { Badge } from "~/components/ui/badge";
+
+import { MinusIcon, PlusIcon } from "lucide-react";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	extractTextFromPortableText,
@@ -46,6 +47,7 @@ type BaseSearchResultData = {
 // Pattern-specific type - Updated to handle both search results and patterns page
 type PatternSearchResultData = BaseSearchResultData & {
 	_type: "pattern";
+	descriptionPlainText?: string | null;
 	theme?: {
 		_id: string;
 		title?: string;
@@ -132,20 +134,22 @@ function SearchResultBase({
 	patternIcon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 }) {
 	return (
-		<div className="relative w-full border-border border-t border-dashed pb-9">
+		<div className="relative w-full border-neutral-400 border-t border-dashed pb-9">
 			<div className="flex flex-col py-4">
 				{/* Header with title and button */}
 				<div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
 					<div className="flex items-start gap-3">
 						{showPatternIcon && patternIcon && (
-							<div className="h-8 w-8 flex-shrink-0 text-neutral-500">
+							<div className="h-6 w-6 flex-shrink-0 text-neutral-500">
 								{React.createElement(patternIcon, {
 									className:
 										"h-full w-full fill-icon/40 text-icon/70 opacity-40",
 								})}
 							</div>
 						)}
-						<h3 className="w-full text-pattern-list-item-title">{title}</h3>
+						<h3 className="w-full text-left font-normal text-lg text-primary uppercase leading-tight md:text-xl">
+							{title}
+						</h3>
 					</div>
 					<div className="flex-shrink-0">{buttonElement}</div>
 				</div>
@@ -197,7 +201,7 @@ function PatternSearchResult({
 	const buttonElement = (
 		<a
 			href={`/pattern/${pattern.slug}`}
-			className="inline-flex items-center gap-2 rounded-md border border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] px-2 py-1 text-[var(--pattern-button-text)] transition-opacity hover:opacity-80 md:px-3 md:py-1"
+			className="inline-flex items-center gap-2 rounded-full border border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] px-3 py-0.5 text-[var(--pattern-button-text)] transition-opacity hover:opacity-80 md:px-4 md:py-1"
 		>
 			<span className="text-button text-xs uppercase">Visit Pattern</span>
 		</a>

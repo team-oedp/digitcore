@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import type { Metadata, Viewport } from "next";
 import { VisualEditing } from "next-sanity";
 import { draftMode } from "next/headers";
-import { sans } from "~/app/(frontend)/fonts";
+import { sans, signifier } from "~/app/(frontend)/fonts";
 import { DisableDraftMode } from "~/components/global/disable-draft-mode";
 import { SiteLayout } from "~/components/global/site-layout";
 import { ThemeProvider } from "~/components/theme/theme-provider";
@@ -53,7 +53,7 @@ export default async function Layout({
 	)) as FOOTER_QUERYResult;
 
 	return (
-		<section className={cn(sans.variable)}>
+		<section className={cn(sans.variable, signifier.variable)}>
 			<div className="h-screen text-foreground antialiased [--header-height:calc(--spacing(14))]">
 				<ThemeProvider
 					attribute="class"

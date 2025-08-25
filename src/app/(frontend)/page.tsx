@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
-import { DigitcoreIcon } from "~/components/icons/logos/digitcore-icon";
+
 import Icon01 from "~/components/icons/shapes/icon-01";
 import Icon02 from "~/components/icons/shapes/icon-02";
 import Icon03 from "~/components/icons/shapes/icon-03";
@@ -68,26 +68,31 @@ export default async function Home() {
 						>
 							{section._type === "content" && (
 								<div
-									title={
-										index === 0 ? "Digitcore Icon" : `Icon ${(index % 5) + 1}`
-									}
-									data-index={index === 0 ? "digitcore" : index % 5}
+									title={`Layered Icons ${index * 3 + 1}-${index * 3 + 3}`}
+									data-index={`layered-${index}`}
+									className="relative h-24 w-24 lg:mb-2.5 lg:h-28 lg:w-28"
 								>
-									{index === 0 ? (
-										<div className="h-32 w-32 lg:mb-2.5 lg:h-48 lg:w-48">
-											<DigitcoreIcon
-												className="h-full w-full stroke-icon/20 text-icon/20 opacity-40"
-												stroke="currentColor"
-											/>
-										</div>
-									) : (
-										<div className="h-24 w-24 lg:mb-2.5 lg:h-28 lg:w-28">
-											{getIconByIndex(
-												index,
-												"w-full h-full fill-icon/20 object-contain opacity-40 text-icon/50",
-											)}
-										</div>
-									)}
+									{/* Layer 1 - Bottom icon */}
+									<div className="absolute inset-0">
+										{getIconByIndex(
+											index * 3,
+											"w-full h-full fill-icon/20 object-contain opacity-40 text-icon/50",
+										)}
+									</div>
+									{/* Layer 2 - Middle icon */}
+									<div className="absolute inset-0">
+										{getIconByIndex(
+											index * 3 + 1,
+											"w-full h-full fill-icon/20 object-contain opacity-40 text-icon/50",
+										)}
+									</div>
+									{/* Layer 3 - Top icon */}
+									<div className="absolute inset-0">
+										{getIconByIndex(
+											index * 3 + 2,
+											"w-full h-full fill-icon/20 object-contain opacity-40 text-icon/50",
+										)}
+									</div>
 								</div>
 							)}
 							{section._type === "content" && section.heading && (

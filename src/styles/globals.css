@@ -7,6 +7,7 @@
 @theme {
 	--font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	--font-signifier: var(--font-signifier), serif;
 
 	--breakpoint-3xl: 1920px;
 }
@@ -345,10 +346,11 @@
 	}
 
 	.text-page-heading {
+		/* font-family: var(--font-signifier); */
 		font-size: var(--text-page-heading-mobile);
 		line-height: var(--text-page-heading-mobile--line-height);
-		font-weight: 400; /* medium */
-		text-transform: none;
+		font-weight: 300; /* light */
+		text-transform: uppercase;
 		color: var(--color-green-dark);
 		text-align: left;
 

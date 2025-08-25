@@ -139,61 +139,62 @@ export function CarrierBagSidebar({
 					</div>
 				</div>
 			</SidebarHeader>
-			<SidebarContent className="flex-1 overflow-y-auto">
-				<SidebarGroup>
-					<div className="flex flex-col gap-2 p-2">
-						{!isHydrated ? (
-							<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-								<p className="font-normal text-muted-foreground text-sm">
-									Loading...
-								</p>
-							</div>
-						) : items.length === 0 ? (
-							<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-								<p className="font-normal text-muted-foreground text-sm">
-									There are no patterns in your carrier bag. Start by saving one
-									from the toolkit.
-								</p>
-							</div>
-						) : (
-							<Reorder.Group
-								axis="y"
-								values={items}
-								onReorder={(newOrder) => setItems(newOrder)}
-								layoutScroll
-								as="div"
-								style={{
-									display: "flex",
-									flexDirection: "column",
-									gap: "0.5rem",
-								}}
-							>
-								{items.map((item) => {
-									const slug =
-										typeof item.pattern.slug === "string"
-											? item.pattern.slug
-											: item.pattern.slug?.current;
-									const itemData: CarrierBagItemData = {
-										id: item.pattern._id,
-										title: item.pattern.title || "Untitled Pattern",
-										slug: slug,
-									};
-									return (
-										<Reorder.Item
-											as="div"
-											key={item.pattern._id}
-											value={item}
-											style={{ position: "relative" }}
-										>
-											<CarrierBagItem
-												item={itemData}
-												onRemove={() => handleRemoveItem(item.pattern._id)}
-											/>
-										</Reorder.Item>
-									);
-								})}
-							</Reorder.Group>
-						)}
+			<SidebarContent className="flex-1 overflow-hidden">
+				<SidebarGroup className="flex-1 overflow-hidden px-0">
+					<div className="flex flex-1 flex-col overflow-hidden px-0">
+						<div className="flex flex-1 flex-col gap-2 overflow-hidden rounded-2xl border border-border border-dashed px-2 pt-2">
+							{!isHydrated ? (
+								<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
+									<p className="font-normal text-muted-foreground text-sm">
+										Loading...
+									</p>
+								</div>
+							) : items.length === 0 ? (
+								<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
+									<p className="font-normal text-muted-foreground text-sm">
+										There are no patterns in your carrier bag. Start by saving
+										one from the toolkit.
+									</p>
+								</div>
+							) : (
+								<Reorder.Group
+									axis="y"
+									values={items}
+									onReorder={(newOrder) => setItems(newOrder)}
+									layoutScroll
+									as="div"
+									className="flex flex-1 flex-col gap-2 overflow-y-auto"
+									style={{
+										maxHeight: "100%",
+									}}
+								>
+									{items.map((item) => {
+										const slug =
+											typeof item.pattern.slug === "string"
+												? item.pattern.slug
+												: item.pattern.slug?.current;
+										const itemData: CarrierBagItemData = {
+											id: item.pattern._id,
+											title: item.pattern.title || "Untitled Pattern",
+											slug: slug,
+										};
+										return (
+											<Reorder.Item
+												as="div"
+												key={item.pattern._id}
+												value={item}
+												style={{ position: "relative" }}
+											>
+												<CarrierBagItem
+													item={itemData}
+													onRemove={() => handleRemoveItem(item.pattern._id)}
+												/>
+											</Reorder.Item>
+										);
+									})}
+								</Reorder.Group>
+							)}
+						</div>
 					</div>
 				</SidebarGroup>
 			</SidebarContent>
