@@ -18,12 +18,21 @@ type ResourceReference = {
 	_key: string;
 };
 
+type DereferencedSolution = {
+	_id: string;
+	title?: string | null;
+	description?: PortableTextBlock[] | null;
+};
+
 export type DereferencedResource = {
 	_id: string;
 	title?: string | null;
 	description?: PortableTextBlock[] | null;
 	links?: { href: string }[];
-	solutionRefs?: { _ref: string; _type: "reference"; _key: string }[];
+	// When query returns dereferenced solutions (solutions[]->{...})
+	solutions?: DereferencedSolution[] | null;
+	// Fallback if only references were returned (may contain invalid shapes in tests)
+	solutionRefs?: unknown[];
 };
 
 function isDereferencedResource(
@@ -38,6 +47,20 @@ function isSolutionReference(
 	if (!solution || typeof solution !== "object") return false;
 	const s = solution as Record<string, unknown>;
 	return "_ref" in s && "_type" in s && s._type === "reference";
+}
+
+function ptToPlainText(blocks?: PortableTextBlock[] | null): string {
+	if (!Array.isArray(blocks)) return "";
+	return blocks
+		.map((block) =>
+			Array.isArray((block as any).children)
+				? (block as any).children
+						.map((child: any) => (typeof child.text === "string" ? child.text : ""))
+						.join("")
+				: "",
+		)
+		.filter(Boolean)
+		.join("\n");
 }
 
 type ResourcesProps = {
@@ -115,16 +138,17 @@ export function Resources({ resources }: ResourcesProps) {
 										className="hidden md:block md:h-6 md:w-6"
 									/>
 									<div className="flex flex-wrap gap-1.5 md:gap-2.5">
-										{resource.solutionRefs?.map((solution, index) =>
-											isSolutionReference(solution) ? (
+										{Array.isArray(resource.solutions) && resource.solutions.length > 0
+											? resource.solutions.map((solution, sIdx) => (
 												<SolutionPreview
-													key={solution._ref || index}
-													solutionNumber={String(index + 1)}
-													solutionTitle={"Linked Solution"}
-													solutionDescription={"No description available"}
+													key={solution._id || sIdx}
+													solutionNumber={String(sIdx + 1)}
+													solutionTitle={solution.title || `Solution ${sIdx + 1}`}
+													solutionDescription={ptToPlainText(solution.description) || "No description available"}
 												>
 													<Badge
 														variant="solution"
+														className="border-green-200 bg-green-100 text-green-800 hover:border-green-300"
 														icon={
 															<HugeiconsIcon
 																icon={ChartRelationshipIcon}
@@ -135,11 +159,36 @@ export function Resources({ resources }: ResourcesProps) {
 															/>
 														}
 													>
-														{`Solution ${index + 1}`}
+														{solution.title || `Solution ${sIdx + 1}`}
 													</Badge>
 												</SolutionPreview>
-											) : null,
-										)}
+											))
+											: resource.solutionRefs?.map((solution, sIdx) =>
+												isSolutionReference(solution) ? (
+													<SolutionPreview
+														key={solution._ref || sIdx}
+														solutionNumber={String(sIdx + 1)}
+														solutionTitle={"Linked Solution"}
+														solutionDescription={"No description available"}
+													>
+														<Badge
+															variant="solution"
+															className="border-green-200 bg-green-100 text-green-800 hover:border-green-300"
+															icon={
+																<HugeiconsIcon
+																	icon={ChartRelationshipIcon}
+																	size={12}
+																	color="currentColor"
+																	strokeWidth={1.5}
+																	className="md:h-[14px] md:w-[14px]"
+																/>
+															}
+														>
+															{`Solution ${sIdx + 1}`}
+														</Badge>
+													</SolutionPreview>
+												) : null,
+											)}
 									</div>
 								</div>
 							</div>

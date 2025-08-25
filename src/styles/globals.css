@@ -297,7 +297,7 @@
 
 	/* Font utilities */
 	.text-body {
-		@apply text-sm md:text-base text-primary prose max-w-none;
+		@apply font-signifier text-sm md:text-base text-primary prose max-w-none;
 	}
 
 	.text-body-muted {
@@ -363,7 +363,7 @@
 	.text-section-heading {
 		font-size: var(--text-section-heading-mobile);
 		line-height: var(--text-section-heading-mobile--line-height);
-		font-weight: 300; /* normal */
+		font-weight: 300; /* light */
 		text-transform: capitalize;
 		color: var(--text-primary);
 		text-align: left;

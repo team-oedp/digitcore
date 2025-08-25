@@ -1,11 +1,45 @@
 import { render, screen } from "@testing-library/react";
+import type React from "react";
 import { describe, expect, it, vi } from "vitest";
 import type { DereferencedResource } from "./resources";
+
+interface HugeiconsIconProps {
+	icon: { name: string };
+	size?: number | string;
+	color?: string;
+	strokeWidth?: number | string;
+	className?: string;
+}
+
+interface CustomPortableTextProps {
+	value?: Array<{
+		children?: Array<{ text?: string }>;
+	}>;
+	className?: string;
+}
+
+interface BadgeProps {
+	children?: React.ReactNode;
+	variant?: string;
+	icon?: React.ReactNode;
+}
+
+interface SolutionPreviewProps {
+	children?: React.ReactNode;
+	solutionNumber?: number;
+	solutionTitle?: string;
+}
 import { Resources } from "./resources";
 
 // Mock the HugeiconsIcon component
 vi.mock("@hugeicons/react", () => ({
-	HugeiconsIcon: ({ icon, size, color, strokeWidth, className }: any) => (
+	HugeiconsIcon: ({
+		icon,
+		size,
+		color,
+		strokeWidth,
+		className,
+	}: HugeiconsIconProps) => (
 		<svg
 			data-testid="hugeicon"
 			className={className}
@@ -21,7 +55,7 @@ vi.mock("@hugeicons/react", () => ({
 
 // Mock the CustomPortableText component
 vi.mock("~/components/global/custom-portable-text", () => ({
-	CustomPortableText: ({ value, className }: any) => (
+	CustomPortableText: ({ value, className }: CustomPortableTextProps) => (
 		<div className={className} data-testid="portable-text">
 			{value?.[0]?.children?.[0]?.text || ""}
 		</div>
@@ -30,7 +64,7 @@ vi.mock("~/components/global/custom-portable-text", () => ({
 
 // Mock the Badge component
 vi.mock("~/components/ui/badge", () => ({
-	Badge: ({ children, variant, icon }: any) => (
+	Badge: ({ children, variant, icon }: BadgeProps) => (
 		<span data-testid={`badge-${variant}`} className={`badge ${variant}`}>
 			{icon && <span data-testid="badge-icon">{icon}</span>}
 			{children}
@@ -40,7 +74,11 @@ vi.mock("~/components/ui/badge", () => ({
 
 // Mock the SolutionPreview component
 vi.mock("./solution-preview", () => ({
-	SolutionPreview: ({ children, solutionNumber, solutionTitle }: any) => (
+	SolutionPreview: ({
+		children,
+		solutionNumber,
+		solutionTitle,
+	}: SolutionPreviewProps) => (
 		<div data-testid="solution-preview" data-solution-number={solutionNumber}>
 			{children}
 		</div>
@@ -243,7 +281,7 @@ describe("Resources Component", () => {
 		const portableText = screen.getByTestId("portable-text");
 		expect(portableText).toBeInTheDocument();
 		expect(portableText).toHaveTextContent(
-			"This resource provides important information"
+			"This resource provides important information",
 		);
 	});
 
@@ -321,7 +359,7 @@ describe("Resources Component", () => {
 				solutionRefs: [
 					{ _ref: "solution-1", _type: "reference", _key: "key1" },
 					// This should be filtered out by isSolutionReference
-					{ _ref: "invalid", _type: "invalid" as any, _key: "key2" },
+					{ _ref: "invalid", _type: "invalid", _key: "key2" },
 					{ _ref: "solution-2", _type: "reference", _key: "key3" },
 				],
 			},
