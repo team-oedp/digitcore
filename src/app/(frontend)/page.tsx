@@ -101,6 +101,7 @@ export default async function Home() {
 							{section._type === "content" && section.body && (
 								<CustomPortableText
 									value={section.body as PortableTextBlock[]}
+									className="text-body"
 								/>
 							)}
 							{isCardCarouselSection(section) &&
@@ -117,7 +118,7 @@ export default async function Home() {
 												{card.description && (
 													<CustomPortableText
 														value={card.description as PortableTextBlock[]}
-														className="mt-3 text-body-muted"
+														className="mt-3 text-body"
 													/>
 												)}
 											</div>

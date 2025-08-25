@@ -55,7 +55,7 @@ export default async function AboutPage() {
 						{section._type === "content" && section.body && (
 							<CustomPortableText
 								value={section.body as PortableTextBlock[]}
-								className="prose"
+								className="text-body"
 							/>
 						)}
 					</section>
