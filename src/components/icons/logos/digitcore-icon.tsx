@@ -3,8 +3,6 @@ import type React from "react";
 export function DigitcoreIcon(props: React.ComponentPropsWithoutRef<"svg">) {
 	return (
 		<svg
-			width="201"
-			height="200"
 			viewBox="0 0 201 200"
 			fill="currentColor"
 			xmlns="http://www.w3.org/2000/svg"

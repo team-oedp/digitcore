@@ -1,5 +1,7 @@
+import { Share04Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 
+import { Icon } from "~/components/shared/icon";
 import { linkResolver } from "~/sanity/lib/utils";
 import type { Link as LinkType } from "~/sanity/sanity.types";
 
@@ -37,7 +39,15 @@ export default function ResolvedLink({
 				rel={shouldOpenInNewTab ? "noopener noreferrer" : undefined}
 				className={className}
 			>
-				{children}
+				<span className="inline-flex items-center gap-1 text-muted-foreground no-underline transition-colors hover:text-primary">
+					{children}
+					<Icon
+						icon={Share04Icon}
+						size={14}
+						strokeWidth={2}
+						className="inline-block flex-shrink-0"
+					/>
+				</span>
 			</Link>
 		);
 	}

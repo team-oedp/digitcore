@@ -242,13 +242,8 @@ export function SearchClientWrapper() {
 			/>
 
 			{!hasSearchCriteria ? (
-				// No search criteria - show empty state instead of loading
-				<div className="py-12 text-left">
-					<p className="mb-2 text-zinc-500">Start your search</p>
-					<p className="text-base text-zinc-400">
-						Enter a search term or select filters to find patterns
-					</p>
-				</div>
+				// No search criteria - show blank area
+				<div className="py-12" />
 			) : isLoading ? (
 				<SearchResultsSkeleton count={6} />
 			) : !searchResult?.success ? (

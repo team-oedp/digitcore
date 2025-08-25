@@ -140,7 +140,8 @@ function SearchResultBase({
 						{showPatternIcon && patternIcon && (
 							<div className="h-8 w-8 flex-shrink-0 text-neutral-500">
 								{React.createElement(patternIcon, {
-									className: "h-full w-full fill-icon/40 text-icon/70",
+									className:
+										"h-full w-full fill-icon/40 text-icon/70 opacity-40",
 								})}
 							</div>
 						)}
@@ -350,7 +351,7 @@ function ResourceSearchResult({
 		>
 			<span className="font-normal text-xs uppercase">Visit Resource</span>
 			{PatternIcon && (
-				<PatternIcon className="h-3 w-3 text-[var(--resource-button-text)]" />
+				<PatternIcon className="h-3 w-3 text-[var(--resource-button-text)] opacity-40" />
 			)}
 		</a>
 	);
@@ -395,7 +396,11 @@ function ResourceSearchResult({
 					>
 						<Badge
 							variant="pattern"
-							icon={PatternIcon && <PatternIcon className="h-3.5 w-3.5" />}
+							icon={
+								PatternIcon && (
+									<PatternIcon className="h-3.5 w-3.5 opacity-40" />
+								)
+							}
 						>
 							{patternInfo.title}
 						</Badge>
@@ -429,7 +434,7 @@ function SolutionSearchResult({
 		>
 			<span className="font-normal text-xs uppercase">Visit Solution</span>
 			{PatternIcon && (
-				<PatternIcon className="h-3 w-3 text-[var(--solution-button-text)]" />
+				<PatternIcon className="h-3 w-3 text-[var(--solution-button-text)] opacity-40" />
 			)}
 		</a>
 	);
@@ -477,7 +482,7 @@ function SolutionSearchResult({
 								{patternInfo.title}
 							</span>
 							{PatternIcon && (
-								<PatternIcon className="h-3.5 w-3.5 text-neutral-500" />
+								<PatternIcon className="h-3.5 w-3.5 text-neutral-500 opacity-40" />
 							)}
 						</div>
 					</SearchResultPreview>

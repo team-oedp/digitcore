@@ -41,7 +41,7 @@ export default async function AboutPage() {
 						description={data.description as PortableTextBlock[]}
 					/>
 				)}
-				<Button asChild className="w-fit">
+				<Button asChild variant="ghost" className="w-fit">
 					<Link href="/onboarding" className="flex items-center gap-2">
 						Start our onboarding to personalise the toolkit
 						<Icon icon={PresentationLineChart01Icon} size={16} />

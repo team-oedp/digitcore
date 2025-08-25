@@ -82,7 +82,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 										<li key={link._key}>
 											<Link
 												href={`/${link.page?.slug || "#"}`}
-												className="link text-sm focus:outline-none"
+												className="text-link text-sm focus:outline-none"
 											>
 												{link.label}
 											</Link>
@@ -237,7 +237,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 											<li key={link._key}>
 												<Link
 													href={`/${link.page?.slug || "#"}`}
-													className="link text-sm focus:outline-none"
+													className="text-link text-sm focus:outline-none"
 												>
 													{link.label}
 												</Link>
