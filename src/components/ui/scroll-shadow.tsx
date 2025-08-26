@@ -12,7 +12,7 @@ type Props = HTMLAttributes<HTMLDivElement> & {
 	children?: ReactNode;
 };
 
-export default function ScrollArea({ className, children, ...props }: Props) {
+export default function ScrollShadow({ className, children, ...props }: Props) {
 	const ref = useRef<HTMLDivElement>(null);
 	const { scroll, maxScroll } = useScroll(ref);
 
