@@ -3,6 +3,7 @@
 "use client";
 
 import type React from "react";
+import { useEffect, useState } from "react";
 import { cn } from "~/lib/utils";
 
 export type ProgressiveBlurProps = {
@@ -11,6 +12,9 @@ export type ProgressiveBlurProps = {
 	position?: "top" | "bottom" | "both";
 	blurLevels?: number[];
 	children?: React.ReactNode;
+	containerRef?: React.RefObject<HTMLElement | HTMLDivElement | null>;
+	hideAtBottom?: boolean;
+	bottomThreshold?: number;
 };
 
 export function ProgressiveBlur({
@@ -18,9 +22,50 @@ export function ProgressiveBlur({
 	height = "30%",
 	position = "bottom",
 	blurLevels = [0.5, 1, 2, 4, 8, 16, 32, 64],
+	containerRef,
+	hideAtBottom = false,
+	bottomThreshold = 50,
 }: ProgressiveBlurProps) {
+	const [isAtBottom, setIsAtBottom] = useState(false);
+	const [opacity, setOpacity] = useState(1);
+
+	useEffect(() => {
+		if (!hideAtBottom || !containerRef?.current) return;
+
+		const container = containerRef.current;
+
+		const handleScroll = () => {
+			const { scrollTop, scrollHeight, clientHeight } = container;
+			const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+
+			if (distanceFromBottom <= bottomThreshold) {
+				setIsAtBottom(true);
+				// Create a smooth fade out as we approach the bottom
+				const fadeOpacity = Math.max(0, distanceFromBottom / bottomThreshold);
+				setOpacity(fadeOpacity);
+			} else {
+				setIsAtBottom(false);
+				setOpacity(1);
+			}
+		};
+
+		container.addEventListener("scroll", handleScroll, { passive: true });
+
+		// Check initial scroll position
+		handleScroll();
+
+		return () => {
+			container.removeEventListener("scroll", handleScroll);
+		};
+	}, [hideAtBottom, containerRef, bottomThreshold]);
+
 	// Create array with length equal to blurLevels.length - 2 (for before/after pseudo elements)
 	const divElements = Array(blurLevels.length - 2).fill(null);
+
+	// Don't render if hiding at bottom and completely faded out
+	if (hideAtBottom && opacity === 0) {
+		return null;
+	}
 
 	return (
 		<div
@@ -35,6 +80,8 @@ export function ProgressiveBlur({
 			)}
 			style={{
 				height: position === "both" ? "100%" : height,
+				opacity: hideAtBottom ? opacity : 1,
+				transition: hideAtBottom ? "opacity 0.2s ease-out" : undefined,
 			}}
 		>
 			{/* First blur layer (pseudo element) */}

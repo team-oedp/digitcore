@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useRef } from "react";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
 import { SiteHeader } from "~/components/global/site-header";
 import { ProgressiveBlur } from "~/components/ui/progressive-blur";
@@ -17,6 +18,7 @@ type SiteLayoutProps = {
 export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 	const pathname = usePathname();
 	const isCarrierBagRoute = pathname === "/carrier-bag";
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	return (
 		<SidebarProvider
 			className="flex h-full min-h-0 w-full flex-col gap-2"
@@ -32,6 +34,7 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 				<CarrierBagSidebar className="peer" />
 				<SidebarInset className="relative mx-2 mb-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-md bg-neutral-200 md:m-0 md:mb-0">
 					<div
+						ref={scrollContainerRef}
 						className={cn(
 							"flex h-full min-h-0 flex-1 flex-col",
 							isCarrierBagRoute
@@ -62,6 +65,9 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 							height="130px"
 							className="z-30"
 							blurLevels={[0.25, 0.5, 1, 2, 4, 8, 16, 32]}
+							containerRef={scrollContainerRef}
+							hideAtBottom={true}
+							bottomThreshold={100}
 						/>
 					)}
 				</SidebarInset>
