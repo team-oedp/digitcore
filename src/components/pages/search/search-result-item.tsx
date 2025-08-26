@@ -20,7 +20,6 @@ import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	extractTextFromPortableText,
 	getMatchExplanation,
-	hasMatchInTitle,
 	highlightMatches,
 	truncateWithContext,
 } from "~/lib/search-utils";
@@ -196,7 +195,6 @@ function PatternSearchResult({
 		rawDescription,
 		searchTerm,
 	);
-	const titleHasMatch = hasMatchInTitle(title, searchTerm);
 
 	const buttonElement = (
 		<a
@@ -227,7 +225,7 @@ function PatternSearchResult({
 									: "line-clamp-3 max-h-[96px]",
 							)}
 						>
-							<span className="block text-sm text-zinc-600 leading-relaxed md:text-base">
+							<span className="block text-description-muted">
 								{renderHighlightedText(
 									extractTextFromPortableText(rawDescription),
 									searchTerm,

@@ -101,7 +101,7 @@ export default async function PatternsPage() {
 									<h2 className="text-section-heading">{theme.title}</h2>
 									<CustomPortableText
 										value={theme.description as PortableTextBlock[]}
-										className="prose"
+										className="text-body"
 									/>
 								</div>
 

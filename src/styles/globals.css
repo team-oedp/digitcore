@@ -297,10 +297,14 @@
 
 	/* Font utilities */
 	.text-body {
-		@apply font-signifier text-sm md:text-base text-primary prose max-w-none;
+		@apply font-signifier text-sm md:text-lg text-primary prose max-w-none;
 	}
 
 	.text-body-muted {
+		@apply text-sm md:text-base text-neutral-500 prose max-w-none;
+	}
+
+	.text-description-muted {
 		@apply text-sm md:text-base text-neutral-500 prose max-w-none;
 	}
 
