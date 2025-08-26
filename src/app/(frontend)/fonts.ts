@@ -45,6 +45,11 @@ export const signifier = localFont({
 			style: "normal",
 		},
 		{
+			path: "../../../public/fonts/Signifier/Signifier-LightItalic.woff2",
+			weight: "300",
+			style: "italic",
+		},
+		{
 			path: "../../../public/fonts/Signifier/Signifier-Light.ttf",
 			weight: "300",
 			style: "normal",
@@ -55,9 +60,24 @@ export const signifier = localFont({
 			style: "normal",
 		},
 		{
+			path: "../../../public/fonts/Signifier/Signifier-Italic.woff2",
+			weight: "400",
+			style: "italic",
+		},
+		{
 			path: "../../../public/fonts/Signifier/Signifier-Regular.ttf",
 			weight: "400",
 			style: "normal",
+		},
+		{
+			path: "../../../public/fonts/Signifier/Signifier-Medium.woff2",
+			weight: "500",
+			style: "normal",
+		},
+		{
+			path: "../../../public/fonts/Signifier/Signifier-MediumItalic.woff2",
+			weight: "500",
+			style: "italic",
 		},
 	],
 	display: "swap",

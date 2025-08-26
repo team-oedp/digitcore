@@ -32,10 +32,13 @@ export default async function AcknowledgementsPage() {
 		<PageWrapper>
 			<div className="flex flex-col gap-10 pb-44">
 				{data.title && data.description && (
-					<PageHeading
-						title={data.title}
-						description={data.description as PortableTextBlock[]}
-					/>
+					<div className="mb-20 lg:mb-60">
+						<PageHeading title={data.title} />
+						<CustomPortableText
+							value={data.description as PortableTextBlock[]}
+							className="mt-8 text-body"
+						/>
+					</div>
 				)}
 				{data.content?.map((section) => (
 					<section key={section._key} className="flex flex-col gap-5">

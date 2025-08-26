@@ -62,9 +62,9 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 					{!isCarrierBagRoute && (
 						<ProgressiveBlur
 							position="bottom"
-							height="130px"
+							height="100px"
 							className="z-30"
-							blurLevels={[0.25, 0.5, 1, 2, 4, 8, 16, 32]}
+							blurLevels={[0.25, 0.5, 1, 2, 3, 6, 12, 24]}
 							containerRef={scrollContainerRef}
 							hideAtBottom={true}
 							bottomThreshold={100}

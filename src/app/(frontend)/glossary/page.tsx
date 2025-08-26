@@ -127,10 +127,13 @@ export default async function GlossaryPage() {
 
 				<div className="flex min-w-0 flex-1 flex-col gap-20 md:gap-40">
 					{pageData?.title && pageData?.description && (
-						<PageHeading
-							title={pageData.title}
-							description={pageData.description as PortableTextBlock[]}
-						/>
+						<div className="mb-20 lg:mb-60">
+							<PageHeading title={pageData.title} />
+							<CustomPortableText
+								value={pageData.description as PortableTextBlock[]}
+								className="mt-8 text-body"
+							/>
+						</div>
 					)}
 					<div className="w-full space-y-8 pb-[800px]" data-scroll-container>
 						<div id="glossary-content" className="w-full space-y-16">

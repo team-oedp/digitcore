@@ -55,7 +55,9 @@ function ptToPlainText(blocks?: PortableTextBlock[] | null): string {
 		.map((block) =>
 			Array.isArray((block as any).children)
 				? (block as any).children
-						.map((child: any) => (typeof child.text === "string" ? child.text : ""))
+						.map((child: any) =>
+							typeof child.text === "string" ? child.text : "",
+						)
 						.join("")
 				: "",
 		)
@@ -138,38 +140,19 @@ export function Resources({ resources }: ResourcesProps) {
 										className="hidden md:block md:h-6 md:w-6"
 									/>
 									<div className="flex flex-wrap gap-1.5 md:gap-2.5">
-										{Array.isArray(resource.solutions) && resource.solutions.length > 0
+										{Array.isArray(resource.solutions) &&
+										resource.solutions.length > 0
 											? resource.solutions.map((solution, sIdx) => (
-												<SolutionPreview
-													key={solution._id || sIdx}
-													solutionNumber={String(sIdx + 1)}
-													solutionTitle={solution.title || `Solution ${sIdx + 1}`}
-													solutionDescription={ptToPlainText(solution.description) || "No description available"}
-												>
-													<Badge
-														variant="solution"
-														className="border-green-200 bg-green-100 text-green-800 hover:border-green-300"
-														icon={
-															<HugeiconsIcon
-																icon={ChartRelationshipIcon}
-																size={12}
-																color="currentColor"
-																strokeWidth={1.5}
-																className="md:h-[14px] md:w-[14px]"
-															/>
-														}
-													>
-														{solution.title || `Solution ${sIdx + 1}`}
-													</Badge>
-												</SolutionPreview>
-											))
-											: resource.solutionRefs?.map((solution, sIdx) =>
-												isSolutionReference(solution) ? (
 													<SolutionPreview
-														key={solution._ref || sIdx}
+														key={solution._id || sIdx}
 														solutionNumber={String(sIdx + 1)}
-														solutionTitle={"Linked Solution"}
-														solutionDescription={"No description available"}
+														solutionTitle={
+															solution.title || `Solution ${sIdx + 1}`
+														}
+														solutionDescription={
+															ptToPlainText(solution.description) ||
+															"No description available"
+														}
 													>
 														<Badge
 															variant="solution"
@@ -184,11 +167,36 @@ export function Resources({ resources }: ResourcesProps) {
 																/>
 															}
 														>
-															{`Solution ${sIdx + 1}`}
+															{solution.title || `Solution ${sIdx + 1}`}
 														</Badge>
 													</SolutionPreview>
-												) : null,
-											)}
+												))
+											: resource.solutionRefs?.map((solution, sIdx) =>
+													isSolutionReference(solution) ? (
+														<SolutionPreview
+															key={solution._ref || sIdx}
+															solutionNumber={String(sIdx + 1)}
+															solutionTitle={"Linked Solution"}
+															solutionDescription={"No description available"}
+														>
+															<Badge
+																variant="solution"
+																className="border-green-200 bg-green-100 text-green-800 hover:border-green-300"
+																icon={
+																	<HugeiconsIcon
+																		icon={ChartRelationshipIcon}
+																		size={12}
+																		color="currentColor"
+																		strokeWidth={1.5}
+																		className="md:h-[14px] md:w-[14px]"
+																	/>
+																}
+															>
+																{`Solution ${sIdx + 1}`}
+															</Badge>
+														</SolutionPreview>
+													) : null,
+												)}
 									</div>
 								</div>
 							</div>

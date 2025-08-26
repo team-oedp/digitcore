@@ -3,6 +3,7 @@ import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { SearchClientWrapper } from "~/components/pages/search/search-client-wrapper";
 import {
 	SearchInterfaceSkeleton,
@@ -53,10 +54,13 @@ export default async function ExplorePage({
 		<PageWrapper>
 			<div className="flex flex-col gap-10 pb-44">
 				{pageData.title && pageData.description && (
-					<PageHeading
-						title={pageData.title}
-						description={pageData.description as PortableTextBlock[]}
-					/>
+					<div className="mb-20 lg:mb-60">
+						<PageHeading title={pageData.title} />
+						<CustomPortableText
+							value={pageData.description as PortableTextBlock[]}
+							className="mt-8 text-body"
+						/>
+					</div>
 				)}
 				<div className="space-y-6">
 					<Suspense fallback={<SearchInterfaceSkeleton />}>

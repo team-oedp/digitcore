@@ -124,7 +124,14 @@ export const GLOSSARY_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
   }`);
 
 export const GLOSSARY_TERMS_QUERY = defineQuery(`
@@ -165,7 +172,14 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
   }`);
 
 export const EXPLORE_PAGE_QUERY = defineQuery(`
@@ -174,7 +188,14 @@ export const EXPLORE_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
   }`);
 
 export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
@@ -545,12 +566,26 @@ export const TAGS_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
     content[]{
       _key,
       _type,
       heading,
-      body,
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
       // For contentList type
       title,
       items[]{
@@ -617,12 +652,26 @@ export const VALUES_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
     content[]{
       _key,
       _type,
       heading,
-      body,
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
       // For contentList type
       title,
       items[]{
@@ -663,12 +712,26 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
     content[]{
       _key,
       _type,
       heading,
-      body,
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
       // For contentList type
       title,
       items[]{
@@ -686,13 +749,27 @@ export const HOME_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
     // Full content blocks, including contentList sections
     content[]{
       _key,
       _type,
       heading,
-      body,
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
       // For contentList type
       title,
       items[]{
@@ -721,12 +798,26 @@ export const FAQ_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
     content[]{
       _key,
       _type,
       heading,
-      body,
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
       // For contentList type
       title,
       items[]{
@@ -761,12 +852,26 @@ export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
     content[]{
       _key,
       _type,
       heading,
-      body,
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
       // For contentList type
       title,
       items[]{

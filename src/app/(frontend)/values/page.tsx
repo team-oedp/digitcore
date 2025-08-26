@@ -30,26 +30,31 @@ export default async function ValuesPage() {
 
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-10 pb-44">
+			<div className="flex flex-col pb-44">
 				{data.title && data.description && (
-					<PageHeading
-						title={data.title}
-						description={data.description as PortableTextBlock[]}
-					/>
+					<div className="mb-20 lg:mb-60">
+						<PageHeading title={data.title} />
+						<CustomPortableText
+							value={data.description as PortableTextBlock[]}
+							className="mt-8 text-body"
+						/>
+					</div>
 				)}
-				{data.content?.map((section) => (
-					<section key={section._key} className="flex flex-col gap-5">
-						{section._type === "content" && section.heading && (
-							<SectionHeading heading={section.heading} />
-						)}
-						{section._type === "content" && section.body && (
-							<CustomPortableText
-								value={section.body as PortableTextBlock[]}
-								className="prose"
-							/>
-						)}
-					</section>
-				))}
+				<div className="flex flex-col gap-8">
+					{data.content?.map((section) => (
+						<section key={section._key} className="flex flex-col gap-5">
+							{section._type === "content" && section.heading && (
+								<SectionHeading heading={section.heading} />
+							)}
+							{section._type === "content" && section.body && (
+								<CustomPortableText
+									value={section.body as PortableTextBlock[]}
+									className="text-body"
+								/>
+							)}
+						</section>
+					))}
+				</div>
 			</div>
 		</PageWrapper>
 	);

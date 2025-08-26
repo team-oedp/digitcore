@@ -320,6 +320,10 @@
 		@apply text-primary no-underline hover:no-underline focus:no-underline transition-colors hover:text-secondary focus:text-secondary;
 	}
 
+	.text-heading-compact {
+		@apply text-left font-normal text-lg text-primary uppercase leading-tight md:text-xl;
+	}
+
 	.accordion-heading {
 		@apply prose max-w-none text-primary text-base md:text-lg hover:no-underline text-left;
 	}
@@ -389,6 +393,27 @@
 		@media (min-width: 768px) {
 			font-size: var(--text-pattern-list-item-title-desktop);
 			line-height: var(--text-pattern-list-item-title-desktop--line-height);
+		}
+	}
+
+	/* Glossary pill styling */
+	.glossary-pill {
+		@apply inline-flex items-center px-2.5 py-0.5 rounded-full;
+		@apply bg-neutral-300 text-foreground;
+		@apply no-underline transition-all duration-200;
+		@apply hover:bg-neutral-400 hover:shadow-sm hover:no-underline;
+		@apply cursor-pointer text-sm;
+		font-weight: 500;
+
+		/* Ensure no underline in any state */
+		text-decoration: none !important;
+		text-underline-offset: 0;
+
+		/* Override any prose link styles */
+		&:hover,
+		&:focus,
+		&:active {
+			text-decoration: none !important;
 		}
 	}
 
@@ -483,6 +508,7 @@
 	a {
 		text-decoration: none;
 		text-underline-offset: 0;
+		font-weight: 400;
 	}
 
 	/* Ensure our custom link styling takes precedence */

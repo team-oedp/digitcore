@@ -13,25 +13,68 @@ import {
 	type PortableTextBlock,
 	type PortableTextComponents,
 } from "next-sanity";
+import { Fragment } from "react";
 
+import {
+	type GlossaryTerm,
+	processTextWithGlossaryTerms,
+} from "~/lib/glossary-utils";
 import { cn } from "~/lib/utils";
+import { GlossaryPill } from "./glossary-pill";
 import ResolvedLink from "./resolved-link";
 
 export function CustomPortableText({
 	className,
 	value,
 	as: Component = "div",
+	glossaryTerms,
 }: {
 	className?: string;
 	value: PortableTextBlock[];
 	as?: React.ElementType;
+	glossaryTerms?: GlossaryTerm[];
 }) {
+	// Function to process children and detect glossary terms
+	const processChildren = (children: React.ReactNode) => {
+		if (!glossaryTerms || glossaryTerms.length === 0) {
+			return children;
+		}
+
+		// Process each child node
+		const processNode = (node: React.ReactNode): React.ReactNode => {
+			if (typeof node === "string") {
+				// Process plain text for glossary terms
+				return processTextWithGlossaryTerms(
+					node,
+					glossaryTerms,
+					(term, text, key) => (
+						<GlossaryPill key={key} term={term}>
+							{text}
+						</GlossaryPill>
+					),
+				);
+			}
+			return node;
+		};
+
+		if (Array.isArray(children)) {
+			return children.map((child) => {
+				const element = child as unknown as { key?: string | number };
+				const key = element?.key ?? undefined;
+				return <Fragment key={key}>{processNode(child)}</Fragment>;
+			});
+		}
+
+		return processNode(children);
+	};
+
 	const components: PortableTextComponents = {
 		block: {
+			normal: ({ children }) => <p>{processChildren(children)}</p>,
 			h1: ({ children, value }) => (
 				// Add an anchor to the h1
 				<h1 className="group relative">
-					{children}
+					{processChildren(children)}
 					<a
 						href={`#${value?._key}`}
 						className="-ml-6 absolute top-0 bottom-0 left-0 flex items-center opacity-0 transition-opacity group-hover:opacity-100"
@@ -58,7 +101,7 @@ export function CustomPortableText({
 				// Add an anchor to the h2
 				return (
 					<h2 className="group relative">
-						{children}
+						{processChildren(children)}
 						<a
 							href={`#${value?._key}`}
 							className="-ml-6 absolute top-0 bottom-0 left-0 flex items-center opacity-0 transition-opacity group-hover:opacity-100"
@@ -82,11 +125,28 @@ export function CustomPortableText({
 					</h2>
 				);
 			},
+			h3: ({ children }) => <h3>{processChildren(children)}</h3>,
+			h4: ({ children }) => <h4>{processChildren(children)}</h4>,
+			blockquote: ({ children }) => (
+				<blockquote>{processChildren(children)}</blockquote>
+			),
 		},
 		marks: {
 			link: ({ children, value: link }) => {
-				return <ResolvedLink link={link}>{children}</ResolvedLink>;
+				return (
+					<ResolvedLink link={link} forceNewTab={Boolean(link?.openInNewTab)}>
+						{children}
+					</ResolvedLink>
+				);
 			},
+		},
+		list: {
+			bullet: ({ children }) => <ul>{children}</ul>,
+			number: ({ children }) => <ol>{children}</ol>,
+		},
+		listItem: {
+			bullet: ({ children }) => <li>{processChildren(children)}</li>,
+			number: ({ children }) => <li>{processChildren(children)}</li>,
 		},
 	};
 

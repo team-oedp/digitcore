@@ -107,21 +107,12 @@ export default async function Home() {
 						{group.contentLists.map((contentList, listIndex) => {
 							if (!isContentListSection(contentList)) return null;
 
-							// Handle both new "items" and legacy "cards" fields
-							const rawItems =
-								(contentList as ContentList).items ||
-								(contentList as { cards?: unknown[] }).cards ||
-								[];
-							const listItems = rawItems as Array<{
-								_key?: string;
-								title?: string;
-								description?: PortableTextBlock[];
-							}>;
+							const listItems = (contentList as ContentList).items || [];
 
 							return (
 								<div
 									key={contentList._key || `list-${listIndex}`}
-									className="space-y-6"
+									className="mt-8 mb-8 space-y-6"
 								>
 									{Array.isArray(listItems) &&
 										listItems.length > 0 &&

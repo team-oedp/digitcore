@@ -100,7 +100,7 @@ export function CarrierBagSidebar({
 		>
 			<SidebarHeader>
 				<div className="flex items-start justify-between p-2">
-					<h3 className="font-normal text-lg text-primary">Carrier Bag</h3>
+					<h3 className="text-heading-compact">Carrier Bag</h3>
 					<div className="flex items-center gap-1">
 						<Button
 							variant="ghost"

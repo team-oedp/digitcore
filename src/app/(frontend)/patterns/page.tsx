@@ -82,10 +82,13 @@ export default async function PatternsPage() {
 		<PageWrapper>
 			<div className="pb-16 lg:pb-32">
 				{pageData?.title && pageData?.description && (
-					<PageHeading
-						title={pageData.title}
-						description={pageData.description as PortableTextBlock[]}
-					/>
+					<div className="mb-20 lg:mb-60">
+						<PageHeading title={pageData.title} />
+						<CustomPortableText
+							value={pageData.description as PortableTextBlock[]}
+							className="mt-8 text-body"
+						/>
+					</div>
 				)}
 				{!allPatterns || allPatterns.length === 0 ? (
 					<div className="p-8">

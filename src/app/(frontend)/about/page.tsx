@@ -1,14 +1,10 @@
-import { PresentationLineChart01Icon } from "@hugeicons/core-free-icons";
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
-import Link from "next/link";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
-import { Icon } from "~/components/shared/icon";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
-import { Button } from "~/components/ui/button";
 import { client } from "~/sanity/lib/client";
 import { ABOUT_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -34,32 +30,31 @@ export default async function AboutPage() {
 
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-10 pb-44">
+			<div className="flex flex-col pb-44">
 				{data.title && data.description && (
-					<PageHeading
-						title={data.title}
-						description={data.description as PortableTextBlock[]}
-					/>
+					<div className="mb-20 lg:mb-60">
+						<PageHeading title={data.title} />
+						<CustomPortableText
+							value={data.description as PortableTextBlock[]}
+							className="mt-8 text-body"
+						/>
+					</div>
 				)}
-				<Button asChild variant="ghost" className="w-fit">
-					<Link href="/onboarding" className="flex items-center gap-2">
-						Start our onboarding to personalise the toolkit
-						<Icon icon={PresentationLineChart01Icon} size={16} />
-					</Link>
-				</Button>
-				{data.content?.map((section) => (
-					<section key={section._key} className="flex flex-col gap-5">
-						{section._type === "content" && section.heading && (
-							<SectionHeading heading={section.heading} />
-						)}
-						{section._type === "content" && section.body && (
-							<CustomPortableText
-								value={section.body as PortableTextBlock[]}
-								className="text-body"
-							/>
-						)}
-					</section>
-				))}
+				<div className="flex flex-col gap-8">
+					{data.content?.map((section) => (
+						<section key={section._key} className="flex flex-col gap-5">
+							{section._type === "content" && section.heading && (
+								<SectionHeading heading={section.heading} />
+							)}
+							{section._type === "content" && section.body && (
+								<CustomPortableText
+									value={section.body as PortableTextBlock[]}
+									className="text-body"
+								/>
+							)}
+						</section>
+					))}
+				</div>
 			</div>
 		</PageWrapper>
 	);

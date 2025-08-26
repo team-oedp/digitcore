@@ -60,10 +60,13 @@ export default async function FAQPage() {
 		<PageWrapper>
 			<div className="flex flex-col gap-10 pb-44">
 				{pageData?.title && pageData?.description && (
-					<PageHeading
-						title={pageData.title}
-						description={pageData.description as PortableTextBlock[]}
-					/>
+					<div className="mb-20 lg:mb-60">
+						<PageHeading title={pageData.title} />
+						<CustomPortableText
+							value={pageData.description as PortableTextBlock[]}
+							className="mt-8 text-body"
+						/>
+					</div>
 				)}
 
 				{/* FAQ Accordions */}

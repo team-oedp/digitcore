@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { TagsList } from "~/components/pages/tags/tags-list";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
 import { LetterNavigation } from "~/components/shared/letter-navigation";
@@ -128,10 +129,13 @@ export default async function Tags() {
 				{/* Scrolling section */}
 				<div className="flex min-w-0 flex-1 flex-col gap-20 md:gap-40">
 					{pageData?.title && pageData?.description && (
-						<PageHeading
-							title={pageData.title}
-							description={pageData.description as PortableTextBlock[]}
-						/>
+						<div className="mb-20 lg:mb-60">
+							<PageHeading title={pageData.title} />
+							<CustomPortableText
+								value={pageData.description as PortableTextBlock[]}
+								className="mt-8 text-body"
+							/>
+						</div>
 					)}
 					<TagsList tagsByLetter={tagsByLetter} alphabet={ALPHABET} />
 				</div>
