@@ -551,9 +551,9 @@ export const TAGS_PAGE_QUERY = defineQuery(`
       _type,
       heading,
       body,
-      // For cardCarousel type
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
@@ -623,9 +623,9 @@ export const VALUES_PAGE_QUERY = defineQuery(`
       _type,
       heading,
       body,
-      // For cardCarousel type
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
@@ -646,9 +646,9 @@ export const PATTERNS_PAGE_QUERY = defineQuery(`
       _type,
       heading,
       body,
-      // For cardCarousel type
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
@@ -669,9 +669,9 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
       _type,
       heading,
       body,
-      // For cardCarousel type
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
@@ -687,27 +687,27 @@ export const HOME_PAGE_QUERY = defineQuery(`
     title,
     "slug": slug.current,
     description,
-    // Full content blocks, including cardCarousel sections
+    // Full content blocks, including contentList sections
     content[]{
       _key,
       _type,
       heading,
       body,
-      // For cardCarousel type
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
       }
     },
-    // Convenience projections for specific card sets by title
-    "audiences": content[_type == 'cardCarousel' && title == 'Audiences'][0].cards[]{
+    // Convenience projections for specific content lists by title
+    "audiences": content[_type == 'contentList' && title == 'Audiences'][0].items[]{
       _key,
       title,
       description
     },
-    "values": content[_type == 'cardCarousel' && title == 'Values'][0].cards[]{
+    "values": content[_type == 'contentList' && title == 'Values'][0].items[]{
       _key,
       title,
       description
@@ -727,9 +727,9 @@ export const FAQ_PAGE_QUERY = defineQuery(`
       _type,
       heading,
       body,
-      // For cardCarousel type
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
@@ -767,9 +767,9 @@ export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
       _type,
       heading,
       body,
-      // For cardCarousel type
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description

@@ -30,13 +30,13 @@ export const pageType = defineType({
 			title: "Content",
 			type: "array",
 			description:
-				"Add different types of content blocks, such a heading and paragraph block, or a card carousel block.",
+				"Add different types of content blocks, such a heading and paragraph block, or a content list block.",
 			of: [
 				defineArrayMember({
 					type: "content",
 				}),
 				defineArrayMember({
-					type: "cardCarousel",
+					type: "contentList",
 					icon: StringIcon,
 				}),
 			],
