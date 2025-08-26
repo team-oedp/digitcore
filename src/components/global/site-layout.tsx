@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
 import { SiteHeader } from "~/components/global/site-header";
+import { ProgressiveBlur } from "~/components/ui/progressive-blur";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
@@ -29,7 +30,7 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 			<SiteHeader />
 			<div className="flex min-h-0 flex-1 flex-row-reverse gap-2 overflow-hidden bg-neutral-200 pt-16 transition-[gap] md:pt-14 md:[&:has([data-slot=sidebar][data-state=collapsed])]:gap-0 md:[&:has([data-slot=sidebar][data-state=collapsed])]:delay-200 md:[&:has([data-slot=sidebar][data-state=collapsed])]:duration-0">
 				<CarrierBagSidebar className="peer" />
-				<SidebarInset className="mx-2 mb-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-md bg-neutral-200 md:m-0 md:mb-0">
+				<SidebarInset className="relative mx-2 mb-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-md bg-neutral-200 md:m-0 md:mb-0">
 					<div
 						className={cn(
 							"flex h-full min-h-0 flex-1 flex-col",
@@ -55,6 +56,14 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 							{!isCarrierBagRoute && <SiteFooter footerData={footerData} />}
 						</div>
 					</div>
+					{!isCarrierBagRoute && (
+						<ProgressiveBlur
+							position="bottom"
+							height="130px"
+							className="z-30"
+							blurLevels={[0.25, 0.5, 1, 2, 4, 8, 16, 32]}
+						/>
+					)}
 				</SidebarInset>
 			</div>
 		</SidebarProvider>
