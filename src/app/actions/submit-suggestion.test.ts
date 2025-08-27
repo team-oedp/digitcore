@@ -1,10 +1,17 @@
-import { createClient } from "next-sanity";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+// Mock next-sanity before importing it so the real implementation is never loaded
+vi.mock("next-sanity");
+
+// Import the (now-mocked) next-sanity client and the modules under test
+import { createClient } from "next-sanity";
 import { sendSuggestionEmail } from "~/lib/email";
 import { type SuggestionFormData, submitSuggestion } from "./submit-suggestion";
 
-vi.mock("next-sanity");
-vi.mock("~/lib/email");
+// Mock the email module before importing anything that uses it
+vi.mock("~/lib/email", () => ({
+	sendSuggestionEmail: vi.fn(),
+}));
 
 // Mock the env module to avoid server-side environment variable access
 vi.mock("~/env", () => ({

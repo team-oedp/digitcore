@@ -909,3 +909,17 @@ export const FOOTER_QUERY = defineQuery(`
     license
   }
 `);
+
+// Query to check if patterns in carrier bag are stale
+export const PATTERNS_STALENESS_CHECK_QUERY = defineQuery(`
+  *[_type == "pattern" && _id in $patternIds]{
+    _id,
+    _updatedAt
+  }
+`);
+
+// Type for staleness check query result
+export type PatternStalenessResult = {
+	_id: string;
+	_updatedAt: string;
+}[];

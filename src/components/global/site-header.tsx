@@ -4,6 +4,7 @@ import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
@@ -18,6 +19,12 @@ export function SiteHeader() {
 	const toggleModalMode = useCarrierBagStore((state) => state.toggleModalMode);
 	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
 	const setOpen = useCarrierBagStore((state) => state.setOpen);
+	const hasUnseenUpdates = useCarrierBagStore(
+		(state) => state.hasUnseenUpdates,
+	);
+	const clearExpiredUpdates = useCarrierBagStore(
+		(state) => state.clearExpiredUpdates,
+	);
 
 	// TODO: implement toggle of carrier bag sidebar into a modal
 	const _handleModalModeToggle = () => {
@@ -30,6 +37,15 @@ export function SiteHeader() {
 
 	const pathname = usePathname();
 	const isOnCarrierBagRoute = pathname === "/carrier-bag";
+
+	// Check for expired updates every 30 seconds
+	useEffect(() => {
+		const interval = setInterval(() => {
+			clearExpiredUpdates();
+		}, 30000); // 30 seconds
+
+		return () => clearInterval(interval);
+	}, [clearExpiredUpdates]);
 
 	return (
 		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-primary-foreground">
@@ -148,18 +164,26 @@ export function SiteHeader() {
 						isOnCarrierBagRoute
 							? "cursor-not-allowed opacity-50"
 							: "hover:bg-main-foreground/40 dark:hover:border-white/10 dark:hover:bg-main-foreground/20",
+						// Add glow effect when there are unseen updates
+						hasUnseenUpdates &&
+							!isOnCarrierBagRoute &&
+							"animate-pulse shadow-lg shadow-yellow-500/25 ring-2 ring-yellow-500/50",
 					)}
 					onClick={isOnCarrierBagRoute ? undefined : toggleOpen}
 					disabled={isOnCarrierBagRoute}
 					title={
 						isOnCarrierBagRoute
 							? "Carrier Bag (currently viewing)"
-							: "Toggle Sidebar"
+							: hasUnseenUpdates
+								? "Carrier Bag (new updates available)"
+								: "Toggle Sidebar"
 					}
 					aria-label={
 						isOnCarrierBagRoute
 							? "Carrier Bag (currently viewing)"
-							: "Toggle Sidebar"
+							: hasUnseenUpdates
+								? "Carrier Bag (new updates available)"
+								: "Toggle Sidebar"
 					}
 				>
 					<Icon
@@ -167,7 +191,11 @@ export function SiteHeader() {
 						size={14}
 						className={cn(
 							"flex items-center gap-0.5 text-sm",
-							isOnCarrierBagRoute ? "text-muted-foreground" : "text-primary",
+							isOnCarrierBagRoute
+								? "text-muted-foreground"
+								: hasUnseenUpdates
+									? "text-yellow-600 dark:text-yellow-400"
+									: "text-primary",
 						)}
 					/>
 				</button>

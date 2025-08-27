@@ -1,6 +1,7 @@
 "use client";
 
 import {
+	AlertCircleIcon,
 	Cancel01Icon,
 	CleaningBucketIcon,
 	Download05Icon,
@@ -24,6 +25,7 @@ import {
 	useSidebar,
 } from "~/components/ui/sidebar";
 import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
+import { useStaleContentCheck } from "~/hooks/use-stale-content-check";
 import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
@@ -40,7 +42,24 @@ export function CarrierBagSidebar({
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
 	const setItems = useCarrierBagStore((state) => state.setItems);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
+	const isPatternStale = useCarrierBagStore((state) => state.isPatternStale);
+	const isPatternUpdating = useCarrierBagStore(
+		(state) => state.isPatternUpdating,
+	);
+	const isPatternRecentlyUpdated = useCarrierBagStore(
+		(state) => state.isPatternRecentlyUpdated,
+	);
+	const showClearConfirmation = useCarrierBagStore(
+		(state) => state.showClearConfirmation,
+	);
+	const showClearConfirmationPane = useCarrierBagStore(
+		(state) => state.showClearConfirmationPane,
+	);
+	const hideClearConfirmationPane = useCarrierBagStore(
+		(state) => state.hideClearConfirmationPane,
+	);
 	const documentData = useCarrierBagDocument(items);
+	const { isCheckingStale, lastChecked } = useStaleContentCheck();
 	const { setOpen: setSidebarOpen, setOpenMobile, isMobile } = useSidebar();
 
 	// Sync Zustand store state to Sidebar component state
@@ -99,7 +118,19 @@ export function CarrierBagSidebar({
 		>
 			<SidebarHeader>
 				<div className="flex items-start justify-between p-2">
-					<h3 className="text-heading-compact">Carrier Bag</h3>
+					<div className="flex flex-col">
+						<h3 className="text-heading-compact">Carrier Bag</h3>
+						{isCheckingStale && (
+							<p className="text-muted-foreground text-xs">
+								Checking for updates...
+							</p>
+						)}
+						{lastChecked && !isCheckingStale && (
+							<p className="text-muted-foreground text-xs">
+								Last checked: {lastChecked.toLocaleTimeString()}
+							</p>
+						)}
+					</div>
 					<div className="flex items-center gap-1">
 						<Button
 							variant="ghost"
@@ -138,10 +169,51 @@ export function CarrierBagSidebar({
 					</div>
 				</div>
 			</SidebarHeader>
-			<SidebarContent className="flex-1 overflow-hidden">
-				<SidebarGroup className="flex-1 overflow-hidden px-0">
-					<div className="flex flex-1 flex-col overflow-hidden px-0">
-						<div className="flex flex-1 flex-col gap-2 overflow-hidden rounded-2xl border border-border border-dashed px-2 pt-2">
+			<SidebarContent className="flex-1 overflow-y-auto">
+				<SidebarGroup>
+					{showClearConfirmation ? (
+						<div className="flex flex-col items-center justify-center gap-4 p-6 text-center">
+							<div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
+								<Icon
+									icon={AlertCircleIcon}
+									size={24}
+									className="text-red-600 dark:text-red-400"
+								/>
+							</div>
+							<div className="space-y-2">
+								<h3 className="font-medium text-foreground text-lg">
+									Clear all items?
+								</h3>
+								<p className="text-muted-foreground text-sm leading-relaxed">
+									This will remove all {items.length} pattern
+									{items.length !== 1 ? "s" : ""} from your carrier bag. This
+									action cannot be undone.
+								</p>
+							</div>
+							<div className="flex w-full gap-3 pt-2">
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={hideClearConfirmationPane}
+									className="flex-1"
+								>
+									Cancel
+								</Button>
+								<Button
+									variant="destructive"
+									size="sm"
+									onClick={() => {
+										clearBag();
+										hideClearConfirmationPane();
+									}}
+									className="flex-1"
+								>
+									Clear all
+								</Button>
+							</div>
+						</div>
+					) : (
+						<div className="flex flex-col gap-2 p-2">
 							{!isHydrated ? (
 								<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
 									<p className="font-normal text-muted-foreground text-sm">
@@ -162,9 +234,10 @@ export function CarrierBagSidebar({
 									onReorder={(newOrder) => setItems(newOrder)}
 									layoutScroll
 									as="div"
-									className="flex flex-1 flex-col gap-2 overflow-y-auto"
 									style={{
-										maxHeight: "100%",
+										display: "flex",
+										flexDirection: "column",
+										gap: "0.5rem",
 									}}
 								>
 									{items.map((item) => {
@@ -176,6 +249,11 @@ export function CarrierBagSidebar({
 											id: item.pattern._id,
 											title: item.pattern.title || "Untitled Pattern",
 											slug: slug,
+											isStale: isPatternStale(item.pattern._id),
+											isUpdating: isPatternUpdating(item.pattern._id),
+											isRecentlyUpdated: isPatternRecentlyUpdated(
+												item.pattern._id,
+											),
 										};
 										return (
 											<Reorder.Item
@@ -194,7 +272,7 @@ export function CarrierBagSidebar({
 								</Reorder.Group>
 							)}
 						</div>
-					</div>
+					)}
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarFooter>
@@ -204,7 +282,7 @@ export function CarrierBagSidebar({
 						size="sm"
 						className="h-8 w-8 border-[#dcdcdc] bg-[#fcfcfc] p-0 text-[#3d3d3d]"
 						type="button"
-						onClick={clearBag}
+						onClick={showClearConfirmationPane}
 						disabled={items.length === 0}
 						aria-label="Clear all items"
 						title="Clear all items"

@@ -66,6 +66,13 @@ export function CarrierBagContent({
 	const items = useCarrierBagStore((state) => state.items);
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
 	const setItems = useCarrierBagStore((state) => state.setItems);
+	const isPatternStale = useCarrierBagStore((state) => state.isPatternStale);
+	const isPatternUpdating = useCarrierBagStore(
+		(state) => state.isPatternUpdating,
+	);
+	const isPatternRecentlyUpdated = useCarrierBagStore(
+		(state) => state.isPatternRecentlyUpdated,
+	);
 	const router = useRouter();
 
 	// UI state
@@ -316,6 +323,9 @@ export function CarrierBagContent({
 									title: pattern.title || "Untitled Pattern",
 									slug: getSlugString(pattern),
 									subtitle: themeTitle,
+									isStale: isPatternStale(pattern._id),
+									isUpdating: isPatternUpdating(pattern._id),
+									isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
 								};
 								return (
 									<CarrierBagItem
@@ -363,6 +373,9 @@ export function CarrierBagContent({
 								title: pattern.title || "Untitled Pattern",
 								slug: getSlugString(pattern),
 								subtitle: themeTitle,
+								isStale: isPatternStale(pattern._id),
+								isUpdating: isPatternUpdating(pattern._id),
+								isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
 							};
 							return (
 								<Reorder.Item
