@@ -78,17 +78,17 @@ export default async function PatternsPage() {
 		}
 	}
 
+	if (!pageData) return null;
+
 	return (
 		<PageWrapper>
 			<div className="pb-16 lg:pb-32">
-				{pageData?.title && pageData?.description && (
-					<div className="mb-20 lg:mb-60">
-						<PageHeading title={pageData.title} />
-						<CustomPortableText
-							value={pageData.description as PortableTextBlock[]}
-							className="mt-8 text-body"
-						/>
-					</div>
+				{pageData.title && <PageHeading title={pageData.title} />}
+				{pageData.description && (
+					<CustomPortableText
+						value={pageData.description as PortableTextBlock[]}
+						className="mt-8 text-body"
+					/>
 				)}
 				{!allPatterns || allPatterns.length === 0 ? (
 					<div className="p-8">
@@ -101,7 +101,12 @@ export default async function PatternsPage() {
 						{Array.from(themeGroups.values()).map(({ theme, patterns }) => (
 							<div key={theme._id}>
 								<div className="flex flex-col gap-5 pt-12 pb-12 md:pt-36">
-									<h2 className="text-section-heading">{theme.title}</h2>
+									<div className="flex flex-col gap-1">
+										<p className="text-muted-foreground text-xxs uppercase">
+											Theme
+										</p>
+										<h2 className="text-section-heading">{theme.title}</h2>
+									</div>
 									<CustomPortableText
 										value={theme.description as PortableTextBlock[]}
 										className="text-body"

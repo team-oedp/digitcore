@@ -50,7 +50,7 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 					)}
 					<h1 className="text-page-heading">{title}</h1>
 				</div>
-				<div>
+				<div className="lg:ml-14">
 					{pattern && (
 						<button
 							type="button"

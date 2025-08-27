@@ -35,7 +35,7 @@ export function CustomPortableText({
 	glossaryTerms?: GlossaryTerm[];
 }) {
 	// Function to process children and detect glossary terms
-	const processChildren = (children: React.ReactNode) => {
+	const processChildren = (children: React.ReactNode, blockKey?: string) => {
 		if (!glossaryTerms || glossaryTerms.length === 0) {
 			return children;
 		}
@@ -58,9 +58,12 @@ export function CustomPortableText({
 		};
 
 		if (Array.isArray(children)) {
-			return children.map((child) => {
-				const element = child as unknown as { key?: string | number };
-				const key = element?.key ?? undefined;
+			return children.map((child, index) => {
+				const key = blockKey
+					? `${blockKey}-child-${index}`
+					: typeof child === "string"
+						? `${child.slice(0, 20)}-${index}`
+						: `node-${index}`;
 				return <Fragment key={key}>{processNode(child)}</Fragment>;
 			});
 		}
@@ -70,11 +73,13 @@ export function CustomPortableText({
 
 	const components: PortableTextComponents = {
 		block: {
-			normal: ({ children }) => <p>{processChildren(children)}</p>,
+			normal: ({ children, value }) => (
+				<p>{processChildren(children, value?._key)}</p>
+			),
 			h1: ({ children, value }) => (
 				// Add an anchor to the h1
 				<h1 className="group relative">
-					{processChildren(children)}
+					{processChildren(children, value?._key)}
 					<a
 						href={`#${value?._key}`}
 						className="-ml-6 absolute top-0 bottom-0 left-0 flex items-center opacity-0 transition-opacity group-hover:opacity-100"
@@ -101,7 +106,7 @@ export function CustomPortableText({
 				// Add an anchor to the h2
 				return (
 					<h2 className="group relative">
-						{processChildren(children)}
+						{processChildren(children, value?._key)}
 						<a
 							href={`#${value?._key}`}
 							className="-ml-6 absolute top-0 bottom-0 left-0 flex items-center opacity-0 transition-opacity group-hover:opacity-100"
@@ -125,10 +130,14 @@ export function CustomPortableText({
 					</h2>
 				);
 			},
-			h3: ({ children }) => <h3>{processChildren(children)}</h3>,
-			h4: ({ children }) => <h4>{processChildren(children)}</h4>,
-			blockquote: ({ children }) => (
-				<blockquote>{processChildren(children)}</blockquote>
+			h3: ({ children, value }) => (
+				<h3>{processChildren(children, value?._key)}</h3>
+			),
+			h4: ({ children, value }) => (
+				<h4>{processChildren(children, value?._key)}</h4>
+			),
+			blockquote: ({ children, value }) => (
+				<blockquote>{processChildren(children, value?._key)}</blockquote>
 			),
 		},
 		marks: {
@@ -139,14 +148,22 @@ export function CustomPortableText({
 					</ResolvedLink>
 				);
 			},
+			strong: ({ children }) => (
+				<strong className="font-medium">{children}</strong>
+			),
+			em: ({ children }) => <em className="italic">{children}</em>,
 		},
 		list: {
 			bullet: ({ children }) => <ul>{children}</ul>,
 			number: ({ children }) => <ol>{children}</ol>,
 		},
 		listItem: {
-			bullet: ({ children }) => <li>{processChildren(children)}</li>,
-			number: ({ children }) => <li>{processChildren(children)}</li>,
+			bullet: ({ children, value }) => (
+				<li>{processChildren(children, value?._key)}</li>
+			),
+			number: ({ children, value }) => (
+				<li>{processChildren(children, value?._key)}</li>
+			),
 		},
 	};
 

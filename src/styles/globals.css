@@ -121,6 +121,7 @@
 	--color-cerulean-default: oklch(0.8 0.12 240);
 	--color-cerulean-light: oklch(0.88 0.08 240);
 
+	--color-moss-border-dark: oklch(0.75 0.12 120);
 	--color-moss-dark: oklch(0.45 0.12 120);
 	--color-moss-default: oklch(0.75 0.2 120);
 	--color-moss-light: oklch(0.9 0.1 120);
@@ -212,9 +213,9 @@
 	--page-badge-border: var(--color-magenta-default);
 	--page-badge-border-dark: var(--color-magenta-border-dark);
 
-	--pattern-button-text: oklch(0.25 0.15 140);
-	--pattern-button-background: oklch(0.9 0.12 140);
-	--pattern-button-border: oklch(0.8 0.15 140);
+	--pattern-button-text: oklch(45.48% 0.1529 142.555);
+	--pattern-button-background: oklch(0.97 0.06 140);
+	--pattern-button-border: oklch(77.44% 0.1942 154.297);
 
 	--solution-button-text: oklch(0.3 0.2 300);
 	--solution-button-background: oklch(0.9 0.08 300);
@@ -313,11 +314,11 @@
 	}
 
 	.text-subheading {
-		@apply font-normal text-lg text-neutral-800 capitalize tracking-wide;
+		@apply font-normal text-lg lg:text-xl text-neutral-800 capitalize tracking-wide;
 	}
 
 	.text-link {
-		@apply text-primary no-underline hover:no-underline focus:no-underline transition-colors hover:text-secondary focus:text-secondary;
+		@apply text-primary no-underline hover:no-underline focus:no-underline transition-colors hover:text-muted-foreground focus:text-muted-foreground;
 	}
 
 	.text-heading-compact {
@@ -325,11 +326,11 @@
 	}
 
 	.accordion-heading {
-		@apply prose max-w-none text-primary text-base md:text-lg hover:no-underline text-left;
+		@apply prose max-w-none text-primary text-base font-normal md:text-lg hover:no-underline text-left;
 	}
 
 	.accordion-detail {
-		@apply prose max-w-none text-primary text-base md:text-base text-left;
+		@apply prose max-w-none text-neutral-700 text-base font-normal md:text-base text-left;
 	}
 
 	.text-button {
@@ -393,27 +394,6 @@
 		@media (min-width: 768px) {
 			font-size: var(--text-pattern-list-item-title-desktop);
 			line-height: var(--text-pattern-list-item-title-desktop--line-height);
-		}
-	}
-
-	/* Glossary pill styling */
-	.glossary-pill {
-		@apply inline-flex items-center px-2.5 py-0.5 rounded-full;
-		@apply bg-neutral-300 text-foreground;
-		@apply no-underline transition-all duration-200;
-		@apply hover:bg-neutral-400 hover:shadow-sm hover:no-underline;
-		@apply cursor-pointer text-sm;
-		font-weight: 500;
-
-		/* Ensure no underline in any state */
-		text-decoration: none !important;
-		text-underline-offset: 0;
-
-		/* Override any prose link styles */
-		&:hover,
-		&:focus,
-		&:active {
-			text-decoration: none !important;
 		}
 	}
 
@@ -514,5 +494,13 @@
 	/* Ensure our custom link styling takes precedence */
 	a:not([class*="text-"]) {
 		color: inherit;
+	}
+
+	strong {
+		font-weight: 500;
+	}
+
+	em {
+		font-style: italic;
 	}
 }

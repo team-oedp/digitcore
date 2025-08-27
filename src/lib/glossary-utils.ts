@@ -9,6 +9,26 @@ export type GlossaryTerm = {
 };
 
 /**
+ * Convert a glossary term title or identifier into a stable, URL-safe anchor id.
+ * This should be used both when creating anchors on the glossary page and when
+ * generating links to those anchors from elsewhere in the site.
+ */
+export function toGlossaryAnchorId(input: string): string {
+	if (!input) return "";
+	return input
+		.toString()
+		.normalize("NFKD")
+		// Remove Unicode combining diacritical marks
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase()
+		.trim()
+		// Replace any sequence of non-alphanumeric characters with a single dash
+		.replace(/[^a-z0-9]+/g, "-")
+		// Trim leading/trailing dashes
+		.replace(/^-+|-+$/g, "");
+}
+
+/**
  * Detects glossary terms in text and returns an array of matched terms with positions
  * @param text - The text to search for glossary terms
  * @param glossaryTerms - Array of glossary terms to detect
@@ -126,10 +146,10 @@ export function processTextWithGlossaryTerms(
 }
 
 /**
- * Creates a glossary link URL for a given term
- * @param termId - The glossary term ID
- * @returns The URL to the glossary page with the term anchor
+ * Creates a glossary link URL for a given term title or identifier.
+ * Prefer passing the term title; the function will generate a stable slug
+ * that matches the anchor id rendered on the glossary page.
  */
-export function createGlossaryLink(termId: string): string {
-	return `/glossary?word=${encodeURIComponent(termId)}`;
+export function createGlossaryLink(term: string): string {
+	return `/glossary?word=${encodeURIComponent(toGlossaryAnchorId(term))}`;
 }

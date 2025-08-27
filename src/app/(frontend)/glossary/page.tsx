@@ -7,17 +7,19 @@ import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
 } from "~/components/ui/accordion";
 import { client } from "~/sanity/lib/client";
 import {
-	GLOSSARY_PAGE_QUERY,
-	GLOSSARY_TERMS_QUERY,
+  GLOSSARY_PAGE_QUERY,
+  GLOSSARY_TERMS_QUERY,
 } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
+import { toGlossaryAnchorId } from "~/lib/glossary-utils";
+import { GlossaryScroll } from "./glossary-scroll";
 
 export const metadata: Metadata = {
 	title: "Glossary | DIGITCORE Toolkit",
@@ -35,7 +37,8 @@ type GlossaryTerm = {
 };
 
 type ProcessedTerm = {
-	id: string;
+	docId: string;
+	anchorId: string;
 	letter: string;
 	term: string;
 	description: PortableTextBlock[];
@@ -43,7 +46,11 @@ type ProcessedTerm = {
 
 type TermsByLetter = Partial<Record<string, ProcessedTerm[]>>;
 
-export default async function GlossaryPage() {
+export default async function GlossaryPage({
+	searchParams,
+}: {
+	searchParams: { [key: string]: string | string[] | undefined };
+}) {
 	const isDraftMode = (await draftMode()).isEnabled;
 
 	// Fetch page content and glossary terms in parallel
@@ -81,11 +88,12 @@ export default async function GlossaryPage() {
 	]);
 
 	// Process glossary terms and group by letter
-	const processedTerms: ProcessedTerm[] =
+const processedTerms: ProcessedTerm[] =
 		(glossaryTerms as GlossaryTerm[])?.map((term) => {
 			const firstLetter = term.title.charAt(0).toUpperCase();
 			return {
-				id: term._id,
+				docId: term._id,
+				anchorId: toGlossaryAnchorId(term.title),
 				letter: firstLetter,
 				term: term.title,
 				description: term.description,
@@ -102,12 +110,9 @@ export default async function GlossaryPage() {
 		return acc;
 	}, {});
 
-	// Default description if page data is not available
-	const defaultDescription =
-		"Building equitable open digital infrastructure requires a shared understanding of key concepts that bridge technology, environmental justice, and community collaboration. This glossary defines essential terms from the DIGITCORE Toolkit, helping researchers, developers, community organizations, and advocates navigate the complex landscape of participatory science and open infrastructure development.";
-
 	return (
 		<div className="relative">
+			<GlossaryScroll searchParams={searchParams} />
 			<PageWrapper className="flex min-h-0 flex-col gap-0 md:min-h-screen md:flex-row md:gap-20">
 				{/* Sticky nav and section indicator */}
 				<div className="sticky top-5 z-10 hidden h-full self-start md:block">
@@ -154,13 +159,15 @@ export default async function GlossaryPage() {
 											collapsible
 											className="w-full min-w-0"
 										>
-											{terms.map((term) => (
+{terms.map((term) => (
 												<AccordionItem
-													key={term.id}
-													value={term.id}
-													className="border-neutral-300 border-b border-dashed last:border-b"
-													id={term.id}
+													key={term.docId}
+													value={term.docId}
+													className="border-neutral-300 border-b border-dashed last:border-b scroll-mt-[29px]"
+													id={term.anchorId}
 												>
+													{/* Back-compat anchor for legacy links using the Sanity document ID */}
+													<span id={term.docId} className="block scroll-mt-[29px]" aria-hidden="true" />
 													<AccordionTrigger
 														showPlusMinus
 														className="accordion-heading items-center justify-between py-4"

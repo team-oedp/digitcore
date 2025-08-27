@@ -104,6 +104,8 @@ export default async function Tags() {
 		return acc;
 	}, {});
 
+	if (!pageData) return null;
+
 	return (
 		<div className="relative">
 			<PageWrapper className="flex flex-col gap-0 md:flex-row md:gap-20">
@@ -127,17 +129,17 @@ export default async function Tags() {
 				</div>
 
 				{/* Scrolling section */}
-				<div className="flex min-w-0 flex-1 flex-col gap-20 md:gap-40">
-					{pageData?.title && pageData?.description && (
-						<div className="mb-20 lg:mb-60">
-							<PageHeading title={pageData.title} />
-							<CustomPortableText
-								value={pageData.description as PortableTextBlock[]}
-								className="mt-8 text-body"
-							/>
-						</div>
+				<div className="flex flex-col pb-44">
+					{pageData.title && <PageHeading title={pageData.title} />}
+					{pageData.description && (
+						<CustomPortableText
+							value={pageData.description as PortableTextBlock[]}
+							className="mt-8 text-body"
+						/>
 					)}
-					<TagsList tagsByLetter={tagsByLetter} alphabet={ALPHABET} />
+					<div className="pt-20 lg:pt-60">
+						<TagsList tagsByLetter={tagsByLetter} alphabet={ALPHABET} />
+					</div>
 				</div>
 			</PageWrapper>
 		</div>

@@ -29,7 +29,7 @@ export default async function ExplorePage({
 	const isDraftMode = (await draftMode()).isEnabled;
 
 	// Fetch page data
-	const pageData = (await client.fetch(
+	const data = (await client.fetch(
 		EXPLORE_PAGE_QUERY,
 		{},
 		isDraftMode
@@ -45,7 +45,7 @@ export default async function ExplorePage({
 				},
 	)) as Page | null;
 
-	if (!pageData) {
+	if (!data) {
 		console.log("No page found, returning 404");
 		return notFound();
 	}
@@ -53,22 +53,20 @@ export default async function ExplorePage({
 	return (
 		<PageWrapper>
 			<div className="flex flex-col gap-10 pb-44">
-				{pageData.title && pageData.description && (
-					<div className="mb-20 lg:mb-60">
-						<PageHeading title={pageData.title} />
-						<CustomPortableText
-							value={pageData.description as PortableTextBlock[]}
-							className="mt-8 text-body"
-						/>
-					</div>
+				{data.title && <PageHeading title={data.title} />}
+				{data.description && (
+					<CustomPortableText
+						value={data.description as PortableTextBlock[]}
+						className="mt-8 text-body"
+					/>
 				)}
-				<div className="space-y-6">
+				<div className="flex flex-col gap-8">
 					<Suspense fallback={<SearchInterfaceSkeleton />}>
 						<SearchInterfaceWrapper />
 					</Suspense>
 					<Suspense
 						fallback={
-							<div className="h-32 animate-pulse rounded bg-zinc-100" />
+							<div className="h-32 animate-pulse rounded bg-neutral-200" />
 						}
 					>
 						<SearchClientWrapper />

@@ -20,12 +20,20 @@ describe("glossary-utils", () => {
 			const matches = detectGlossaryTerms(text, mockGlossaryTerms);
 
 			expect(matches).toHaveLength(2);
-			expect(matches[0].term.title).toBe("API");
-			expect(matches[0].startIndex).toBe(14);
-			expect(matches[0].endIndex).toBe(17);
-			expect(matches[1].term.title).toBe("Open Source");
-			expect(matches[1].startIndex).toBe(22);
-			expect(matches[1].endIndex).toBe(33);
+			const firstMatch = matches[0];
+			const secondMatch = matches[1];
+			expect(firstMatch).toBeDefined();
+			if (firstMatch) {
+				expect(firstMatch.term.title).toBe("API");
+				expect(firstMatch.startIndex).toBe(14);
+				expect(firstMatch.endIndex).toBe(17);
+			}
+			expect(secondMatch).toBeDefined();
+			if (secondMatch) {
+				expect(secondMatch.term.title).toBe("Open Source");
+				expect(secondMatch.startIndex).toBe(22);
+				expect(secondMatch.endIndex).toBe(33);
+			}
 		});
 
 		it("should detect case-insensitive matches", () => {
@@ -33,8 +41,16 @@ describe("glossary-utils", () => {
 			const matches = detectGlossaryTerms(text, mockGlossaryTerms);
 
 			expect(matches).toHaveLength(2);
-			expect(matches[0].originalText).toBe("api");
-			expect(matches[1].originalText).toBe("open source");
+			const firstMatch = matches[0];
+			const secondMatch = matches[1];
+			expect(firstMatch).toBeDefined();
+			if (firstMatch) {
+				expect(firstMatch.originalText).toBe("api");
+			}
+			expect(secondMatch).toBeDefined();
+			if (secondMatch) {
+				expect(secondMatch.originalText).toBe("open source");
+			}
 		});
 
 		it("should prioritize longer terms over shorter ones", () => {
@@ -42,9 +58,13 @@ describe("glossary-utils", () => {
 			const matches = detectGlossaryTerms(text, mockGlossaryTerms);
 
 			expect(matches).toHaveLength(1);
-			expect(matches[0].term.title).toBe("Digital Infrastructure");
-			expect(matches[0].startIndex).toBe(15);
-			expect(matches[0].endIndex).toBe(37);
+			const firstMatch = matches[0];
+			expect(firstMatch).toBeDefined();
+			if (firstMatch) {
+				expect(firstMatch.term.title).toBe("Digital Infrastructure");
+				expect(firstMatch.startIndex).toBe(15);
+				expect(firstMatch.endIndex).toBe(37);
+			}
 		});
 
 		it("should match whole words only", () => {
@@ -52,8 +72,12 @@ describe("glossary-utils", () => {
 			const matches = detectGlossaryTerms(text, mockGlossaryTerms);
 
 			expect(matches).toHaveLength(1);
-			expect(matches[0].term.title).toBe("API");
-			expect(matches[0].startIndex).toBe(33); // "APIS and APIs are different from " is 33 characters
+			const firstMatch = matches[0];
+			expect(firstMatch).toBeDefined();
+			if (firstMatch) {
+				expect(firstMatch.term.title).toBe("API");
+				expect(firstMatch.startIndex).toBe(33); // "APIS and APIs are different from " is 33 characters
+			}
 		});
 
 		it("should return empty array for empty text", () => {
@@ -129,9 +153,9 @@ describe("glossary-utils", () => {
 			expect(link).toBe("/glossary?word=test-term-id");
 		});
 
-		it("should encode special characters", () => {
+	it("should slugify spaces and special characters", () => {
 			const link = createGlossaryLink("term with spaces");
-			expect(link).toBe("/glossary?word=term%20with%20spaces");
+			expect(link).toBe("/glossary?word=term-with-spaces");
 		});
 	});
 });

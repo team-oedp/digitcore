@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useGlossaryScroll } from "~/lib/scroll";
+import { toGlossaryAnchorId } from "~/lib/glossary-utils";
 
 type GlossaryScrollProps = {
 	searchParams: { [key: string]: string | string[] | undefined };
@@ -14,7 +15,12 @@ export function GlossaryScroll({ searchParams }: GlossaryScrollProps) {
 		const word = searchParams.word;
 		if (typeof word === "string") {
 			const timer = setTimeout(() => {
-				scrollToWord(word);
+				// Try the provided word first (works for legacy links using doc IDs)
+				const ok = scrollToWord(word);
+				if (!ok) {
+					// Fallback: slugify titles that may have been passed raw in some links
+					scrollToWord(toGlossaryAnchorId(word));
+				}
 			}, 100);
 
 			return () => clearTimeout(timer);

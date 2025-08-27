@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { HeadingMorph } from "~/components/shared/heading-morph";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
+import type { GlossaryTerm } from "~/lib/glossary-utils";
 import { client } from "~/sanity/lib/client";
-import { HOME_PAGE_QUERY } from "~/sanity/lib/queries";
+import { GLOSSARY_TERMS_QUERY, HOME_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { ContentList, Page } from "~/sanity/sanity.types";
 
@@ -17,13 +19,22 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 	const isDraftMode = (await draftMode()).isEnabled;
-	const data = (await client.fetch(
-		HOME_PAGE_QUERY,
-		{},
-		isDraftMode
-			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
-			: { perspective: "published", useCdn: true },
-	)) as Page | null;
+	const [data, glossaryTerms] = await Promise.all([
+		client.fetch(
+			HOME_PAGE_QUERY,
+			{},
+			isDraftMode
+				? { perspective: "previewDrafts", useCdn: false, stega: true, token }
+				: { perspective: "published", useCdn: true },
+		) as Promise<Page | null>,
+		client.fetch(
+			GLOSSARY_TERMS_QUERY,
+			{},
+			isDraftMode
+				? { perspective: "previewDrafts", useCdn: false, stega: true, token }
+				: { perspective: "published", useCdn: true },
+		) as Promise<GlossaryTerm[]>,
+	]);
 
 	const contentSections = (data?.content ?? []) as NonNullable<Page["content"]>;
 
@@ -76,66 +87,72 @@ export default async function Home() {
 
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-20 pb-44 lg:gap-60">
-				{data?.description && (
+			<div className="pb-44">
+				{/* {data?.description && (
 					<CustomPortableText
 						value={data.description as PortableTextBlock[]}
 						className="text-page-heading lg:mb-20"
+						glossaryTerms={glossaryTerms}
 					/>
-				)}
-				{sectionGroups.map((group, groupIndex) => (
-					<section
-						key={group.content?._key || `group-${groupIndex}`}
-						className="flex flex-col gap-5"
-					>
-						{/* Render the content section */}
-						{group.content && group.content._type === "content" && (
-							<>
-								{group.content.heading && (
-									<SectionHeading heading={group.content.heading} />
-								)}
-								{group.content.body && (
-									<CustomPortableText
-										value={group.content.body as PortableTextBlock[]}
-										className="text-body"
-									/>
-								)}
-							</>
-						)}
+				)} */}
+				<HeadingMorph />
+				<div className="flex flex-col gap-20 pt-20 lg:gap-60 lg:pt-60">
+					{sectionGroups.map((group, groupIndex) => (
+						<section
+							key={group.content?._key || `group-${groupIndex}`}
+							className="flex flex-col gap-5"
+						>
+							{/* Render the content section */}
+							{group.content && group.content._type === "content" && (
+								<>
+									{group.content.heading && (
+										<SectionHeading heading={group.content.heading} />
+									)}
+									{group.content.body && (
+										<CustomPortableText
+											value={group.content.body as PortableTextBlock[]}
+											className="text-body"
+											glossaryTerms={glossaryTerms}
+										/>
+									)}
+								</>
+							)}
 
-						{/* Render all content lists that belong to this content section */}
-						{group.contentLists.map((contentList, listIndex) => {
-							if (!isContentListSection(contentList)) return null;
+							{/* Render all content lists that belong to this content section */}
+							{group.contentLists.map((contentList, listIndex) => {
+								if (!isContentListSection(contentList)) return null;
 
-							const listItems = (contentList as ContentList).items || [];
+								const listItems = (contentList as ContentList).items || [];
 
-							return (
-								<div
-									key={contentList._key || `list-${listIndex}`}
-									className="mt-8 mb-8 space-y-6"
-								>
-									{Array.isArray(listItems) &&
-										listItems.length > 0 &&
-										listItems.slice(0, 6).map((item) => (
-											<div key={item._key} className="pl-8">
-												<div className="mb-3 pb-2">
-													<h3 className="font-medium text-body uppercase">
-														{item.title}
-													</h3>
+								return (
+									<div
+										key={contentList._key || `list-${listIndex}`}
+										className="mt-8 mb-8 space-y-6"
+									>
+										{Array.isArray(listItems) &&
+											listItems.length > 0 &&
+											listItems.slice(0, 6).map((item) => (
+												<div key={item._key} className="pl-8">
+													<div className="mb-3 pb-2">
+														<h3 className="font-medium text-body uppercase">
+															{item.title}
+														</h3>
+													</div>
+													{item.description && (
+														<CustomPortableText
+															value={item.description as PortableTextBlock[]}
+															className="mt-3 text-body"
+															glossaryTerms={glossaryTerms}
+														/>
+													)}
 												</div>
-												{item.description && (
-													<CustomPortableText
-														value={item.description as PortableTextBlock[]}
-														className="mt-3 text-body"
-													/>
-												)}
-											</div>
-										))}
-								</div>
-							);
-						})}
-					</section>
-				))}
+											))}
+									</div>
+								);
+							})}
+						</section>
+					))}
+				</div>
 			</div>
 		</PageWrapper>
 	);

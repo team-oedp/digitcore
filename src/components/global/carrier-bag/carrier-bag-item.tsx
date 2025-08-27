@@ -57,11 +57,11 @@ export function CarrierBagItem({
 				>
 					<div className="mt-0.5 flex-shrink-0">
 						{PatternIcon ? (
-							<div className="h-4 w-4 flex-shrink-0">
+							<div className="h-4 w-4 flex-shrink-0 opacity-40">
 								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
 							</div>
 						) : (
-							<Icon icon={Share02Icon} size={16} />
+							<Icon icon={Share02Icon} size={16} className="opacity-40" />
 						)}
 					</div>
 					<div className="min-w-0 flex-1">
@@ -79,11 +79,11 @@ export function CarrierBagItem({
 				<>
 					<div className="mt-0.5 flex-shrink-0">
 						{PatternIcon ? (
-							<div className="h-4 w-4 flex-shrink-0">
+							<div className="h-4 w-4 flex-shrink-0 opacity-40">
 								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
 							</div>
 						) : (
-							<Icon icon={Share02Icon} size={16} />
+							<Icon icon={Share02Icon} size={16} className="opacity-40" />
 						)}
 					</div>
 					<div className="min-w-0 flex-1">

@@ -30,29 +30,29 @@ export default async function AcknowledgementsPage() {
 
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-10 pb-44">
-				{data.title && data.description && (
-					<div className="mb-20 lg:mb-60">
-						<PageHeading title={data.title} />
-						<CustomPortableText
-							value={data.description as PortableTextBlock[]}
-							className="mt-8 text-body"
-						/>
-					</div>
+			<div className="flex flex-col pb-44">
+				{data.title && <PageHeading title={data.title} />}
+				{data.description && (
+					<CustomPortableText
+						value={data.description as PortableTextBlock[]}
+						className="mt-8 text-body"
+					/>
 				)}
-				{data.content?.map((section) => (
-					<section key={section._key} className="flex flex-col gap-5">
-						{section._type === "content" && section.heading && (
-							<SectionHeading heading={section.heading} />
-						)}
-						{section._type === "content" && section.body && (
-							<CustomPortableText
-								value={section.body as PortableTextBlock[]}
-								className="prose"
-							/>
-						)}
-					</section>
-				))}
+				<div className="flex flex-col gap-8 pt-20 lg:pt-60">
+					{data.content?.map((section) => (
+						<section key={section._key} className="flex flex-col gap-5">
+							{section._type === "content" && section.heading && (
+								<SectionHeading heading={section.heading} />
+							)}
+							{section._type === "content" && section.body && (
+								<CustomPortableText
+									value={section.body as PortableTextBlock[]}
+									className="prose"
+								/>
+							)}
+						</section>
+					))}
+				</div>
 			</div>
 		</PageWrapper>
 	);

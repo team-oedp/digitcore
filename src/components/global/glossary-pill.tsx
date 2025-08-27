@@ -1,15 +1,17 @@
 "use client";
 
+import { BookOpen02Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
-import { createGlossaryLink } from "~/lib/glossary-utils";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
+import { createGlossaryLink } from "~/lib/glossary-utils";
 import { cn } from "~/lib/utils";
+import { Icon } from "../shared/icon";
 
-interface GlossaryPillProps {
+type GlossaryPillProps = {
 	term: GlossaryTerm;
 	children: React.ReactNode;
 	className?: string;
-}
+};
 
 /**
  * Component that renders a glossary term as a styled pill
@@ -18,25 +20,15 @@ interface GlossaryPillProps {
 export function GlossaryPill({ term, children, className }: GlossaryPillProps) {
 	return (
 		<Link
-			href={createGlossaryLink(term._id)}
+			href={createGlossaryLink(term.title)}
 			className={cn(
-				"glossary-pill",
-				"inline-flex items-center",
-				"px-2.5 py-0.5",
-				"rounded-full",
-				"bg-neutral-300",
-				"text-foreground",
-				"no-underline hover:no-underline",
-				"transition-all duration-200",
-				"hover:bg-neutral-400",
-				"hover:shadow-sm",
-				"cursor-pointer",
-				"text-sm",
+				"inline-flex cursor-pointer items-center gap-1 rounded-md text-link",
 				className,
 			)}
 			title={`View definition of "${term.title}"`}
 		>
 			{children}
+			<Icon icon={BookOpen02Icon} className="h-4 w-4" />
 		</Link>
 	);
 }

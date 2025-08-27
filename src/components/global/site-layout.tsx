@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import { useRef } from "react";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
 import { SiteHeader } from "~/components/global/site-header";
-import { ProgressiveBlur } from "~/components/ui/progressive-blur";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
@@ -59,7 +58,7 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 							{!isCarrierBagRoute && <SiteFooter footerData={footerData} />}
 						</div>
 					</div>
-					{!isCarrierBagRoute && (
+					{/* {!isCarrierBagRoute && (
 						<ProgressiveBlur
 							position="bottom"
 							height="100px"
@@ -69,7 +68,7 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 							hideAtBottom={true}
 							bottomThreshold={100}
 						/>
-					)}
+					)} */}
 				</SidebarInset>
 			</div>
 		</SidebarProvider>
