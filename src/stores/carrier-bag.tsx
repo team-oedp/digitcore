@@ -13,6 +13,10 @@ type CarrierBagState = {
 	isPinned: boolean;
 	isModalMode: boolean;
 	stalePatternIds: string[];
+	updatingPatternIds: string[];
+	recentlyUpdatedIds: string[];
+	hasUnseenUpdates: boolean;
+	lastUpdateTime: number | null;
 	addPattern: (pattern: Pattern, notes?: string) => void;
 	removePattern: (patternId: string) => void;
 	updatePattern: (patternId: string, updatedPattern: Pattern) => void;
@@ -31,6 +35,14 @@ type CarrierBagState = {
 	setStalePatternIds: (ids: string[]) => void;
 	isPatternStale: (patternId: string) => boolean;
 	markPatternFresh: (patternId: string, newVersion: string) => void;
+	setUpdatingPatternIds: (ids: string[]) => void;
+	addUpdatingPattern: (patternId: string) => void;
+	removeUpdatingPattern: (patternId: string) => void;
+	isPatternUpdating: (patternId: string) => boolean;
+	isPatternRecentlyUpdated: (patternId: string) => boolean;
+	markPatternUpdated: (patternId: string) => void;
+	markUpdatesAsSeen: () => void;
+	clearExpiredUpdates: () => void;
 };
 
 export const createCarrierBagStore = () =>
@@ -43,6 +55,10 @@ export const createCarrierBagStore = () =>
 				isPinned: false,
 				isModalMode: false,
 				stalePatternIds: [],
+				updatingPatternIds: [],
+				recentlyUpdatedIds: [],
+				hasUnseenUpdates: false,
+				lastUpdateTime: null,
 
 				addPattern: (pattern: Pattern, notes?: string) => {
 					const { items } = get();
@@ -69,7 +85,7 @@ export const createCarrierBagStore = () =>
 				},
 
 				updatePattern: (patternId: string, updatedPattern: Pattern) => {
-					const { items } = get();
+					const { items, markPatternUpdated } = get();
 					set({
 						items: items.map((item) =>
 							item.pattern._id === patternId
@@ -81,6 +97,8 @@ export const createCarrierBagStore = () =>
 								: item,
 						),
 					});
+					// Mark this pattern as recently updated
+					markPatternUpdated(patternId);
 				},
 
 				setItems: (items: CarrierBagItem[]) => {
@@ -120,7 +138,12 @@ export const createCarrierBagStore = () =>
 				},
 
 				setOpen: (open: boolean) => {
+					const { markUpdatesAsSeen } = get();
 					set({ isOpen: open });
+					// Mark updates as seen when drawer is opened
+					if (open) {
+						markUpdatesAsSeen();
+					}
 				},
 
 				togglePin: () => {
@@ -170,6 +193,65 @@ export const createCarrierBagStore = () =>
 						stalePatternIds: updatedStaleIds,
 					});
 				},
+
+				setUpdatingPatternIds: (ids: string[]) => {
+					set({ updatingPatternIds: ids });
+				},
+
+				addUpdatingPattern: (patternId: string) => {
+					const { updatingPatternIds } = get();
+					if (!updatingPatternIds.includes(patternId)) {
+						set({ updatingPatternIds: [...updatingPatternIds, patternId] });
+					}
+				},
+
+				removeUpdatingPattern: (patternId: string) => {
+					const { updatingPatternIds } = get();
+					set({
+						updatingPatternIds: updatingPatternIds.filter(
+							(id) => id !== patternId,
+						),
+					});
+				},
+
+				isPatternUpdating: (patternId: string) => {
+					const { updatingPatternIds } = get();
+					return updatingPatternIds.includes(patternId);
+				},
+
+				isPatternRecentlyUpdated: (patternId: string) => {
+					const { recentlyUpdatedIds } = get();
+					return recentlyUpdatedIds.includes(patternId);
+				},
+
+				markPatternUpdated: (patternId: string) => {
+					const { recentlyUpdatedIds } = get();
+					if (!recentlyUpdatedIds.includes(patternId)) {
+						set({
+							recentlyUpdatedIds: [...recentlyUpdatedIds, patternId],
+							hasUnseenUpdates: true,
+							lastUpdateTime: Date.now(),
+						});
+					}
+				},
+
+				markUpdatesAsSeen: () => {
+					set({
+						hasUnseenUpdates: false,
+					});
+				},
+
+				clearExpiredUpdates: () => {
+					const { lastUpdateTime } = get();
+					if (lastUpdateTime && Date.now() - lastUpdateTime > 120000) {
+						// 2 minutes
+						set({
+							recentlyUpdatedIds: [],
+							hasUnseenUpdates: false,
+							lastUpdateTime: null,
+						});
+					}
+				},
 			}),
 			{
 				name: "carrier-bag",
@@ -180,7 +262,7 @@ export const createCarrierBagStore = () =>
 					state?.setOpen(false);
 				},
 				partialize: (state) => ({
-					// Only persist items, not UI state or transient staleness data
+					// Only persist items, not UI state or transient staleness/update notification data
 					items: state.items,
 				}),
 			},

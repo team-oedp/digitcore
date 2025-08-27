@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { defineQuery } from "next-sanity";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { client } from "~/sanity/lib/client";
 import {
 	PATTERNS_STALENESS_CHECK_QUERY,
 	type PatternStalenessResult,
 } from "~/sanity/lib/queries";
-import type { Pattern, PATTERN_QUERYResult } from "~/sanity/sanity.types";
+import type { PATTERN_QUERYResult, Pattern } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 
 // Constants
@@ -68,8 +68,14 @@ type StaleContentResult = {
 };
 
 export const useStaleContentCheck = (): StaleContentResult => {
-	const { items, setStalePatternIds, markPatternFresh, updatePattern } =
-		useCarrierBagStore();
+	const {
+		items,
+		setStalePatternIds,
+		markPatternFresh,
+		updatePattern,
+		addUpdatingPattern,
+		removeUpdatingPattern,
+	} = useCarrierBagStore();
 	const stalePatternIds = useCarrierBagStore((state) => state.stalePatternIds);
 
 	const [isCheckingStale, setIsCheckingStale] = useState(false);
@@ -118,18 +124,20 @@ export const useStaleContentCheck = (): StaleContentResult => {
 
 				for (const item of items) {
 					// Skip items without contentVersion (shouldn't happen but defensive)
-					if (!item.contentVersion) continue;
+					if (!item.contentVersion) {
+						continue;
+					}
 
 					const currentVersion = currentVersions.find(
 						(v) => v._id === item.pattern._id,
 					);
 
 					if (currentVersion) {
+						const currentTime = new Date(currentVersion._updatedAt);
+						const storedTime = new Date(item.contentVersion);
+
 						// Only mark as stale if current version is newer
-						if (
-							new Date(currentVersion._updatedAt) >
-							new Date(item.contentVersion)
-						) {
+						if (currentTime > storedTime) {
 							staleIds.push(item.pattern._id);
 							patternsToRefresh.push(item.pattern._id);
 						}
@@ -144,14 +152,17 @@ export const useStaleContentCheck = (): StaleContentResult => {
 				if (!signal.aborted) {
 					// Set stale patterns temporarily (will be cleared as they're refreshed)
 					setStalePatternIds(staleIds);
-					
+
 					// Automatically refresh all stale patterns in the background
 					for (const patternId of patternsToRefresh) {
 						refreshStalePattern(patternId).catch((error) => {
-							console.warn(`Failed to auto-refresh pattern ${patternId}:`, error);
+							console.warn(
+								`Failed to auto-refresh pattern ${patternId}:`,
+								error,
+							);
 						});
 					}
-					
+
 					setLastChecked(new Date());
 				}
 			} catch (error: unknown) {
@@ -182,6 +193,13 @@ export const useStaleContentCheck = (): StaleContentResult => {
 
 	const refreshStalePattern = useCallback(
 		async (patternId: string) => {
+			// Mark pattern as updating
+			addUpdatingPattern(patternId);
+
+			// Ensure minimum display time of 1 second for the updating animation
+			const startTime = Date.now();
+			const minDisplayTime = 1000; // 1 second
+
 			try {
 				// Fetch the full pattern content
 				const freshPattern: PATTERN_QUERYResult = await client.fetch(
@@ -199,15 +217,32 @@ export const useStaleContentCheck = (): StaleContentResult => {
 						(id: string) => id !== patternId,
 					);
 					setStalePatternIds(updatedStaleIds);
-					console.log(`Successfully refreshed pattern: ${patternId}`);
 				} else {
 					console.warn(`Pattern ${patternId} no longer exists in Sanity`);
 				}
 			} catch (error) {
 				console.warn(`Failed to refresh pattern ${patternId}:`, error);
+			} finally {
+				// Ensure minimum display time before removing updating state
+				const elapsed = Date.now() - startTime;
+				const remaining = Math.max(0, minDisplayTime - elapsed);
+
+				if (remaining > 0) {
+					setTimeout(() => {
+						removeUpdatingPattern(patternId);
+					}, remaining);
+				} else {
+					removeUpdatingPattern(patternId);
+				}
 			}
 		},
-		[updatePattern, setStalePatternIds, stalePatternIds],
+		[
+			updatePattern,
+			setStalePatternIds,
+			stalePatternIds,
+			addUpdatingPattern,
+			removeUpdatingPattern,
+		],
 	);
 
 	// Auto-check when pattern IDs change (not just length)

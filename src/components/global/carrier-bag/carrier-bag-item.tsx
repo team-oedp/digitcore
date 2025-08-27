@@ -9,11 +9,12 @@ import {
 import Link from "next/link";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
+import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	getStaleItemClasses,
 	getStaleStatusText,
 } from "~/lib/stale-content-utils";
-import { getPatternIconWithMapping } from "~/lib/pattern-icons";
+import { cn } from "~/lib/utils";
 import type { Pattern } from "~/sanity/sanity.types";
 
 export type CarrierBagItem = {
@@ -30,6 +31,8 @@ export type CarrierBagItemData = {
 	icon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 	subtitle?: string;
 	isStale?: boolean;
+	isUpdating?: boolean;
+	isRecentlyUpdated?: boolean;
 };
 
 export type CarrierBagItemProps = {
@@ -46,13 +49,22 @@ export function CarrierBagItem({
 	// Get the pattern icon based on slug, fallback to Share02Icon if no slug
 	const PatternIcon = item.slug ? getPatternIconWithMapping(item.slug) : null;
 
+	const showUpdateAnimation = item.isUpdating || item.isRecentlyUpdated;
+
 	return (
 		<div
-			className={getStaleItemClasses(item.isStale)}
+			className={cn(
+				getStaleItemClasses(item.isStale),
+				showUpdateAnimation && "relative",
+			)}
 			aria-label={getStaleStatusText(item.isStale)}
 		>
+			{/* Updating outline animation */}
+			{showUpdateAnimation && (
+				<div className="-inset-0.5 absolute animate-pulse rounded-md border-2 border-yellow-500/60 shadow-sm shadow-yellow-500/20" />
+			)}
 			{/* Drag handle */}
-			<div className="flex-shrink-0 cursor-grab opacity-60 transition-opacity hover:opacity-100 active:cursor-grabbing">
+			<div className="relative z-10 flex-shrink-0 cursor-grab opacity-60 transition-opacity hover:opacity-100 active:cursor-grabbing">
 				<Icon icon={DragDropVerticalIcon} size={16} strokeWidth={3} />
 			</div>
 
@@ -60,7 +72,7 @@ export function CarrierBagItem({
 			{item.slug ? (
 				<Link
 					href={`/pattern/${item.slug}`}
-					className="flex min-w-0 flex-1 cursor-pointer items-start gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+					className="relative z-10 flex min-w-0 flex-1 cursor-pointer items-start gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 					onClick={(e) => e.stopPropagation()}
 					onPointerDown={(e) => e.stopPropagation()}
 				>
@@ -85,7 +97,7 @@ export function CarrierBagItem({
 					</div>
 				</Link>
 			) : (
-				<>
+				<div className="relative z-10 flex min-w-0 flex-1 items-start gap-3">
 					<div className="mt-0.5 flex-shrink-0">
 						{PatternIcon ? (
 							<div className="h-4 w-4 flex-shrink-0">
@@ -105,11 +117,11 @@ export function CarrierBagItem({
 							</p>
 						) : null}
 					</div>
-				</>
+				</div>
 			)}
 
 			{/* Actions */}
-			<div className="item-actions flex items-center gap-1 opacity-0 transition-opacity max-sm:opacity-100 sm:opacity-0">
+			<div className="item-actions relative z-10 flex items-center gap-1 opacity-0 transition-opacity max-sm:opacity-100 sm:opacity-0">
 				{item.isStale && (
 					/* Visual stale indicator for mobile (always visible) - content is being updated automatically */
 					<div

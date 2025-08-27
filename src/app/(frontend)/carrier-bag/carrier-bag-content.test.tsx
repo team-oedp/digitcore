@@ -117,6 +117,9 @@ const mockItems = [
 
 const mockRemovePattern = vi.fn();
 const mockSetItems = vi.fn();
+const mockIsPatternStale = vi.fn();
+const mockIsPatternUpdating = vi.fn();
+const mockIsPatternRecentlyUpdated = vi.fn();
 
 vi.mock("~/stores/carrier-bag", () => ({
 	useCarrierBagStore: vi.fn(),
@@ -131,6 +134,9 @@ describe("CarrierBagContent Navigation", () => {
 					items: mockItems,
 					removePattern: mockRemovePattern,
 					setItems: mockSetItems,
+					isPatternStale: mockIsPatternStale,
+					isPatternUpdating: mockIsPatternUpdating,
+					isPatternRecentlyUpdated: mockIsPatternRecentlyUpdated,
 				};
 				return selector ? selector(state) : state;
 			},
@@ -234,6 +240,9 @@ describe("CarrierBagContent Navigation", () => {
 					items: [itemWithStringSlug],
 					removePattern: mockRemovePattern,
 					setItems: mockSetItems,
+					isPatternStale: mockIsPatternStale,
+					isPatternUpdating: mockIsPatternUpdating,
+					isPatternRecentlyUpdated: mockIsPatternRecentlyUpdated,
 				};
 				return selector ? selector(state) : state;
 			},
@@ -272,6 +281,9 @@ describe("CarrierBagContent Navigation", () => {
 					items: [],
 					removePattern: mockRemovePattern,
 					setItems: mockSetItems,
+					isPatternStale: mockIsPatternStale,
+					isPatternUpdating: mockIsPatternUpdating,
+					isPatternRecentlyUpdated: mockIsPatternRecentlyUpdated,
 				};
 				return selector ? selector(state) : state;
 			},
@@ -398,6 +410,9 @@ describe("CarrierBagContent Filtering and Ordering", () => {
 					items: mockItemsWithThemes,
 					removePattern: mockRemovePattern,
 					setItems: mockSetItems,
+					isPatternStale: mockIsPatternStale,
+					isPatternUpdating: mockIsPatternUpdating,
+					isPatternRecentlyUpdated: mockIsPatternRecentlyUpdated,
 				};
 				return selector ? selector(state) : state;
 			},

@@ -54,6 +54,7 @@ export async function sendSuggestionEmail(payload: SuggestionEmailPayload) {
 			: DEFAULT_EMAIL_FROM;
 
 	console.log(SUGGESTION_NOTIFICATION_EMAIL.split(",").map((e) => e.trim()));
+  
 	const options = {
 		from: fromAddress,
 		to: SUGGESTION_NOTIFICATION_EMAIL.split(",").map((e) => e.trim()),

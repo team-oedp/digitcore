@@ -43,6 +43,12 @@ export function CarrierBagSidebar({
 	const setItems = useCarrierBagStore((state) => state.setItems);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const isPatternStale = useCarrierBagStore((state) => state.isPatternStale);
+	const isPatternUpdating = useCarrierBagStore(
+		(state) => state.isPatternUpdating,
+	);
+	const isPatternRecentlyUpdated = useCarrierBagStore(
+		(state) => state.isPatternRecentlyUpdated,
+	);
 	const documentData = useCarrierBagDocument(items);
 	const { isCheckingStale, lastChecked } = useStaleContentCheck();
 	const { setOpen: setSidebarOpen, setOpenMobile, isMobile } = useSidebar();
@@ -193,6 +199,8 @@ export function CarrierBagSidebar({
 										title: item.pattern.title || "Untitled Pattern",
 										slug: slug,
 										isStale: isPatternStale(item.pattern._id),
+										isUpdating: isPatternUpdating(item.pattern._id),
+										isRecentlyUpdated: isPatternRecentlyUpdated(item.pattern._id),
 									};
 									return (
 										<Reorder.Item
