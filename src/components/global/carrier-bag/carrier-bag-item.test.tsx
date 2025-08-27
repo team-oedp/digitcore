@@ -114,8 +114,7 @@ describe("CarrierBagItem", () => {
 	it("stops event propagation when buttons are clicked", () => {
 		const mockParentClick = vi.fn();
 		const { container } = render(
-			<button
-				type="button"
+			<div
 				onClick={mockParentClick}
 				onPointerDown={mockParentClick}
 				onKeyDown={mockParentClick}
@@ -126,7 +125,7 @@ describe("CarrierBagItem", () => {
 					onRemove={mockOnRemove}
 					onVisit={mockOnVisit}
 				/>
-			</button>,
+			</div>,
 		);
 
 		const visitButton = screen.getByRole("button", {
