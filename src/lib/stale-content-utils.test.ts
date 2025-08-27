@@ -55,10 +55,10 @@ describe("stale-content-utils", () => {
 				"[&:hover_.item-actions]:opacity-100",
 			];
 
-			commonClasses.forEach((className) => {
+			for (const className of commonClasses) {
 				expect(freshClasses).toContain(className);
 				expect(staleClasses).toContain(className);
-			});
+			}
 		});
 	});
 
@@ -189,8 +189,10 @@ describe("stale-content-utils", () => {
 
 		it("should handle edge cases gracefully", () => {
 			// Undefined/null values should default to non-stale
-			expect(getStaleItemClasses(undefined as any)).toContain("border-border");
-			expect(getStaleStatusText(undefined as any)).toBe("");
+			expect(getStaleItemClasses(undefined as boolean | undefined)).toContain(
+				"border-border",
+			);
+			expect(getStaleStatusText(undefined as boolean | undefined)).toBe("");
 
 			// All utility functions should be callable without errors
 			expect(() => getStaleItemClasses()).not.toThrow();

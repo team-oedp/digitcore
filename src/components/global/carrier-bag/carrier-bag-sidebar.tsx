@@ -4,6 +4,7 @@ import type * as React from "react";
 import { useEffect } from "react";
 
 import {
+	AlertCircleIcon,
 	Cancel01Icon,
 	CleaningBucketIcon,
 	Download05Icon,
@@ -43,6 +44,21 @@ export function CarrierBagSidebar({
 	const setItems = useCarrierBagStore((state) => state.setItems);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const isPatternStale = useCarrierBagStore((state) => state.isPatternStale);
+	const isPatternUpdating = useCarrierBagStore(
+		(state) => state.isPatternUpdating,
+	);
+	const isPatternRecentlyUpdated = useCarrierBagStore(
+		(state) => state.isPatternRecentlyUpdated,
+	);
+	const showClearConfirmation = useCarrierBagStore(
+		(state) => state.showClearConfirmation,
+	);
+	const showClearConfirmationPane = useCarrierBagStore(
+		(state) => state.showClearConfirmationPane,
+	);
+	const hideClearConfirmationPane = useCarrierBagStore(
+		(state) => state.hideClearConfirmationPane,
+	);
 	const documentData = useCarrierBagDocument(items);
 	const { isCheckingStale, lastChecked } = useStaleContentCheck();
 	const { setOpen: setSidebarOpen, setOpenMobile, isMobile } = useSidebar();
@@ -156,61 +172,108 @@ export function CarrierBagSidebar({
 			</SidebarHeader>
 			<SidebarContent className="flex-1 overflow-y-auto">
 				<SidebarGroup>
-					<div className="flex flex-col gap-2 p-2">
-						{!isHydrated ? (
-							<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-								<p className="font-normal text-muted-foreground text-sm">
-									Loading...
+					{showClearConfirmation ? (
+						<div className="flex flex-col items-center justify-center gap-4 p-6 text-center">
+							<div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
+								<Icon
+									icon={AlertCircleIcon}
+									size={24}
+									className="text-red-600 dark:text-red-400"
+								/>
+							</div>
+							<div className="space-y-2">
+								<h3 className="font-medium text-foreground text-lg">
+									Clear all items?
+								</h3>
+								<p className="text-muted-foreground text-sm leading-relaxed">
+									This will remove all {items.length} pattern
+									{items.length !== 1 ? "s" : ""} from your carrier bag. This
+									action cannot be undone.
 								</p>
 							</div>
-						) : items.length === 0 ? (
-							<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-								<p className="font-normal text-muted-foreground text-sm">
-									There are no patterns in your carrier bag. Start by saving one
-									from the toolkit.
-								</p>
+							<div className="flex w-full gap-3 pt-2">
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={hideClearConfirmationPane}
+									className="flex-1"
+								>
+									Cancel
+								</Button>
+								<Button
+									variant="destructive"
+									size="sm"
+									onClick={() => {
+										clearBag();
+										hideClearConfirmationPane();
+									}}
+									className="flex-1"
+								>
+									Clear all
+								</Button>
 							</div>
-						) : (
-							<Reorder.Group
-								axis="y"
-								values={items}
-								onReorder={(newOrder) => setItems(newOrder)}
-								layoutScroll
-								as="div"
-								style={{
-									display: "flex",
-									flexDirection: "column",
-									gap: "0.5rem",
-								}}
-							>
-								{items.map((item) => {
-									const slug =
-										typeof item.pattern.slug === "string"
-											? item.pattern.slug
-											: item.pattern.slug?.current;
-									const itemData: CarrierBagItemData = {
-										id: item.pattern._id,
-										title: item.pattern.title || "Untitled Pattern",
-										slug: slug,
-										isStale: isPatternStale(item.pattern._id),
-									};
-									return (
-										<Reorder.Item
-											as="div"
-											key={item.pattern._id}
-											value={item}
-											style={{ position: "relative" }}
-										>
-											<CarrierBagItem
-												item={itemData}
-												onRemove={() => handleRemoveItem(item.pattern._id)}
-											/>
-										</Reorder.Item>
-									);
-								})}
-							</Reorder.Group>
-						)}
-					</div>
+						</div>
+					) : (
+						<div className="flex flex-col gap-2 p-2">
+							{!isHydrated ? (
+								<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
+									<p className="font-normal text-muted-foreground text-sm">
+										Loading...
+									</p>
+								</div>
+							) : items.length === 0 ? (
+								<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
+									<p className="font-normal text-muted-foreground text-sm">
+										There are no patterns in your carrier bag. Start by saving
+										one from the toolkit.
+									</p>
+								</div>
+							) : (
+								<Reorder.Group
+									axis="y"
+									values={items}
+									onReorder={(newOrder) => setItems(newOrder)}
+									layoutScroll
+									as="div"
+									style={{
+										display: "flex",
+										flexDirection: "column",
+										gap: "0.5rem",
+									}}
+								>
+									{items.map((item) => {
+										const slug =
+											typeof item.pattern.slug === "string"
+												? item.pattern.slug
+												: item.pattern.slug?.current;
+										const itemData: CarrierBagItemData = {
+											id: item.pattern._id,
+											title: item.pattern.title || "Untitled Pattern",
+											slug: slug,
+											isStale: isPatternStale(item.pattern._id),
+											isUpdating: isPatternUpdating(item.pattern._id),
+											isRecentlyUpdated: isPatternRecentlyUpdated(
+												item.pattern._id,
+											),
+										};
+										return (
+											<Reorder.Item
+												as="div"
+												key={item.pattern._id}
+												value={item}
+												style={{ position: "relative" }}
+											>
+												<CarrierBagItem
+													item={itemData}
+													onRemove={() => handleRemoveItem(item.pattern._id)}
+												/>
+											</Reorder.Item>
+										);
+									})}
+								</Reorder.Group>
+							)}
+						</div>
+					)}
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarFooter>
@@ -220,7 +283,7 @@ export function CarrierBagSidebar({
 						size="sm"
 						className="h-8 w-8 border-[#dcdcdc] bg-[#fcfcfc] p-0 text-[#3d3d3d]"
 						type="button"
-						onClick={clearBag}
+						onClick={showClearConfirmationPane}
 						disabled={items.length === 0}
 						aria-label="Clear all items"
 						title="Clear all items"
