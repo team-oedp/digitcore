@@ -48,12 +48,13 @@ function useScrollThreshold(threshold: number) {
 }
 
 export function HeadingMorph() {
-	const { isScrolledPast, elementRef } = useScrollThreshold(150);
+	const { isScrolledPast, elementRef } = useScrollThreshold(75);
 
 	return (
-		<motion.div ref={elementRef} className="sticky top-5 z-40">
+		<motion.header ref={elementRef} className="sticky top-5 z-40 w-fit">
 			<motion.div className="relative">
 				<motion.h1
+					initial={false}
 					animate={{
 						opacity: isScrolledPast ? 0 : 1,
 					}}
@@ -66,19 +67,43 @@ export function HeadingMorph() {
 					Welcome to the Digital Toolkit for Collaborative Environmental
 					Research, or
 				</motion.h1>
-				<motion.h1
+				<motion.div
+					initial={false}
 					animate={{
 						opacity: isScrolledPast ? 1 : 0,
+						borderWidth: isScrolledPast ? "1px" : "0px",
 					}}
 					transition={{
-						duration: 0.3,
-						ease: "easeInOut",
+						opacity: {
+							duration: 0.3,
+							ease: "easeInOut",
+						},
+						borderWidth: {
+							duration: 0.2,
+							delay: 1,
+							ease: "easeInOut",
+						},
 					}}
-					className="absolute top-0 text-page-heading"
+					className="absolute top-0 rounded-md border-[var(--color-green-brand)] border-solid bg-background px-1.5 py-0.5"
 				>
-					DIGITCORE
-				</motion.h1>
+					<motion.h1
+						initial={false}
+						animate={{
+							fontSize: isScrolledPast ? "18px" : undefined,
+						}}
+						transition={{
+							fontSize: {
+								duration: 0.4,
+								delay: 0.5,
+								ease: "easeInOut",
+							},
+						}}
+						className="text-page-heading"
+					>
+						DIGITCORE
+					</motion.h1>
+				</motion.div>
 			</motion.div>
-		</motion.div>
+		</motion.header>
 	);
 }
