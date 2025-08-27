@@ -53,9 +53,7 @@ export function CarrierBagItem({
 
 	return (
 		<div
-			className={cn(
-				getStaleItemClasses(item.isStale),
-			)}
+			className={cn(getStaleItemClasses(item.isStale))}
 			aria-label={getStaleStatusText(item.isStale)}
 		>
 			{/* Drag handle */}
@@ -69,7 +67,8 @@ export function CarrierBagItem({
 					href={`/pattern/${item.slug}`}
 					className={cn(
 						"relative flex min-w-0 flex-1 cursor-pointer items-start gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-						showUpdateAnimation && "animate-pulse border-2 border-yellow-500/60 shadow-sm shadow-yellow-500/20"
+						showUpdateAnimation &&
+							"animate-pulse border-2 border-yellow-500/60 shadow-sm shadow-yellow-500/20",
 					)}
 					onClick={(e) => e.stopPropagation()}
 					onPointerDown={(e) => e.stopPropagation()}
@@ -95,10 +94,13 @@ export function CarrierBagItem({
 					</div>
 				</Link>
 			) : (
-				<div className={cn(
-					"relative flex min-w-0 flex-1 items-start gap-3 rounded-md",
-					showUpdateAnimation && "animate-pulse border-2 border-yellow-500/60 shadow-sm shadow-yellow-500/20"
-				)}>
+				<div
+					className={cn(
+						"relative flex min-w-0 flex-1 items-start gap-3 rounded-md",
+						showUpdateAnimation &&
+							"animate-pulse border-2 border-yellow-500/60 shadow-sm shadow-yellow-500/20",
+					)}
+				>
 					<div className="mt-0.5 flex-shrink-0">
 						{PatternIcon ? (
 							<div className="h-4 w-4 flex-shrink-0">

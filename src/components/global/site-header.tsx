@@ -167,7 +167,7 @@ export function SiteHeader() {
 						// Add glow effect when there are unseen updates
 						hasUnseenUpdates &&
 							!isOnCarrierBagRoute &&
-							"animate-pulse shadow-yellow-500/25 shadow-lg ring-2 ring-yellow-500/50",
+							"animate-pulse shadow-lg shadow-yellow-500/25 ring-2 ring-yellow-500/50",
 					)}
 					onClick={isOnCarrierBagRoute ? undefined : toggleOpen}
 					disabled={isOnCarrierBagRoute}
