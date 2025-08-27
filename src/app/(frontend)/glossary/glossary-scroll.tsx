@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useGlossaryScroll } from "~/lib/scroll";
 import { toGlossaryAnchorId } from "~/lib/glossary-utils";
+import { useGlossaryScroll } from "~/lib/scroll";
 
 type GlossaryScrollProps = {
 	searchParams: { [key: string]: string | string[] | undefined };

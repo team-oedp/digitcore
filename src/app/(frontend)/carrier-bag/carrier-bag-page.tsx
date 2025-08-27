@@ -38,7 +38,10 @@ import {
 	SidebarMenuItem,
 	SidebarProvider,
 } from "~/components/ui/sidebar";
-import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
+import {
+	type CarrierBagDocumentData,
+	useCarrierBagDocument,
+} from "~/hooks/use-pattern-content";
 import { client } from "~/sanity/lib/client";
 import { PATTERNS_BY_SLUGS_QUERY } from "~/sanity/lib/queries";
 import type { CarrierBag, Pattern } from "~/sanity/sanity.types";
@@ -58,138 +61,25 @@ const uiData = {
 	},
 };
 
-function CloseCarrierBagButton() {
-	const router = useRouter();
-
+function SidebarContentComponent(props: {
+	data?: CarrierBag;
+	documentData: CarrierBagDocumentData;
+	itemsCount: number;
+	shareOpen: boolean;
+	setShareOpen: (open: boolean) => void;
+	shareUrl: string;
+	handleNavClick: (label: string) => void;
+}) {
+	const {
+		data,
+		documentData,
+		itemsCount,
+		shareOpen,
+		setShareOpen,
+		shareUrl,
+		handleNavClick,
+	} = props;
 	return (
-		<Button
-			variant="ghost"
-			onClick={() => {
-				const ref = document.referrer;
-				if (ref) {
-					try {
-						const referrerUrl = new URL(ref);
-						if (referrerUrl.origin === window.location.origin) {
-							router.back();
-							return;
-						}
-					} catch (err) {}
-				}
-				router.push("/");
-			}}
-		>
-			<span className="text-xs uppercase">Close carrier bag</span>
-		</Button>
-	);
-}
-
-export function CarrierBagPage({ data }: { data?: CarrierBag }) {
-	const items = useCarrierBagStore((state) => state.items);
-	const clearBag = useCarrierBagStore((state) => state.clearBag);
-	const addPattern = useCarrierBagStore((state) => state.addPattern);
-	const documentData = useCarrierBagDocument(items);
-	const router = useRouter();
-
-	const [shareOpen, setShareOpen] = useState(false);
-	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-
-	const bagSlugs = useMemo(() => {
-		return items
-			.map((i) =>
-				typeof i.pattern.slug === "string"
-					? i.pattern.slug
-					: i.pattern.slug?.current,
-			)
-			.filter(Boolean) as string[];
-	}, [items]);
-
-	const shareUrl = useMemo(() => {
-		if (typeof window === "undefined") return "";
-		const url = new URL(`${window.location.origin}/carrier-bag`);
-		if (bagSlugs.length > 0) {
-			url.searchParams.set("slugs", bagSlugs.join(","));
-		}
-		url.searchParams.set("mode", "replace");
-		return url.toString();
-	}, [bagSlugs]);
-
-	useEffect(() => {
-		const { search } = window.location;
-		if (!search) return;
-		const params = new URLSearchParams(search);
-		const slugsParam = params.get("slugs");
-		if (!slugsParam) return;
-		const mode = params.get("mode");
-		const slugs = slugsParam
-			.split(",")
-			.map((s) => s.trim())
-			.filter(Boolean);
-		if (slugs.length === 0) return;
-		(async () => {
-			try {
-				const patterns = await client.fetch(PATTERNS_BY_SLUGS_QUERY, { slugs });
-				if (mode === "replace") {
-					clearBag();
-				}
-				for (const p of patterns) {
-					addPattern(p as unknown as Pattern);
-				}
-				const cleanUrl = `${window.location.origin}/carrier-bag`;
-				window.history.replaceState({}, "", cleanUrl);
-			} catch (err) {
-				// TODO: catch errors
-			}
-		})();
-	}, [addPattern, clearBag]);
-
-	const handleDownloadJson = () => {
-		const payload = {
-			generatedAt: new Date().toISOString(),
-			count: items.length,
-			patterns: items.map((i) => ({
-				id: i.pattern._id,
-				title: i.pattern.title,
-				slug:
-					typeof i.pattern.slug === "string"
-						? i.pattern.slug
-						: i.pattern.slug?.current,
-				notes: i.notes,
-				dateAdded: i.dateAdded,
-			})),
-		};
-		const blob = new Blob([JSON.stringify(payload, null, 2)], {
-			type: "application/json",
-		});
-		const href = URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = href;
-		a.download = "carrier-bag.json";
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
-		URL.revokeObjectURL(href);
-	};
-
-	const handleNavClick = (label: string) => {
-		switch (label) {
-			case "Remove All":
-				clearBag();
-				break;
-			case "Download List As JSON":
-				handleDownloadJson();
-				break;
-			case "Export Patterns As PDF":
-				break;
-			case "Generate Link":
-				break;
-			case "Share To Socials":
-				setShareOpen((o) => !o);
-				break;
-		}
-	};
-
-	// Sidebar content component that can be reused in both desktop and mobile views
-	const SidebarContentComponent = () => (
 		<>
 			<SidebarContent className="flex h-full flex-col">
 				<SidebarGroup className="flex h-full flex-col">
@@ -202,13 +92,13 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 										{item.label === "Export Patterns As PDF" ? (
 											<PDFPreviewModal
 												documentData={documentData}
-												disabled={items.length === 0}
+												disabled={itemsCount === 0}
 											>
 												<SidebarMenuButton asChild>
 													<button
 														type="button"
 														className="w-full"
-														disabled={items.length === 0}
+														disabled={itemsCount === 0}
 													>
 														<div className="flex items-center gap-2">
 															<Icon icon={item.icon} />
@@ -226,7 +116,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 														<button
 															type="button"
 															className="w-full"
-															disabled={items.length === 0}
+															disabled={itemsCount === 0}
 														>
 															<div className="flex items-center gap-2">
 																<Icon icon={item.icon} />
@@ -300,7 +190,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 												<CopyButton
 													className="w-full"
 													value={shareUrl}
-													disabled={items.length === 0}
+													disabled={itemsCount === 0}
 													copiedChildren={
 														<div className="flex items-start justify-start gap-2">
 															<Icon icon={Tick02Icon} />
@@ -324,7 +214,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 													type="button"
 													className="w-full"
 													onClick={() => handleNavClick(item.label)}
-													disabled={items.length === 0}
+													disabled={itemsCount === 0}
 												>
 													<div className="flex items-center gap-2">
 														<Icon icon={item.icon} />
@@ -362,6 +252,137 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 			</SidebarFooter>
 		</>
 	);
+}
+
+function CloseCarrierBagButton() {
+	const router = useRouter();
+
+	return (
+		<Button
+			variant="ghost"
+			onClick={() => {
+				const ref = document.referrer;
+				if (ref) {
+					try {
+						const referrerUrl = new URL(ref);
+						if (referrerUrl.origin === window.location.origin) {
+							router.back();
+							return;
+						}
+					} catch (_err) {}
+				}
+				router.push("/");
+			}}
+		>
+			<span className="text-xs uppercase">Close carrier bag</span>
+		</Button>
+	);
+}
+
+export function CarrierBagPage({ data }: { data?: CarrierBag }) {
+	const items = useCarrierBagStore((state) => state.items);
+	const clearBag = useCarrierBagStore((state) => state.clearBag);
+	const addPattern = useCarrierBagStore((state) => state.addPattern);
+	const documentData = useCarrierBagDocument(items);
+	const _router = useRouter();
+
+	const [shareOpen, setShareOpen] = useState(false);
+	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+	const bagSlugs = useMemo(() => {
+		return items
+			.map((i) =>
+				typeof i.pattern.slug === "string"
+					? i.pattern.slug
+					: i.pattern.slug?.current,
+			)
+			.filter(Boolean) as string[];
+	}, [items]);
+
+	const shareUrl = useMemo(() => {
+		if (typeof window === "undefined") return "";
+		const url = new URL(`${window.location.origin}/carrier-bag`);
+		if (bagSlugs.length > 0) {
+			url.searchParams.set("slugs", bagSlugs.join(","));
+		}
+		url.searchParams.set("mode", "replace");
+		return url.toString();
+	}, [bagSlugs]);
+
+	useEffect(() => {
+		const { search } = window.location;
+		if (!search) return;
+		const params = new URLSearchParams(search);
+		const slugsParam = params.get("slugs");
+		if (!slugsParam) return;
+		const mode = params.get("mode");
+		const slugs = slugsParam
+			.split(",")
+			.map((s) => s.trim())
+			.filter(Boolean);
+		if (slugs.length === 0) return;
+		(async () => {
+			try {
+				const patterns = await client.fetch(PATTERNS_BY_SLUGS_QUERY, { slugs });
+				if (mode === "replace") {
+					clearBag();
+				}
+				for (const p of patterns) {
+					addPattern(p as unknown as Pattern);
+				}
+				const cleanUrl = `${window.location.origin}/carrier-bag`;
+				window.history.replaceState({}, "", cleanUrl);
+			} catch (_err) {
+				// TODO: catch errors
+			}
+		})();
+	}, [addPattern, clearBag]);
+
+	const handleDownloadJson = () => {
+		const payload = {
+			generatedAt: new Date().toISOString(),
+			count: items.length,
+			patterns: items.map((i) => ({
+				id: i.pattern._id,
+				title: i.pattern.title,
+				slug:
+					typeof i.pattern.slug === "string"
+						? i.pattern.slug
+						: i.pattern.slug?.current,
+				notes: i.notes,
+				dateAdded: i.dateAdded,
+			})),
+		};
+		const blob = new Blob([JSON.stringify(payload, null, 2)], {
+			type: "application/json",
+		});
+		const href = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = href;
+		a.download = "carrier-bag.json";
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(href);
+	};
+
+	const handleNavClick = (label: string) => {
+		switch (label) {
+			case "Remove All":
+				clearBag();
+				break;
+			case "Download List As JSON":
+				handleDownloadJson();
+				break;
+			case "Export Patterns As PDF":
+				break;
+			case "Generate Link":
+				break;
+			case "Share To Socials":
+				setShareOpen((o) => !o);
+				break;
+		}
+	};
 
 	return (
 		<SidebarProvider
@@ -378,7 +399,15 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 				collapsible="none"
 				className="hidden h-full min-h-0 flex-col overflow-hidden rounded-md bg-primary-foreground md:flex"
 			>
-				<SidebarContentComponent />
+				<SidebarContentComponent
+					data={data}
+					documentData={documentData}
+					itemsCount={items.length}
+					shareOpen={shareOpen}
+					setShareOpen={setShareOpen}
+					shareUrl={shareUrl}
+					handleNavClick={handleNavClick}
+				/>
 			</Sidebar>
 
 			{/* Carrier Bag Content with mobile trigger */}
@@ -409,7 +438,15 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 											collapsible="none"
 											className="flex h-full min-h-0 flex-col"
 										>
-											<SidebarContentComponent />
+											<SidebarContentComponent
+												data={data}
+												documentData={documentData}
+												itemsCount={items.length}
+												shareOpen={shareOpen}
+												setShareOpen={setShareOpen}
+												shareUrl={shareUrl}
+												handleNavClick={handleNavClick}
+											/>
 										</Sidebar>
 									</SidebarProvider>
 								</div>

@@ -15,17 +15,19 @@ export type GlossaryTerm = {
  */
 export function toGlossaryAnchorId(input: string): string {
 	if (!input) return "";
-	return input
-		.toString()
-		.normalize("NFKD")
-		// Remove Unicode combining diacritical marks
-		.replace(/[\u0300-\u036f]/g, "")
-		.toLowerCase()
-		.trim()
-		// Replace any sequence of non-alphanumeric characters with a single dash
-		.replace(/[^a-z0-9]+/g, "-")
-		// Trim leading/trailing dashes
-		.replace(/^-+|-+$/g, "");
+	return (
+		input
+			.toString()
+			.normalize("NFKD")
+			// Remove Unicode combining diacritical marks
+			.replace(/\p{M}/gu, "")
+			.toLowerCase()
+			.trim()
+			// Replace any sequence of non-alphanumeric characters with a single dash
+			.replace(/[^a-z0-9]+/g, "-")
+			// Trim leading/trailing dashes
+			.replace(/^-+|-+$/g, "")
+	);
 }
 
 /**
@@ -62,10 +64,9 @@ export function detectGlossaryTerms(
 	for (const term of sortedTerms) {
 		// Create a case-insensitive regex that matches whole words
 		const pattern = new RegExp(`\\b${escapeRegExp(term.title)}\\b`, "gi");
-		let match: RegExpExecArray | null;
 
-		while ((match = pattern.exec(text)) !== null) {
-			const startIndex = match.index;
+		for (const match of text.matchAll(pattern)) {
+			const startIndex = match.index ?? 0;
 			const endIndex = startIndex + match[0].length;
 
 			// Check if this position overlaps with any existing matches

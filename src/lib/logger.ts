@@ -74,7 +74,7 @@ class SearchLogger {
 					logs.splice(0, logs.length - 100);
 				}
 				sessionStorage.setItem("search-debug-logs", JSON.stringify(logs));
-			} catch (e) {
+			} catch (_e) {
 				// Ignore storage errors
 			}
 		}

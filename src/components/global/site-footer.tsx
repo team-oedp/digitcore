@@ -45,7 +45,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 	const license = footerData?.license;
 
 	// Combine internal and external links, fallback to hardcoded social links if no external links from Sanity
-	const allExternalLinks =
+	const _allExternalLinks =
 		externalLinks.length > 0
 			? externalLinks
 			: FALLBACK_SOCIAL_LINKS.map((link) => ({

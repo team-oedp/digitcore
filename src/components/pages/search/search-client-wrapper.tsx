@@ -228,8 +228,8 @@ export function SearchClientWrapper() {
 		currentTags.length > 0;
 
 	// Extract search term for display from results
-	const searchTerm = searchResult?.searchParams?.searchTerm;
-	const hasActiveFilters =
+	const _searchTerm = searchResult?.searchParams?.searchTerm;
+	const _hasActiveFilters =
 		(searchResult?.searchParams?.audiences?.length ?? 0) > 0 ||
 		(searchResult?.searchParams?.themes?.length ?? 0) > 0 ||
 		(searchResult?.searchParams?.tags?.length ?? 0) > 0;

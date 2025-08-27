@@ -34,7 +34,7 @@ describe("ClickableBadge Component", () => {
 	describe("Tag Badge", () => {
 		it("should render tag badge with correct link", () => {
 			render(
-				<ClickableBadge type="tag" id="tag-123" title="accessibility">
+				<ClickableBadge type="tag" id={"tag-123"} title="accessibility">
 					<span>accessibility</span>
 				</ClickableBadge>,
 			);
@@ -50,7 +50,7 @@ describe("ClickableBadge Component", () => {
 
 		it("should fallback to /tags when tag title is missing", () => {
 			render(
-				<ClickableBadge type="tag" id="tag-123">
+				<ClickableBadge type="tag" id={"tag-123"}>
 					<span>Unknown Tag</span>
 				</ClickableBadge>,
 			);
@@ -64,7 +64,7 @@ describe("ClickableBadge Component", () => {
 			render(
 				<ClickableBadge
 					type="tag"
-					id="tag-123"
+					id={"tag-123"}
 					title="test"
 					className="custom-class"
 				>
@@ -82,7 +82,7 @@ describe("ClickableBadge Component", () => {
 	describe("Audience Badge", () => {
 		it("should render audience badge with correct link", () => {
 			render(
-				<ClickableBadge type="audience" id="audience-456" title="Developers">
+				<ClickableBadge type="audience" id={"audience-456"} title="Developers">
 					<span>Developers</span>
 				</ClickableBadge>,
 			);
@@ -98,7 +98,7 @@ describe("ClickableBadge Component", () => {
 
 		it("should use ID in aria-label when title is missing", () => {
 			render(
-				<ClickableBadge type="audience" id="audience-456">
+				<ClickableBadge type="audience" id={"audience-456"}>
 					<span>Audience Content</span>
 				</ClickableBadge>,
 			);
@@ -114,7 +114,7 @@ describe("ClickableBadge Component", () => {
 	describe("Theme Badge", () => {
 		it("should render theme badge with correct link", () => {
 			render(
-				<ClickableBadge type="theme" id="theme-789" title="Sustainability">
+				<ClickableBadge type="theme" id={"theme-789"} title="Sustainability">
 					<span>Sustainability</span>
 				</ClickableBadge>,
 			);
@@ -130,7 +130,7 @@ describe("ClickableBadge Component", () => {
 
 		it("should use ID in aria-label when title is missing", () => {
 			render(
-				<ClickableBadge type="theme" id="theme-789">
+				<ClickableBadge type="theme" id={"theme-789"}>
 					<span>Theme Content</span>
 				</ClickableBadge>,
 			);
@@ -146,7 +146,7 @@ describe("ClickableBadge Component", () => {
 	describe("Edge Cases", () => {
 		it("should handle empty className prop", () => {
 			render(
-				<ClickableBadge type="tag" id="tag-123" title="test" className="">
+				<ClickableBadge type="tag" id={"tag-123"} title="test" className="">
 					<span>Test</span>
 				</ClickableBadge>,
 			);
@@ -158,7 +158,7 @@ describe("ClickableBadge Component", () => {
 
 		it("should render children correctly", () => {
 			render(
-				<ClickableBadge type="theme" id="theme-123" title="Test Theme">
+				<ClickableBadge type="theme" id={"theme-123"} title="Test Theme">
 					<div data-testid="badge-content">
 						<span>Badge Text</span>
 						<svg data-testid="badge-icon" />
@@ -175,7 +175,7 @@ describe("ClickableBadge Component", () => {
 			render(
 				<ClickableBadge
 					type="tag"
-					id="tag-with-special-@#$"
+					id={"tag-with-special-@#$"}
 					title="Tag & Title with <special> chars"
 				>
 					<span>Special Tag</span>

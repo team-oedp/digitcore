@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 function useScrollThreshold(threshold: number) {
 	const [isScrolledPast, setIsScrolledPast] = useState(false);
@@ -61,10 +61,11 @@ export function PageHeading({ title }: { title: string }) {
 	// set distance in pixels to trigger animation
 	const { isScrolledPast, elementRef } = useScrollThreshold(45);
 
+	const headingId = useId();
 	return (
 		<motion.header
 			ref={elementRef}
-			id="page-header"
+			id={headingId}
 			initial={false}
 			animate={{
 				backgroundColor: isScrolledPast

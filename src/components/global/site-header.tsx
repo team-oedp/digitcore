@@ -20,7 +20,7 @@ export function SiteHeader() {
 	const setOpen = useCarrierBagStore((state) => state.setOpen);
 
 	// TODO: implement toggle of carrier bag sidebar into a modal
-	const handleModalModeToggle = () => {
+	const _handleModalModeToggle = () => {
 		toggleModalMode();
 		// When switching to modal mode, ensure the modal is open
 		if (!isModalMode) {

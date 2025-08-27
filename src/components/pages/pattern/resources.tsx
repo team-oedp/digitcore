@@ -24,6 +24,17 @@ type DereferencedSolution = {
 	description?: PortableTextBlock[] | null;
 };
 
+type PortableTextSpan = {
+	_key: string;
+	_type: "span";
+	text: string;
+	marks?: string[];
+};
+
+function isPortableTextSpan(child: unknown): child is PortableTextSpan {
+	return !!child && typeof child === "object" && "text" in child;
+}
+
 export type DereferencedResource = {
 	_id: string;
 	title?: string | null;
@@ -52,12 +63,11 @@ function isSolutionReference(
 function ptToPlainText(blocks?: PortableTextBlock[] | null): string {
 	if (!Array.isArray(blocks)) return "";
 	return blocks
-		.map((block) =>
-			Array.isArray((block as any).children)
-				? (block as any).children
-						.map((child: any) =>
-							typeof child.text === "string" ? child.text : "",
-						)
+		.map((block: PortableTextBlock) =>
+			Array.isArray(block.children)
+				? block.children
+						.filter(isPortableTextSpan)
+						.map((child) => (typeof child.text === "string" ? child.text : ""))
 						.join("")
 				: "",
 		)

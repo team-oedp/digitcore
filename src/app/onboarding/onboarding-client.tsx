@@ -77,7 +77,9 @@ function friendlyLabelFromPath(path?: string) {
 
 function DashedBorder({
 	strokeWidth = 1.5,
-}: { strokeWidth?: number | string }) {
+}: {
+	strokeWidth?: number | string;
+}) {
 	return (
 		<svg
 			aria-hidden="true"
@@ -658,7 +660,7 @@ function Slide2({
 				<div className="space-y-4 font-light text-base text-foreground leading-relaxed md:text-lg">
 					{/* Audience buttons embedded in the text flow */}
 					<div className="flex flex-wrap items-center gap-2">
-						{audienceOptions.map((opt, idx) => (
+						{audienceOptions.map((opt, _idx) => (
 							<button
 								key={opt.value}
 								type="button"

@@ -7,18 +7,18 @@ import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
 } from "~/components/ui/accordion";
+import { toGlossaryAnchorId } from "~/lib/glossary-utils";
 import { client } from "~/sanity/lib/client";
 import {
-  GLOSSARY_PAGE_QUERY,
-  GLOSSARY_TERMS_QUERY,
+	GLOSSARY_PAGE_QUERY,
+	GLOSSARY_TERMS_QUERY,
 } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
-import { toGlossaryAnchorId } from "~/lib/glossary-utils";
 import { GlossaryScroll } from "./glossary-scroll";
 
 export const metadata: Metadata = {
@@ -88,7 +88,7 @@ export default async function GlossaryPage({
 	]);
 
 	// Process glossary terms and group by letter
-const processedTerms: ProcessedTerm[] =
+	const processedTerms: ProcessedTerm[] =
 		(glossaryTerms as GlossaryTerm[])?.map((term) => {
 			const firstLetter = term.title.charAt(0).toUpperCase();
 			return {
@@ -130,17 +130,18 @@ const processedTerms: ProcessedTerm[] =
 					</div>
 				</div>
 
-				<div className="flex min-w-0 flex-1 flex-col gap-20 md:gap-40">
-					{pageData?.title && pageData?.description && (
-						<div className="mb-20 lg:mb-60">
-							<PageHeading title={pageData.title} />
-							<CustomPortableText
-								value={pageData.description as PortableTextBlock[]}
-								className="mt-8 text-body"
-							/>
-						</div>
+				<div className="flex flex-col pb-44">
+					{pageData.title && <PageHeading title={pageData.title} />}
+					{pageData.description && (
+						<CustomPortableText
+							value={pageData.description as PortableTextBlock[]}
+							className="mt-8 text-body"
+						/>
 					)}
-					<div className="w-full space-y-8 pb-[800px]" data-scroll-container>
+					<div
+						className="w-full space-y-8 pt-20 pb-[800px] lg:pt-60"
+						data-scroll-container
+					>
 						<div id="glossary-content" className="w-full space-y-16">
 							{ALPHABET.map((letter) => {
 								const terms = termsByLetter[letter];
@@ -149,7 +150,7 @@ const processedTerms: ProcessedTerm[] =
 								return (
 									<section
 										key={letter}
-										className="w-full scroll-mt-[29px] space-y-4"
+										className="w-full scroll-mt-36 space-y-4"
 										id={`letter-${letter}`}
 									>
 										<h2 className="text-subheading">{letter}</h2>
@@ -159,15 +160,19 @@ const processedTerms: ProcessedTerm[] =
 											collapsible
 											className="w-full min-w-0"
 										>
-{terms.map((term) => (
+											{terms.map((term) => (
 												<AccordionItem
 													key={term.docId}
 													value={term.docId}
-													className="border-neutral-300 border-b border-dashed last:border-b scroll-mt-[29px]"
+													className="scroll-mt-[29px] border-neutral-300 border-b border-dashed last:border-b"
 													id={term.anchorId}
 												>
 													{/* Back-compat anchor for legacy links using the Sanity document ID */}
-													<span id={term.docId} className="block scroll-mt-[29px]" aria-hidden="true" />
+													<span
+														id={term.docId}
+														className="block scroll-mt-[29px]"
+														aria-hidden="true"
+													/>
 													<AccordionTrigger
 														showPlusMinus
 														className="accordion-heading items-center justify-between py-4"

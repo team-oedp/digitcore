@@ -71,20 +71,30 @@ export function HeadingMorph() {
 					initial={false}
 					animate={{
 						opacity: isScrolledPast ? 1 : 0,
-						borderWidth: isScrolledPast ? "1px" : "0px",
+						backgroundColor: isScrolledPast
+							? "var(--background)"
+							: "var(--primary-foreground)",
+						borderColor: isScrolledPast
+							? "var(--color-green-brand)"
+							: "var(--primary-foreground)",
 					}}
 					transition={{
 						opacity: {
 							duration: 0.3,
 							ease: "easeInOut",
 						},
-						borderWidth: {
+						backgroundColor: {
+							duration: 0.3,
+							delay: 0.8,
+							ease: "easeInOut",
+						},
+						borderColor: {
 							duration: 0.2,
-							delay: 1,
+							delay: 1.1,
 							ease: "easeInOut",
 						},
 					}}
-					className="absolute top-0 rounded-md border-[var(--color-green-brand)] border-solid bg-background px-1.5 py-0.5"
+					className="absolute top-0 rounded-md border border-solid bg-background px-1.5 py-0.5"
 				>
 					<motion.h1
 						initial={false}

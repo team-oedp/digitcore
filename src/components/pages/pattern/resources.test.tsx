@@ -29,6 +29,7 @@ interface SolutionPreviewProps {
 	solutionNumber?: number;
 	solutionTitle?: string;
 }
+
 import { Resources } from "./resources";
 
 // Mock the HugeiconsIcon component

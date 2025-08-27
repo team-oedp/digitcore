@@ -5,17 +5,15 @@ import {
 	ChartRelationshipIcon,
 	Tag01Icon,
 } from "@hugeicons/core-free-icons";
+import { MinusIcon, PlusIcon } from "lucide-react";
 import React, { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
-
 import {
 	BadgeGroup,
 	BadgeGroupContainer,
 } from "~/components/shared/badge-group";
 import { Icon } from "~/components/shared/icon";
 import { Badge } from "~/components/ui/badge";
-
-import { MinusIcon, PlusIcon } from "lucide-react";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	extractTextFromPortableText,
@@ -331,10 +329,13 @@ function PatternSearchResult({
 }
 
 // Resource Search Result Component
-function ResourceSearchResult({
+function _ResourceSearchResult({
 	pattern,
 	searchTerm = "",
-}: { pattern: ResourceSearchResultData; searchTerm?: string }) {
+}: {
+	pattern: ResourceSearchResultData;
+	searchTerm?: string;
+}) {
 	const title = pattern.title || "Untitled Resource";
 	const solutions = pattern.solutions || [];
 	const patternInfo = pattern.pattern;
@@ -414,10 +415,13 @@ function ResourceSearchResult({
 }
 
 // Solution Search Result Component
-function SolutionSearchResult({
+function _SolutionSearchResult({
 	pattern,
 	searchTerm = "",
-}: { pattern: SolutionSearchResultData; searchTerm?: string }) {
+}: {
+	pattern: SolutionSearchResultData;
+	searchTerm?: string;
+}) {
 	const title = pattern.title || "Untitled Solution";
 	const audiences = pattern.audiences || [];
 	const patternInfo = pattern.pattern;

@@ -141,7 +141,9 @@ const CarrierBagStoreContext = createContext<ReturnType<
 
 export const CarrierBagStoreProvider = ({
 	children,
-}: { children: React.ReactNode }) => {
+}: {
+	children: React.ReactNode;
+}) => {
 	const storeRef = useRef<ReturnType<typeof createCarrierBagStore>>(
 		createCarrierBagStore(),
 	);

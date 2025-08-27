@@ -97,58 +97,56 @@ export default async function PatternsPage() {
 						</p>
 					</div>
 				) : (
-					<>
-						{Array.from(themeGroups.values()).map(({ theme, patterns }) => (
-							<div key={theme._id}>
-								<div className="flex flex-col gap-5 pt-12 pb-12 md:pt-36">
-									<div className="flex flex-col gap-1">
-										<p className="text-muted-foreground text-xxs uppercase">
-											Theme
-										</p>
-										<h2 className="text-section-heading">{theme.title}</h2>
-									</div>
-									<CustomPortableText
-										value={theme.description as PortableTextBlock[]}
-										className="text-body"
-									/>
+					Array.from(themeGroups.values()).map(({ theme, patterns }) => (
+						<div key={theme._id}>
+							<div className="flex flex-col gap-5 pt-12 pb-12 md:pt-36">
+								<div className="flex flex-col gap-1">
+									<p className="text-muted-foreground text-xxs uppercase">
+										Theme
+									</p>
+									<h2 className="text-section-heading">{theme.title}</h2>
 								</div>
-
-								<div className="space-y-0 pt-12">
-									{patterns.map((pattern) => (
-										<SearchResultItem
-											key={pattern._id}
-											showPatternIcon={true}
-											pattern={{
-												...pattern,
-												theme: pattern.theme
-													? {
-															_id: pattern.theme._id,
-															title:
-																pattern.theme.title === null
-																	? undefined
-																	: pattern.theme.title,
-															description: pattern.theme.description as
-																| unknown[]
-																| undefined,
-														}
-													: null,
-												audiences:
-													pattern.audiences?.map((aud) => ({
-														...aud,
-														title: aud.title === null ? undefined : aud.title,
-													})) ?? null,
-												resources:
-													pattern.resources?.map((resource) => ({
-														...resource,
-														solution: resource.solutions || null,
-													})) ?? null,
-											}}
-										/>
-									))}
-								</div>
+								<CustomPortableText
+									value={theme.description as PortableTextBlock[]}
+									className="text-body"
+								/>
 							</div>
-						))}
-					</>
+
+							<div className="space-y-0 pt-12">
+								{patterns.map((pattern) => (
+									<SearchResultItem
+										key={pattern._id}
+										showPatternIcon={true}
+										pattern={{
+											...pattern,
+											theme: pattern.theme
+												? {
+														_id: pattern.theme._id,
+														title:
+															pattern.theme.title === null
+																? undefined
+																: pattern.theme.title,
+														description: pattern.theme.description as
+															| unknown[]
+															| undefined,
+													}
+												: null,
+											audiences:
+												pattern.audiences?.map((aud) => ({
+													...aud,
+													title: aud.title === null ? undefined : aud.title,
+												})) ?? null,
+											resources:
+												pattern.resources?.map((resource) => ({
+													...resource,
+													solution: resource.solutions || null,
+												})) ?? null,
+										}}
+									/>
+								))}
+							</div>
+						</div>
+					))
 				)}
 			</div>
 		</PageWrapper>

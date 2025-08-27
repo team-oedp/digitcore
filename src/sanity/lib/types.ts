@@ -37,7 +37,7 @@ export type ResolvedSanityReferences<T> =
 			: // match arrays, unwrap with `T[number]`,
 				// recursively run through `ResolvedSanityReferences`
 				// then re-wrap in an another array
-				// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+				// biome-ignore lint/suspicious/noExplicitAny: false positive
 				T extends any[]
 				? Array<ResolvedSanityReferences<T[number]>>
 				: // finally utilize mapped types to

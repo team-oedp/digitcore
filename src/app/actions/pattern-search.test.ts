@@ -16,6 +16,7 @@ vi.mock("console", () => ({
 
 // Import the mocked client to get access to the fetch function
 import { client } from "~/sanity/lib/client";
+
 const mockFetch = vi.mocked(client.fetch);
 
 // Mock data helpers

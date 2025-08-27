@@ -1,11 +1,10 @@
 "use client";
 
 import { Backpack03Icon } from "@hugeicons/core-free-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
-import type { Pattern } from "~/sanity/sanity.types";
-
 import { cn } from "~/lib/utils";
+import type { Pattern } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { Icon } from "./icon";
 
@@ -39,8 +38,9 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 		addPatternToBag(pattern);
 	}
 
+	const headingId = useId();
 	return (
-		<header id="page-header" className="relative max-w-4xl">
+		<header id={headingId} className="relative max-w-4xl">
 			<div className="flex flex-col gap-3 md:gap-4">
 				<div className="flex items-start gap-2 md:gap-4">
 					{PatternIcon && (

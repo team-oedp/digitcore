@@ -1,9 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import type Link from "next/link";
+import type { ComponentProps } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
-
-import type { ComponentProps } from "react";
 
 type LinkProps = ComponentProps<typeof Link>;
 
@@ -115,7 +114,8 @@ describe("CarrierBagItem", () => {
 	it("stops event propagation when buttons are clicked", () => {
 		const mockParentClick = vi.fn();
 		const { container } = render(
-			<div
+			<button
+				type="button"
 				onClick={mockParentClick}
 				onPointerDown={mockParentClick}
 				onKeyDown={mockParentClick}
@@ -126,7 +126,7 @@ describe("CarrierBagItem", () => {
 					onRemove={mockOnRemove}
 					onVisit={mockOnVisit}
 				/>
-			</div>,
+			</button>,
 		);
 
 		const visitButton = screen.getByRole("button", {

@@ -55,7 +55,7 @@ export function scrollToAnchor(
 			inline,
 		});
 		return true;
-	} catch (error) {
+	} catch (_error) {
 		const errorMessage = "Failed to scroll to element";
 		if (onError) {
 			onError(errorMessage);

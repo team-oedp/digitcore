@@ -118,7 +118,7 @@ describe("glossary-utils", () => {
 
 		it("should return original text when no matches found", () => {
 			const text = "No matching terms here.";
-			const renderTerm = (term: GlossaryTerm, text: string, key: string) =>
+			const renderTerm = (_term: GlossaryTerm, text: string, key: string) =>
 				`<span key="${key}">${text}</span>`;
 
 			const result = processTextWithGlossaryTerms(
@@ -133,7 +133,7 @@ describe("glossary-utils", () => {
 
 		it("should preserve original case in rendered terms", () => {
 			const text = "The API and api are the same.";
-			const renderTerm = (term: GlossaryTerm, text: string, key: string) =>
+			const renderTerm = (_term: GlossaryTerm, text: string, _key: string) =>
 				`[${text}]`;
 
 			const result = processTextWithGlossaryTerms(
@@ -153,7 +153,7 @@ describe("glossary-utils", () => {
 			expect(link).toBe("/glossary?word=test-term-id");
 		});
 
-	it("should slugify spaces and special characters", () => {
+		it("should slugify spaces and special characters", () => {
 			const link = createGlossaryLink("term with spaces");
 			expect(link).toBe("/glossary?word=term-with-spaces");
 		});

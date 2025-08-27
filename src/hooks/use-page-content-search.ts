@@ -143,15 +143,15 @@ export function usePageContentSearch({
 				const contextLower = item.context?.toLowerCase() || "";
 
 				// Score based on term matches
-				let score = 0;
+				let _score = 0;
 				let matchedTerms = 0;
 
 				for (const term of searchTerms) {
 					if (titleLower.includes(term)) {
-						score += 10; // Higher weight for title matches
+						_score += 10; // Higher weight for title matches
 						matchedTerms++;
 					} else if (contextLower.includes(term)) {
-						score += 5; // Lower weight for context matches
+						_score += 5; // Lower weight for context matches
 						matchedTerms++;
 					}
 				}

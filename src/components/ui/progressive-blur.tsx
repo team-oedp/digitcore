@@ -26,7 +26,7 @@ export function ProgressiveBlur({
 	hideAtBottom = false,
 	bottomThreshold = 50,
 }: ProgressiveBlurProps) {
-	const [isAtBottom, setIsAtBottom] = useState(false);
+	const [_isAtBottom, setIsAtBottom] = useState(false);
 	const [opacity, setOpacity] = useState(1);
 
 	useEffect(() => {
