@@ -17,6 +17,7 @@ type CarrierBagState = {
 	recentlyUpdatedIds: string[];
 	hasUnseenUpdates: boolean;
 	lastUpdateTime: number | null;
+	showClearConfirmation: boolean;
 	addPattern: (pattern: Pattern, notes?: string) => void;
 	removePattern: (patternId: string) => void;
 	updatePattern: (patternId: string, updatedPattern: Pattern) => void;
@@ -43,6 +44,8 @@ type CarrierBagState = {
 	markPatternUpdated: (patternId: string) => void;
 	markUpdatesAsSeen: () => void;
 	clearExpiredUpdates: () => void;
+	showClearConfirmationPane: () => void;
+	hideClearConfirmationPane: () => void;
 };
 
 export const createCarrierBagStore = () =>
@@ -59,6 +62,7 @@ export const createCarrierBagStore = () =>
 				recentlyUpdatedIds: [],
 				hasUnseenUpdates: false,
 				lastUpdateTime: null,
+				showClearConfirmation: false,
 
 				addPattern: (pattern: Pattern, notes?: string) => {
 					const { items } = get();
@@ -115,7 +119,7 @@ export const createCarrierBagStore = () =>
 				},
 
 				clearBag: () => {
-					set({ items: [] });
+					set({ items: [], showClearConfirmation: false });
 				},
 
 				hasPattern: (patternId: string) => {
@@ -251,6 +255,14 @@ export const createCarrierBagStore = () =>
 							lastUpdateTime: null,
 						});
 					}
+				},
+
+				showClearConfirmationPane: () => {
+					set({ showClearConfirmation: true });
+				},
+
+				hideClearConfirmationPane: () => {
+					set({ showClearConfirmation: false });
 				},
 			}),
 			{
