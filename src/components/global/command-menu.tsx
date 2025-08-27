@@ -1,26 +1,4 @@
-import { usePathname, useRouter } from "next/navigation";
-
-import { useCallback, useEffect, useRef, useState } from "react";
-
 import { Search02Icon } from "@hugeicons/core-free-icons";
-import { useTheme } from "next-themes";
-import { useDebounce } from "use-debounce";
-import type {
-	SearchPattern,
-	SearchResource,
-	SearchSolution,
-	SearchTag,
-} from "~/app/actions/search";
-import { searchContentForCommandModal } from "~/app/actions/search";
-import { usePageContentSearch } from "~/hooks/use-page-content-search";
-import {
-	type PortableTextBlock,
-	extractTextFromPortableText,
-	getMatchExplanation,
-	highlightMatches,
-	truncateWithContext,
-} from "~/lib/search-utils";
-
 import {
 	ArrowDownIcon,
 	ArrowUpIcon,
@@ -32,10 +10,17 @@ import {
 	HashIcon,
 	LightbulbIcon,
 } from "lucide-react";
-
-import { cn } from "~/lib/utils";
-import { Icon } from "../shared/icon";
-
+import { useTheme } from "next-themes";
+import { usePathname, useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useDebounce } from "use-debounce";
+import type {
+	SearchPattern,
+	SearchResource,
+	SearchSolution,
+	SearchTag,
+} from "~/app/actions/search";
+import { searchContentForCommandModal } from "~/app/actions/search";
 import {
 	CommandDialog,
 	CommandEmpty,
@@ -44,6 +29,16 @@ import {
 	CommandItem,
 	CommandList,
 } from "~/components/ui/command";
+import { usePageContentSearch } from "~/hooks/use-page-content-search";
+import {
+	type PortableTextBlock,
+	extractTextFromPortableText,
+	getMatchExplanation,
+	highlightMatches,
+	truncateWithContext,
+} from "~/lib/search-utils";
+import { cn } from "~/lib/utils";
+import { Icon } from "../shared/icon";
 
 type CommandMenuItemProps = {
 	shortcut?: string;
@@ -55,7 +50,7 @@ type CommandMenuItemProps = {
 	searchValue?: string;
 } & React.ComponentProps<typeof CommandItem>;
 
-function CommandMenuItem({
+function _CommandMenuItem({
 	children,
 	icon,
 	shortcut,
@@ -118,7 +113,7 @@ export function CommandMenu() {
 	const pathname = usePathname();
 
 	const { resolvedTheme: theme } = useTheme();
-	const patternSlug = pathname.startsWith("/pattern/")
+	const _patternSlug = pathname.startsWith("/pattern/")
 		? pathname.split("/").pop()
 		: undefined;
 
@@ -131,7 +126,7 @@ export function CommandMenu() {
 		tags: SearchTag[];
 	}>({ patterns: [], solutions: [], resources: [], tags: [] });
 	const [globalLoading, setGlobalLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+	const [_error, setError] = useState<string | null>(null);
 	const [debouncedQuery] = useDebounce(query, 300);
 
 	// Enhanced search effect using comprehensive search
@@ -172,7 +167,7 @@ export function CommandMenu() {
 						tags: [],
 					});
 				}
-			} catch (err) {
+			} catch (_err) {
 				setError("Search failed");
 				setSearchResults({
 					patterns: [],
@@ -204,7 +199,7 @@ export function CommandMenu() {
 	};
 
 	const isLoading = globalLoading || pageLoading;
-	const hasResults =
+	const _hasResults =
 		searchResults.patterns.length > 0 ||
 		searchResults.solutions.length > 0 ||
 		searchResults.resources.length > 0 ||
@@ -227,7 +222,7 @@ export function CommandMenu() {
 		}
 	}, [isOpen, clearPageSearch]);
 
-	const clearSearch = useCallback(() => {
+	const _clearSearch = useCallback(() => {
 		setQuery("");
 		setSearchResults({ patterns: [], solutions: [], resources: [], tags: [] });
 		setError(null);
@@ -331,7 +326,7 @@ export function CommandMenu() {
 		return { hasMatch: titleMatch };
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	// biome-ignore lint/correctness/useExhaustiveDependencies: false positive
 	useEffect(() => {
 		function handleKeyDown(e: KeyboardEvent) {
 			if (e.key === "k" && (e.metaKey || e.ctrlKey)) {

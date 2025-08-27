@@ -60,7 +60,9 @@ function getSlugString(p: PatternWithFlexibleSlug): string | undefined {
 
 export function CarrierBagContent({
 	mobileTrigger,
-}: { mobileTrigger?: React.ReactNode }) {
+}: {
+	mobileTrigger?: React.ReactNode;
+}) {
 	const items = useCarrierBagStore((state) => state.items);
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
 	const setItems = useCarrierBagStore((state) => state.setItems);

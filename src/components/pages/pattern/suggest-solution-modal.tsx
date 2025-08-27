@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { submitSuggestion } from "~/app/actions/submit-suggestion";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -29,6 +29,7 @@ export function SuggestSolutionModal({
 	trigger,
 }: SuggestSolutionModalProps) {
 	const [isOpen, setIsOpen] = useState(false);
+	const baseId = useId();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [formData, setFormData] = useState({
@@ -135,11 +136,11 @@ export function SuggestSolutionModal({
 						</div>
 
 						<div>
-							<Label htmlFor="newSolutions" className="pb-2">
+							<Label htmlFor={`${baseId}-newSolutions`} className="pb-2">
 								New Solution(s)
 							</Label>
 							<textarea
-								id="newSolutions"
+								id={`${baseId}-newSolutions`}
 								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 								placeholder="What new solution(s) would you like to add for this pattern?"
 								value={formData.newSolutions}
@@ -150,11 +151,11 @@ export function SuggestSolutionModal({
 						</div>
 
 						<div>
-							<Label htmlFor="newResources" className="pb-2">
+							<Label htmlFor={`${baseId}-newResources`} className="pb-2">
 								New Resource(s)
 							</Label>
 							<textarea
-								id="newResources"
+								id={`${baseId}-newResources`}
 								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 								placeholder="What new resource(s) would you like to add for this pattern? Please reference a solution and provide a URL if applicable."
 								value={formData.newResources}
@@ -165,11 +166,11 @@ export function SuggestSolutionModal({
 						</div>
 
 						<div>
-							<Label htmlFor="additionalFeedback" className="pb-2">
+							<Label htmlFor={`${baseId}-additionalFeedback`} className="pb-2">
 								Additional Feedback
 							</Label>
 							<textarea
-								id="additionalFeedback"
+								id={`${baseId}-additionalFeedback`}
 								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 								placeholder="Do you have any additional feedback on the Pattern or Toolkit?"
 								value={formData.additionalFeedback}
@@ -180,11 +181,11 @@ export function SuggestSolutionModal({
 						</div>
 
 						<div>
-							<Label htmlFor="nameAndAffiliation" className="pb-2">
+							<Label htmlFor={`${baseId}-nameAndAffiliation`} className="pb-2">
 								Name and Affiliation
 							</Label>
 							<Input
-								id="nameAndAffiliation"
+								id={`${baseId}-nameAndAffiliation`}
 								placeholder="If you would like to be credited on the website, how would you like your name and affiliation to be listed? (Full name and max 2 affiliations)"
 								value={formData.nameAndAffiliation}
 								onChange={(e) =>
@@ -194,11 +195,11 @@ export function SuggestSolutionModal({
 						</div>
 
 						<div>
-							<Label htmlFor="email" className="pb-2">
+							<Label htmlFor={`${baseId}-email`} className="pb-2">
 								Email <span className="text-red-500">*</span>
 							</Label>
 							<Input
-								id="email"
+								id={`${baseId}-email`}
 								type="email"
 								placeholder="What email can we use to reach out to you if we have further questions? (Enter 'N/A' for anonymous submission)"
 								value={formData.email}

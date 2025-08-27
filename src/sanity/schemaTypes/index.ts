@@ -12,7 +12,7 @@ import { suggestionType } from "./documents/suggestionType";
 import { tagType } from "./documents/tagType";
 import { themeType } from "./documents/themeType";
 import { blockContentType } from "./objects/blockContentType";
-import { cardCarouselType } from "./objects/cardCarouselType";
+import { contentListType } from "./objects/contentListType";
 import { contentType } from "./objects/contentType";
 import { linkType } from "./objects/linkType";
 import { carrierBagType } from "./singletons/carrierBagType";
@@ -25,7 +25,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 		linkType,
 		blockContentType,
 		contentType,
-		cardCarouselType,
+		contentListType,
 		tagType,
 		patternType,
 		audienceType,

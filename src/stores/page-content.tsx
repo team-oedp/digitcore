@@ -212,7 +212,9 @@ const PageContentStoreContext = createContext<ReturnType<
 
 export const PageContentStoreProvider = ({
 	children,
-}: { children: React.ReactNode }) => {
+}: {
+	children: React.ReactNode;
+}) => {
 	const storeRef = useRef<ReturnType<typeof createPageContentStore>>(
 		createPageContentStore(),
 	);

@@ -8,7 +8,6 @@ import {
 import { MinusIcon, PlusIcon } from "lucide-react";
 import React, { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
-
 import {
 	BadgeGroup,
 	BadgeGroupContainer,
@@ -19,7 +18,6 @@ import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	extractTextFromPortableText,
 	getMatchExplanation,
-	hasMatchInTitle,
 	highlightMatches,
 	truncateWithContext,
 } from "~/lib/search-utils";
@@ -46,6 +44,7 @@ type BaseSearchResultData = {
 // Pattern-specific type - Updated to handle both search results and patterns page
 type PatternSearchResultData = BaseSearchResultData & {
 	_type: "pattern";
+	descriptionPlainText?: string | null;
 	theme?: {
 		_id: string;
 		title?: string;
@@ -132,19 +131,22 @@ function SearchResultBase({
 	patternIcon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 }) {
 	return (
-		<div className="relative w-full border-border border-t border-dashed pb-9">
+		<div className="relative w-full border-neutral-400 border-t border-dashed pb-9">
 			<div className="flex flex-col py-4">
 				{/* Header with title and button */}
 				<div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
 					<div className="flex items-start gap-3">
 						{showPatternIcon && patternIcon && (
-							<div className="h-8 w-8 flex-shrink-0 text-neutral-500">
+							<div className="h-6 w-6 flex-shrink-0 text-neutral-500">
 								{React.createElement(patternIcon, {
-									className: "h-full w-full fill-icon/40 text-icon/70",
+									className:
+										"h-full w-full fill-icon/40 text-icon/70 opacity-40",
 								})}
 							</div>
 						)}
-						<h3 className="w-full text-pattern-list-item-title">{title}</h3>
+						<h3 className="w-full text-left font-normal text-lg text-primary uppercase leading-tight md:text-xl">
+							{title}
+						</h3>
 					</div>
 					<div className="flex-shrink-0">{buttonElement}</div>
 				</div>
@@ -191,12 +193,11 @@ function PatternSearchResult({
 		rawDescription,
 		searchTerm,
 	);
-	const titleHasMatch = hasMatchInTitle(title, searchTerm);
 
 	const buttonElement = (
 		<a
 			href={`/pattern/${pattern.slug}`}
-			className="inline-flex items-center gap-2 rounded-md border border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] px-2 py-1 text-[var(--pattern-button-text)] transition-opacity hover:opacity-80 md:px-3 md:py-1"
+			className="inline-flex items-center gap-2 rounded-full border border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] px-3 py-0.5 text-[var(--pattern-button-text)] transition-opacity hover:opacity-80 md:px-4 md:py-1"
 		>
 			<span className="text-button text-xs uppercase">Visit Pattern</span>
 		</a>
@@ -222,7 +223,7 @@ function PatternSearchResult({
 									: "line-clamp-3 max-h-[96px]",
 							)}
 						>
-							<span className="block text-sm text-zinc-600 leading-relaxed md:text-base">
+							<span className="block text-description-muted">
 								{renderHighlightedText(
 									extractTextFromPortableText(rawDescription),
 									searchTerm,
@@ -328,10 +329,13 @@ function PatternSearchResult({
 }
 
 // Resource Search Result Component
-function ResourceSearchResult({
+function _ResourceSearchResult({
 	pattern,
 	searchTerm = "",
-}: { pattern: ResourceSearchResultData; searchTerm?: string }) {
+}: {
+	pattern: ResourceSearchResultData;
+	searchTerm?: string;
+}) {
 	const title = pattern.title || "Untitled Resource";
 	const solutions = pattern.solutions || [];
 	const patternInfo = pattern.pattern;
@@ -350,7 +354,7 @@ function ResourceSearchResult({
 		>
 			<span className="font-normal text-xs uppercase">Visit Resource</span>
 			{PatternIcon && (
-				<PatternIcon className="h-3 w-3 text-[var(--resource-button-text)]" />
+				<PatternIcon className="h-3 w-3 text-[var(--resource-button-text)] opacity-40" />
 			)}
 		</a>
 	);
@@ -395,7 +399,11 @@ function ResourceSearchResult({
 					>
 						<Badge
 							variant="pattern"
-							icon={PatternIcon && <PatternIcon className="h-3.5 w-3.5" />}
+							icon={
+								PatternIcon && (
+									<PatternIcon className="h-3.5 w-3.5 opacity-40" />
+								)
+							}
 						>
 							{patternInfo.title}
 						</Badge>
@@ -407,10 +415,13 @@ function ResourceSearchResult({
 }
 
 // Solution Search Result Component
-function SolutionSearchResult({
+function _SolutionSearchResult({
 	pattern,
 	searchTerm = "",
-}: { pattern: SolutionSearchResultData; searchTerm?: string }) {
+}: {
+	pattern: SolutionSearchResultData;
+	searchTerm?: string;
+}) {
 	const title = pattern.title || "Untitled Solution";
 	const audiences = pattern.audiences || [];
 	const patternInfo = pattern.pattern;
@@ -429,7 +440,7 @@ function SolutionSearchResult({
 		>
 			<span className="font-normal text-xs uppercase">Visit Solution</span>
 			{PatternIcon && (
-				<PatternIcon className="h-3 w-3 text-[var(--solution-button-text)]" />
+				<PatternIcon className="h-3 w-3 text-[var(--solution-button-text)] opacity-40" />
 			)}
 		</a>
 	);
@@ -477,7 +488,7 @@ function SolutionSearchResult({
 								{patternInfo.title}
 							</span>
 							{PatternIcon && (
-								<PatternIcon className="h-3.5 w-3.5 text-neutral-500" />
+								<PatternIcon className="h-3.5 w-3.5 text-neutral-500 opacity-40" />
 							)}
 						</div>
 					</SearchResultPreview>

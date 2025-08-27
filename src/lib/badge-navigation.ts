@@ -12,7 +12,7 @@ export function getTagNavigationUrl(tagTitle: string): string {
 
 	// Create the anchor that matches the tag name
 	// Using the tag title as anchor for more precise scrolling
-	const tagAnchor = encodeURIComponent(
+	const _tagAnchor = encodeURIComponent(
 		tagTitle.toLowerCase().replace(/\s+/g, "-"),
 	);
 

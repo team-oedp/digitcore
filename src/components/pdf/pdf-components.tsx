@@ -448,7 +448,7 @@ const PDFSolutions = ({ solutions }: PDFSolutionsProps) => {
 	return (
 		<View>
 			<Text style={styles.sectionTitle}>Solutions</Text>
-			{solutions.map((solution, index) => (
+			{solutions.map((solution, _index) => (
 				<View key={solution.id} style={styles.solutionContainer}>
 					<View style={styles.solutionHeader}>
 						<Text style={styles.solutionNumber}>{solution.number}</Text>

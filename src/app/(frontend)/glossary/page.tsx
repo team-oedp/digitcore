@@ -12,12 +12,14 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "~/components/ui/accordion";
+import { toGlossaryAnchorId } from "~/lib/glossary-utils";
 import { client } from "~/sanity/lib/client";
 import {
 	GLOSSARY_PAGE_QUERY,
 	GLOSSARY_TERMS_QUERY,
 } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
+import { GlossaryScroll } from "./glossary-scroll";
 
 export const metadata: Metadata = {
 	title: "Glossary | DIGITCORE Toolkit",
@@ -35,7 +37,8 @@ type GlossaryTerm = {
 };
 
 type ProcessedTerm = {
-	id: string;
+	docId: string;
+	anchorId: string;
 	letter: string;
 	term: string;
 	description: PortableTextBlock[];
@@ -43,7 +46,11 @@ type ProcessedTerm = {
 
 type TermsByLetter = Partial<Record<string, ProcessedTerm[]>>;
 
-export default async function GlossaryPage() {
+export default async function GlossaryPage({
+	searchParams,
+}: {
+	searchParams: { [key: string]: string | string[] | undefined };
+}) {
 	const isDraftMode = (await draftMode()).isEnabled;
 
 	// Fetch page content and glossary terms in parallel
@@ -85,7 +92,8 @@ export default async function GlossaryPage() {
 		(glossaryTerms as GlossaryTerm[])?.map((term) => {
 			const firstLetter = term.title.charAt(0).toUpperCase();
 			return {
-				id: term._id,
+				docId: term._id,
+				anchorId: toGlossaryAnchorId(term.title),
 				letter: firstLetter,
 				term: term.title,
 				description: term.description,
@@ -102,12 +110,9 @@ export default async function GlossaryPage() {
 		return acc;
 	}, {});
 
-	// Default description if page data is not available
-	const defaultDescription =
-		"Building equitable open digital infrastructure requires a shared understanding of key concepts that bridge technology, environmental justice, and community collaboration. This glossary defines essential terms from the DIGITCORE Toolkit, helping researchers, developers, community organizations, and advocates navigate the complex landscape of participatory science and open infrastructure development.";
-
 	return (
 		<div className="relative">
+			<GlossaryScroll searchParams={searchParams} />
 			<PageWrapper className="flex min-h-0 flex-col gap-0 md:min-h-screen md:flex-row md:gap-20">
 				{/* Sticky nav and section indicator */}
 				<div className="sticky top-5 z-10 hidden h-full self-start md:block">
@@ -125,14 +130,18 @@ export default async function GlossaryPage() {
 					</div>
 				</div>
 
-				<div className="flex min-w-0 flex-1 flex-col gap-20 md:gap-40">
-					{pageData?.title && pageData?.description && (
-						<PageHeading
-							title={pageData.title}
-							description={pageData.description as PortableTextBlock[]}
+				<div className="flex flex-col pb-44">
+					{pageData.title && <PageHeading title={pageData.title} />}
+					{pageData.description && (
+						<CustomPortableText
+							value={pageData.description as PortableTextBlock[]}
+							className="mt-8 text-body"
 						/>
 					)}
-					<div className="w-full space-y-8 pb-[800px]" data-scroll-container>
+					<div
+						className="w-full space-y-8 pt-20 pb-[800px] lg:pt-60"
+						data-scroll-container
+					>
 						<div id="glossary-content" className="w-full space-y-16">
 							{ALPHABET.map((letter) => {
 								const terms = termsByLetter[letter];
@@ -141,7 +150,7 @@ export default async function GlossaryPage() {
 								return (
 									<section
 										key={letter}
-										className="w-full scroll-mt-[29px] space-y-4"
+										className="w-full scroll-mt-36 space-y-4"
 										id={`letter-${letter}`}
 									>
 										<h2 className="text-subheading">{letter}</h2>
@@ -153,11 +162,17 @@ export default async function GlossaryPage() {
 										>
 											{terms.map((term) => (
 												<AccordionItem
-													key={term.id}
-													value={term.id}
-													className="border-neutral-300 border-b border-dashed last:border-b"
-													id={term.id}
+													key={term.docId}
+													value={term.docId}
+													className="scroll-mt-[29px] border-neutral-300 border-b border-dashed last:border-b"
+													id={term.anchorId}
 												>
+													{/* Back-compat anchor for legacy links using the Sanity document ID */}
+													<span
+														id={term.docId}
+														className="block scroll-mt-[29px]"
+														aria-hidden="true"
+													/>
 													<AccordionTrigger
 														showPlusMinus
 														className="accordion-heading items-center justify-between py-4"

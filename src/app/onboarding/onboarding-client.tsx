@@ -77,7 +77,9 @@ function friendlyLabelFromPath(path?: string) {
 
 function DashedBorder({
 	strokeWidth = 1.5,
-}: { strokeWidth?: number | string }) {
+}: {
+	strokeWidth?: number | string;
+}) {
 	return (
 		<svg
 			aria-hidden="true"
@@ -445,36 +447,39 @@ function Slide1({
 			<div className="relative md:hidden">
 				<Icon01
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_130s_linear_infinite] fill-icon/10 text-icon/30"
-					width={120}
-					height={120}
+					width={180}
+					height={180}
 				/>
 				<Icon04
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_110s_linear_infinite_reverse] fill-icon/15 text-icon/40"
-					width={120}
-					height={120}
+					width={180}
+					height={180}
 				/>
 				<Icon07
 					className="relative max-h-full max-w-full animate-[spin_150s_linear_infinite] fill-icon/20 text-icon/50"
-					width={120}
-					height={120}
+					width={180}
+					height={180}
 				/>
 			</div>
 			{/* Desktop icons */}
 			<div className="relative hidden md:block">
 				<Icon01
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_130s_linear_infinite] fill-icon/10 text-icon/30"
-					width={600}
-					height={600}
+					width={440}
+					height={440}
+					strokeWidth={1}
 				/>
 				<Icon04
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_110s_linear_infinite_reverse] fill-icon/15 text-icon/40"
-					width={600}
-					height={600}
+					width={440}
+					height={440}
+					strokeWidth={1}
 				/>
 				<Icon07
 					className="relative max-h-full max-w-full animate-[spin_150s_linear_infinite] fill-icon/20 text-icon/50"
-					width={600}
-					height={600}
+					width={440}
+					height={440}
+					strokeWidth={1}
 				/>
 			</div>
 		</div>
@@ -597,36 +602,39 @@ function Slide2({
 			<div className="relative md:hidden">
 				<Icon02
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_140s_linear_infinite] fill-icon/10 text-icon/30"
-					width={120}
-					height={120}
+					width={180}
+					height={180}
 				/>
 				<Icon05
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_120s_linear_infinite_reverse] fill-icon/15 text-icon/40"
-					width={120}
-					height={120}
+					width={180}
+					height={180}
 				/>
 				<Icon08
 					className="relative max-h-full max-w-full animate-[spin_160s_linear_infinite] fill-icon/20 text-icon/50"
-					width={120}
-					height={120}
+					width={180}
+					height={180}
 				/>
 			</div>
 			{/* Desktop icons */}
 			<div className="relative hidden md:block">
 				<Icon02
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_140s_linear_infinite] fill-icon/10 text-icon/30"
-					width={600}
-					height={600}
+					width={440}
+					height={440}
+					strokeWidth={1}
 				/>
 				<Icon05
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_120s_linear_infinite_reverse] fill-icon/15 text-icon/40"
-					width={600}
-					height={600}
+					width={440}
+					height={440}
+					strokeWidth={1}
 				/>
 				<Icon08
 					className="relative max-h-full max-w-full animate-[spin_160s_linear_infinite] fill-icon/20 text-icon/50"
-					width={600}
-					height={600}
+					width={440}
+					height={440}
+					strokeWidth={1}
 				/>
 			</div>
 		</div>
@@ -658,7 +666,7 @@ function Slide2({
 				<div className="space-y-4 font-light text-base text-foreground leading-relaxed md:text-lg">
 					{/* Audience buttons embedded in the text flow */}
 					<div className="flex flex-wrap items-center gap-2">
-						{audienceOptions.map((opt, idx) => (
+						{audienceOptions.map((opt, _idx) => (
 							<button
 								key={opt.value}
 								type="button"
@@ -764,36 +772,39 @@ function Slide3({
 			<div className="relative md:hidden">
 				<Icon03
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_135s_linear_infinite] fill-icon/10 text-icon/30"
-					width={120}
-					height={120}
+					width={180}
+					height={180}
 				/>
 				<Icon06
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_115s_linear_infinite_reverse] fill-icon/15 text-icon/40"
-					width={120}
-					height={120}
+					width={180}
+					height={180}
 				/>
 				<Icon09
 					className="relative max-h-full max-w-full animate-[spin_155s_linear_infinite] fill-icon/20 text-icon/50"
-					width={120}
-					height={120}
+					width={180}
+					height={180}
 				/>
 			</div>
 			{/* Desktop icons */}
 			<div className="relative hidden md:block">
 				<Icon03
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_135s_linear_infinite] fill-icon/10 text-icon/30"
-					width={600}
-					height={600}
+					width={440}
+					height={440}
+					strokeWidth={1}
 				/>
 				<Icon06
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_115s_linear_infinite_reverse] fill-icon/15 text-icon/40"
-					width={600}
-					height={600}
+					width={440}
+					height={440}
+					strokeWidth={1}
 				/>
 				<Icon09
 					className="relative max-h-full max-w-full animate-[spin_155s_linear_infinite] fill-icon/20 text-icon/50"
-					width={600}
-					height={600}
+					width={440}
+					height={440}
+					strokeWidth={1}
 				/>
 			</div>
 		</div>

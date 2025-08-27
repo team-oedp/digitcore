@@ -6,6 +6,7 @@ export const PATTERNS_QUERY =
     _type,
     title,
     description,
+    "descriptionPlainText": pt::text(description),
     "slug": slug.current,
     tags[]->,
     audiences[]->,
@@ -30,6 +31,7 @@ export const PATTERN_QUERY =
     _rev,
     title,
     description,
+    "descriptionPlainText": pt::text(description),
     "slug": slug.current,
     tags[]->{...},
 	    audiences[]->{...},
@@ -72,6 +74,7 @@ export const PATTERN_BASE_QUERY =
     _rev,
     title,
     description,
+    "descriptionPlainText": pt::text(description),
     "slug": slug.current,
     "tagIds": tags[]._ref,
     "audienceIds": audiences[]._ref,
@@ -121,7 +124,14 @@ export const GLOSSARY_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
   }`);
 
 export const GLOSSARY_TERMS_QUERY = defineQuery(`
@@ -162,7 +172,14 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
   }`);
 
 export const EXPLORE_PAGE_QUERY = defineQuery(`
@@ -171,7 +188,14 @@ export const EXPLORE_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
   }`);
 
 export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
@@ -542,15 +566,29 @@ export const TAGS_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
     content[]{
       _key,
       _type,
       heading,
-      body,
-      // For cardCarousel type
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
@@ -614,15 +652,29 @@ export const VALUES_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
     content[]{
       _key,
       _type,
       heading,
-      body,
-      // For cardCarousel type
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
@@ -643,9 +695,9 @@ export const PATTERNS_PAGE_QUERY = defineQuery(`
       _type,
       heading,
       body,
-      // For cardCarousel type
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
@@ -660,15 +712,29 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
     content[]{
       _key,
       _type,
       heading,
-      body,
-      // For cardCarousel type
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
@@ -683,28 +749,42 @@ export const HOME_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
-    // Full content blocks, including cardCarousel sections
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
+    // Full content blocks, including contentList sections
     content[]{
       _key,
       _type,
       heading,
-      body,
-      // For cardCarousel type
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
       }
     },
-    // Convenience projections for specific card sets by title
-    "audiences": content[_type == 'cardCarousel' && title == 'Audiences'][0].cards[]{
+    // Convenience projections for specific content lists by title
+    "audiences": content[_type == 'contentList' && title == 'Audiences'][0].items[]{
       _key,
       title,
       description
     },
-    "values": content[_type == 'cardCarousel' && title == 'Values'][0].cards[]{
+    "values": content[_type == 'contentList' && title == 'Values'][0].items[]{
       _key,
       title,
       description
@@ -718,15 +798,29 @@ export const FAQ_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
     content[]{
       _key,
       _type,
       heading,
-      body,
-      // For cardCarousel type
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description
@@ -758,15 +852,29 @@ export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
     content[]{
       _key,
       _type,
       heading,
-      body,
-      // For cardCarousel type
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current
+        }
+      },
+      // For contentList type
       title,
-      cards[]{
+      items[]{
         _key,
         title,
         description

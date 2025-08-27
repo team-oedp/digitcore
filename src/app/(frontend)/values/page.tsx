@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function ValuesPage() {
 	const isDraftMode = (await draftMode()).isEnabled;
-	const data = (await client.fetch(
+	const pageData = (await client.fetch(
 		VALUES_PAGE_QUERY,
 		{},
 		isDraftMode
@@ -26,30 +26,33 @@ export default async function ValuesPage() {
 			: { perspective: "published", useCdn: true },
 	)) as Page | null;
 
-	if (!data) return null;
+	if (!pageData) return null;
 
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-10 pb-44">
-				{data.title && data.description && (
-					<PageHeading
-						title={data.title}
-						description={data.description as PortableTextBlock[]}
+			<div className="flex flex-col pb-44">
+				{pageData.title && <PageHeading title={pageData.title} />}
+				{pageData.description && (
+					<CustomPortableText
+						value={pageData.description as PortableTextBlock[]}
+						className="mt-8 text-body"
 					/>
 				)}
-				{data.content?.map((section) => (
-					<section key={section._key} className="flex flex-col gap-5">
-						{section._type === "content" && section.heading && (
-							<SectionHeading heading={section.heading} />
-						)}
-						{section._type === "content" && section.body && (
-							<CustomPortableText
-								value={section.body as PortableTextBlock[]}
-								className="prose"
-							/>
-						)}
-					</section>
-				))}
+				<div className="flex flex-col gap-8 pt-20 lg:pt-60">
+					{pageData.content?.map((section) => (
+						<section key={section._key} className="flex flex-col gap-5">
+							{section._type === "content" && section.heading && (
+								<SectionHeading heading={section.heading} />
+							)}
+							{section._type === "content" && section.body && (
+								<CustomPortableText
+									value={section.body as PortableTextBlock[]}
+									className="text-body"
+								/>
+							)}
+						</section>
+					))}
+				</div>
 			</div>
 		</PageWrapper>
 	);

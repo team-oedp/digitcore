@@ -1,9 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import type Link from "next/link";
+import type { ComponentProps } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
-
-import type { ComponentProps } from "react";
 
 type LinkProps = ComponentProps<typeof Link>;
 

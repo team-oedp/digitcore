@@ -27,7 +27,7 @@ export function SiteHeader() {
 	);
 
 	// TODO: implement toggle of carrier bag sidebar into a modal
-	const handleModalModeToggle = () => {
+	const _handleModalModeToggle = () => {
 		toggleModalMode();
 		// When switching to modal mode, ensure the modal is open
 		if (!isModalMode) {
@@ -71,7 +71,7 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2 capitalize",
+										"h-auto px-3 py-2 text-link",
 										pathname === "/onboarding"
 											? "text-foreground"
 											: "text-muted-foreground",
@@ -85,7 +85,7 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2 capitalize",
+										"h-auto px-3 py-2 text-link",
 										pathname === "/explore"
 											? "text-foreground"
 											: "text-muted-foreground",
@@ -99,7 +99,7 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2 capitalize",
+										"h-auto px-3 py-2 text-link",
 										pathname === "/patterns"
 											? "text-foreground"
 											: "text-muted-foreground",
@@ -113,7 +113,7 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2 capitalize",
+										"h-auto px-3 py-2 text-link",
 										pathname === "/tags"
 											? "text-foreground"
 											: "text-muted-foreground",
@@ -127,7 +127,7 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2 capitalize",
+										"h-auto px-3 py-2 text-link",
 										pathname === "/values"
 											? "text-foreground"
 											: "text-muted-foreground",
@@ -141,7 +141,7 @@ export function SiteHeader() {
 									variant="link"
 									asChild
 									className={cn(
-										"h-auto px-3 py-2 capitalize",
+										"h-auto px-3 py-2 text-link",
 										pathname === "/about"
 											? "text-foreground"
 											: "text-muted-foreground",

@@ -43,13 +43,7 @@ export function SearchResultsHeaderClient({
 
 	// Don't show anything if no search criteria
 	if (!hasSearchCriteria) {
-		return (
-			<div className="flex items-center justify-between">
-				<div className="flex items-center gap-2">
-					<span className="text-sm text-zinc-400">Ready to search</span>
-				</div>
-			</div>
-		);
+		return null;
 	}
 
 	if (isLoading) {

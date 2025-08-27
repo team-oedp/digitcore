@@ -65,7 +65,7 @@ export function truncateWithContext(
 	const contextAfter = maxLength - contextBefore - termLength;
 
 	const start = Math.max(0, matchIndex - contextBefore);
-	const end = Math.min(
+	const _end = Math.min(
 		plainText.length,
 		matchIndex + termLength + contextAfter,
 	);

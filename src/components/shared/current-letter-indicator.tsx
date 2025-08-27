@@ -42,7 +42,7 @@ export function CurrentLetterIndicator({
 
 	// Build refs for each section we care about and observe them from below the header
 	const setActiveLetter = useSectionInViewStore((s) => s.setActiveLetter);
-	const headerOffset = useSectionInViewStore((s) => s.headerOffset);
+	const _headerOffset = useSectionInViewStore((s) => s.headerOffset);
 
 	// Stable sorted letters to track
 	const letters = useMemo(() => {

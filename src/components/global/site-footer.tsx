@@ -45,7 +45,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 	const license = footerData?.license;
 
 	// Combine internal and external links, fallback to hardcoded social links if no external links from Sanity
-	const allExternalLinks =
+	const _allExternalLinks =
 		externalLinks.length > 0
 			? externalLinks
 			: FALLBACK_SOCIAL_LINKS.map((link) => ({
@@ -82,7 +82,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 										<li key={link._key}>
 											<Link
 												href={`/${link.page?.slug || "#"}`}
-												className="link text-sm focus:outline-none"
+												className="text-link text-sm focus:outline-none"
 											>
 												{link.label}
 											</Link>
@@ -237,7 +237,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 											<li key={link._key}>
 												<Link
 													href={`/${link.page?.slug || "#"}`}
-													className="link text-sm focus:outline-none"
+													className="text-link text-sm focus:outline-none"
 												>
 													{link.label}
 												</Link>

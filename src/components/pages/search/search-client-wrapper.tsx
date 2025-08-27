@@ -228,8 +228,8 @@ export function SearchClientWrapper() {
 		currentTags.length > 0;
 
 	// Extract search term for display from results
-	const searchTerm = searchResult?.searchParams?.searchTerm;
-	const hasActiveFilters =
+	const _searchTerm = searchResult?.searchParams?.searchTerm;
+	const _hasActiveFilters =
 		(searchResult?.searchParams?.audiences?.length ?? 0) > 0 ||
 		(searchResult?.searchParams?.themes?.length ?? 0) > 0 ||
 		(searchResult?.searchParams?.tags?.length ?? 0) > 0;
@@ -242,13 +242,8 @@ export function SearchClientWrapper() {
 			/>
 
 			{!hasSearchCriteria ? (
-				// No search criteria - show empty state instead of loading
-				<div className="py-12 text-left">
-					<p className="mb-2 text-zinc-500">Start your search</p>
-					<p className="text-base text-zinc-400">
-						Enter a search term or select filters to find patterns
-					</p>
-				</div>
+				// No search criteria - show blank area
+				<div className="py-12" />
 			) : isLoading ? (
 				<SearchResultsSkeleton count={6} />
 			) : !searchResult?.success ? (

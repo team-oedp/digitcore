@@ -1,7 +1,5 @@
 "use client";
 
-import { useCarrierBagStore } from "~/stores/carrier-bag";
-
 import {
 	ArrowExpand02Icon,
 	Cancel01Icon,
@@ -14,6 +12,7 @@ import {
 } from "~/components/global/carrier-bag/carrier-bag-item";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
+import { useCarrierBagStore } from "~/stores/carrier-bag";
 import {
 	Sidebar,
 	SidebarContent,

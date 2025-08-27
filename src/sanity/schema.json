@@ -4261,7 +4261,7 @@
     }
   },
   {
-    "name": "cardCarousel",
+    "name": "contentList",
     "type": "type",
     "value": {
       "type": "object",
@@ -4270,7 +4270,7 @@
           "type": "objectAttribute",
           "value": {
             "type": "string",
-            "value": "cardCarousel"
+            "value": "contentList"
           }
         },
         "title": {
@@ -4280,7 +4280,7 @@
           },
           "optional": true
         },
-        "cards": {
+        "items": {
           "type": "objectAttribute",
           "value": {
             "type": "array",
@@ -4553,7 +4553,7 @@
                   "type": "objectAttribute",
                   "value": {
                     "type": "string",
-                    "value": "card"
+                    "value": "item"
                   }
                 }
               },
@@ -5311,7 +5311,7 @@
                 },
                 "rest": {
                   "type": "inline",
-                  "name": "cardCarousel"
+                  "name": "contentList"
                 }
               }
             ]

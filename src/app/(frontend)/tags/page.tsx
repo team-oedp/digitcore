@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
+import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { TagsList } from "~/components/pages/tags/tags-list";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
 import { LetterNavigation } from "~/components/shared/letter-navigation";
@@ -103,6 +104,8 @@ export default async function Tags() {
 		return acc;
 	}, {});
 
+	if (!pageData) return null;
+
 	return (
 		<div className="relative">
 			<PageWrapper className="flex flex-col gap-0 md:flex-row md:gap-20">
@@ -126,14 +129,17 @@ export default async function Tags() {
 				</div>
 
 				{/* Scrolling section */}
-				<div className="flex min-w-0 flex-1 flex-col gap-20 md:gap-40">
-					{pageData?.title && pageData?.description && (
-						<PageHeading
-							title={pageData.title}
-							description={pageData.description as PortableTextBlock[]}
+				<div className="flex flex-col pb-44">
+					{pageData.title && <PageHeading title={pageData.title} />}
+					{pageData.description && (
+						<CustomPortableText
+							value={pageData.description as PortableTextBlock[]}
+							className="mt-8 text-body"
 						/>
 					)}
-					<TagsList tagsByLetter={tagsByLetter} alphabet={ALPHABET} />
+					<div className="pt-20 lg:pt-60">
+						<TagsList tagsByLetter={tagsByLetter} alphabet={ALPHABET} />
+					</div>
 				</div>
 			</PageWrapper>
 		</div>

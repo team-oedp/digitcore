@@ -1,13 +1,13 @@
 import { StringIcon, VersionsIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
-export const cardCarouselType = defineType({
-	name: "cardCarousel",
-	title: "Card set",
+export const contentListType = defineType({
+	name: "contentList",
+	title: "Content list",
 	type: "object",
 	icon: VersionsIcon,
 	description:
-		"A display of cards. Each card has a title and a portable-text description.",
+		"A list of content items. Each item has a title and a description.",
 	fields: [
 		defineField({
 			name: "title",
@@ -15,13 +15,13 @@ export const cardCarouselType = defineType({
 			type: "string",
 		}),
 		defineField({
-			name: "cards",
-			title: "Cards",
+			name: "items",
+			title: "Items",
 			type: "array",
 			of: [
 				defineArrayMember({
-					name: "card",
-					title: "Card",
+					name: "item",
+					title: "Item",
 					type: "object",
 					icon: StringIcon,
 					fields: [
@@ -41,16 +41,16 @@ export const cardCarouselType = defineType({
 		}),
 	],
 	preview: {
-		select: { title: "title", cards: "cards" },
+		select: { title: "title", items: "items" },
 		prepare(selection) {
-			const { title, cards } = selection as {
+			const { title, items } = selection as {
 				title?: string;
-				cards?: unknown[];
+				items?: unknown[];
 			};
 			return {
-				title: title || "Card",
+				title: title || "Content list",
 				subtitle:
-					cards && Array.isArray(cards) ? `${cards.length} card(s)` : "",
+					items && Array.isArray(items) ? `${items.length} item(s)` : "",
 			};
 		},
 	},

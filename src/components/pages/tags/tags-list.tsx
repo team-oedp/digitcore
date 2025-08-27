@@ -30,7 +30,10 @@ type TagsByLetter = Partial<Record<string, Tag[]>>;
 export function TagsList({
 	tagsByLetter,
 	alphabet,
-}: { tagsByLetter: TagsByLetter; alphabet: string[] }) {
+}: {
+	tagsByLetter: TagsByLetter;
+	alphabet: string[];
+}) {
 	return (
 		<div className="space-y-8 pb-[200px] md:pb-[800px]" data-scroll-container>
 			<div id="tags-content" className="flex-1 space-y-16">
@@ -41,13 +44,13 @@ export function TagsList({
 					return (
 						<section
 							key={letter}
-							className="w-full max-w-4xl scroll-mt-[29px] space-y-8"
+							className="w-full max-w-4xl scroll-mt-36 space-y-8"
 							id={`letter-${letter}`}
 						>
 							<h2 className="text-subheading">{letter}</h2>
 
 							{tags.map((tag) => (
-								<div key={tag.id} className="space-y-4">
+								<div key={tag.id} className="mb-12 space-y-4">
 									<div className="inline-block w-fit rounded-md bg-neutral-100 px-2 py-1">
 										<h3 className="text-subheading">{tag.name}</h3>
 									</div>

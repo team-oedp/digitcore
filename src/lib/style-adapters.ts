@@ -9,7 +9,7 @@ import { type PatternStyleKey, patternStyles } from "./pattern-styles";
  * This maintains the existing web styling approach
  */
 export const toTailwindClasses = (styleKey: PatternStyleKey): string => {
-	const style = patternStyles[styleKey];
+	const _style = patternStyles[styleKey];
 
 	// Map specific styles to their existing Tailwind equivalents
 	const tailwindMap: Record<PatternStyleKey, string> = {

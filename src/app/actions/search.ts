@@ -107,6 +107,7 @@ export type SearchPattern = {
 		_type: "block";
 		_key: string;
 	}> | null;
+	descriptionPlainText?: string | null;
 	slug: string | null;
 	tags: Array<{
 		_id: string;

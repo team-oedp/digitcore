@@ -1,8 +1,5 @@
 "use client";
 
-import type * as React from "react";
-import { useEffect } from "react";
-
 import {
 	AlertCircleIcon,
 	Cancel01Icon,
@@ -14,6 +11,8 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Reorder } from "motion/react";
 import Link from "next/link";
+import type * as React from "react";
+import { useEffect } from "react";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
@@ -120,7 +119,7 @@ export function CarrierBagSidebar({
 			<SidebarHeader>
 				<div className="flex items-start justify-between p-2">
 					<div className="flex flex-col">
-						<h3 className="font-normal text-lg text-primary">Carrier Bag</h3>
+						<h3 className="text-heading-compact">Carrier Bag</h3>
 						{isCheckingStale && (
 							<p className="text-muted-foreground text-xs">
 								Checking for updates...
