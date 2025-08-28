@@ -186,11 +186,11 @@ export function CarrierBagContent({
 	};
 
 	return (
-		<div className="flex h-full min-h-0 w-full flex-col gap-4 overflow-hidden rounded-md bg-primary-foreground px-4">
-			<div className="sticky top-0 z-10 bg-primary-foreground pt-6 pb-2">
+		<div className="flex h-full min-h-0 w-full flex-col gap-4 overflow-hidden rounded-md bg-sidebar px-4">
+			<div className="sticky top-0 z-10 bg-sidebar pt-6 pb-2">
 				<div className="flex items-start justify-between gap-6">
 					<div className="flex-1">
-						<h2 className="font-normal text-2xl">Carrier Bag</h2>
+						<h2 className="text-heading-compact">Carrier Bag</h2>
 						<p className="font-normal text-sm">{`${items.length} saved items`}</p>
 					</div>
 					{mobileTrigger && mobileTrigger}

@@ -224,13 +224,13 @@ export function SearchInterface({
 							onChange={(e) => handleSearchChange(e.target.value)}
 							onKeyDown={handleKeyDown}
 							placeholder="Search patterns, solutions, resources..."
-							className="h-8 rounded-none border-0 border-neutral-300 border-b bg-transparent px-0 py-1 pr-16 text-sm text-zinc-500 shadow-none placeholder:text-zinc-500 focus-visible:border-neutral-300 focus-visible:ring-0 focus-visible:ring-offset-0"
+							className="h-8 rounded-none border-0 border-neutral-300 border-b bg-transparent px-0 py-1 pr-16 text-foreground text-sm shadow-none placeholder:text-muted-foreground focus-visible:border-neutral-400 focus-visible:ring-0 focus-visible:ring-offset-0 dark:border-neutral-700 dark:bg-transparent dark:focus-visible:border-neutral-500"
 						/>
 						{searchTerm && (
 							<button
 								onClick={() => handleSearchChange("")}
 								type="button"
-								className="absolute right-0 cursor-pointer text-sm text-zinc-400 transition-colors hover:text-zinc-600"
+								className="absolute right-0 cursor-pointer text-muted-foreground text-sm transition-colors hover:text-foreground"
 								title="Clear search"
 							>
 								Clear
@@ -249,7 +249,7 @@ export function SearchInterface({
 						values={optimisticAudiences}
 						onValuesChange={handleAudienceChange}
 					>
-						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">
+						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg bg-transparent text-[14px] text-primary shadow-none hover:bg-transparent dark:bg-transparent dark:hover:bg-transparent">
 							<MultiSelectValue
 								placeholder="Select audiences"
 								overflowBehavior="cutoff"
@@ -279,7 +279,7 @@ export function SearchInterface({
 						values={optimisticThemes}
 						onValuesChange={handleThemeChange}
 					>
-						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">
+						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg bg-transparent text-[14px] text-primary shadow-none hover:bg-transparent dark:bg-transparent dark:hover:bg-transparent">
 							<MultiSelectValue
 								placeholder="Select themes"
 								overflowBehavior="cutoff"
@@ -309,7 +309,7 @@ export function SearchInterface({
 						values={optimisticTags}
 						onValuesChange={handleTagsChange}
 					>
-						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">
+						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg bg-transparent text-[14px] text-primary shadow-none hover:bg-transparent dark:bg-transparent dark:hover:bg-transparent">
 							<MultiSelectValue
 								placeholder="Select tags"
 								overflowBehavior="cutoff"

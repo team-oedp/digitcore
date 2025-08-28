@@ -127,15 +127,15 @@ function SidebarContentComponent(props: {
 														</button>
 													</SidebarMenuButton>
 												</PopoverTrigger>
-												<PopoverContent className="w-80 p-4">
+												<PopoverContent className="w-80 bg-popover p-4">
 													<div className="space-y-4">
-														<p className="mb-6 text-primary text-sm">
+														<p className="mb-6 text-popover-foreground text-sm">
 															Share this carrier bag
 														</p>
 														<input
 															readOnly
 															value={shareUrl}
-															className="w-full rounded-md border border-border bg-muted px-2 py-1 text-base"
+															className="w-full rounded-md border border-border bg-background px-2 py-1 text-base text-foreground"
 														/>
 														<div className="grid grid-cols-3 gap-2">
 															<Button
@@ -386,7 +386,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 
 	return (
 		<SidebarProvider
-			className="flex h-full min-h-0 w-full gap-2 bg-neutral-200"
+			className="flex h-full min-h-0 w-full gap-2 bg-secondary"
 			style={
 				{
 					"--sidebar-width": "24rem",
@@ -394,10 +394,9 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 			}
 			defaultOpen={true}
 		>
-			{/* Desktop Sidebar */}
 			<Sidebar
 				collapsible="none"
-				className="hidden h-full min-h-0 flex-col overflow-hidden rounded-md bg-primary-foreground md:flex"
+				className="hidden h-full min-h-0 flex-col overflow-hidden rounded-md md:flex"
 			>
 				<SidebarContentComponent
 					data={data}
@@ -432,7 +431,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 								align="end"
 								sideOffset={5}
 							>
-								<div className="flex h-full flex-col bg-primary-foreground">
+								<div className="flex h-full flex-col">
 									<SidebarProvider>
 										<Sidebar
 											collapsible="none"

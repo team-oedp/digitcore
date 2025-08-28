@@ -75,7 +75,7 @@ export function HeadingMorph() {
 							? "var(--background)"
 							: "var(--primary-foreground)",
 						borderColor: isScrolledPast
-							? "var(--color-green-brand)"
+							? "var(--brand)"
 							: "var(--primary-foreground)",
 					}}
 					transition={{

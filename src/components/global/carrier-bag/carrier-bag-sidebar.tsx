@@ -111,12 +111,12 @@ export function CarrierBagSidebar({
 			side="right"
 			variant="inset"
 			className={cn(
-				"top-[calc(var(--header-height)+theme(spacing.2))] right-2 bottom-2 flex h-[calc(100svh-var(--header-height)-theme(spacing.4))] min-h-0 flex-col rounded-md bg-primary-foreground",
+				"top-[calc(var(--header-height)+theme(spacing.2))] right-2 bottom-2 flex h-[calc(100svh-var(--header-height)-theme(spacing.4))] min-h-0 flex-col rounded-md bg-background",
 				className,
 			)}
 			{...props}
 		>
-			<SidebarHeader>
+			<SidebarHeader className="bg-background">
 				<div className="flex items-start justify-between p-2">
 					<div className="flex flex-col">
 						<h3 className="text-heading-compact">Carrier Bag</h3>
@@ -169,7 +169,7 @@ export function CarrierBagSidebar({
 					</div>
 				</div>
 			</SidebarHeader>
-			<SidebarContent className="flex-1 overflow-y-auto">
+			<SidebarContent className="flex-1 bg-background">
 				<SidebarGroup>
 					{showClearConfirmation ? (
 						<div className="flex flex-col items-center justify-center gap-4 p-6 text-center">
@@ -181,7 +181,7 @@ export function CarrierBagSidebar({
 								/>
 							</div>
 							<div className="space-y-2">
-								<h3 className="font-medium text-foreground text-lg">
+								<h3 className="font-normal text-foreground text-lg">
 									Clear all items?
 								</h3>
 								<p className="text-muted-foreground text-sm leading-relaxed">
@@ -213,7 +213,7 @@ export function CarrierBagSidebar({
 							</div>
 						</div>
 					) : (
-						<div className="flex flex-col gap-2 p-2">
+						<div className="flex flex-col gap-2 rounded-md border border-border border-dashed p-2">
 							{!isHydrated ? (
 								<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
 									<p className="font-normal text-muted-foreground text-sm">
@@ -238,6 +238,7 @@ export function CarrierBagSidebar({
 										display: "flex",
 										flexDirection: "column",
 										gap: "0.5rem",
+										overflowY: "auto",
 									}}
 								>
 									{items.map((item) => {
@@ -275,12 +276,12 @@ export function CarrierBagSidebar({
 					)}
 				</SidebarGroup>
 			</SidebarContent>
-			<SidebarFooter>
+			<SidebarFooter className="bg-background">
 				<div className="flex flex-row items-center gap-2 p-2">
 					<Button
 						variant="outline"
 						size="sm"
-						className="h-8 w-8 border-[#dcdcdc] bg-[#fcfcfc] p-0 text-[#3d3d3d]"
+						className="h-8 w-8 border-border bg-accent p-0 text-accent-foreground hover:bg-accent/80"
 						type="button"
 						onClick={showClearConfirmationPane}
 						disabled={items.length === 0}
@@ -292,7 +293,7 @@ export function CarrierBagSidebar({
 					<Button
 						variant="outline"
 						size="sm"
-						className="h-8 w-8 border-[#dcdcdc] bg-[#fcfcfc] p-0 text-[#3d3d3d]"
+						className="h-8 w-8 border-border bg-accent p-0 text-accent-foreground hover:bg-accent/80"
 						type="button"
 						onClick={handleDownloadJson}
 						disabled={items.length === 0}
@@ -308,7 +309,7 @@ export function CarrierBagSidebar({
 						<Button
 							variant="outline"
 							size="sm"
-							className="h-8 w-8 border-[#dcdcdc] bg-[#fcfcfc] p-0 text-[#3d3d3d]"
+							className="h-8 w-8 border-border bg-accent p-0 text-accent-foreground hover:bg-accent/80"
 							type="button"
 							disabled={items.length === 0}
 							aria-label="Download as PDF"

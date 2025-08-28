@@ -248,13 +248,15 @@ export function SearchClientWrapper() {
 				<SearchResultsSkeleton count={6} />
 			) : !searchResult?.success ? (
 				<div className="py-12 text-center">
-					<p className="mb-2 text-red-600">Search Error</p>
-					<p className="text-base text-zinc-500">{searchResult?.error}</p>
+					<p className="mb-2 text-red-600 dark:text-red-400">Search Error</p>
+					<p className="text-base text-muted-foreground">
+						{searchResult?.error}
+					</p>
 				</div>
 			) : searchResult.totalCount === 0 ? (
 				<div className="py-12 text-left">
-					<p className="mb-2 text-zinc-500">No results found</p>
-					<p className="text-base text-zinc-400">
+					<p className="mb-2 text-muted-foreground">No results found</p>
+					<p className="text-base text-muted-foreground/70">
 						Try adjusting your search terms or filters
 					</p>
 				</div>

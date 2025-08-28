@@ -57,8 +57,8 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 							className={cn(
 								"flex items-center gap-2 rounded-lg border px-2 py-1 transition-colors md:gap-2.5",
 								isInBag
-									? "cursor-default border-green-200 bg-green-50"
-									: "cursor-pointer border-border bg-white hover:bg-secondary",
+									? "cursor-default border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950"
+									: "cursor-pointer border-border bg-background hover:bg-secondary dark:hover:bg-neutral-800",
 							)}
 							onClick={isInBag ? undefined : handleSaveToCarrierBag}
 							disabled={isInBag || false}
@@ -66,7 +66,7 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 							<Icon
 								icon={Backpack03Icon}
 								size={14}
-								color="#71717a"
+								className="text-neutral-500 dark:text-neutral-400"
 								strokeWidth={1.5}
 							/>
 							<span className="font-normal text-primary text-xs uppercase md:text-sm">
