@@ -87,7 +87,7 @@ describe("PageHeading Carrier Bag Functionality", () => {
 		// Should have hover styles (not green active state)
 		expect(saveButton).toHaveClass(
 			"cursor-pointer",
-			"bg-white",
+			"bg-background",
 			"hover:bg-secondary",
 		);
 		expect(saveButton).not.toHaveClass("border-green-200", "bg-green-50");
