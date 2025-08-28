@@ -43,13 +43,13 @@ export function Solutions({
 				<h2 className="font-light text-[24px] text-primary md:text-[32px]">
 					Solutions
 				</h2>
-				<div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#f7f7f7] px-3 py-1 md:h-8 md:w-8 md:px-4 md:py-1.5">
+				<div className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-100 px-3 py-1 md:h-8 md:w-8 md:px-4 md:py-1.5 dark:bg-neutral-800">
 					<HugeiconsIcon
 						icon={ChartRelationshipIcon}
 						size={16}
 						color="currentColor"
 						strokeWidth={1.5}
-						className="md:h-5 md:w-5"
+						className="text-neutral-600 md:h-5 md:w-5 dark:text-neutral-300"
 					/>
 				</div>
 			</header>

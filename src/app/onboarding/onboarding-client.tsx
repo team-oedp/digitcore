@@ -85,7 +85,7 @@ function DashedBorder({
 			aria-hidden="true"
 			width="100%"
 			height="100%"
-			className="pointer-events-none absolute inset-0 h-full w-full text-neutral-600"
+			className="pointer-events-none absolute inset-0 h-full w-full text-neutral-400 dark:text-neutral-600"
 			fill="none"
 		>
 			<rect
@@ -117,8 +117,8 @@ function ActionButton({
 	preserveSize?: boolean;
 }) {
 	const baseClass = preserveSize
-		? "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-2 text-left text-foreground text-sm uppercase font-light transition-colors hover:bg-neutral-100 md:text-lg"
-		: "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 text-left text-foreground text-xs uppercase font-light transition-colors hover:bg-neutral-100 md:px-3 md:py-2 md:text-lg";
+		? "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-2 text-left text-foreground text-sm uppercase font-light transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 md:text-lg"
+		: "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 text-left text-foreground text-xs uppercase font-light transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 md:px-3 md:py-2 md:text-lg";
 
 	if (href) {
 		return (
@@ -224,8 +224,8 @@ function OnboardingInner({
 	const goToSlide3 = () => goToSlide(3);
 
 	return (
-		<div className="m-2 rounded-md bg-neutral-200">
-			<div className="relative h-[calc(100vh-1rem)] overflow-clip rounded-md bg-primary-foreground p-2">
+		<div className="m-2 rounded-md bg-neutral-200 dark:bg-neutral-800">
+			<div className="relative h-[calc(100vh-1rem)] overflow-clip rounded-md bg-primary-foreground p-2 dark:bg-neutral-900">
 				{/* Desktop skip button - top right */}
 				<div className="absolute top-4 right-4 z-10 hidden md:block">
 					<ActionButton
@@ -392,8 +392,10 @@ function Slide({
 					{footerText || "Open Environmental Data Project"}
 				</footer>
 			</div>
-			<div className="relative w-full flex-1 rounded-md bg-icon/20 p-2 md:h-full md:w-1/2 md:flex-none md:pl-2">
-				{asset || <div className="h-full w-full rounded-md bg-icon/60" />}
+			<div className="relative w-full flex-1 rounded-md bg-icon/20 p-2 md:h-full md:w-1/2 md:flex-none md:pl-2 dark:bg-icon/10">
+				{asset || (
+					<div className="h-full w-full rounded-md bg-icon/60 dark:bg-icon/30" />
+				)}
 
 				{/* Mobile skip button - bottom right of icon container */}
 				<div className="absolute right-2 bottom-2 z-20 md:hidden">
@@ -446,17 +448,17 @@ function Slide1({
 			{/* Mobile icons */}
 			<div className="relative md:hidden">
 				<Icon01
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_130s_linear_infinite] fill-icon/10 text-icon/30"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_130s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={180}
 					height={180}
 				/>
 				<Icon04
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_110s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_110s_linear_infinite_reverse] fill-icon/15 text-icon/40 dark:fill-icon/7 dark:text-icon/20"
 					width={180}
 					height={180}
 				/>
 				<Icon07
-					className="relative max-h-full max-w-full animate-[spin_150s_linear_infinite] fill-icon/20 text-icon/50"
+					className="relative max-h-full max-w-full animate-[spin_150s_linear_infinite] fill-icon/20 text-icon/50 dark:fill-icon/10 dark:text-icon/25"
 					width={180}
 					height={180}
 				/>
@@ -464,19 +466,19 @@ function Slide1({
 			{/* Desktop icons */}
 			<div className="relative hidden md:block">
 				<Icon01
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_130s_linear_infinite] fill-icon/10 text-icon/30"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_130s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={440}
 					height={440}
 					strokeWidth={1}
 				/>
 				<Icon04
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_110s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_110s_linear_infinite_reverse] fill-icon/15 text-icon/40 dark:fill-icon/7 dark:text-icon/20"
 					width={440}
 					height={440}
 					strokeWidth={1}
 				/>
 				<Icon07
-					className="relative max-h-full max-w-full animate-[spin_150s_linear_infinite] fill-icon/20 text-icon/50"
+					className="relative max-h-full max-w-full animate-[spin_150s_linear_infinite] fill-icon/20 text-icon/50 dark:fill-icon/10 dark:text-icon/25"
 					width={440}
 					height={440}
 					strokeWidth={1}
@@ -517,7 +519,7 @@ function Slide1({
 						<Icon
 							icon={SearchList02Icon}
 							size={20}
-							color="#525252"
+							className="text-neutral-600 dark:text-neutral-400"
 							strokeWidth={1.5}
 						/>
 					</ActionButton>
@@ -540,7 +542,7 @@ function Slide1({
 								<Icon
 									icon={Share02Icon}
 									size={20}
-									color="#525252"
+									className="text-neutral-600 dark:text-neutral-400"
 									strokeWidth={1.5}
 								/>
 							</ActionButton>
@@ -558,7 +560,7 @@ function Slide1({
 								<Icon
 									icon={Share02Icon}
 									size={20}
-									color="#525252"
+									className="text-neutral-600 dark:text-neutral-400"
 									strokeWidth={1.5}
 								/>
 							</ActionButton>
@@ -601,17 +603,17 @@ function Slide2({
 			{/* Mobile icons */}
 			<div className="relative md:hidden">
 				<Icon02
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_140s_linear_infinite] fill-icon/10 text-icon/30"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_140s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={180}
 					height={180}
 				/>
 				<Icon05
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_120s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_120s_linear_infinite_reverse] fill-icon/15 text-icon/40 dark:fill-icon/7 dark:text-icon/20"
 					width={180}
 					height={180}
 				/>
 				<Icon08
-					className="relative max-h-full max-w-full animate-[spin_160s_linear_infinite] fill-icon/20 text-icon/50"
+					className="relative max-h-full max-w-full animate-[spin_160s_linear_infinite] fill-icon/20 text-icon/50 dark:fill-icon/10 dark:text-icon/25"
 					width={180}
 					height={180}
 				/>
@@ -619,19 +621,19 @@ function Slide2({
 			{/* Desktop icons */}
 			<div className="relative hidden md:block">
 				<Icon02
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_140s_linear_infinite] fill-icon/10 text-icon/30"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_140s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={440}
 					height={440}
 					strokeWidth={1}
 				/>
 				<Icon05
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_120s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_120s_linear_infinite_reverse] fill-icon/15 text-icon/40 dark:fill-icon/7 dark:text-icon/20"
 					width={440}
 					height={440}
 					strokeWidth={1}
 				/>
 				<Icon08
-					className="relative max-h-full max-w-full animate-[spin_160s_linear_infinite] fill-icon/20 text-icon/50"
+					className="relative max-h-full max-w-full animate-[spin_160s_linear_infinite] fill-icon/20 text-icon/50 dark:fill-icon/10 dark:text-icon/25"
 					width={440}
 					height={440}
 					strokeWidth={1}
@@ -674,8 +676,8 @@ function Slide2({
 								className={cn(
 									"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 text-foreground text-xs uppercase transition-colors md:px-3 md:py-2 md:text-lg",
 									selectedAudienceIds.includes(opt.value)
-										? "bg-neutral-300"
-										: "bg-primary-foreground hover:bg-neutral-100",
+										? "bg-neutral-300 dark:bg-neutral-600"
+										: "bg-primary-foreground hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
 								)}
 							>
 								{opt.label}
@@ -692,7 +694,7 @@ function Slide2({
 								<span className="font-light text-foreground text-lg md:text-xl">
 									Select your
 								</span>
-								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light text-foreground text-xs uppercase md:px-3 md:py-2 md:text-base">
+								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light text-foreground text-xs uppercase md:px-3 md:py-2 md:text-base dark:bg-neutral-600">
 									AUDIENCE TYPE
 									<DashedBorder />
 								</span>
@@ -708,7 +710,7 @@ function Slide2({
 								<button
 									type="button"
 									onClick={goToSlide3}
-									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-100 md:px-3 md:py-2 md:text-lg"
+									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 								>
 									NEXT
 									<DashedBorder />
@@ -727,7 +729,7 @@ function Slide2({
 						<button
 							type="button"
 							onClick={goToSlide1}
-							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-100 md:px-3 md:py-2 md:text-lg"
+							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 						>
 							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
@@ -771,17 +773,17 @@ function Slide3({
 			{/* Mobile icons */}
 			<div className="relative md:hidden">
 				<Icon03
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_135s_linear_infinite] fill-icon/10 text-icon/30"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_135s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={180}
 					height={180}
 				/>
 				<Icon06
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_115s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_115s_linear_infinite_reverse] fill-icon/15 text-icon/40 dark:fill-icon/7 dark:text-icon/20"
 					width={180}
 					height={180}
 				/>
 				<Icon09
-					className="relative max-h-full max-w-full animate-[spin_155s_linear_infinite] fill-icon/20 text-icon/50"
+					className="relative max-h-full max-w-full animate-[spin_155s_linear_infinite] fill-icon/20 text-icon/50 dark:fill-icon/10 dark:text-icon/25"
 					width={180}
 					height={180}
 				/>
@@ -789,19 +791,19 @@ function Slide3({
 			{/* Desktop icons */}
 			<div className="relative hidden md:block">
 				<Icon03
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_135s_linear_infinite] fill-icon/10 text-icon/30"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_135s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={440}
 					height={440}
 					strokeWidth={1}
 				/>
 				<Icon06
-					className="absolute inset-0 max-h-full max-w-full animate-[spin_115s_linear_infinite_reverse] fill-icon/15 text-icon/40"
+					className="absolute inset-0 max-h-full max-w-full animate-[spin_115s_linear_infinite_reverse] fill-icon/15 text-icon/40 dark:fill-icon/7 dark:text-icon/20"
 					width={440}
 					height={440}
 					strokeWidth={1}
 				/>
 				<Icon09
-					className="relative max-h-full max-w-full animate-[spin_155s_linear_infinite] fill-icon/20 text-icon/50"
+					className="relative max-h-full max-w-full animate-[spin_155s_linear_infinite] fill-icon/20 text-icon/50 dark:fill-icon/10 dark:text-icon/25"
 					width={440}
 					height={440}
 					strokeWidth={1}
@@ -843,8 +845,8 @@ function Slide3({
 							className={cn(
 								"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors md:px-3 md:py-2 md:text-lg",
 								selectedThemeIds.includes(opt.value)
-									? "bg-neutral-300"
-									: "bg-primary-foreground hover:bg-neutral-100",
+									? "bg-neutral-300 dark:bg-neutral-600"
+									: "bg-primary-foreground hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
 							)}
 						>
 							{opt.label}
@@ -860,7 +862,7 @@ function Slide3({
 								<span className="font-light text-foreground text-lg md:text-xl">
 									Select a
 								</span>
-								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-2 font-light text-base text-foreground uppercase">
+								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-2 font-light text-base text-foreground uppercase dark:bg-neutral-600">
 									THEME
 									<DashedBorder />
 								</span>
@@ -890,7 +892,7 @@ function Slide3({
 												"onboarding_completed=1; path=/; max-age=31536000";
 										} catch {}
 									}}
-									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-100 md:px-3 md:py-2 md:text-lg"
+									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 								>
 									FINISH
 									<DashedBorder />
@@ -909,7 +911,7 @@ function Slide3({
 						<button
 							type="button"
 							onClick={goToSlide2}
-							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-100 md:px-3 md:py-2 md:text-lg"
+							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 						>
 							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />

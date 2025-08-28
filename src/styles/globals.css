@@ -143,6 +143,60 @@
 	--color-green-brand-dark: oklch(0.5344 0.0889 146.94);
 	--color-green-brand-light: oklch(0.8 0.02 145);
 
+	/* Dark Mode Color Palette - Same concepts but darker and more muted */
+	/* Dark Mode Teal Colors */
+	--color-teal-border-dark--dark: oklch(0.45 0.08 180);
+	--color-teal-dark--dark: oklch(0.25 0.04 180);
+	--color-teal-default--dark: oklch(0.35 0.06 180);
+	--color-teal-light--dark: oklch(0.45 0.08 180);
+
+	/* Dark Mode Ochre Colors */
+	--color-ochre-border-dark--dark: oklch(0.45 0.08 85);
+	--color-ochre-dark--dark: oklch(0.25 0.04 85);
+	--color-ochre-default--dark: oklch(0.35 0.06 85);
+	--color-ochre-light--dark: oklch(0.45 0.08 85);
+
+	/* Dark Mode Magenta Colors */
+	--color-magenta-border-dark--dark: oklch(0.45 0.08 320);
+	--color-magenta-dark--dark: oklch(0.25 0.04 320);
+	--color-magenta-default--dark: oklch(0.35 0.06 320);
+	--color-magenta-light--dark: oklch(0.45 0.08 320);
+
+	/* Dark Mode Fuschia Colors */
+	--color-fuschia-border-dark--dark: oklch(0.45 0.08 300);
+	--color-fuschia-dark--dark: oklch(0.25 0.04 300);
+	--color-fuschia-default--dark: oklch(0.35 0.06 300);
+	--color-fuschia-light--dark: oklch(0.45 0.08 300);
+
+	/* Dark Mode Cerulean Colors */
+	--color-cerulean-border-dark--dark: oklch(0.45 0.08 240);
+	--color-cerulean-dark--dark: oklch(0.25 0.04 240);
+	--color-cerulean-default--dark: oklch(0.35 0.06 240);
+	--color-cerulean-light--dark: oklch(0.45 0.08 240);
+
+	/* Dark Mode Moss Colors */
+	--color-moss-border-dark--dark: oklch(0.45 0.08 120);
+	--color-moss-dark--dark: oklch(0.25 0.04 120);
+	--color-moss-default--dark: oklch(0.35 0.06 120);
+	--color-moss-light--dark: oklch(0.45 0.08 120);
+
+	/* Dark Mode Purple Colors */
+	--color-purple-border-dark--dark: oklch(0.45 0.08 270);
+	--color-purple-dark--dark: oklch(0.25 0.04 270);
+	--color-purple-default--dark: oklch(0.35 0.06 270);
+	--color-purple-light--dark: oklch(0.45 0.08 270);
+
+	/* Dark Mode Coral Colors */
+	--color-coral-border-dark--dark: oklch(0.45 0.08 25);
+	--color-coral-dark--dark: oklch(0.25 0.04 25);
+	--color-coral-default--dark: oklch(0.35 0.06 25);
+	--color-coral-light--dark: oklch(0.45 0.08 25);
+
+	/* Dark Mode Green Colors */
+	--color-green-dark--dark: oklch(0.25 0.04 150);
+	--color-green-default--dark: oklch(0.35 0.06 120);
+	--color-green-light--dark: oklch(0.45 0.08 120);
+
 	--color-grey-light: oklch(0.95 0 0); /* #f2f2f2 */
 
 	--radius: 0.625rem;
@@ -159,8 +213,8 @@
 	--secondary-foreground: var(--color-neutral-800);
 	--muted: var(--color-neutral-100);
 	--muted-foreground: var(--color-neutral-300);
-	--accent: var(--color-neutral-100);
-	--accent-foreground: var(--color-neutral-900);
+	--accent: var(--color-neutral-300);
+	--accent-foreground: var(--color-neutral-600);
 	--destructive: oklch(0.577 0.245 27.325);
 	--border: var(--color-neutral-200);
 	--input: var(--color-neutral-200);
@@ -243,8 +297,8 @@
 	--secondary-foreground: var(--color-neutral-200);
 	--muted: var(--color-neutral-600);
 	--muted-foreground: var(--color-neutral-300);
-	--accent: var(--color-neutral-600);
-	--accent-foreground: var(--color-neutral-50);
+	--accent: var(--color-neutral-800);
+	--accent-foreground: var(--color-neutral-200);
 	--destructive: oklch(0.704 0.191 22.216);
 	--border: oklch(1 0 0 / 10%);
 	--input: oklch(1 0 0 / 15%);
@@ -264,6 +318,42 @@
 	--sidebar-ring: var(--color-neutral-500);
 	--icon: oklch(0.6902 0.0515 134.87);
 	--brand: var(--color-green-brand-light);
+
+	/* Dark mode badge colors - muted/desaturated for better contrast */
+	--theme-badge-text: oklch(0.75 0.08 85); /* Lighter, less saturated ochre */
+	--theme-badge-background: oklch(0.25 0.04 85); /* Dark ochre background */
+	--theme-badge-border: oklch(0.35 0.06 85); /* Muted ochre border */
+	--theme-badge-border-dark: oklch(0.45 0.08 85);
+
+	--tag-badge-text: oklch(0.7 0.12 270); /* Lighter, less saturated purple */
+	--tag-badge-background: oklch(0.25 0.04 270); /* Dark purple background */
+	--tag-badge-border: oklch(0.35 0.06 270); /* Muted purple border */
+	--tag-badge-border-dark: oklch(0.45 0.08 270);
+
+	--audience-badge-text: oklch(0.7 0.1 240); /* Lighter, less saturated blue */
+	--audience-badge-background: oklch(0.25 0.04 240); /* Dark blue background */
+	--audience-badge-border: oklch(0.35 0.06 240); /* Muted blue border */
+	--audience-badge-border-dark: oklch(0.45 0.08 240);
+
+	--solution-badge-text: oklch(0.7 0.1 25); /* Lighter, less saturated coral */
+	--solution-badge-background: oklch(0.25 0.04 25); /* Dark coral background */
+	--solution-badge-border: oklch(0.35 0.06 25); /* Muted coral border */
+	--solution-badge-border-dark: oklch(0.45 0.08 25);
+
+	--resource-badge-text: oklch(0.7 0.1 300); /* Lighter, less saturated fuschia */
+	--resource-badge-background: oklch(0.25 0.04 300); /* Dark fuschia background */
+	--resource-badge-border: oklch(0.35 0.06 300); /* Muted fuschia border */
+	--resource-badge-border-dark: oklch(0.45 0.08 300);
+
+	--pattern-badge-text: oklch(0.7 0.1 180); /* Lighter, less saturated teal */
+	--pattern-badge-background: oklch(0.25 0.04 180); /* Dark teal background */
+	--pattern-badge-border: oklch(0.35 0.06 180); /* Muted teal border */
+	--pattern-badge-border-dark: oklch(0.45 0.08 180);
+
+	--page-badge-text: oklch(0.7 0.12 320); /* Lighter, less saturated magenta */
+	--page-badge-background: oklch(0.25 0.04 320); /* Dark magenta background */
+	--page-badge-border: oklch(0.35 0.06 320); /* Muted magenta border */
+	--page-badge-border-dark: oklch(0.45 0.08 320);
 }
 
 @layer base {
@@ -312,19 +402,19 @@
 	}
 
 	.text-body-muted {
-		@apply text-sm md:text-base text-neutral-500 prose max-w-none;
+		@apply text-sm md:text-base text-neutral-500 prose max-w-none dark:text-neutral-400;
 	}
 
 	.text-description-muted {
-		@apply text-sm md:text-base text-neutral-500 prose max-w-none;
+		@apply font-signifier text-sm md:text-base text-neutral-500 prose max-w-none dark:text-neutral-400;
 	}
 
 	.text-minor {
-		@apply text-xs md:text-sm text-neutral-300 prose max-w-none;
+		@apply text-xs md:text-sm text-neutral-300 prose max-w-none dark:text-neutral-500;
 	}
 
 	.text-subheading {
-		@apply font-normal text-lg lg:text-xl text-neutral-800 capitalize tracking-wide;
+		@apply font-normal text-lg lg:text-xl text-neutral-800 capitalize tracking-wide dark:text-neutral-200;
 	}
 
 	.text-link {
@@ -340,7 +430,7 @@
 	}
 
 	.accordion-detail {
-		@apply prose max-w-none text-neutral-700 text-base font-normal md:text-base text-left;
+		@apply prose max-w-none text-neutral-700 text-base font-normal md:text-base text-left dark:text-neutral-300;
 	}
 
 	.text-button {

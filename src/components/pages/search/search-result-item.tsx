@@ -5,7 +5,7 @@ import {
 	ChartRelationshipIcon,
 	Tag01Icon,
 } from "@hugeicons/core-free-icons";
-import { MinusIcon, PlusIcon } from "lucide-react";
+import Link from "next/link";
 import React, { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
 import {
@@ -120,35 +120,38 @@ type SearchResultItemProps = {
 function SearchResultBase({
 	children,
 	title,
-	buttonElement,
+	titleElement,
 	showPatternIcon = false,
 	patternIcon,
 }: {
 	children: React.ReactNode;
 	title: string;
-	buttonElement: React.ReactNode;
+	titleElement?: React.ReactNode;
 	showPatternIcon?: boolean;
 	patternIcon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 }) {
 	return (
 		<div className="relative w-full border-neutral-400 border-t border-dashed pb-9">
 			<div className="flex flex-col py-4">
-				{/* Header with title and button */}
-				<div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-					<div className="flex items-start gap-3">
-						{showPatternIcon && patternIcon && (
-							<div className="h-6 w-6 flex-shrink-0 text-neutral-500">
-								{React.createElement(patternIcon, {
-									className:
-										"h-full w-full fill-icon/40 text-icon/70 opacity-40",
-								})}
-							</div>
-						)}
-						<h3 className="w-full text-left font-normal text-lg text-primary uppercase leading-tight md:text-xl">
-							{title}
-						</h3>
-					</div>
-					<div className="flex-shrink-0">{buttonElement}</div>
+				{/* Header with title */}
+				<div className="mb-4">
+					{titleElement ? (
+						titleElement
+					) : (
+						<div className="flex items-start gap-3">
+							{showPatternIcon && patternIcon && (
+								<div className="h-6 w-6 flex-shrink-0 text-neutral-500">
+									{React.createElement(patternIcon, {
+										className:
+											"h-full w-full fill-icon/40 text-icon/70 opacity-40",
+									})}
+								</div>
+							)}
+							<h3 className="w-full text-left font-normal text-lg text-primary uppercase leading-tight md:text-xl">
+								{title}
+							</h3>
+						</div>
+					)}
 				</div>
 				{/* Content area with full width */}
 				<div className="w-full space-y-4">{children}</div>
@@ -194,20 +197,35 @@ function PatternSearchResult({
 		searchTerm,
 	);
 
-	const buttonElement = (
-		<a
-			href={`/pattern/${pattern.slug}`}
-			className="inline-flex items-center gap-2 rounded-full border border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] px-3 py-0.5 text-[var(--pattern-button-text)] transition-opacity hover:opacity-80 md:px-4 md:py-1"
-		>
-			<span className="text-button text-xs uppercase">Visit Pattern</span>
-		</a>
+	// Create clickable title element using Next.js Link
+	const titleElement = (
+		<div className="flex items-start gap-3">
+			{showPatternIcon && PatternIcon && (
+				<div className="h-6 w-6 flex-shrink-0 text-neutral-500">
+					{React.createElement(PatternIcon, {
+						className: "h-full w-full fill-icon/40 text-icon/70 opacity-40",
+					})}
+				</div>
+			)}
+			<Link
+				href={`/pattern/${pattern.slug}`}
+				className="group inline-flex items-start gap-3"
+			>
+				<h3 className="text-left font-normal text-lg text-primary uppercase leading-tight md:text-xl">
+					{title}
+				</h3>
+				<span className="mt-0.5 inline-flex items-center rounded-full border-[0.75px] border-border bg-background px-2 py-0.5 font-normal text-[10px] text-muted-foreground uppercase transition-colors group-hover:border-primary/40 group-hover:bg-primary/5 group-hover:text-primary/80">
+					View
+				</span>
+			</Link>
+		</div>
 	);
 
 	return (
 		<SearchResultPreview description={displayDescription} patternTitle={title}>
 			<SearchResultBase
 				title={title}
-				buttonElement={buttonElement}
+				titleElement={titleElement}
 				showPatternIcon={showPatternIcon}
 				patternIcon={PatternIcon}
 			>
@@ -217,7 +235,7 @@ function PatternSearchResult({
 						{/* Smooth expand/collapse using CSS max-height + line clamp */}
 						<div
 							className={cn(
-								"relative overflow-hidden transition-[max-height] duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] md:pr-10",
+								"relative overflow-hidden transition-[max-height] duration-600 ease-[cubic-bezier(0.22,1,0.36,1)]",
 								showFullDescription
 									? "max-h-[1500px]"
 									: "line-clamp-3 max-h-[96px]",
@@ -229,34 +247,30 @@ function PatternSearchResult({
 									searchTerm,
 								)}
 							</span>
-
-							{/* Inline Expand/Collapse Toggle */}
-							{descriptionResult.isTruncated && (
-								<button
-									onClick={() => setShowFullDescription(!showFullDescription)}
-									type="button"
-									aria-label={
-										showFullDescription
-											? "Collapse description"
-											: "Expand description"
-									}
-									className="mt-2 inline-flex h-6 w-6 items-center justify-center rounded-md text-blue-600 transition-colors hover:border hover:border-current/40 hover:bg-blue-50/10 focus:outline-none md:absolute md:right-0 md:bottom-0 md:mt-0"
-								>
-									{showFullDescription ? (
-										<MinusIcon className="size-4" aria-hidden="true" />
-									) : (
-										<PlusIcon className="size-4" aria-hidden="true" />
-									)}
-								</button>
-							)}
 						</div>
+
+						{/* Show more/less button below description */}
+						{descriptionResult.isTruncated && (
+							<button
+								onClick={() => setShowFullDescription(!showFullDescription)}
+								type="button"
+								aria-label={
+									showFullDescription
+										? "Collapse description"
+										: "Expand description"
+								}
+								className="mt-3 inline-flex items-center text-neutral-600 text-xs uppercase transition-colors hover:text-neutral-800 focus:text-neutral-800 focus:outline-none"
+							>
+								{showFullDescription ? "Show less" : "Show more"}
+							</button>
+						)}
 
 						{/* Match Indicators */}
 						{searchTerm &&
 							(matchExplanation.titleMatch ||
 								matchExplanation.descriptionMatch) && (
-								<div className="mt-2 flex items-center gap-2 text-neutral-500 text-xs">
-									<span>Match found in:</span>
+								<div className="mt-2 flex items-center gap-2 text-description-muted">
+									<span className="text-minor">Match found in:</span>
 									{matchExplanation.titleMatch && (
 										<span className="rounded bg-blue-100 px-2 py-1 text-blue-700">
 											Title
@@ -268,7 +282,7 @@ function PatternSearchResult({
 										</span>
 									)}
 									{descriptionResult.matchCount > 1 && (
-										<span className="text-neutral-400">
+										<span className="text-description-muted">
 											({descriptionResult.matchCount} matches)
 										</span>
 									)}
@@ -360,7 +374,7 @@ function _ResourceSearchResult({
 	);
 
 	return (
-		<SearchResultBase title={title} buttonElement={buttonElement}>
+		<SearchResultBase title={title}>
 			{/* Solutions */}
 			{solutions.length > 0 && (
 				<BadgeGroup className="mb-3">
@@ -387,10 +401,7 @@ function _ResourceSearchResult({
 					</div>
 
 					<div className="flex h-6 w-6 items-center justify-center">
-						<Icon
-							icon={ArrowRight02Icon}
-							className="h-4 w-4 text-neutral-500"
-						/>
+						<Icon icon={ArrowRight02Icon} className="h-4 w-4 text-accent" />
 					</div>
 
 					<SearchResultPreview
@@ -446,7 +457,7 @@ function _SolutionSearchResult({
 	);
 
 	return (
-		<SearchResultBase title={title} buttonElement={buttonElement}>
+		<SearchResultBase title={title}>
 			{/* Audiences */}
 			{audiences.length > 0 && (
 				<BadgeGroup className="mb-3">

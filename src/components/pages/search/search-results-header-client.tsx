@@ -49,7 +49,7 @@ export function SearchResultsHeaderClient({
 	if (isLoading) {
 		return (
 			<div className="flex items-center justify-between">
-				<div className="h-6 w-48 animate-pulse rounded bg-zinc-200" />
+				<div className="h-6 w-48 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
 			</div>
 		);
 	}
@@ -57,11 +57,11 @@ export function SearchResultsHeaderClient({
 	return (
 		<div className="flex items-center justify-between">
 			<div className="flex items-center gap-2">
-				<span className="text-zinc-600">
+				<span className="text-muted-foreground">
 					{resultCount} {resultCount === 1 ? "result" : "results"}
 				</span>
 				{searchQuery && (
-					<span className="text-zinc-400">for "{searchQuery}"</span>
+					<span className="text-muted-foreground/80">for "{searchQuery}"</span>
 				)}
 			</div>
 		</div>

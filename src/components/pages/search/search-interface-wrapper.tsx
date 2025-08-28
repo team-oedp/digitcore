@@ -111,7 +111,9 @@ export function SearchInterfaceWrapper() {
 	}, [componentId, location]);
 
 	if (isLoading) {
-		return <div className="h-32 animate-pulse rounded bg-neutral-100" />;
+		return (
+			<div className="h-32 animate-pulse rounded bg-neutral-100 dark:bg-neutral-900" />
+		);
 	}
 
 	return (

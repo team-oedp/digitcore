@@ -94,10 +94,10 @@ function _CommandMenuItem({
 			</div>
 			{shortcut && (
 				<div className="ml-auto flex gap-1">
-					<div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-200 font-semibold text-neutral-400 text-xs uppercase dark:bg-[#141414]">
+					<div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-200 font-semibold text-neutral-600 text-xs uppercase dark:bg-neutral-800 dark:text-neutral-400">
 						<CommandIcon size={12} />
 					</div>
-					<div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-200 font-semibold text-neutral-400 text-xs uppercase dark:bg-[#141414]">
+					<div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-200 font-semibold text-neutral-600 text-xs uppercase dark:bg-neutral-800 dark:text-neutral-400">
 						{shortcut}
 					</div>
 				</div>

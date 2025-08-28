@@ -51,8 +51,10 @@ export function TagsList({
 
 							{tags.map((tag) => (
 								<div key={tag.id} className="mb-12 space-y-4">
-									<div className="inline-block w-fit rounded-md bg-neutral-100 px-2 py-1">
-										<h3 className="text-subheading">{tag.name}</h3>
+									<div className="inline-block w-fit rounded-md bg-neutral-100 px-2 py-1 dark:bg-neutral-800">
+										<h3 className="text-neutral-800 text-subheading dark:text-neutral-200">
+											{tag.name}
+										</h3>
 									</div>
 
 									<p className="mb-4 text-body-muted">

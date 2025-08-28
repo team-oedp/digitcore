@@ -134,7 +134,7 @@ export default async function Home() {
 											listItems.slice(0, 6).map((item) => (
 												<div key={item._key} className="pl-8">
 													<div className="mb-3 pb-2">
-														<h3 className="font-medium text-body uppercase">
+														<h3 className="text-heading-compact">
 															{item.title}
 														</h3>
 													</div>
