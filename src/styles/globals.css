@@ -140,7 +140,8 @@
 	--color-green-default: oklch(0.8 0.15 120);
 	--color-green-light: oklch(0.9 0.1 120);
 
-	--color-green-brand: oklch(0.5344 0.0889 146.94);
+	--color-green-brand-dark: oklch(0.5344 0.0889 146.94);
+	--color-green-brand-light: oklch(0.8 0.02 145);
 
 	--color-grey-light: oklch(0.95 0 0); /* #f2f2f2 */
 
@@ -154,6 +155,7 @@
 	--primary: var(--color-neutral-900);
 	--primary-foreground: var(--color-neutral-50);
 	--secondary: var(--color-neutral-200);
+	/* --secondary: oklch(0.94 0.01 140); */
 	--secondary-foreground: var(--color-neutral-800);
 	--muted: var(--color-neutral-100);
 	--muted-foreground: var(--color-neutral-300);
@@ -177,6 +179,7 @@
 	--sidebar-border: var(--color-neutral-200);
 	--sidebar-ring: var(--color-neutral-300);
 	--icon: oklch(0.6902 0.0515 134.87);
+	--brand: var(--color-green-brand-dark);
 
 	--theme-badge-text: var(--color-ochre-dark);
 	--theme-badge-background: var(--color-ochre-light);
@@ -234,8 +237,9 @@
 	--popover: var(--color-neutral-900);
 	--popover-foreground: var(--color-neutral-50);
 	--primary: var(--color-neutral-200);
-	--primary-foreground: var(--color-neutral-900);
-	--secondary: var(--color-neutral-800);
+	--primary-foreground: var(--color-neutral-950);
+	--secondary: oklch(22.1% 0 0);
+	/* --secondary: var(--color-neutral-900); */
 	--secondary-foreground: var(--color-neutral-200);
 	--muted: var(--color-neutral-600);
 	--muted-foreground: var(--color-neutral-300);
@@ -259,21 +263,26 @@
 	--sidebar-border: var(--color-neutral-700);
 	--sidebar-ring: var(--color-neutral-500);
 	--icon: oklch(0.6902 0.0515 134.87);
+	--brand: var(--color-green-brand-light);
 }
 
 @layer base {
 	:root {
 		color-scheme: light;
 	}
+
 	* {
 		@apply border-border outline-ring/50;
 	}
+
 	html {
 		@apply antialiased;
 	}
+
 	body {
 		@apply bg-background text-foreground font-normal;
 	}
+
 	#app {
 		height: 100vh;
 		max-height: 100dvh;
@@ -281,6 +290,7 @@
 		-webkit-font-smoothing: antialiased;
 		overflow: auto;
 	}
+
 	button:not([disabled]),
 	[role="button"]:not([disabled]) {
 		cursor: pointer;
@@ -355,12 +365,11 @@
 	}
 
 	.text-page-heading {
-		/* font-family: var(--font-signifier); */
 		font-size: var(--text-page-heading-mobile);
 		line-height: var(--text-page-heading-mobile--line-height);
 		font-weight: 300; /* light */
 		text-transform: uppercase;
-		color: var(--color-green-dark);
+		color: var(--brand);
 		text-align: left;
 
 		@media (min-width: 768px) {

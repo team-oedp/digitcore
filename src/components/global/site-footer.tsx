@@ -55,7 +55,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 				}));
 
 	return (
-		<footer className="mx-3 mt-auto h-[400px] rounded-md bg-background">
+		<footer className="mx-3 mt-auto h-[400px] rounded-md bg-secondary">
 			<div className="pb-3">
 				<div className="flex h-[400px] flex-col px-4 py-3 md:px-8 md:py-6">
 					{/* Mobile Layout - Vertical Stack */}

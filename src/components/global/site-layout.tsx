@@ -29,15 +29,15 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 			defaultOpen={false}
 		>
 			<SiteHeader />
-			<div className="flex min-h-0 flex-1 flex-row-reverse gap-2 overflow-hidden bg-neutral-200 pt-16 transition-[gap] md:pt-14 md:[&:has([data-slot=sidebar][data-state=collapsed])]:gap-0 md:[&:has([data-slot=sidebar][data-state=collapsed])]:delay-200 md:[&:has([data-slot=sidebar][data-state=collapsed])]:duration-0">
+			<div className="flex min-h-0 flex-1 flex-row-reverse gap-2 overflow-hidden bg-secondary pt-16 transition-[gap] md:pt-14 md:[&:has([data-slot=sidebar][data-state=collapsed])]:gap-0 md:[&:has([data-slot=sidebar][data-state=collapsed])]:delay-200 md:[&:has([data-slot=sidebar][data-state=collapsed])]:duration-0">
 				<CarrierBagSidebar className="peer" />
-				<SidebarInset className="relative mx-2 mb-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-md bg-neutral-200 md:m-0 md:mb-0">
+				<SidebarInset className="relative mx-2 mb-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-md bg-secondary md:m-0 md:mb-0">
 					<div
 						ref={scrollContainerRef}
 						className={cn(
 							"flex h-full min-h-0 flex-1 flex-col",
 							isCarrierBagRoute
-								? "overflow-hidden bg-neutral-200"
+								? "overflow-hidden bg-secondary"
 								: "overflow-y-auto bg-primary-foreground",
 						)}
 					>
