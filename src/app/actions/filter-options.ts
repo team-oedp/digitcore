@@ -2,7 +2,7 @@
 
 import { createLogLocation, logger } from "~/lib/logger";
 import { client } from "~/sanity/lib/client";
-import { FILTER_OPTIONS_QUERY } from "~/sanity/lib/filter-options";
+import { FILTER_OPTIONS_QUERY } from "~/sanity/lib/queries";
 
 // Type for handling both direct response and test response formats
 type SanityResponse<T> = T | { result: T; ms: number };

@@ -923,3 +923,54 @@ export type PatternStalenessResult = {
 	_id: string;
 	_updatedAt: string;
 }[];
+
+// Filter option queries
+export const AUDIENCES_QUERY = defineQuery(`
+  *[_type == "audience"] | order(title asc) {
+    _id,
+    title,
+    "value": _id,
+    "label": title
+  }
+`);
+
+export const THEMES_QUERY = defineQuery(`
+  *[_type == "theme"] | order(title asc) {
+    _id,
+    title,
+    "value": _id,
+    "label": title
+  }
+`);
+
+export const TAGS_QUERY = defineQuery(`
+  *[_type == "tag"] | order(title asc) {
+    _id,
+    title,
+    "value": _id,
+    "label": title
+  }
+`);
+
+export const FILTER_OPTIONS_QUERY = defineQuery(`
+  {
+    "audiences": *[_type == "audience"] | order(title asc) {
+      _id,
+      title,
+      "value": _id,
+      "label": title
+    },
+    "themes": *[_type == "theme"] | order(title asc) {
+      _id,
+      title,
+      "value": _id,
+      "label": title
+    },
+    "tags": *[_type == "tag"] | order(title asc) {
+      _id,
+      title,
+      "value": _id,
+      "label": title
+    }
+  }
+`);
