@@ -5,16 +5,16 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { SearchClientWrapper } from "~/components/pages/search/search-client-wrapper";
-import {
-	SearchInterfaceSkeleton,
-	SearchInterfaceWrapper,
-} from "~/components/pages/search/search-interface-wrapper";
+import { SearchInterfaceServer } from "~/components/pages/search/search-interface-server";
+import { SearchInterfaceSkeleton } from "~/components/pages/search/search-interface-skeleton";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
 import { EXPLORE_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
 	title: "Explore | DIGITCORE Toolkit",
@@ -62,7 +62,7 @@ export default async function ExplorePage({
 				)}
 				<div className="flex flex-col gap-8">
 					<Suspense fallback={<SearchInterfaceSkeleton />}>
-						<SearchInterfaceWrapper />
+						<SearchInterfaceServer />
 					</Suspense>
 					<Suspense
 						fallback={
