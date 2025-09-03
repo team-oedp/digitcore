@@ -567,6 +567,7 @@
 @utility prose {
 	font-size: inherit;
 	line-height: inherit;
+	font-family: inherit;
 
 	h1,
 	h2,
@@ -581,9 +582,12 @@
 	code {
 		font-size: inherit;
 		line-height: inherit;
+		font-family: inherit;
 	}
+}
 
-	/* Override default prose link styling */
+/* Override default prose link styling */
+@utility prose {
 	a {
 		text-decoration: none;
 		text-underline-offset: 0;
