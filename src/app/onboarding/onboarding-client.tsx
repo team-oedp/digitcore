@@ -661,7 +661,7 @@ function Slide2({
 					/>
 				)}
 
-				<div className="space-y-4 font-light font-signifier text-base text-foreground leading-relaxed md:text-lg">
+				<div className="space-y-4 font-light font-sans text-base text-foreground leading-relaxed md:text-lg">
 					{/* Audience buttons embedded in the text flow */}
 					<div className="flex flex-wrap items-center gap-2">
 						{audienceOptions.map((opt, _idx) => (
