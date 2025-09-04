@@ -74,11 +74,11 @@ export function CustomPortableText({
 	const components: PortableTextComponents = {
 		block: {
 			normal: ({ children, value }) => (
-				<p>{processChildren(children, value?._key)}</p>
+				<p className={className}>{processChildren(children, value?._key)}</p>
 			),
 			h1: ({ children, value }) => (
 				// Add an anchor to the h1
-				<h1 className="group relative">
+				<h1 className={cn(className, "group relative")}>
 					{processChildren(children, value?._key)}
 					<a
 						href={`#${value?._key}`}
@@ -105,7 +105,7 @@ export function CustomPortableText({
 			h2: ({ children, value }) => {
 				// Add an anchor to the h2
 				return (
-					<h2 className="group relative">
+					<h2 className={cn(className, "group relative")}>
 						{processChildren(children, value?._key)}
 						<a
 							href={`#${value?._key}`}
@@ -131,10 +131,10 @@ export function CustomPortableText({
 				);
 			},
 			h3: ({ children, value }) => (
-				<h3>{processChildren(children, value?._key)}</h3>
+				<h3 className={className}>{processChildren(children, value?._key)}</h3>
 			),
 			h4: ({ children, value }) => (
-				<h4>{processChildren(children, value?._key)}</h4>
+				<h4 className={className}>{processChildren(children, value?._key)}</h4>
 			),
 			blockquote: ({ children, value }) => (
 				<blockquote>{processChildren(children, value?._key)}</blockquote>
