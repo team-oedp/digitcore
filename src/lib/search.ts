@@ -12,6 +12,8 @@ export const searchParamsSchema = z.object({
 	audiences: z.string().optional(),
 	themes: z.string().optional(),
 	tags: z.string().optional(),
+	// Enhancement toggle for onboarding preferences
+	enhance: z.string().optional(),
 	// Pagination (for future use)
 	page: z.coerce.number().min(1).optional().default(1),
 	limit: z.coerce.number().min(1).max(100).optional().default(20),
@@ -25,6 +27,7 @@ export type ParsedSearchParams = {
 	audiences: string[];
 	themes: string[];
 	tags: string[];
+	enhance: boolean;
 	page: number;
 	limit: number;
 };
@@ -42,6 +45,7 @@ export function parseSearchParams(
 			? searchParams.themes.split(",").filter(Boolean)
 			: [],
 		tags: searchParams.tags ? searchParams.tags.split(",").filter(Boolean) : [],
+		enhance: searchParams.enhance === "true",
 		page: searchParams.page || 1,
 		limit: searchParams.limit || 20,
 	};
@@ -69,6 +73,10 @@ export function serializeSearchParams(
 		urlParams.set("tags", params.tags.join(","));
 	}
 
+	if (params.enhance !== undefined) {
+		urlParams.set("enhance", params.enhance.toString());
+	}
+
 	if (params.page && params.page > 1) {
 		urlParams.set("page", params.page.toString());
 	}
@@ -86,6 +94,7 @@ export const defaultSearchParams: ParsedSearchParams = {
 	audiences: [],
 	themes: [],
 	tags: [],
+	enhance: false,
 	page: 1,
 	limit: 20,
 };

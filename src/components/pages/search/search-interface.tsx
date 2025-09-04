@@ -19,6 +19,8 @@ import {
 	searchParamsSchema,
 	serializeSearchParams,
 } from "~/lib/search";
+import { useOnboardingStore } from "~/stores/onboarding";
+import { EnhanceToggle } from "./enhance-toggle";
 
 type FilterOption = {
 	value: string;
@@ -41,6 +43,31 @@ export function SearchInterface({
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
+
+	// Get onboarding preferences for enhance toggle
+	const onboardingPreferences = useOnboardingStore((state) => ({
+		selectedAudienceIds: state.selectedAudienceIds,
+		selectedThemeIds: state.selectedThemeIds,
+		hasCompletedOnboarding: state.hasCompletedOnboarding,
+	}));
+
+	// Check if user has preferences from onboarding
+	const hasPreferences = 
+		onboardingPreferences.hasCompletedOnboarding &&
+		(onboardingPreferences.selectedAudienceIds.length > 0 || 
+		 onboardingPreferences.selectedThemeIds.length > 0);
+	
+	// Get enhance state from URL, default to true if preferences exist and no URL parameter
+	const enhanceEnabled = currentParams.enhance !== undefined 
+		? currentParams.enhance 
+		: hasPreferences;
+
+	// Helper functions to get preference labels for hover text
+	const getAudienceLabels = (ids: string[]) => 
+		ids.map(id => audienceOptions.find(opt => opt.value === id)?.label).filter(Boolean) as string[];
+	
+	const getThemeLabels = (ids: string[]) => 
+		ids.map(id => themeOptions.find(opt => opt.value === id)?.label).filter(Boolean) as string[];
 
 	logger.debug(
 		"client",
@@ -185,6 +212,14 @@ export function SearchInterface({
 		[updateSearchParams],
 	);
 
+	// Handle enhance toggle changes
+	const handleEnhanceToggle = useCallback(
+		(enabled: boolean) => {
+			updateSearchParams({ enhance: enabled });
+		},
+		[updateSearchParams],
+	);
+
 	// Handle Enter key for search
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent) => {
@@ -239,6 +274,14 @@ export function SearchInterface({
 					</div>
 				</div>
 			</div>
+
+			{/* Enhance Toggle */}
+			<EnhanceToggle
+				enabled={enhanceEnabled}
+				onToggle={handleEnhanceToggle}
+				audiencePreferences={getAudienceLabels(onboardingPreferences.selectedAudienceIds)}
+				themePreferences={getThemeLabels(onboardingPreferences.selectedThemeIds)}
+			/>
 
 			{/* Filter Tools */}
 			<div className="flex w-full max-w-4xl gap-3 p-0.5">

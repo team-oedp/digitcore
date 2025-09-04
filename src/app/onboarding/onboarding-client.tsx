@@ -876,15 +876,7 @@ function Slide3({
 									click
 								</span>
 								<Link
-									href={`/explore?themes=${encodeURIComponent(
-										selectedThemeIds.join(","),
-									)}${
-										selectedAudienceIds.length
-											? `&audiences=${encodeURIComponent(
-													selectedAudienceIds.join(","),
-												)}`
-											: ""
-									}`}
+									href="/explore"
 									onClick={() => {
 										setCompleted(true);
 										try {

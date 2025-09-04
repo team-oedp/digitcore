@@ -159,8 +159,15 @@ export async function searchPatterns(
 			audiences: formData.get("audiences")?.toString(),
 			themes: formData.get("themes")?.toString(),
 			tags: formData.get("tags")?.toString(),
+			enhance: formData.get("enhance")?.toString(),
 			page: formData.get("page")?.toString(),
 			limit: formData.get("limit")?.toString(),
+		};
+
+		// Extract preference parameters for boosting
+		const prefParams = {
+			prefAudiences: formData.get("prefAudiences")?.toString(),
+			prefThemes: formData.get("prefThemes")?.toString(),
 		};
 
 		logger.search("Raw form data parameters", rawParams, location);
@@ -172,11 +179,21 @@ export async function searchPatterns(
 		const parsedParams = parseSearchParams(validatedParams);
 		logger.search("Parsed parameters", parsedParams, location);
 
+		// Parse preference parameters for boosting
+		const prefAudiences = prefParams.prefAudiences
+			? prefParams.prefAudiences.split(",").filter(Boolean)
+			: [];
+		const prefThemes = prefParams.prefThemes
+			? prefParams.prefThemes.split(",").filter(Boolean)
+			: [];
+
 		// Prepare GROQ query parameters - always provide all parameters (empty arrays if no values)
 		const queryParams: Record<string, unknown> = {
 			audiences: parsedParams.audiences || [],
 			themes: parsedParams.themes || [],
 			tags: parsedParams.tags || [],
+			prefAudiences,
+			prefThemes,
 		};
 
 		logger.search(
@@ -338,6 +355,60 @@ export async function searchPatternsWithParams(
 		return await searchPatterns(formData);
 	} catch (error) {
 		logger.searchError("searchPatternsWithParams failed", error, location);
+
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : "Search failed",
+			totalCount: 0,
+			searchParams: parseSearchParams({ page: 1, limit: 20 }),
+		};
+	}
+}
+
+/**
+ * Search function that accepts onboarding preferences for result boosting
+ */
+export async function searchPatternsWithPreferences(
+	searchParams: URLSearchParams,
+	preferences: {
+		selectedAudienceIds: string[];
+		selectedThemeIds: string[];
+	},
+): Promise<SearchResult> {
+	const location = createLogLocation(
+		"search.ts",
+		"searchPatternsWithPreferences",
+	);
+
+	try {
+		logger.searchInfo(
+			"Starting search with onboarding preferences",
+			{
+				searchParams: Object.fromEntries(searchParams.entries()),
+				preferences,
+			},
+			location,
+		);
+
+		const formData = new FormData();
+
+		// Add search params
+		for (const [key, value] of searchParams) {
+			formData.append(key, value);
+		}
+
+		// Add preference parameters for GROQ boosting
+		formData.append("prefAudiences", preferences.selectedAudienceIds.join(","));
+		formData.append("prefThemes", preferences.selectedThemeIds.join(","));
+
+		logger.search(
+			"Delegating to searchPatterns with preferences",
+			undefined,
+			location,
+		);
+		return await searchPatterns(formData);
+	} catch (error) {
+		logger.searchError("searchPatternsWithPreferences failed", error, location);
 
 		return {
 			success: false,

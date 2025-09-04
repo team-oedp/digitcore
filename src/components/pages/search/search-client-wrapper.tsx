@@ -5,9 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import {
 	type SearchResult,
 	searchPatternsWithParams,
+	searchPatternsWithPreferences,
 } from "~/app/actions/search";
 import { createLogLocation, logger } from "~/lib/logger";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
+import { useOnboardingStore } from "~/stores/onboarding";
 import { SearchResultsSkeleton } from "./search-result-skeleton";
 import { SearchResults } from "./search-results";
 import { SearchResultsHeaderClient } from "./search-results-header-client";
@@ -23,6 +25,13 @@ export function SearchClientWrapper() {
 	const [searchId] = useState(() => Math.random().toString(36).substring(7));
 	const abortControllerRef = useRef<AbortController | null>(null);
 	const lastSearchParamsRef = useRef<string>("");
+
+	// Get onboarding preferences for result boosting
+	const onboardingPreferences = useOnboardingStore((state) => ({
+		selectedAudienceIds: state.selectedAudienceIds,
+		selectedThemeIds: state.selectedThemeIds,
+		hasCompletedOnboarding: state.hasCompletedOnboarding,
+	}));
 
 	logger.debug("client", "SearchClientWrapper mounted", { searchId }, location);
 
@@ -48,6 +57,7 @@ export function SearchClientWrapper() {
 				audiences: searchParams.get("audiences") ?? undefined,
 				themes: searchParams.get("themes") ?? undefined,
 				tags: searchParams.get("tags") ?? undefined,
+				enhance: searchParams.get("enhance") ?? undefined,
 				page: searchParams.get("page") ?? undefined,
 				limit: searchParams.get("limit") ?? undefined,
 			};
@@ -150,9 +160,21 @@ export function SearchClientWrapper() {
 					location,
 				);
 
-				// Execute search
+				// Execute search - use preferences if enhance is enabled and preferences exist
 				const startTime = Date.now();
-				const result = await searchPatternsWithParams(urlSearchParams);
+				const hasPreferences =
+					onboardingPreferences.hasCompletedOnboarding &&
+					(onboardingPreferences.selectedAudienceIds.length > 0 ||
+						onboardingPreferences.selectedThemeIds.length > 0);
+
+				const shouldEnhance = parsedParams.enhance && hasPreferences;
+
+				const result = shouldEnhance
+					? await searchPatternsWithPreferences(urlSearchParams, {
+							selectedAudienceIds: onboardingPreferences.selectedAudienceIds,
+							selectedThemeIds: onboardingPreferences.selectedThemeIds,
+						})
+					: await searchPatternsWithParams(urlSearchParams);
 				const endTime = Date.now();
 
 				logger.info(
@@ -195,7 +217,7 @@ export function SearchClientWrapper() {
 		};
 
 		performSearch();
-	}, [searchParams, location, searchId]);
+	}, [searchParams, location, searchId, onboardingPreferences]);
 
 	// Cleanup effect to abort ongoing requests when component unmounts
 	useEffect(() => {
