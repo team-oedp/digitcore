@@ -2,7 +2,8 @@ import "~/styles/globals.css";
 
 import type { Metadata, Viewport } from "next";
 import { VisualEditing } from "next-sanity";
-import { draftMode } from "next/headers";
+import { cookies, draftMode } from "next/headers";
+import { redirect } from "next/navigation";
 import { sans, signifier } from "~/app/(frontend)/fonts";
 import { DisableDraftMode } from "~/components/global/disable-draft-mode";
 import { SiteLayout } from "~/components/global/site-layout";
