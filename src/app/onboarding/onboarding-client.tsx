@@ -388,7 +388,7 @@ function Slide({
 					breadcrumbs={breadcrumbs}
 				/>
 				<div className="min-h-0 flex-1">{children}</div>
-				<footer className="hidden pt-4 text-left font-sans text-foreground text-sm md:block md:pt-8">
+				<footer className="hidden pt-4 text-left text-body-muted md:block md:pt-8">
 					{footerText || "Open Environmental Data Project"}
 				</footer>
 			</div>
@@ -444,7 +444,7 @@ function Slide1({
 			.join(" ");
 
 	const asset = (
-		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-2 md:p-8">
+		<div className="flex h-full w-full items-center justify-center rounded-md p-2 md:p-8">
 			{/* Mobile icons */}
 			<div className="relative md:hidden">
 				<Icon01
@@ -504,7 +504,7 @@ function Slide1({
 				{onboarding?.slide1?.body && (
 					<CustomPortableText
 						value={onboarding.slide1.body as PortableTextBlock[]}
-						className="space-y-4 font-signifier text-foreground text-sm leading-relaxed md:space-y-6 md:text-lg"
+						className="text-body"
 					/>
 				)}
 
@@ -523,7 +523,7 @@ function Slide1({
 					</ActionButton>
 
 					<div>
-						<p className="mb-2 font-light font-signifier text-foreground text-sm leading-relaxed md:text-lg">
+						<p className="mb-2 text-body">
 							{onboarding?.slide1?.secondaryCtaText || "Or, go directly to:"}
 						</p>
 						{patternSlug ? (
@@ -657,11 +657,11 @@ function Slide2({
 				{onboarding?.slide2?.body && (
 					<CustomPortableText
 						value={onboarding.slide2.body as PortableTextBlock[]}
-						className="space-y-4 font-signifier text-foreground text-sm leading-relaxed md:text-lg"
+						className="text-body"
 					/>
 				)}
 
-				<div className="space-y-4 font-light font-sans text-base text-foreground leading-relaxed md:text-lg">
+				<div className="space-y-4 text-body">
 					{/* Audience buttons embedded in the text flow */}
 					<div className="flex flex-wrap items-center gap-2">
 						{audienceOptions.map((opt, _idx) => (
@@ -687,22 +687,16 @@ function Slide2({
 					<div className="flex items-center gap-2">
 						{selectedAudienceIds.length === 0 ? (
 							<>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-									Select your
-								</span>
+								<span className="text-subheading">Select your</span>
 								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light text-foreground text-xs uppercase md:px-3 md:py-2 md:text-base dark:bg-neutral-600">
 									AUDIENCE TYPE
 									<DashedBorder />
 								</span>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-									to continue.
-								</span>
+								<span className="text-subheading">to continue.</span>
 							</>
 						) : (
 							<>
-								<span className="font-light font-signifier text-foreground text-lg capitalize md:text-xl">
-									Click
-								</span>
+								<span className="text-subheading capitalize">Click</span>
 								<button
 									type="button"
 									onClick={goToSlide3}
@@ -711,17 +705,13 @@ function Slide2({
 									NEXT
 									<DashedBorder />
 								</button>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-									to continue.
-								</span>
+								<span className="text-subheading">to continue.</span>
 							</>
 						)}
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-							Or, go
-						</span>
+						<span className="text-subheading">Or, go</span>
 						<button
 							type="button"
 							onClick={goToSlide1}
@@ -730,9 +720,7 @@ function Slide2({
 							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
 						</button>
-						<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-							to the previous step.
-						</span>
+						<span className="text-subheading">to the previous step.</span>
 					</div>
 				</div>
 			</div>
@@ -825,7 +813,7 @@ function Slide3({
 				{onboarding?.slide3?.body && (
 					<CustomPortableText
 						value={onboarding.slide3.body as PortableTextBlock[]}
-						className="space-y-4 font-signifier text-base text-foreground leading-relaxed md:text-lg"
+						className="text-body"
 					/>
 				)}
 
@@ -853,22 +841,18 @@ function Slide3({
 					<div className="flex items-center gap-2">
 						{selectedThemeIds.length === 0 ? (
 							<>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-									Select a
-								</span>
+								<span className="text-subheading">Select a</span>
 								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-2 font-light text-base text-foreground uppercase dark:bg-neutral-600">
 									THEME
 									<DashedBorder />
 								</span>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
+								<span className="text-subheading">
 									that interests you to continue.
 								</span>
 							</>
 						) : (
 							<>
-								<span className="font-light font-signifier text-foreground text-lg capitalize md:text-xl">
-									click
-								</span>
+								<span className="text-subheading capitalize">click</span>
 								<Link
 									href={`/explore?themes=${encodeURIComponent(
 										selectedThemeIds.join(","),
@@ -891,7 +875,7 @@ function Slide3({
 									FINISH
 									<DashedBorder />
 								</Link>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
+								<span className="text-subheading">
 									to continue to the toolkit.
 								</span>
 							</>
@@ -899,9 +883,7 @@ function Slide3({
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-							Or, go
-						</span>
+						<span className="text-subheading">Or, go</span>
 						<button
 							type="button"
 							onClick={goToSlide2}
@@ -910,9 +892,7 @@ function Slide3({
 							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
 						</button>
-						<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-							to the previous step.
-						</span>
+						<span className="text-subheading">to the previous step.</span>
 					</div>
 				</div>
 			</div>
