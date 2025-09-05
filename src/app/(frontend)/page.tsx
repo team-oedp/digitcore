@@ -88,13 +88,6 @@ export default async function Home() {
 	return (
 		<PageWrapper>
 			<div className="pb-44">
-				{/* {data?.description && (
-					<CustomPortableText
-						value={data.description as PortableTextBlock[]}
-						className="text-page-heading lg:mb-20"
-						glossaryTerms={glossaryTerms}
-					/>
-				)} */}
 				<HeadingMorph />
 				<div className="flex flex-col gap-20 pt-20 lg:gap-60 lg:pt-60">
 					{sectionGroups.map((group, groupIndex) => (

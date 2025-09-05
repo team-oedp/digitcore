@@ -571,7 +571,7 @@
 	--tw-prose-td-borders: var(--border);
 }
 
-/* Override Tailwind Typography font size defaults */
+/* Override Tailwind Typography defaults */
 @utility prose {
 	font-size: inherit;
 	line-height: inherit;
@@ -592,10 +592,7 @@
 		line-height: inherit;
 		font-family: inherit;
 	}
-}
 
-/* Override default prose link styling */
-@utility prose {
 	a {
 		text-decoration: none;
 		text-underline-offset: 0;
