@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { cn } from "~/lib/utils";
+import { themeScript } from "~/lib/theme-script";
 import "~/styles/globals.css";
 import { sans, signifier } from "./(frontend)/fonts";
 
@@ -24,6 +26,13 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
+			<head>
+				<Script
+					id="theme-script"
+					strategy="beforeInteractive"
+					dangerouslySetInnerHTML={{ __html: themeScript }}
+				/>
+			</head>
 			<body className={cn(sans.variable, signifier.variable)}>{children}</body>
 		</html>
 	);

@@ -67,14 +67,14 @@ export function PageHeading({ title }: { title: string }) {
 			ref={elementRef}
 			id={headingId}
 			initial={false}
-			animate={{
-				backgroundColor: isScrolledPast
-					? "var(--background)"
-					: "var(--primary-foreground)",
-				borderColor: isScrolledPast
-					? "var(--brand)"
-					: "var(--primary-foreground)",
-			}}
+		animate={{
+			backgroundColor: isScrolledPast
+				? "var(--background)"
+				: "transparent",
+			borderColor: isScrolledPast
+				? "var(--brand)"
+				: "transparent",
+		}}
 			transition={{
 				backgroundColor: {
 					duration: 0.3,

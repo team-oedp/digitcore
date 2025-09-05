@@ -358,7 +358,15 @@
 
 @layer base {
 	:root {
+		color-scheme: light dark;
+	}
+
+	html:not(.dark) {
 		color-scheme: light;
+	}
+
+	html.dark {
+		color-scheme: dark;
 	}
 
 	* {

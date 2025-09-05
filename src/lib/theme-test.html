@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Test</title>
+    <style>
+        body {
+            font-family: system-ui;
+            padding: 2rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .light {
+            background: white;
+            color: black;
+        }
+        
+        .dark {
+            background: #0a0a0a;
+            color: white;
+        }
+        
+        button {
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            border: 1px solid currentColor;
+            background: transparent;
+            color: inherit;
+            cursor: pointer;
+            border-radius: 0.25rem;
+        }
+        
+        .info {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid currentColor;
+            border-radius: 0.25rem;
+        }
+        
+        code {
+            background: rgba(128, 128, 128, 0.2);
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Theme System Test</h1>
+    
+    <div class="info">
+        <h2>Current State:</h2>
+        <p>System Preference: <code id="system-pref">Checking...</code></p>
+        <p>LocalStorage theme: <code id="storage-theme">Checking...</code></p>
+        <p>Current HTML class: <code id="html-class">Checking...</code></p>
+        <p>Applied Theme: <code id="applied-theme">Checking...</code></p>
+    </div>
+    
+    <div>
+        <h2>Test Actions:</h2>
+        <button onclick="setTheme('light')">Set Light Theme</button>
+        <button onclick="setTheme('dark')">Set Dark Theme</button>
+        <button onclick="setTheme('system')">Set System Theme</button>
+        <button onclick="clearTheme()">Clear Theme (Reset)</button>
+        <button onclick="simulateOnboarding()">Simulate Onboarding Complete</button>
+    </div>
+    
+    <div class="info">
+        <h2>Test Results:</h2>
+        <ol>
+            <li>The page should respect your system preferences by default</li>
+            <li>After completing onboarding, it should still respect system preferences</li>
+            <li>Manual theme selection should persist across page reloads</li>
+            <li>When theme is set to "system", it should follow OS dark/light mode</li>
+        </ol>
+    </div>
+
+    <script>
+        // Check system preference
+        function checkSystemPreference() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            return prefersDark ? 'dark' : 'light';
+        }
+        
+        // Update display
+        function updateDisplay() {
+            document.getElementById('system-pref').textContent = checkSystemPreference();
+            document.getElementById('storage-theme').textContent = localStorage.getItem('theme') || 'not set';
+            document.getElementById('html-class').textContent = document.documentElement.className || 'none';
+            
+            const hasClass = document.documentElement.classList.contains('dark');
+            document.getElementById('applied-theme').textContent = hasClass ? 'dark' : 'light';
+            
+            // Apply theme to body for visual feedback
+            document.body.className = hasClass ? 'dark' : 'light';
+        }
+        
+        // Apply theme based on storage or system
+        function applyTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            
+            if (!savedTheme || savedTheme === 'system') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            } else if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+            }
+            
+            updateDisplay();
+        }
+        
+        // Set theme
+        function setTheme(theme) {
+            localStorage.setItem('theme', theme);
+            applyTheme();
+            console.log(`Theme set to: ${theme}`);
+        }
+        
+        // Clear theme
+        function clearTheme() {
+            localStorage.removeItem('theme');
+            applyTheme();
+            console.log('Theme cleared - using system default');
+        }
+        
+        // Simulate onboarding completion
+        function simulateOnboarding() {
+            document.cookie = "onboarding_completed=1; path=/; max-age=31536000";
+            console.log('Onboarding cookie set');
+            
+            // Check that theme still respects system after onboarding
+            setTimeout(() => {
+                applyTheme();
+                alert('Onboarding completed. Theme should still respect system preference unless explicitly set.');
+            }, 100);
+        }
+        
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            console.log('System theme changed to:', e.matches ? 'dark' : 'light');
+            applyTheme();
+        });
+        
+        // Initial setup
+        applyTheme();
+        
+        // Update display every second to catch any changes
+        setInterval(updateDisplay, 1000);
+    </script>
+</body>
+</html>
