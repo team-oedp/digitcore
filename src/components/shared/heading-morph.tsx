@@ -69,15 +69,13 @@ export function HeadingMorph() {
 				</motion.h1>
 				<motion.div
 					initial={false}
-				animate={{
-					opacity: isScrolledPast ? 1 : 0,
-					backgroundColor: isScrolledPast
-						? "var(--background)"
-						: "transparent",
-					borderColor: isScrolledPast
-						? "var(--brand)"
-						: "transparent",
-				}}
+					animate={{
+						opacity: isScrolledPast ? 1 : 0,
+						backgroundColor: isScrolledPast
+							? "var(--background)"
+							: "transparent",
+						borderColor: isScrolledPast ? "var(--brand)" : "transparent",
+					}}
 					transition={{
 						opacity: {
 							duration: 0.3,
