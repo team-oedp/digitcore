@@ -296,7 +296,11 @@ function PatternSearchResult({
 					{/* Theme Badges */}
 					{theme && (
 						<BadgeGroup>
-							<Badge variant="theme" icon={<ThemeMiniBadge />}>
+							<Badge
+								variant="theme"
+								icon={<ThemeMiniBadge />}
+								className="capitalize"
+							>
 								{theme.title}
 							</Badge>
 						</BadgeGroup>
@@ -312,7 +316,7 @@ function PatternSearchResult({
 									icon={
 										<Icon
 											icon={ChartRelationshipIcon}
-											className="h-3.5 w-3.5"
+											className="h-3.5 w-3.5 capitalize"
 										/>
 									}
 								>
@@ -329,7 +333,9 @@ function PatternSearchResult({
 								<Badge
 									key={tag._id}
 									variant="tag"
-									icon={<Icon icon={Tag01Icon} className="h-3.5 w-3.5" />}
+									icon={
+										<Icon icon={Tag01Icon} className="h-3.5 w-3.5 capitalize" />
+									}
 								>
 									{tag.title}
 								</Badge>
@@ -466,7 +472,10 @@ function _SolutionSearchResult({
 							key={audience._id}
 							variant="audience"
 							icon={
-								<Icon icon={ChartRelationshipIcon} className="h-3.5 w-3.5" />
+								<Icon
+									icon={ChartRelationshipIcon}
+									className="h-3.5 w-3.5 capitalize"
+								/>
 							}
 						>
 							{audience.title}
@@ -565,8 +574,8 @@ function renderHighlightedText(text: string, searchTerm: string) {
 // Theme Mini Badge Component
 function ThemeMiniBadge() {
 	return (
-		<div className="flex h-[16px] items-center justify-center rounded border border-orange-200 px-1 py-0 md:h-[18px] md:px-1.5">
-			<span className="font-normal text-[10px] text-orange-800 tracking-tighter md:text-[12px]">
+		<div className="flex h-[16px] items-center justify-center rounded border border-[var(--theme-mini-icon-border)] px-1 py-0 md:h-[18px] md:px-1.5">
+			<span className="font-normal text-[10px] text-[var(--theme-badge-text)] tracking-tighter md:text-[12px]">
 				Theme
 			</span>
 		</div>
