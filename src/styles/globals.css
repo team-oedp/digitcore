@@ -150,16 +150,16 @@
 	--color-teal-light--dark: oklch(0.45 0.08 180);
 
 	/* Dark Mode Ochre Colors */
-	--color-ochre-border-dark--dark: oklch(0.45 0.15 60);
-	--color-ochre-dark--dark: oklch(0.35 0.08 60);
-	--color-ochre-default--dark: oklch(0.45 0.1 60);
-	--color-ochre-light--dark: oklch(0.65 0.15 60);
+	--color-ochre-border-dark--dark: oklch(0.42 0.12 60);
+	--color-ochre-dark--dark: oklch(0.38 0.09 60);
+	--color-ochre-default--dark: oklch(0.4 0.09 60);
+	--color-ochre-light--dark: oklch(0.6 0.12 60);
 
 	/* Dark Mode Magenta Colors */
-	--color-magenta-border-dark--dark: oklch(0.45 0.08 320);
-	--color-magenta-dark--dark: oklch(0.25 0.04 320);
-	--color-magenta-default--dark: oklch(0.35 0.06 320);
-	--color-magenta-light--dark: oklch(0.45 0.08 320);
+	--color-magenta-border-dark--dark: oklch(0.5 0.1 320);
+	--color-magenta-dark--dark: oklch(0.3 0.06 320);
+	--color-magenta-default--dark: oklch(0.4 0.08 320);
+	--color-magenta-light--dark: oklch(0.7 0.12 320);
 
 	/* Dark Mode Fuschia Colors */
 	--color-fuschia-border-dark--dark: oklch(0.45 0.08 300);
@@ -168,10 +168,10 @@
 	--color-fuschia-light--dark: oklch(0.45 0.08 300);
 
 	/* Dark Mode Cerulean Colors */
-	--color-cerulean-border-dark--dark: oklch(0.45 0.08 240);
-	--color-cerulean-dark--dark: oklch(0.25 0.04 240);
-	--color-cerulean-default--dark: oklch(0.35 0.06 240);
-	--color-cerulean-light--dark: oklch(0.65 0.15 240);
+	--color-cerulean-border-dark--dark: oklch(0.42 0.07 240);
+	--color-cerulean-dark--dark: oklch(0.38 0.07 240);
+	--color-cerulean-default--dark: oklch(0.4 0.06 240);
+	--color-cerulean-light--dark: oklch(0.6 0.11 240);
 
 	/* Dark Mode Moss Colors */
 	--color-moss-border-dark--dark: oklch(0.45 0.08 120);
@@ -180,10 +180,10 @@
 	--color-moss-light--dark: oklch(0.45 0.08 120);
 
 	/* Dark Mode Purple Colors */
-	--color-purple-border-dark--dark: oklch(0.45 0.08 270);
-	--color-purple-dark--dark: oklch(0.25 0.04 270);
-	--color-purple-default--dark: oklch(0.35 0.06 270);
-	--color-purple-light--dark: oklch(0.65 0.15 270);
+	--color-purple-border-dark--dark: oklch(0.42 0.07 270);
+	--color-purple-dark--dark: oklch(0.38 0.07 270);
+	--color-purple-default--dark: oklch(0.4 0.06 270);
+	--color-purple-light--dark: oklch(0.6 0.11 270);
 
 	/* Dark Mode Coral Colors */
 	--color-coral-border-dark--dark: oklch(0.45 0.08 25);
@@ -321,18 +321,24 @@
 
 	/* Dark mode badge colors */
 	--theme-badge-text: var(--color-ochre-light--dark);
-	--theme-badge-background: var(--color-ochre-dark--dark);
+	--theme-badge-background: oklch(
+		from var(--color-ochre-dark--dark) l c h /
+		0.6
+	);
 	--theme-badge-border: var(--color-ochre-default--dark);
 	--theme-badge-border-dark: var(--color-ochre-border-dark--dark);
 	--theme-mini-icon-border: var(--color-ochre-border-dark--dark);
 
 	--tag-badge-text: var(--color-purple-light--dark);
-	--tag-badge-background: var(--color-purple-dark--dark);
+	--tag-badge-background: oklch(from var(--color-purple-dark--dark) l c h / 0.6);
 	--tag-badge-border: var(--color-purple-default--dark);
 	--tag-badge-border-dark: var(--color-purple-border-dark--dark);
 
 	--audience-badge-text: var(--color-cerulean-light--dark);
-	--audience-badge-background: var(--color-cerulean-dark--dark);
+	--audience-badge-background: oklch(
+		from var(--color-cerulean-dark--dark) l c h /
+		0.6
+	);
 	--audience-badge-border: var(--color-cerulean-default--dark);
 	--audience-badge-border-dark: var(--color-cerulean-border-dark--dark);
 
