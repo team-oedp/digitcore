@@ -11,9 +11,7 @@
 		"deploy": "sanity deploy",
 		"deploy-graphql": "sanity graphql deploy"
 	},
-	"keywords": [
-		"sanity"
-	],
+	"keywords": ["sanity"],
 	"dependencies": {
 		"@sanity/code-input": "^6.0.0",
 		"@sanity/vision": "^4.6.1",
