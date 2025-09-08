@@ -109,18 +109,21 @@ function ActionButton({
 	children,
 	dashed = true,
 	preserveSize = false,
+	asButton = false,
 }: {
 	href?: string;
 	onClick?: () => void;
 	children: React.ReactNode;
 	dashed?: boolean;
 	preserveSize?: boolean;
+	asButton?: boolean;
 }) {
 	const baseClass = preserveSize
 		? "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-2 text-left text-foreground text-sm uppercase font-light transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 md:text-lg"
 		: "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 text-left text-foreground text-xs uppercase font-light transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 md:px-3 md:py-2 md:text-lg";
 
-	if (href) {
+	// Use Link component when href is provided and we're not forcing button behavior
+	if (href && !asButton) {
 		return (
 			<Link href={href} className={baseClass} onClick={onClick}>
 				<span className="relative z-10 inline-flex items-center gap-2">
@@ -131,6 +134,7 @@ function ActionButton({
 		);
 	}
 
+	// Always render as button when asButton is true or no href is provided
 	return (
 		<button type="button" onClick={onClick} className={baseClass}>
 			<span className="relative z-10 inline-flex items-center gap-2">
@@ -226,24 +230,31 @@ function OnboardingInner({
 	return (
 		<div className="m-2 rounded-md bg-neutral-200 dark:bg-neutral-800">
 			<div className="relative h-[calc(100vh-1rem)] overflow-clip rounded-md bg-primary-foreground p-2 dark:bg-neutral-900">
-				{/* Desktop skip button - top right */}
-				<div className="absolute top-4 right-4 z-10 hidden md:block">
-					<ActionButton
-						href="/"
-						dashed={false}
-						preserveSize={true}
-						onClick={() => {
-							try {
-								document.cookie =
-									"onboarding_completed=1; path=/; max-age=31536000";
-							} catch {}
-						}}
-					>
-						<span className="text-xs">
-							{onboarding?.skipLabel || "Skip onboarding"}
-						</span>
-					</ActionButton>
-				</div>
+			{/* Desktop skip button - top right */}
+			<div className="absolute top-4 right-4 z-10 hidden md:block">
+				<ActionButton
+					dashed={false}
+					preserveSize={true}
+					asButton={true}
+					onClick={() => {
+						try {
+							document.cookie =
+								"onboarding_completed=1; path=/; max-age=31536000";
+							// Add a small delay to ensure cookie is set before navigation
+							setTimeout(() => {
+								router.push("/");
+							}, 50);
+						} catch {
+							// If cookie setting fails, still navigate
+							router.push("/");
+						}
+					}}
+				>
+					<span className="text-xs">
+						{onboarding?.skipLabel || "Skip onboarding"}
+					</span>
+				</ActionButton>
+			</div>
 
 				<div
 					className={cn(
@@ -379,6 +390,7 @@ function Slide({
 	footerText?: string;
 	onboarding?: Onboarding;
 }) {
+	const router = useRouter();
 	return (
 		<div className="flex h-full flex-col md:flex-row">
 			<div className="flex w-full flex-col justify-start px-3 py-3 md:w-1/2 md:py-4 md:pr-4 md:pl-4">
@@ -397,24 +409,31 @@ function Slide({
 					<div className="h-full w-full rounded-md bg-icon/60 dark:bg-icon/30" />
 				)}
 
-				{/* Mobile skip button - bottom right of icon container */}
-				<div className="absolute right-2 bottom-2 z-20 md:hidden">
-					<ActionButton
-						href="/"
-						dashed={false}
-						preserveSize={true}
-						onClick={() => {
-							try {
-								document.cookie =
-									"onboarding_completed=1; path=/; max-age=31536000";
-							} catch {}
-						}}
-					>
-						<span className="text-xs">
-							{onboarding?.skipLabel || "Skip onboarding"}
-						</span>
-					</ActionButton>
-				</div>
+			{/* Mobile skip button - bottom right of icon container */}
+			<div className="absolute right-2 bottom-2 z-20 md:hidden">
+				<ActionButton
+					dashed={false}
+					preserveSize={true}
+					asButton={true}
+					onClick={() => {
+						try {
+							document.cookie =
+								"onboarding_completed=1; path=/; max-age=31536000";
+							// Add a small delay to ensure cookie is set before navigation
+							setTimeout(() => {
+								router.push("/");
+							}, 50);
+						} catch {
+							// If cookie setting fails, still navigate
+							router.push("/");
+						}
+					}}
+				>
+					<span className="text-xs">
+						{onboarding?.skipLabel || "Skip onboarding"}
+					</span>
+				</ActionButton>
+			</div>
 			</div>
 		</div>
 	);
