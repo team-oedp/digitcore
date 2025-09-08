@@ -1,0 +1,270 @@
+---
+description: Implementation guide for the glossary words feature that integrates Sanity CMS with frontend automatic term detection and linking
+---
+
+# Glossary Feature Usage Guide
+
+## Overview
+
+The glossary feature automatically detects and styles glossary terms that appear inline within text content throughout the website. Terms are styled as clickable links with a book icon, making them easily distinguishable while maintaining readability.
+
+## Sanity CMS Setup
+
+### 1. Schema Definition
+
+The glossary is defined in Sanity as a document type:
+
+```typescript
+// ~/sanity/schemaTypes/documents/glossaryType.ts
+export const glossaryType = defineType({
+  name: "glossary",
+  title: "Glossary", 
+  type: "document",
+  icon: BookIcon,
+  fields: [
+    defineField({
+      name: "title",
+      type: "string",
+    }),
+    defineField({
+      name: "description", 
+      type: "blockContent",
+    }),
+  ],
+});
+```
+
+### 2. GROQ Queries
+
+Terms are fetched using predefined queries:
+
+```typescript
+// ~/sanity/lib/queries.ts
+export const GLOSSARY_TERMS_QUERY = defineQuery(`
+  *[_type == "glossary"] | order(title asc) {
+    _id,
+    title,
+    description
+  }`);
+
+export const GLOSSARY_PAGE_QUERY = (`
+  *[_type == 'page' && slug.current == 'glossary'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current
+      }
+    },
+  }`);
+```
+
+### 3. TypeScript Types
+
+Auto-generated types are available:
+
+```typescript
+import type { GlossaryTerm } from "~/lib/glossary-utils";
+// or
+import type { Glossary } from "~/sanity/sanity.types";
+```
+
+## Frontend Implementation
+
+### 1. Basic Usage in a Component
+
+To enable glossary detection in your content, pass the glossary terms to the `CustomPortableText` component:
+
+```tsx
+import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { client } from "~/sanity/lib/client";
+import { GLOSSARY_TERMS_QUERY } from "~/sanity/lib/queries";
+import type { GlossaryTerm } from "~/lib/glossary-utils";
+
+export default async function MyPage() {
+  // Fetch glossary terms
+  const glossaryTerms = await client.fetch<GlossaryTerm[]>(GLOSSARY_TERMS_QUERY);
+  
+  // Fetch your content
+  const content = await fetchYourContent();
+  
+  return (
+    <div>
+      <CustomPortableText 
+        value={content.description}
+        glossaryTerms={glossaryTerms}
+        className="text-body"
+      />
+    </div>
+  );
+}
+```
+
+### 2. Without Glossary Detection
+
+If you don't want glossary detection in a specific instance, simply omit the `glossaryTerms` prop:
+
+```tsx
+<CustomPortableText 
+  value={content.description}
+  className="text-body"
+/>
+```
+
+### 3. Current Pages Using Glossary
+
+The feature is currently implemented on:
+
+- **Homepage** (`~/app/(frontend)/page.tsx`) - All content sections support glossary detection
+- **Glossary page** (`~/app/(frontend)/glossary/page.tsx`) - Terms are not automatically linked within their own definitions
+
+## Styling and Behaviour
+
+### 1. Current Styling
+
+The glossary pills use the following styling:
+
+- Text colour: `text-link` class (theme-based link colour)
+- No background colour (clean, minimalist approach)
+- Book icon: `BookOpen02Icon` from HugeIcons
+- Hover state: Standard link hover behaviour
+- No underline or background
+
+### 2. Behaviour
+
+- **Click behaviour**: Clicking a glossary term navigates to `/glossary#term-slug` and scrolls to that specific term
+- **Tooltip**: Displays "View definition of [term]" on hover
+- **Case sensitivity**: Detection is case-insensitive but preserves original text casing
+- **Icon**: Each pill includes a small book icon to indicate it's a glossary term
+
+### 3. Anchor Generation
+
+Terms are converted to URL-friendly anchors:
+
+```typescript
+// "Digital Infrastructure" → "digital-infrastructure"
+export function toGlossaryAnchorId(input: string): string {
+  return input
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+```
+
+## Detection Algorithm
+
+### 1. Smart Matching Features
+
+- **Whole word matching**: Won't match "APIs" when looking for "API"
+- **Case-insensitive detection**: Finds terms regardless of case
+- **Case preservation**: Maintains original text formatting
+- **Length prioritisation**: Matches "Digital Infrastructure" before just "Infrastructure"
+- **Overlap prevention**: Prevents multiple terms from overlapping in the same text position
+
+### 2. Processing Flow
+
+1. Sort terms by length (longest first)
+2. Create case-insensitive regex with word boundaries
+3. Find all matches in text
+4. Filter out overlapping matches
+5. Sort matches by position
+6. Replace matches with `GlossaryPill` components
+
+## Core Files
+
+### 1. Utility Functions
+
+- `~/lib/glossary-utils.ts` - Core detection and processing logic
+- Functions: `detectGlossaryTerms`, `processTextWithGlossaryTerms`, `toGlossaryAnchorId`, `createGlossaryLink`
+
+### 2. Components
+
+- `~/components/global/glossary-pill.tsx` - Individual pill component with book icon
+- `~/components/global/custom-portable-text.tsx` - Enhanced Portable Text with glossary support
+
+### 3. Sanity Integration
+
+- `~/sanity/schemaTypes/documents/glossaryType.ts` - Schema definition
+- `~/sanity/lib/queries.ts` - GROQ queries for fetching terms
+
+## Integration Notes
+
+### 1. Portable Text Integration
+
+The feature seamlessly integrates with Portable Text rendering:
+
+- Works with all text blocks: paragraphs, headings (h1-h4), lists, block quotes
+- Processes text content within each block type
+- Respects existing links and formatting
+- Does not interfere with other Portable Text features
+
+### 2. Performance Considerations
+
+- Terms are fetched once per page load
+- Detection uses efficient regex matching
+- No runtime API calls for term lookup
+- Processing happens during server-side rendering
+
+### 3. Accessibility
+
+- Proper link semantics with `href` attributes
+- Descriptive tooltips for screen readers
+- Keyboard navigation support via native link behaviour
+- Semantic HTML structure preserved
+
+## Advanced Usage
+
+### 1. Custom Pill Styling
+
+Override the default styling by passing a custom className:
+
+```tsx
+<GlossaryPill term={term} className="custom-pill-class">
+  {termText}
+</GlossaryPill>
+```
+
+### 2. Direct Glossary Link Creation
+
+Create glossary links programmatically:
+
+```typescript
+import { createGlossaryLink } from "~/lib/glossary-utils";
+
+const link = createGlossaryLink("Digital Infrastructure");
+// Result: "/glossary#digital-infrastructure"
+```
+
+### 3. Custom Term Processing
+
+Use the utility functions directly for custom implementations:
+
+```typescript
+import { detectGlossaryTerms, processTextWithGlossaryTerms } from "~/lib/glossary-utils";
+
+const matches = detectGlossaryTerms(text, glossaryTerms);
+const processedContent = processTextWithGlossaryTerms(
+  text, 
+  glossaryTerms, 
+  (term, text, key) => {
+    // Custom rendering logic
+    return <CustomComponent key={key} term={term}>{text}</CustomComponent>;
+  }
+);
+```
+
+## Future Enhancements
+
+Potential improvements to consider:
+
+- Search functionality within glossary terms
+- Term usage analytics
+- Related terms suggestions
+- Bulk term imports from external sources
+- Term categories or tagging

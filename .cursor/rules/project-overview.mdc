@@ -1,14 +1,133 @@
-# Project Overview
-
-## Structure
-
-
-## Key Tech
-
-- TypeScript strict, functional style.
-- Next.js (App Router, Server Components).
-- Zustand for small client-side state islands.
-- Sanity CMS for content.
-- tRPC for type-safe backend calls.
-
 ---
+alwaysApply: true
+---
+# Digitcore Toolkit - Project Overview
+
+Digitcore is a community-centered open infrastructure platform that empowers equitable collaboration between researchers, developers, and frontline communities. The application serves as a comprehensive toolkit containing patterns, solutions, and resources for implementing digital practices that support social justice and community engagement.
+
+## Core Concepts
+
+### Patterns
+The heart of the application - [patterns](mdc:src/sanity/schemaTypes/documents/patternType.ts) are structured methodologies, techniques, or approaches that communities can use. Each pattern includes:
+- Title, description, and iconography
+- Associated solutions and resources  
+- Tags for categorization
+- Target audiences
+- Thematic groupings
+
+### Solutions & Resources
+- **Solutions**: Specific implementations or approaches within patterns
+- **Resources**: Supporting materials, tools, and references
+- Both can be searched and linked to patterns for comprehensive guidance
+
+### Carrier Bag
+Named after Ursula Le Guin's carrier bag theory, this feature allows users to:
+- Collect patterns of interest
+- Add personal notes
+- Export collections as PDFs with custom formatting
+- Share collections via links or social media
+- Download collection metadata as JSON
+
+## Technical Architecture
+
+### Frontend Stack
+- **Next.js 15** with App Router and Server Components
+- **TypeScript** with strict mode for type safety
+- **Tailwind CSS** for utility-first styling
+- **Motion** (Framer Motion) for animations
+- **Radix UI** primitives with custom component library in [src/components/ui/](mdc:src/components/ui/)
+
+### Content Management
+- **Sanity CMS** for structured content with separate studio configuration
+- Rich content model supporting patterns, solutions, resources, glossary terms, and pages
+- Draft mode support and real-time preview capabilities
+- Custom validation and schema types in [src/sanity/schemaTypes/](mdc:src/sanity/schemaTypes/)
+
+### State Management
+- **Zustand** for client-side state (carrier bag, onboarding, page content)
+- **tRPC** for type-safe server communication
+- URL-based state for search and filtering
+
+### Key Features
+
+#### Advanced Search System
+Multi-layered search functionality in [src/app/actions/search.ts](mdc:src/app/actions/search.ts):
+- **Pattern Search**: Full-text search with GROQ scoring across titles, descriptions
+- **Filtering**: By audiences, themes, and tags
+- **Command Menu**: Global search across all content types
+- **Pattern-specific Search**: Search within individual pattern content
+
+#### Automatic Glossary Integration
+Smart text processing in [src/lib/glossary-utils.ts](mdc:src/lib/glossary-utils.ts):
+- Detects glossary terms in content automatically
+- Renders interactive glossary pills with hover definitions
+- Prevents overlapping term detection
+- Supports case-insensitive matching with original case preservation
+
+#### PDF Export System
+Comprehensive PDF generation in [src/components/pdf/](mdc:src/components/pdf/):
+- Custom React PDF components for consistent branding
+- Table of contents generation
+- Pattern-by-pattern layouts
+- SVG to PNG conversion for logo compatibility
+- Styled with custom fonts and spacing
+
+#### Onboarding Experience
+Interactive multi-slide onboarding in [src/app/onboarding/](mdc:src/app/onboarding/):
+- Audience and interest selection
+- Progressive disclosure of platform features
+- Customizable content via Sanity CMS
+
+## File Structure
+
+### Core Application
+- [src/app/(frontend)/](mdc:src/app/(frontend)/) - Main application pages (patterns, search, about, etc.)
+- [src/components/](mdc:src/components/) - Reusable React components organized by function
+- [src/hooks/](mdc:src/hooks/) - Custom React hooks for common functionality
+
+### Content & Data
+- [src/sanity/](mdc:src/sanity/) - Frontend Sanity configuration and queries
+- [src/stores/](mdc:src/stores/) - Zustand state management
+- [src/lib/](mdc:src/lib/) - Utility functions and business logic
+
+### Infrastructure
+- [src/app/actions/](mdc:src/app/actions/) - Server actions for search and form handling
+- [src/server/](mdc:src/server/) - tRPC API routes
+- [src/middleware.ts](mdc:src/middleware.ts) - Next.js middleware for routing
+
+## Development Patterns
+
+### Component Architecture
+- Functional components with TypeScript interfaces
+- Composition patterns with compound components
+- Consistent prop patterns and naming conventions
+- Separation of UI components, page components, and business logic
+
+### Content Integration
+- Server Components for data fetching by default
+- Draft mode support for content preview
+- GROQ queries for efficient content retrieval
+- Type-safe content models with Sanity code generation
+
+### Testing Strategy
+- **Unit Tests**: Vitest for utility functions and hooks
+- **E2E Tests**: Cypress for critical user flows
+- **Type Safety**: TypeScript strict mode with comprehensive type definitions
+
+### Performance Considerations
+- Next.js optimization with Image component and dynamic imports
+- React PDF for client-side PDF generation
+- Debounced search inputs
+- Efficient GROQ queries with minimal data fetching
+
+## Key Dependencies
+
+**Core Framework**: Next.js, React, TypeScript
+**Content**: Sanity CMS, next-sanity, Portable Text
+**UI/Styling**: Tailwind CSS, Radix UI, Motion, Lucide icons
+**State**: Zustand, tRPC, React Query
+**PDF**: React PDF, custom font loading
+**Testing**: Vitest, Cypress, Testing Library
+**Development**: Biome for linting/formatting, strict TypeScript
+
+This application prioritizes accessibility, performance, and user experience while maintaining a robust content management system that supports the complex needs of community-centered digital infrastructure work.
