@@ -1,143 +1,155 @@
 # Cypress Testing Guidelines for DIGITCORE Toolkit
 
 ## Overview
-This guide provides comprehensive guidelines for writing end-to-end tests using Cypress in the DIGITCORE Toolkit project, following Next.js official recommendations. This guide ensures consistent, reliable, and maintainable tests.
+
+This guide provides comprehensive guidelines for writing end-to-end tests using Cypress in the DIGITCORE Toolkit project, based on the current implementation and codebase structure. This guide ensures consistent, reliable, and maintainable tests.
 
 ## Project Context
+
 - **Framework**: Next.js 15 with React 19 (App Router)
 - **Styling**: Tailwind CSS with shadcn/ui components
-- **State Management**: Zustand, TanStack Query, tRPC
+- **State Management**: Zustand (carrier bag), tRPC
 - **Theme System**: next-themes (light/dark/system modes)
 - **Base URL**: http://localhost:3000
+- **Current Cypress Version**: 14.5.2
 
-## Installation & Setup
+## Current Implementation
 
-### Required Packages
-```bash
-npm install -D cypress start-server-and-test
-```
+### Existing Scripts (package.json)
 
-**Note**: Cypress versions below 13.6.3 have TypeScript compatibility issues with Next.js. Ensure you're using Cypress 13.6.3+.
-
-### Package.json Scripts
 ```json
 {
   "scripts": {
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run",
-    "e2e": "start-server-and-test dev http://localhost:3000 \"cypress run --e2e\"",
-    "e2e:dev": "start-server-and-test dev http://localhost:3000 \"cypress open --e2e\"",
+    "cypress:open": "cross-env NODE_ENV=test SKIP_ENV_VALIDATION=1 cypress open",
+    "cypress:run": "cross-env NODE_ENV=test SKIP_ENV_VALIDATION=1 cypress run",
+    "e2e": "start-server-and-test dev http://localhost:3000 \"cross-env NODE_ENV=test SKIP_ENV_VALIDATION=1 cypress run --e2e\"",
+    "e2e:dev": "start-server-and-test dev http://localhost:3000 \"cross-env NODE_ENV=test SKIP_ENV_VALIDATION=1 cypress open --e2e\"",
     "e2e:production": "start-server-and-test start http://localhost:3000 \"cypress run --e2e\""
   }
 }
 ```
 
-### Configuration Files
+### Current Configuration (cypress.config.ts)
 
-Create `cypress.config.ts` in project root:
 ```typescript
-import { defineConfig } from 'cypress'
+import { defineConfig } from "cypress";
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:3000',
-    viewportWidth: 1280,
-    viewportHeight: 720,
-    specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
-    supportFile: 'cypress/support/e2e.ts',
-    video: false, // Disable for faster local development
-    screenshotOnRunFailure: true,
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
-    },
+    baseUrl: "http://localhost:3000",
+    specPattern: "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+    supportFile: "cypress/support/e2e.{js,ts}",
+    video: false,
+    screenshotOnRunFailure: false,
   },
-  // Component testing is optional for Next.js App Router
-  // Server Components cannot be component tested
   component: {
     devServer: {
-      framework: 'next',
-      bundler: 'webpack',
+      framework: "next",
+      bundler: "webpack",
     },
-    specPattern: 'src/**/*.cy.{js,jsx,ts,tsx}',
   },
-})
+});
 ```
 
-### Initial Setup
-1. Run `npm run cypress:open` to initialize Cypress
-2. Choose "E2E Testing" when prompted
-3. Cypress will create the folder structure and config files
+## Current File Structure
 
-## File Structure
-```
+```text
 cypress/
 ├── e2e/
-│   ├── navigation.cy.ts          # Main navigation tests
-│   ├── theme-toggle.cy.ts        # Theme switching functionality
-│   ├── carrier-bag.cy.ts         # Carrier bag functionality
-│   └── pages/
-│       ├── home.cy.ts            # Home page specific tests
-│       ├── glossary.cy.ts        # Glossary page tests
-│       ├── search.cy.ts          # Search functionality
-│       ├── tags.cy.ts            # Tags page tests
-│       ├── values.cy.ts          # Values page tests
-│       └── onboarding.cy.ts      # Onboarding flow tests
+│   └── middleware-onboarding.cy.ts  # Existing onboarding middleware tests
 ├── support/
-│   ├── commands.ts               # Custom Cypress commands
-│   ├── e2e.ts                    # Support file for e2e tests
-│   └── component.ts              # Support file for component tests (optional)
+│   ├── commands.ts                  # Currently contains example code
+│   ├── e2e.ts                       # Minimal support file
+│   └── component-index.html         # Component testing template
 ├── fixtures/
-│   ├── patterns.json             # Mock pattern data
-│   ├── glossary.json             # Mock glossary data
-│   └── carrier-bag.json          # Mock carrier bag data
-└── cypress.config.ts             # Cypress configuration
+│   └── example.json                 # Default fixture
+└── downloads/                       # Downloads directory
 ```
 
 ## Testing Patterns
 
 ### 1. Navigation Testing
+
+Based on actual SiteHeader component structure:
+
 ```typescript
 describe('Navigation', () => {
   beforeEach(() => {
     cy.visit('/')
   })
 
-  it('should display all main navigation links', () => {
-    cy.get('[data-testid="nav-carrier-bag"]').should('be.visible').and('contain', 'Carrier Bag')
-    cy.get('[data-testid="nav-tags"]').should('be.visible').and('contain', 'Tags')
-    cy.get('[data-testid="nav-glossary"]').should('be.visible').and('contain', 'Glossary')
-    cy.get('[data-testid="nav-onboarding"]').should('be.visible').and('contain', 'Onboarding')
-    cy.get('[data-testid="nav-values"]').should('be.visible').and('contain', 'Values')
-    cy.get('[data-testid="nav-search"]').should('be.visible').and('contain', 'Search')
+  it('should display main navigation links', () => {
+    // Test main logo/home link
+    cy.get('header').find('a[href="/"]').should('contain', 'Digitcore')
+    
+    // Test desktop navigation links (hidden on mobile)
+    cy.get('nav').within(() => {
+      cy.get('a[href="/onboarding"]').should('contain', 'Start here')
+      cy.get('a[href="/explore"]').should('contain', 'Explore')  
+      cy.get('a[href="/patterns"]').should('contain', 'Patterns')
+      cy.get('a[href="/tags"]').should('contain', 'Tags')
+      cy.get('a[href="/glossary"]').should('contain', 'Glossary')
+      cy.get('a[href="/values"]').should('contain', 'Values')
+      cy.get('a[href="/faq"]').should('contain', 'FAQ')
+      cy.get('a[href="/about"]').should('contain', 'About')
+      cy.get('a[href="/acknowledgements"]').should('contain', 'Acknowledgements')
+    })
   })
 
   it('should navigate to each page correctly', () => {
     const pages = [
-      { selector: '[data-testid="nav-carrier-bag"]', url: '/carrier-bag', heading: 'Carrier Bag' },
-      { selector: '[data-testid="nav-glossary"]', url: '/glossary', heading: 'Glossary' },
-      { selector: '[data-testid="nav-search"]', url: '/search', heading: 'Search' }
+      { href: '/onboarding', text: 'Start here' },
+      { href: '/explore', text: 'Explore' },
+      { href: '/patterns', text: 'Patterns' },
+      { href: '/tags', text: 'Tags' },
+      { href: '/glossary', text: 'Glossary' },
+      { href: '/values', text: 'Values' },
+      { href: '/faq', text: 'FAQ' },
+      { href: '/about', text: 'About' },
+      { href: '/acknowledgements', text: 'Acknowledgements' }
     ]
 
-    pages.forEach(({ selector, url, heading }) => {
-      cy.get(selector).click()
-      cy.url().should('include', url)
-      cy.get('h1').should('contain', heading)
-      cy.get('[data-testid="nav-home"]').click() // Return to home
+    pages.forEach(({ href, text }) => {
+      cy.get(`a[href="${href}"]`).first().click()
+      cy.url().should('include', href)
+      // Return to home
+      cy.get('a[href="/"]').first().click()
     })
+  })
+
+  it('should handle mobile navigation', () => {
+    cy.viewport('iphone-6')
+    // Test mobile menu button exists (implementation may vary)
+    cy.get('button').contains('Menu').should('exist')
   })
 })
 ```
 
 ### 2. Theme Toggle Testing
+
+Based on actual ModeToggle component:
+
 ```typescript
 describe('Theme Toggle', () => {
   beforeEach(() => {
     cy.visit('/')
   })
 
+  it('should open theme dropdown menu', () => {
+    // Find theme toggle button (has aria-label "Select theme")
+    cy.get('button[aria-label="Select theme"]').click()
+    
+    // Check dropdown menu items
+    cy.get('[role="menu"]').within(() => {
+      cy.contains('Light').should('be.visible')
+      cy.contains('Dark').should('be.visible') 
+      cy.contains('System').should('be.visible')
+    })
+  })
+
   it('should switch to dark theme', () => {
-    cy.get('[data-testid="theme-toggle"]').click()
-    cy.get('[data-testid="theme-dark"]').click()
+    cy.get('button[aria-label="Select theme"]').click()
+    cy.contains('Dark').click()
     cy.get('html').should('have.class', 'dark')
     
     // Verify persistence after page reload
@@ -146,80 +158,150 @@ describe('Theme Toggle', () => {
   })
 
   it('should switch to light theme', () => {
-    cy.get('[data-testid="theme-toggle"]').click()
-    cy.get('[data-testid="theme-light"]').click()
+    cy.get('button[aria-label="Select theme"]').click()
+    cy.contains('Light').click()
+    cy.get('html').should('not.have.class', 'dark')
+    
+    // Verify persistence
+    cy.reload()
     cy.get('html').should('not.have.class', 'dark')
   })
 
   it('should respect system theme', () => {
-    cy.get('[data-testid="theme-toggle"]').click()
-    cy.get('[data-testid="theme-system"]').click()
-    // Theme should match system preference
+    cy.get('button[aria-label="Select theme"]').click()
+    cy.contains('System').click()
+    
+    // System theme should be set (exact appearance depends on OS settings)
+    cy.reload()
+    // Theme persistence check
+    cy.get('button[aria-label="Select theme"]').should('exist')
   })
 })
 ```
 
-### 3. Form and Input Testing
+### 3. Onboarding Middleware Testing
+
+Based on existing middleware-onboarding.cy.ts implementation:
+
 ```typescript
-describe('Search Functionality', () => {
-  beforeEach(() => {
-    cy.visit('/search')
+describe('Onboarding middleware', () => {
+  before(() => {
+    // Warm up dev server compilation to avoid initial timeouts
+    cy.visit('/')
   })
 
-  it('should perform search and display results', () => {
-    cy.get('[data-testid="search-input"]')
-      .type('pattern')
-      .should('have.value', 'pattern')
-    
-    cy.get('[data-testid="search-submit"]').click()
-    
-    cy.get('[data-testid="search-results"]').should('be.visible')
-    cy.get('[data-testid="search-result-item"]').should('have.length.greaterThan', 0)
+  // Handle known React/Next.js performance measurement errors
+  Cypress.on('uncaught:exception', (err) => {
+    // Ignore performance measurement errors that occur with 404 pages
+    if (err.message.includes("Failed to execute 'measure' on 'Performance'")) {
+      return false
+    }
+    // Let other errors fail the test
+    return true
   })
 
-  it('should handle empty search gracefully', () => {
-    cy.get('[data-testid="search-submit"]').click()
-    cy.get('[data-testid="search-error"]').should('contain', 'Please enter a search term')
+  it('redirects first-time visitor to /onboarding', () => {
+    cy.clearCookies()
+    cy.visit('/explore', { failOnStatusCode: false })
+    cy.location('pathname', { timeout: 120000 }).should('eq', '/onboarding')
+  })
+
+  it('passes through when onboarding cookie is present', () => {
+    cy.setCookie('onboarding_completed', '1')
+    cy.visit('/explore')
+    cy.location('pathname').should('eq', '/explore')
+  })
+
+  it('preserves pattern slug and query params', () => {
+    cy.clearCookies()
+    cy.visit('/pattern/foo?bar=baz', { failOnStatusCode: false })
+    cy.location('pathname', { timeout: 120000 }).should('eq', '/onboarding')
+    cy.location('search').should('contain', 'pattern=foo')
+    cy.location('search').should('contain', 'returnTo=%2Fpattern%2Ffoo%3Fbar%3Dbaz')
+  })
+
+  it('does not redirect when already on /onboarding', () => {
+    cy.clearCookies()
+    cy.visit('/onboarding')
+    cy.location('pathname').should('eq', '/onboarding')
   })
 })
 ```
 
-### 4. Local Storage Testing (Carrier Bag)
+### 4. Carrier Bag Testing (Zustand + localStorage)
+
+Based on actual CarrierBagStore implementation:
+
 ```typescript
 describe('Carrier Bag Functionality', () => {
   beforeEach(() => {
-    cy.visit('/carrier-bag')
-    // Clear local storage before each test
+    // Clear localStorage before each test
     cy.clearLocalStorage()
+    cy.visit('/')
   })
 
-  it('should add pattern to carrier bag', () => {
-    cy.visit('/pattern/example-pattern')
-    cy.get('[data-testid="add-to-carrier-bag"]').click()
-    
+  it('should start with empty carrier bag', () => {
     cy.visit('/carrier-bag')
-    cy.get('[data-testid="carrier-bag-item"]').should('have.length', 1)
-    
-    // Verify persistence
-    cy.reload()
-    cy.get('[data-testid="carrier-bag-item"]').should('have.length', 1)
+    // Check for empty state message or no items
+    cy.get('main').should('be.visible')
   })
 
-  it('should remove pattern from carrier bag', () => {
-    // Add pattern first
+  it('should persist carrier bag state in localStorage', () => {
+    // Set up carrier bag data directly in localStorage
     cy.window().then((win) => {
-      win.localStorage.setItem('carrier-bag', JSON.stringify([{ id: '1', title: 'Test Pattern' }]))
+      const mockCarrierBagData = {
+        state: {
+          items: [
+            {
+              pattern: {
+                _id: 'test-pattern-1',
+                title: 'Test Pattern',
+                _updatedAt: new Date().toISOString()
+              },
+              dateAdded: new Date().toISOString(),
+              notes: 'Test notes',
+              contentVersion: new Date().toISOString()
+            }
+          ],
+          isHydrated: true,
+          isOpen: false,
+          isPinned: false,
+          isModalMode: false,
+          stalePatternIds: [],
+          updatingPatternIds: [],
+          recentlyUpdatedIds: [],
+          hasUnseenUpdates: false,
+          lastUpdateTime: null,
+          showClearConfirmation: false
+        },
+        version: 0
+      }
+      win.localStorage.setItem('carrier-bag', JSON.stringify(mockCarrierBagData))
     })
     
+    cy.visit('/carrier-bag')
     cy.reload()
-    cy.get('[data-testid="carrier-bag-item"]').should('have.length', 1)
-    cy.get('[data-testid="remove-from-carrier-bag"]').first().click()
-    cy.get('[data-testid="carrier-bag-item"]').should('have.length', 0)
+    
+    // Verify data persists after reload
+    cy.window().then((win) => {
+      const stored = win.localStorage.getItem('carrier-bag')
+      expect(stored).to.not.be.null
+      const parsed = JSON.parse(stored)
+      expect(parsed.state.items).to.have.length(1)
+    })
+  })
+
+  it('should open carrier bag sidebar', () => {
+    // Look for carrier bag trigger button (backpack icon)
+    cy.get('button').contains('svg').click()
+    // Check if sidebar opens (implementation specific)
+    cy.get('[data-state="open"]').should('exist')
   })
 })
 ```
 
 ### 5. Responsive Design Testing
+
 ```typescript
 describe('Responsive Design', () => {
   const viewports = [
@@ -251,6 +333,7 @@ describe('Responsive Design', () => {
 ## Custom Commands
 
 ### Support Commands (cypress/support/commands.ts)
+
 ```typescript
 declare global {
   namespace Cypress {
@@ -305,6 +388,7 @@ Cypress.Commands.add('navigateAndVerify', (path: string, expectedHeading: string
 Add these `data-testid` attributes to your components:
 
 #### Navigation (layout.tsx)
+
 ```tsx
 // Header navigation
 <nav data-testid="header">
@@ -354,27 +438,32 @@ Add these `data-testid` attributes to your components:
 ## Best Practices
 
 ### 1. Test Organization
+
 - Group related tests in describe blocks
 - Use descriptive test names that explain the expected behavior
 - Keep tests focused on a single piece of functionality
 - Use beforeEach hooks to set up common test preconditions
 
 ### 2. Selectors
+
 - **Prefer data-testid attributes** over CSS classes or element types
 - Use semantic selectors when data-testid is not available
 - Avoid fragile selectors that depend on implementation details
 
 ### 3. Assertions
+
 - Use specific assertions (`.should('contain', 'text')` vs `.should('exist')`)
 - Test both positive and negative cases
 - Verify state changes and persistence where applicable
 
 ### 4. Performance
+
 - Use `cy.intercept()` to mock API calls and avoid external dependencies
 - Keep tests isolated and independent
 - Use fixtures for consistent test data
 
 ### 5. Debugging
+
 - Use `cy.debug()` and `cy.pause()` for debugging failing tests
 - Take screenshots on failures automatically (configured in cypress.config.ts)
 - Use descriptive error messages in custom commands
@@ -382,6 +471,7 @@ Add these `data-testid` attributes to your components:
 ## Environment-Specific Testing
 
 ### Development
+
 ```typescript
 // cypress.config.ts
 if (Cypress.env('NODE_ENV') === 'development') {
@@ -392,6 +482,7 @@ if (Cypress.env('NODE_ENV') === 'development') {
 ```
 
 ### CI/CD
+
 ```typescript
 // For GitHub Actions or similar
 if (Cypress.env('CI')) {
@@ -407,6 +498,7 @@ if (Cypress.env('CI')) {
 ## Common Patterns for DIGITCORE
 
 ### Testing tRPC Integration
+
 ```typescript
 it('should load data from tRPC', () => {
   cy.intercept('POST', '/api/trpc/post.getAll', { fixture: 'posts.json' }).as('getPosts')
@@ -420,6 +512,7 @@ it('should load data from tRPC', () => {
 ```
 
 ### Testing Zustand Store
+
 ```typescript
 it('should update carrier bag store', () => {
   cy.visit('/carrier-bag')
@@ -435,6 +528,7 @@ it('should update carrier bag store', () => {
 ```
 
 ### Testing Theme Persistence
+
 ```typescript
 it('should persist theme across sessions', () => {
   cy.setTheme('dark')
@@ -454,6 +548,7 @@ it('should persist theme across sessions', () => {
 ## Running Tests
 
 ### Development Workflow
+
 1. **Development Mode**: `npm run e2e:dev` - Starts dev server and opens Cypress
 2. **Headless Testing**: `npm run e2e` - Runs tests in headless mode against dev server
 3. **Production Testing**: 
@@ -462,6 +557,7 @@ it('should persist theme across sessions', () => {
    ```
 
 ### Best Practices for Next.js Testing
+
 - **Test against production builds** when possible for accurate results
 - Use `start-server-and-test` to ensure server is ready before running tests
 - For CI/CD, always test against production builds: `npm run build && npm run start`
@@ -473,6 +569,7 @@ it('should persist theme across sessions', () => {
 ## Troubleshooting
 
 ### Common Issues
+
 1. **Element not found**: Check data-testid attributes are added to components
 2. **Timing issues**: Use `cy.wait()` for API calls or `cy.should()` for element states
 3. **State persistence**: Verify localStorage/sessionStorage is being used correctly
@@ -481,6 +578,7 @@ it('should persist theme across sessions', () => {
 6. **Server Components**: Remember that Server Components can't be component tested - use E2E instead
 
 ### Debugging Commands
+
 ```typescript
 cy.debug()           // Pause execution and open DevTools
 cy.pause()           // Pause execution

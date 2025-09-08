@@ -1,0 +1,16 @@
+---
+description: Implementation for Motion in both Client Components and React Server Components (RSC)
+globs:
+alwaysApply: true
+---
+
+# Implementation for Motion in both Client Components and React Server Components (RSC)
+
+## Client Components
+
+"use client";
+import { motion } from "motion/react";
+
+## React Server Components (RSC)
+
+import * as motion from "motion/react-client";

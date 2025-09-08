@@ -1,17 +1,35 @@
-# DIGITCORE Search Optimization - Implementation Guide
+---
+description: Comprehensive guide to the DIGITCORE search functionality including main search, command menu, page content search, and pattern-specific search features
+---
+
+# DIGITCORE Search Architecture - Implementation Guide
+
+*Last Updated: 2025-01-27*  
+*Status: Production-ready with multiple search interfaces*
 
 ## Project Overview
-DIGITCORE is a Next.js application with Sanity CMS. This document covers the search functionality optimization work completed to improve user experience and performance.
 
-## Search Architecture
+DIGITCORE is a Next.js 15 application with Sanity CMS featuring comprehensive search functionality across multiple interfaces and content types.
+
+## Search Architecture Overview
 
 ### Technology Stack
-- **Frontend**: Next.js 15, React, TypeScript
-- **Database/CMS**: Sanity CMS with GROQ queries
-- **Search Implementation**: Client-side with server actions
-- **Styling**: Tailwind CSS
+- **Frontend**: Next.js 15 (App Router), React 18, TypeScript
+- **Backend**: Sanity CMS with GROQ queries
+- **Search Implementation**: Hybrid client-side and server actions
+- **State Management**: React state with Zustand for global state
+- **Styling**: Tailwind CSS with shadcn/ui components
 
-### Component Structure
+### Search Types Implemented
+
+1. **Main Search Page** (`/search`) - Advanced search with filtering
+2. **Command Menu** (Cmd+K) - Global search palette 
+3. **Page Content Search** - In-page search for pattern pages
+4. **Pattern-Specific Search** - Search within individual pattern content
+
+## 1. Main Search Page Architecture
+
+### File Structure
 ```
 src/app/(frontend)/search/page.tsx                    # Main search page (Server Component)
 ├── src/components/pages/search/
@@ -23,51 +41,187 @@ src/app/(frontend)/search/page.tsx                    # Main search page (Server
 │   ├── search-result-skeleton.tsx                   # Loading skeleton
 │   └── search-results-header-client.tsx             # Results count header
 ├── src/app/actions/
-│   ├── search.ts                                     # Search server action
+│   ├── search.ts                                     # Main search server actions
 │   └── filter-options.ts                            # Filter options server action
 ├── src/lib/
 │   ├── search.ts                                     # Search utilities & types
-│   └── search-utils.ts                              # Truncation & highlighting utilities
+│   └── search-utils.ts                              # Text processing utilities
 └── src/sanity/lib/
     ├── queries.ts                                    # GROQ search queries
     └── filter-options.ts                            # Filter option queries
 ```
 
-## Optimization Work Completed
+### Key Features
+- **Advanced Text Search**: GROQ-powered full-text search with relevance scoring
+- **Multi-faceted Filtering**: Filter by audiences, themes, and tags
+- **Context-aware Truncation**: Smart text truncation preserving search matches
+- **Match Highlighting**: Visual highlighting of search terms in results
+- **Match Explanation**: Shows where matches were found (title/description)
+- **Expandable Descriptions**: Client-side expansion without re-fetch
+- **URL State Management**: All search state persists in URL parameters
 
-### 1. Input Behavior Optimization (CRITICAL FIX)
-**Problem**: Character flickering and unpredictable backspace behavior during typing
-**Root Cause**: URL sync conflicts between local state and debounced updates
-**Solution**: Isolated local state management
+### Search Parameters Schema
 ```typescript
-// BEFORE (Problematic)
-useEffect(() => {
-  setSearchTerm(currentParams.searchTerm || "");
-}, [currentParams.searchTerm, searchTerm]); // ← Caused infinite loops
+// From src/lib/search.ts
+export const searchParamsSchema = z.object({
+  q: z.string().optional(),                    // Search query string
+  audiences: z.string().optional(),            // Comma-separated audience IDs
+  themes: z.string().optional(),               // Comma-separated theme IDs  
+  tags: z.string().optional(),                 // Comma-separated tag IDs
+  page: z.coerce.number().min(1).default(1),   // Pagination
+  limit: z.coerce.number().min(1).max(100).default(20)
+});
+```
 
-// AFTER (Fixed)
+### GROQ Query Implementation
+```groq
+// Enhanced search with scoring - from src/sanity/lib/queries.ts
+*[_type == "pattern" && defined(slug.current)
+  // Filter applications
+  && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
+  && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)
+  && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
+]
+// Multi-level scoring system
+| score(
+    boost(title match $searchTerm, 15),                    // Exact title match (highest)
+    boost(pt::text(description) match $searchTerm, 12),    // Exact description match
+    boost(title match ($searchTerm + "*"), 8),             // Title prefix match
+    boost(pt::text(description) match ($searchTerm + "*"), 6), // Description prefix
+    title match ($searchTerm + "*"),                       // Basic title scoring
+    pt::text(description) match ($searchTerm + "*")        // Basic description scoring
+)
+[_score > 0] | order(_score desc, title asc)
+```
+
+## 2. Command Menu (Global Search)
+
+### Implementation
+- **Location**: `src/components/global/command-menu.tsx`
+- **Trigger**: Cmd+K / Ctrl+K keyboard shortcut
+- **Search Action**: `searchContentForCommandModal()` in `src/app/actions/search.ts`
+
+### Features
+- **Cross-content Search**: Searches patterns, solutions, resources, and tags simultaneously
+- **Debounced Input**: 300ms debounce for performance
+- **Keyboard Navigation**: Full keyboard navigation support
+- **Theme Integration**: Respects light/dark theme
+- **Page Content Integration**: On pattern pages, also searches page content
+
+### Search Execution
+```typescript
+// From src/app/actions/search.ts - Command modal search
+export async function searchContentForCommandModal(searchTerm: string) {
+  // Execute parallel searches across all content types
+  const [patternsResult, solutionsResult, resourcesResult, tagsResult] = 
+    await Promise.allSettled([
+      client.fetch(PATTERN_SIMPLE_SEARCH_QUERY, queryParams),
+      client.fetch(SOLUTION_SEARCH_QUERY, queryParams),
+      client.fetch(RESOURCE_SEARCH_QUERY, queryParams),
+      client.fetch(TAG_SEARCH_QUERY, queryParams),
+    ]);
+}
+```
+
+## 3. Page Content Search
+
+### Implementation
+- **Hook**: `src/hooks/use-page-content-search.ts`
+- **Store**: `src/stores/page-content.tsx` 
+- **Scope**: Pattern pages only
+
+### Features
+- **Content Indexing**: Automatically indexes page content (headings, solutions, resources)
+- **Client-side Search**: No server requests, instant results
+- **Type Prioritization**: Solutions > Resources > Headings > Content
+- **Score-based Ranking**: Term matches weighted by location (title vs context)
+- **Scroll Integration**: Can scroll to search results within page
+
+### Search Algorithm
+```typescript
+// From use-page-content-search.ts
+const searchTerms = searchQuery.toLowerCase().split(" ");
+for (const term of searchTerms) {
+  if (titleLower.includes(term)) {
+    score += 10; // Higher weight for title matches
+    matchedTerms++;
+  } else if (contextLower.includes(term)) {
+    score += 5;  // Lower weight for context matches
+    matchedTerms++;
+  }
+}
+```
+
+## 4. Pattern-Specific Search
+
+### Implementation
+- **Server Action**: `src/app/actions/pattern-search.ts`
+- **Scope**: Search within a specific pattern's content
+
+### Features
+- **Deep Content Search**: Searches pattern title, description, solutions, resources, tags, audiences
+- **Nested Solution Search**: Includes solutions nested within resources
+- **Server-side Filtering**: Uses GROQ to fetch then filters client-side for flexibility
+
+## Text Processing & UX Enhancements
+
+### Context-Aware Truncation
+```typescript
+// From src/lib/search-utils.ts
+export function truncateWithContext(text: string, searchTerm: string, maxLength = 200) {
+  // Centers snippet around search match
+  const contextBefore = Math.floor((maxLength - termLength) / 2);
+  const start = Math.max(0, matchIndex - contextBefore);
+  // Returns with ellipsis indicators and match metadata
+}
+```
+
+### Search Term Highlighting
+```typescript
+export function highlightMatches(text: string, searchTerm: string): string {
+  const regex = new RegExp(`(${escapedTerm})`, 'gi');
+  return text.replace(regex, '<mark class="bg-yellow-200 rounded-sm">$1</mark>');
+}
+```
+
+### Match Explanation System
+- **Visual Indicators**: Shows where matches were found (title/description)
+- **Match Count**: Displays number of term occurrences
+- **Expandable Content**: Click to see full descriptions with preserved highlighting
+
+## Performance Optimizations
+
+### Request Management
+- **Deduplication**: Prevents duplicate searches with identical parameters
+- **Abort Controllers**: Cancels in-flight requests when new searches start
+- **Conditional Execution**: Only searches when criteria present (no empty searches)
+- **Debounced Input**: 300ms debounce across all search interfaces
+
+### Client-Side Processing
+- **Zero Server Load**: All text truncation and highlighting done client-side
+- **Cacheable Results**: Same GROQ query results cached for all users
+- **Optimistic Updates**: Immediate UI feedback for filter changes
+- **Memory Management**: Proper cleanup of search state and event listeners
+
+### State Management Patterns
+
+#### Isolated Local State (Critical Pattern)
+```typescript
+// Fixed pattern from search-interface.tsx - prevents input flickering
 const [searchTerm, setSearchTerm] = useState("");
 const isInitialized = useRef(false);
+
 useEffect(() => {
   if (!isInitialized.current && currentParams) {
     setSearchTerm(currentParams.searchTerm || "");
-    isInitialized.current = true;
+    isInitialized.current = true; // One-time initialization only
   }
-}, [currentParams.searchTerm]); // One-time initialization only
+}, [currentParams]);
 ```
 
-### 2. GROQ Query Optimization 
-**Problem**: "param $themes referenced, but not provided" errors
-**Root Cause**: Conditional parameter passing to GROQ queries
-**Solution**: Always provide all parameters
+#### Parameter Management
 ```typescript
-// BEFORE (Caused Errors)
-const queryParams: Record<string, unknown> = {};
-if (parsedParams.audiences?.length > 0) {
-  queryParams.audiences = parsedParams.audiences;
-}
-
-// AFTER (Fixed)
+// Always provide all GROQ parameters to prevent "param not provided" errors
 const queryParams: Record<string, unknown> = {
   audiences: parsedParams.audiences || [],
   themes: parsedParams.themes || [],
@@ -75,174 +229,126 @@ const queryParams: Record<string, unknown> = {
 };
 ```
 
-### 3. Search Result Context & Highlighting
-**Problem**: Users couldn't understand why results matched when search term wasn't visible in title
-**Solution**: Smart truncation with context preservation and match highlighting
+## Debug & Monitoring System
 
-#### 3.1 Context-Aware Truncation
+### Browser Console Integration
 ```typescript
-function truncateWithContext(text: string, searchTerm: string, maxLength: number = 200) {
-  // Find match position
-  const matchIndex = lowerText.indexOf(lowerTerm);
-  
-  // Center snippet around the match
-  const contextBefore = Math.floor((maxLength - termLength) / 2);
-  const start = Math.max(0, matchIndex - contextBefore);
-  
-  // Return with ellipsis indicators
-  return prefix + snippet + suffix;
-}
-```
-
-#### 3.2 Match Highlighting
-```typescript
-function highlightMatches(text: string, searchTerm: string): string {
-  const regex = new RegExp(`(${escapedTerm})`, 'gi');
-  return text.replace(regex, '<mark class="bg-yellow-200 rounded-sm">$1</mark>');
-}
-```
-
-#### 3.3 Match Explanation Indicators
-```jsx
-{/* Match Indicators */}
-{searchTerm && (matchExplanation.titleMatch || matchExplanation.descriptionMatch) && (
-  <div className="mt-2 flex items-center gap-2 text-xs text-zinc-500">
-    <span>Match found in:</span>
-    {matchExplanation.titleMatch && (
-      <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded">Title</span>
-    )}
-    {matchExplanation.descriptionMatch && (
-      <span className="bg-green-100 text-green-700 px-2 py-1 rounded">Description</span>
-    )}
-  </div>
-)}
-```
-
-### 4. GROQ Search Query Enhancement
-**Problem**: Only exact matches worked, partial matches like "Enhan" → "Enhance" failed
-**Solution**: Multi-level scoring with prefix matching
-```groq
-| score(
-    boost(title match $searchTerm, 10),                    // Exact title match
-    boost(pt::text(description) match $searchTerm, 8),     // Exact description  
-    boost(title match ($searchTerm + "*"), 6),             // Title prefix match
-    boost(pt::text(description) match ($searchTerm + "*"), 4), // Description prefix
-    title match ($searchTerm + "*"),                       // Basic title scoring
-    pt::text(description) match ($searchTerm + "*")        // Basic description scoring
-)
-[_score > 0] | order(_score desc, title asc)
-```
-
-### 5. Performance Optimizations
-
-#### 5.1 Request Deduplication
-```typescript
-const abortControllerRef = useRef<AbortController | null>(null);
-const lastSearchParamsRef = useRef<string>("");
-
-// Prevent duplicate searches
-if (currentSearchString === lastSearchParamsRef.current) {
-  return; // Skip duplicate
-}
-
-// Cancel ongoing search
-if (abortControllerRef.current) {
-  abortControllerRef.current.abort();
-}
-```
-
-#### 5.2 Conditional Search Execution
-```typescript
-// Only search when there are actual criteria
-const hasSearchCriteria = currentSearchTerm || 
-                         currentAudiences.length > 0 || 
-                         currentThemes.length > 0 || 
-                         currentTags.length > 0;
-
-if (!hasSearchCriteria) {
-  // Show "Start your search" instead of loading skeleton
-  return;
-}
-```
-
-#### 5.3 Client-Side Text Processing
-- **Zero server load**: All truncation and highlighting done client-side
-- **Cacheable results**: Same GROQ query results cached for all users
-- **Expandable content**: Full descriptions available without re-fetch
-
-### 6. Debug Logging System
-Comprehensive logging for troubleshooting search issues:
-```typescript
-// Browser console helpers
+// Available in browser console - from src/lib/logger.ts
 window.searchLogger = {
-  dump: () => logger.dumpLogs(),
-  export: () => logger.exportLogs(), 
-  clear: () => logger.clearLogs(),
-  logs: () => console.table(logger.dumpLogs())
+  dump: () => logger.dumpLogs(),      // View all logs
+  export: () => logger.exportLogs(), // Export for analysis
+  clear: () => logger.clearLogs(),   // Clear log history
+  logs: () => console.table(logger.dumpLogs()) // Tabular view
 };
 ```
 
-## User Experience Improvements
+### Comprehensive Logging
+- **Search Operations**: Complete search flow tracking
+- **GROQ Queries**: Query execution times and parameters
+- **Component Lifecycle**: Mount/unmount and state changes
+- **Error Handling**: Detailed error context and recovery paths
 
-### Before Optimization
-- ❌ Character flickering during typing
-- ❌ GROQ errors breaking search
-- ❌ Confusing results with no visible matches
-- ❌ Loading skeletons showing unnecessarily
-- ❌ No way to see full descriptions
+## User Experience Features
 
-### After Optimization  
-- ✅ Smooth, predictable typing experience
-- ✅ Reliable search with proper error handling
-- ✅ Clear match explanations with highlighting
-- ✅ Smart loading states (only when actually searching)
-- ✅ Expandable descriptions with context preservation
-- ✅ Match indicators showing where terms were found
+### Loading States
+- **Smart Skeletons**: Only show loading when actively searching
+- **Progressive Enhancement**: Results appear as they load
+- **Empty States**: Helpful guidance when no results or no search criteria
 
-## Technical Achievements
+### Accessibility
+- **Keyboard Navigation**: Full keyboard support across all search interfaces
+- **Screen Reader Support**: Proper ARIA labels and announcements
+- **Focus Management**: Logical focus flow and visible focus indicators
 
-### Architecture Improvements
-- **Isolated state management**: Eliminated sync conflicts
-- **Proper server/client boundaries**: Fixed hydration issues
-- **Industry-standard patterns**: Followed React best practices
+### Visual Design
+- **Match Highlighting**: Yellow highlighting for search terms
+- **Match Indicators**: Badges showing where matches were found
+- **Expandable Content**: Smooth transitions for content expansion
+- **Responsive Design**: Works across all device sizes
 
-### Performance Gains
-- **Reduced server load**: Client-side text processing
-- **Fewer API calls**: Request deduplication and conditional execution
-- **Better perceived performance**: Optimistic updates and smart loading states
+## Development Guidelines
 
-### Developer Experience
-- **Comprehensive logging**: Easy debugging with browser console tools
-- **Clear component structure**: Logical separation of concerns
-- **Type safety**: Full TypeScript coverage with proper interfaces
+### Adding New Search Features
 
-## Future Considerations
-- **Search analytics**: Track search terms and result interactions
-- **Advanced filtering**: Add date ranges, content type filters  
-- **Search suggestions**: Implement autocomplete/typeahead
-- **Result ranking**: Machine learning-based relevance scoring
-- **Search performance monitoring**: Track query execution times
+1. **Server Actions**: Add to `src/app/actions/search.ts`
+2. **GROQ Queries**: Update `src/sanity/lib/queries.ts` 
+3. **Client Components**: Follow isolated state pattern from `search-interface.tsx`
+4. **Text Processing**: Use utilities in `src/lib/search-utils.ts`
+5. **Logging**: Include comprehensive logging for debugging
 
-## Maintenance Guidelines
+### Testing Search Features
 
-### When Adding New Search Features:
-1. **Server actions**: Add to `src/app/actions/search.ts`
-2. **GROQ queries**: Update `src/sanity/lib/queries.ts`
-3. **Client components**: Follow isolated state pattern
-4. **Text processing**: Use utilities in `src/lib/search-utils.ts`
+1. **Enable Logging**: Use `logger.search()` and `logger.groq()` calls
+2. **Browser Console**: `searchLogger.logs()` for tabular view of operations
+3. **Component Tracking**: Each component has unique ID for tracing requests
+4. **Export Logs**: `searchLogger.export()` for detailed analysis
 
-### Debugging Search Issues:
-1. **Enable logging**: `logger.search()` and `logger.groq()` calls throughout
-2. **Browser console**: `searchLogger.logs()` for tabular view
-3. **Component tracking**: Each component has unique ID for tracing
-4. **Export logs**: `searchLogger.export()` for detailed analysis
+### Common Patterns
 
-### Performance Monitoring:
-- Monitor search query execution times
-- Track client-side processing performance
-- Watch for memory usage in text processing
-- Monitor user interaction patterns with search results
+#### Search Component Structure
+```typescript
+export function SearchComponent() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const location = createLogLocation("component.tsx", "ComponentName");
+  const [componentId] = useState(() => Math.random().toString(36).substring(7));
+  
+  // Always include comprehensive logging
+  logger.debug("client", "Component initialized", { componentId }, location);
+  
+  // Use isolated state pattern for search inputs
+  // Include proper cleanup in useEffect
+}
+```
+
+#### URL State Management
+```typescript
+// Use serializeSearchParams for URL updates
+const updateURL = useCallback((params: Partial<ParsedSearchParams>) => {
+  const newParams = serializeSearchParams({ ...currentParams, ...params });
+  router.push(`${pathname}?${newParams.toString()}`);
+}, [currentParams, pathname, router]);
+```
+
+## Future Enhancement Areas
+
+### Potential Improvements
+- **Search Analytics**: Track search terms and result interactions
+- **Machine Learning**: Improve relevance scoring based on user behavior
+- **Search Suggestions**: Implement autocomplete/typeahead functionality
+- **Advanced Filtering**: Add date ranges, content type filters
+- **Search Performance**: Monitor and optimize query execution times
+- **Faceted Search**: Add saved searches and search history
+
+### Maintenance Monitoring
+- **Performance Metrics**: Track search query execution times
+- **Error Rates**: Monitor search failure rates and error patterns
+- **User Behavior**: Track search patterns and result click-through rates
+- **Content Coverage**: Ensure all content types are properly indexed
 
 ---
-*Last Updated: 2025-08-06*  
-*Status: Complete - Search functionality optimized and production-ready*
+
+## Quick Reference
+
+### Key Files by Function
+- **Main Search**: `src/components/pages/search/search-interface.tsx`
+- **Command Menu**: `src/components/global/command-menu.tsx`
+- **Page Search**: `src/hooks/use-page-content-search.ts`
+- **Server Actions**: `src/app/actions/search.ts`
+- **GROQ Queries**: `src/sanity/lib/queries.ts`
+- **Text Utils**: `src/lib/search-utils.ts`
+- **Types & Schema**: `src/lib/search.ts`
+
+### Debug Commands
+```javascript
+// In browser console
+searchLogger.logs()          // View recent search operations
+searchLogger.export()        // Export logs for analysis
+searchLogger.clear()         // Clear log history
+```
+
+### Performance Considerations
+- All search inputs use 300ms debounce
+- Client-side text processing (no server load for highlighting/truncation)
+- Request deduplication prevents unnecessary API calls
+- Optimistic UI updates for better perceived performance
+- Proper cleanup prevents memory leaks in long-running sessions
