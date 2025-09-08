@@ -346,10 +346,10 @@ export function CommandMenu() {
 				type="button"
 				onClick={() => setIsOpen((prev) => !prev)}
 				className={cn(
-					"group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear hover:bg-main-foreground/40 focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:border-border/50 dark:focus-visible:ring-neutral-800 dark:hover:border-white/10 dark:hover:bg-main-foreground/20",
+					"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:focus-visible:ring-neutral-800",
 				)}
 			>
-				<CommandMenuIcon />
+				<CommandMenuIcon isOpen={isOpen} />
 			</button>
 			<CommandDialog
 				open={isOpen}
@@ -710,9 +710,16 @@ export function CommandMenu() {
 	);
 }
 
-function CommandMenuIcon() {
+function CommandMenuIcon({ isOpen }: { isOpen: boolean }) {
 	return (
-		<span className={cn("flex items-center gap-0.5 text-primary text-sm")}>
+		<span
+			className={cn(
+				"flex items-center gap-0.5 text-sm transition-colors",
+				isOpen
+					? "text-foreground"
+					: "text-muted-foreground group-hover:text-foreground",
+			)}
+		>
 			<Icon icon={Search02Icon} size={14} />
 			<CommandIcon size={14} /> K
 		</span>
