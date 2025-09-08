@@ -19,6 +19,7 @@ import {
 	GLOSSARY_TERMS_QUERY,
 } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
+import type { Page } from "~/sanity/sanity.types";
 import { GlossaryScroll } from "./glossary-scroll";
 
 export const metadata: Metadata = {
@@ -46,16 +47,12 @@ type ProcessedTerm = {
 
 type TermsByLetter = Partial<Record<string, ProcessedTerm[]>>;
 
-export default async function GlossaryPage({
-	searchParams,
-}: {
-	searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function GlossaryPage() {
 	const isDraftMode = (await draftMode()).isEnabled;
 
 	// Fetch page content and glossary terms in parallel
 	const [pageData, glossaryTerms] = await Promise.all([
-		client.fetch(
+		client.fetch<Page | null>(
 			GLOSSARY_PAGE_QUERY,
 			{},
 			isDraftMode
@@ -70,7 +67,7 @@ export default async function GlossaryPage({
 						useCdn: true,
 					},
 		),
-		client.fetch(
+		client.fetch<GlossaryTerm[]>(
 			GLOSSARY_TERMS_QUERY,
 			{},
 			isDraftMode
@@ -89,7 +86,7 @@ export default async function GlossaryPage({
 
 	// Process glossary terms and group by letter
 	const processedTerms: ProcessedTerm[] =
-		(glossaryTerms as GlossaryTerm[])?.map((term) => {
+		glossaryTerms?.map((term) => {
 			const firstLetter = term.title.charAt(0).toUpperCase();
 			return {
 				docId: term._id,
@@ -112,7 +109,7 @@ export default async function GlossaryPage({
 
 	return (
 		<div className="relative">
-			<GlossaryScroll searchParams={searchParams} />
+			<GlossaryScroll />
 			<PageWrapper className="flex min-h-0 flex-col gap-0 md:min-h-screen md:flex-row md:gap-20">
 				{/* Sticky nav and section indicator */}
 				<div className="sticky top-5 z-10 hidden h-full self-start md:block">
@@ -131,8 +128,8 @@ export default async function GlossaryPage({
 				</div>
 
 				<div className="flex flex-col pb-44">
-					{pageData.title && <PageHeading title={pageData.title} />}
-					{pageData.description && (
+					{pageData?.title && <PageHeading title={pageData.title} />}
+					{pageData?.description && (
 						<CustomPortableText
 							value={pageData.description as PortableTextBlock[]}
 							className="mt-8 text-body"
@@ -164,13 +161,13 @@ export default async function GlossaryPage({
 												<AccordionItem
 													key={term.docId}
 													value={term.docId}
-													className="scroll-mt-[29px] border-neutral-300 border-b border-dashed last:border-b"
+													className="scroll-mt-80 border-neutral-300 border-b border-dashed last:border-b"
 													id={term.anchorId}
 												>
-													{/* Back-compat anchor for legacy links using the Sanity document ID */}
+													{/* Fallback anchor for document ID-based navigation */}
 													<span
 														id={term.docId}
-														className="block scroll-mt-[29px]"
+														className="block scroll-mt-80"
 														aria-hidden="true"
 													/>
 													<AccordionTrigger

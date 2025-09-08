@@ -152,5 +152,5 @@ export function processTextWithGlossaryTerms(
  * that matches the anchor id rendered on the glossary page.
  */
 export function createGlossaryLink(term: string): string {
-	return `/glossary?word=${encodeURIComponent(toGlossaryAnchorId(term))}`;
+	return `/glossary#${toGlossaryAnchorId(term)}`;
 }

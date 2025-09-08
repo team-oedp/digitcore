@@ -230,31 +230,31 @@ function OnboardingInner({
 	return (
 		<div className="m-2 rounded-md bg-neutral-200 dark:bg-neutral-800">
 			<div className="relative h-[calc(100vh-1rem)] overflow-clip rounded-md bg-primary-foreground p-2 dark:bg-neutral-900">
-			{/* Desktop skip button - top right */}
-			<div className="absolute top-4 right-4 z-10 hidden md:block">
-				<ActionButton
-					dashed={false}
-					preserveSize={true}
-					asButton={true}
-					onClick={() => {
-						try {
-							document.cookie =
-								"onboarding_completed=1; path=/; max-age=31536000";
-							// Add a small delay to ensure cookie is set before navigation
-							setTimeout(() => {
+				{/* Desktop skip button - top right */}
+				<div className="absolute top-4 right-4 z-10 hidden md:block">
+					<ActionButton
+						dashed={false}
+						preserveSize={true}
+						asButton={true}
+						onClick={() => {
+							try {
+								document.cookie =
+									"onboarding_completed=1; path=/; max-age=31536000";
+								// Add a small delay to ensure cookie is set before navigation
+								setTimeout(() => {
+									router.push("/");
+								}, 50);
+							} catch {
+								// If cookie setting fails, still navigate
 								router.push("/");
-							}, 50);
-						} catch {
-							// If cookie setting fails, still navigate
-							router.push("/");
-						}
-					}}
-				>
-					<span className="text-xs">
-						{onboarding?.skipLabel || "Skip onboarding"}
-					</span>
-				</ActionButton>
-			</div>
+							}
+						}}
+					>
+						<span className="text-xs">
+							{onboarding?.skipLabel || "Skip onboarding"}
+						</span>
+					</ActionButton>
+				</div>
 
 				<div
 					className={cn(
@@ -409,31 +409,31 @@ function Slide({
 					<div className="h-full w-full rounded-md bg-icon/60 dark:bg-icon/30" />
 				)}
 
-			{/* Mobile skip button - bottom right of icon container */}
-			<div className="absolute right-2 bottom-2 z-20 md:hidden">
-				<ActionButton
-					dashed={false}
-					preserveSize={true}
-					asButton={true}
-					onClick={() => {
-						try {
-							document.cookie =
-								"onboarding_completed=1; path=/; max-age=31536000";
-							// Add a small delay to ensure cookie is set before navigation
-							setTimeout(() => {
+				{/* Mobile skip button - bottom right of icon container */}
+				<div className="absolute right-2 bottom-2 z-20 md:hidden">
+					<ActionButton
+						dashed={false}
+						preserveSize={true}
+						asButton={true}
+						onClick={() => {
+							try {
+								document.cookie =
+									"onboarding_completed=1; path=/; max-age=31536000";
+								// Add a small delay to ensure cookie is set before navigation
+								setTimeout(() => {
+									router.push("/");
+								}, 50);
+							} catch {
+								// If cookie setting fails, still navigate
 								router.push("/");
-							}, 50);
-						} catch {
-							// If cookie setting fails, still navigate
-							router.push("/");
-						}
-					}}
-				>
-					<span className="text-xs">
-						{onboarding?.skipLabel || "Skip onboarding"}
-					</span>
-				</ActionButton>
-			</div>
+							}
+						}}
+					>
+						<span className="text-xs">
+							{onboarding?.skipLabel || "Skip onboarding"}
+						</span>
+					</ActionButton>
+				</div>
 			</div>
 		</div>
 	);
