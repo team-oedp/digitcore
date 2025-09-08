@@ -164,7 +164,9 @@ describe("PatternConnections Component", () => {
 				.closest('[data-slot="badge"]');
 			expect(badgeContent).toHaveClass("cursor-pointer");
 			// The Badge component uses CSS variables for hover styles
-			expect(badgeContent).toHaveClass("hover:border-[var(--theme-badge-border-dark)]");
+			expect(badgeContent).toHaveClass(
+				"hover:border-[var(--theme-badge-border-dark)]",
+			);
 			expect(badgeContent).toHaveClass("transition-[color,box-shadow]");
 		});
 
@@ -177,7 +179,9 @@ describe("PatternConnections Component", () => {
 				.closest('[data-slot="badge"]');
 			expect(badgeContent).toHaveClass("cursor-pointer");
 			// The Badge component uses CSS variables for hover styles
-			expect(badgeContent).toHaveClass("hover:border-[var(--audience-badge-border-dark)]");
+			expect(badgeContent).toHaveClass(
+				"hover:border-[var(--audience-badge-border-dark)]",
+			);
 			expect(badgeContent).toHaveClass("transition-colors");
 			expect(badgeContent).toHaveClass("hover:bg-blue-150");
 		});
@@ -191,7 +195,9 @@ describe("PatternConnections Component", () => {
 				.closest('[data-slot="badge"]');
 			expect(badgeContent).toHaveClass("cursor-pointer");
 			// The Badge component uses CSS variables for hover styles
-			expect(badgeContent).toHaveClass("hover:border-[var(--tag-badge-border-dark)]");
+			expect(badgeContent).toHaveClass(
+				"hover:border-[var(--tag-badge-border-dark)]",
+			);
 			expect(badgeContent).toHaveClass("transition-colors");
 			expect(badgeContent).toHaveClass("hover:bg-violet-150");
 		});

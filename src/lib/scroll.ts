@@ -80,6 +80,20 @@ export function scrollToAnchorFromSearchParams(
 	return scrollToAnchor(anchorId, options);
 }
 
+export function scrollToHash(options: ScrollToAnchorOptions = {}): boolean {
+	// SSR safety check
+	if (typeof window === "undefined" || typeof document === "undefined") {
+		return false;
+	}
+
+	const hash = window.location.hash.slice(1); // Remove the #
+	if (!hash) {
+		return false;
+	}
+
+	return scrollToAnchor(hash, options);
+}
+
 export function useGlossaryScroll() {
 	return {
 		scrollToWord: (word: string) =>
@@ -88,6 +102,10 @@ export function useGlossaryScroll() {
 			}),
 		scrollToWordFromParams: (searchParams: URLSearchParams) =>
 			scrollToAnchorFromSearchParams(searchParams, "word", {
+				fallbackMessage: "Word is not in glossary",
+			}),
+		scrollToHash: () =>
+			scrollToHash({
 				fallbackMessage: "Word is not in glossary",
 			}),
 	};
