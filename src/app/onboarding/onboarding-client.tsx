@@ -237,17 +237,12 @@ function OnboardingInner({
 						preserveSize={true}
 						asButton={true}
 						onClick={() => {
-							try {
-								document.cookie =
-									"onboarding_completed=1; path=/; max-age=31536000";
-								// Add a small delay to ensure cookie is set before navigation
-								setTimeout(() => {
-									router.push("/");
-								}, 50);
-							} catch {
-								// If cookie setting fails, still navigate
-								router.push("/");
-							}
+							// User is skipping onboarding - set skipped cookie with shorter expiry
+							// This allows them to be redirected again on future visits
+							document.cookie =
+								"onboarding_skipped=1; path=/; max-age=86400; SameSite=Lax"; // 24 hours
+							// Use window.location to ensure middleware sees the updated cookie
+							window.location.href = "/";
 						}}
 					>
 						<span className="text-xs">
@@ -416,17 +411,12 @@ function Slide({
 						preserveSize={true}
 						asButton={true}
 						onClick={() => {
-							try {
-								document.cookie =
-									"onboarding_completed=1; path=/; max-age=31536000";
-								// Add a small delay to ensure cookie is set before navigation
-								setTimeout(() => {
-									router.push("/");
-								}, 50);
-							} catch {
-								// If cookie setting fails, still navigate
-								router.push("/");
-							}
+							// User is skipping onboarding - set skipped cookie with shorter expiry
+							// This allows them to be redirected again on future visits
+							document.cookie =
+								"onboarding_skipped=1; path=/; max-age=86400; SameSite=Lax"; // 24 hours
+							// Use window.location to ensure middleware sees the updated cookie
+							window.location.href = "/";
 						}}
 					>
 						<span className="text-xs">
@@ -549,10 +539,9 @@ function Slide1({
 							<ActionButton
 								href={`/pattern/${patternSlug}`}
 								onClick={() => {
-									try {
-										document.cookie =
-											"onboarding_completed=1; path=/; max-age=31536000";
-									} catch {}
+									// User is skipping to go directly to pattern - set skipped cookie
+									document.cookie =
+										"onboarding_skipped=1; path=/; max-age=86400; SameSite=Lax"; // 24 hours
 								}}
 							>
 								<span>{patternTitle || toTitleCase(patternSlug)}</span>
@@ -567,10 +556,9 @@ function Slide1({
 							<ActionButton
 								href={getSafePath(returnToPath)}
 								onClick={() => {
-									try {
-										document.cookie =
-											"onboarding_completed=1; path=/; max-age=31536000";
-									} catch {}
+									// User is skipping to go to return path - set skipped cookie
+									document.cookie =
+										"onboarding_skipped=1; path=/; max-age=86400; SameSite=Lax"; // 24 hours
 								}}
 							>
 								<span>{friendlyLabelFromPath(getSafePath(returnToPath))}</span>
@@ -689,7 +677,7 @@ function Slide2({
 								type="button"
 								onClick={() => toggleAudience(opt.value)}
 								className={cn(
-									"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 text-foreground text-xs uppercase transition-colors md:px-3 md:py-2 md:text-lg",
+									"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 font-sans text-foreground text-xs uppercase transition-colors md:px-3 md:py-2 md:text-lg",
 									selectedAudienceIds.includes(opt.value)
 										? "bg-neutral-300 dark:bg-neutral-600"
 										: "bg-primary-foreground hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
@@ -707,7 +695,7 @@ function Slide2({
 						{selectedAudienceIds.length === 0 ? (
 							<>
 								<span className="text-subheading">Select your</span>
-								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light text-foreground text-xs uppercase md:px-3 md:py-2 md:text-base dark:bg-neutral-600">
+								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light font-sans text-foreground text-xs uppercase md:px-3 md:py-2 md:text-base dark:bg-neutral-600">
 									AUDIENCE TYPE
 									<DashedBorder />
 								</span>
@@ -719,7 +707,7 @@ function Slide2({
 								<button
 									type="button"
 									onClick={goToSlide3}
-									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
+									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light font-sans text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 								>
 									NEXT
 									<DashedBorder />
@@ -734,7 +722,7 @@ function Slide2({
 						<button
 							type="button"
 							onClick={goToSlide1}
-							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
+							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light font-sans text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 						>
 							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
@@ -884,10 +872,10 @@ function Slide3({
 									}`}
 									onClick={() => {
 										setCompleted(true);
-										try {
-											document.cookie =
-												"onboarding_completed=1; path=/; max-age=31536000";
-										} catch {}
+										// User completed the full onboarding - set completed cookie
+										// This ensures they won't be redirected again
+										document.cookie =
+											"onboarding_completed=1; path=/; max-age=31536000; SameSite=Lax"; // 1 year
 									}}
 									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 								>

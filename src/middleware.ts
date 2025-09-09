@@ -4,6 +4,11 @@ import type { NextRequest } from "next/server";
 /**
  * Middleware to handle onboarding redirects at the edge.
  * Runs before any page rendering, preventing flash of content.
+ *
+ * Logic:
+ * - First-time visitors (no cookies) → Redirect to onboarding
+ * - Users who completed onboarding → Never redirect
+ * - Users who skipped onboarding → May redirect on return visits
  */
 export function middleware(request: NextRequest) {
 	const pathname = request.nextUrl.pathname;
@@ -18,13 +23,23 @@ export function middleware(request: NextRequest) {
 		return NextResponse.next();
 	}
 
-	// Check if user has completed onboarding
-	const onboardingCookie = request.cookies.get("onboarding_completed");
-	const hasCompletedOnboarding =
-		onboardingCookie?.value === "1" || onboardingCookie?.value === "true";
+	// Check cookies for onboarding status
+	const completedCookie = request.cookies.get("onboarding_completed");
+	const skippedCookie = request.cookies.get("onboarding_skipped");
 
-	// If onboarding not completed, redirect to onboarding page
-	if (!hasCompletedOnboarding) {
+	const hasCompletedOnboarding =
+		completedCookie?.value === "1" || completedCookie?.value === "true";
+	const hasSkippedOnboarding =
+		skippedCookie?.value === "1" || skippedCookie?.value === "true";
+
+	// If user completed onboarding, never redirect them
+	if (hasCompletedOnboarding) {
+		return NextResponse.next();
+	}
+
+	// If user has neither completed nor skipped (first-time visitor), redirect to onboarding
+	// OR if user skipped but enough time has passed (cookie expired), redirect again
+	if (!hasCompletedOnboarding && !hasSkippedOnboarding) {
 		const url = request.nextUrl.clone();
 		url.pathname = "/onboarding";
 
@@ -44,7 +59,7 @@ export function middleware(request: NextRequest) {
 		return NextResponse.redirect(url);
 	}
 
-	// Continue to requested page if onboarding is complete
+	// User has skipped onboarding - let them browse
 	return NextResponse.next();
 }
 

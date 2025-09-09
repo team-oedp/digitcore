@@ -76,60 +76,107 @@ describe("middleware onboarding redirect", () => {
 		mockNext.mockReset();
 	});
 
-	it("redirects first-time visitor to /onboarding with returnTo", () => {
-		const req = createRequest("https://example.com/explore");
-		middleware(req);
+	describe("First-time visitors", () => {
+		it("redirects first-time visitor to /onboarding with returnTo", () => {
+			const req = createRequest("https://example.com/explore");
+			middleware(req);
 
-		expect(mockRedirect).toHaveBeenCalledTimes(1);
-		const arg = mockRedirect.mock.calls[0][0];
-		expect(arg.pathname).toBe("/onboarding");
-		expect(arg.searchParams.get("returnTo")).toBe("/explore");
-	});
-
-	it("preserves pattern slug and query params in redirect", () => {
-		const req = createRequest("https://example.com/pattern/foo?bar=baz");
-		middleware(req);
-
-		expect(mockRedirect).toHaveBeenCalledTimes(1);
-		const arg = mockRedirect.mock.calls[0][0];
-		expect(arg.pathname).toBe("/onboarding");
-		expect(arg.searchParams.get("pattern")).toBe("foo");
-		expect(arg.searchParams.get("returnTo")).toBe("/pattern/foo?bar=baz");
-	});
-
-	it("allows navigation when onboarding cookie is present", () => {
-		const req = createRequest("https://example.com/explore?x=1", {
-			onboarding_completed: "1",
+			expect(mockRedirect).toHaveBeenCalledTimes(1);
+			const arg = mockRedirect.mock.calls[0][0];
+			expect(arg.pathname).toBe("/onboarding");
+			expect(arg.searchParams.get("returnTo")).toBe("/explore");
 		});
-		middleware(req);
 
-		expect(mockRedirect).not.toHaveBeenCalled();
-		expect(mockNext).toHaveBeenCalledTimes(1);
-	});
+		it("preserves pattern slug and query params in redirect", () => {
+			const req = createRequest("https://example.com/pattern/foo?bar=baz");
+			middleware(req);
 
-	it("allows navigation when onboarding cookie value is 'true'", () => {
-		const req = createRequest("https://example.com/explore?x=1", {
-			onboarding_completed: "true",
+			expect(mockRedirect).toHaveBeenCalledTimes(1);
+			const arg = mockRedirect.mock.calls[0][0];
+			expect(arg.pathname).toBe("/onboarding");
+			expect(arg.searchParams.get("pattern")).toBe("foo");
+			expect(arg.searchParams.get("returnTo")).toBe("/pattern/foo?bar=baz");
 		});
-		middleware(req);
-
-		expect(mockRedirect).not.toHaveBeenCalled();
-		expect(mockNext).toHaveBeenCalledTimes(1);
 	});
 
-	it("does not redirect non-GET requests", () => {
-		const req = createRequest("https://example.com/explore", {}, "POST");
-		middleware(req);
+	describe("Users who completed onboarding", () => {
+		it("allows navigation when onboarding_completed cookie is '1'", () => {
+			const req = createRequest("https://example.com/explore?x=1", {
+				onboarding_completed: "1",
+			});
+			middleware(req);
 
-		expect(mockRedirect).not.toHaveBeenCalled();
-		expect(mockNext).toHaveBeenCalledTimes(1);
+			expect(mockRedirect).not.toHaveBeenCalled();
+			expect(mockNext).toHaveBeenCalledTimes(1);
+		});
+
+		it("allows navigation when onboarding_completed cookie is 'true'", () => {
+			const req = createRequest("https://example.com/explore?x=1", {
+				onboarding_completed: "true",
+			});
+			middleware(req);
+
+			expect(mockRedirect).not.toHaveBeenCalled();
+			expect(mockNext).toHaveBeenCalledTimes(1);
+		});
+
+		it("prioritizes completed cookie over skipped cookie", () => {
+			const req = createRequest("https://example.com/", {
+				onboarding_completed: "1",
+				onboarding_skipped: "1",
+			});
+			middleware(req);
+
+			expect(mockRedirect).not.toHaveBeenCalled();
+			expect(mockNext).toHaveBeenCalledTimes(1);
+		});
 	});
 
-	it("does not redirect when already on /onboarding", () => {
-		const req = createRequest("https://example.com/onboarding");
-		middleware(req);
+	describe("Users who skipped onboarding", () => {
+		it("allows navigation when onboarding_skipped cookie is set", () => {
+			const req = createRequest("https://example.com/patterns", {
+				onboarding_skipped: "1",
+			});
+			middleware(req);
 
-		expect(mockRedirect).not.toHaveBeenCalled();
-		expect(mockNext).toHaveBeenCalledTimes(1);
+			expect(mockRedirect).not.toHaveBeenCalled();
+			expect(mockNext).toHaveBeenCalledTimes(1);
+		});
+
+		it("redirects when neither completed nor skipped cookies are set", () => {
+			// Simulates expired skipped cookie
+			const req = createRequest("https://example.com/");
+			middleware(req);
+
+			expect(mockRedirect).toHaveBeenCalledTimes(1);
+			const arg = mockRedirect.mock.calls[0][0];
+			expect(arg.pathname).toBe("/onboarding");
+		});
+	});
+
+	describe("Special routes and methods", () => {
+		it("does not redirect non-GET requests", () => {
+			const req = createRequest("https://example.com/explore", {}, "POST");
+			middleware(req);
+
+			expect(mockRedirect).not.toHaveBeenCalled();
+			expect(mockNext).toHaveBeenCalledTimes(1);
+		});
+
+		it("does not redirect when already on /onboarding", () => {
+			const req = createRequest("https://example.com/onboarding");
+			middleware(req);
+
+			expect(mockRedirect).not.toHaveBeenCalled();
+			expect(mockNext).toHaveBeenCalledTimes(1);
+		});
+
+		it("does not redirect API routes", () => {
+			const req = createRequest("https://example.com/api/send");
+			middleware(req);
+
+			expect(mockRedirect).not.toHaveBeenCalled();
+			expect(mockNext).toHaveBeenCalledTimes(1);
+		});
 	});
 });
