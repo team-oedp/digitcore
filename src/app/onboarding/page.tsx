@@ -16,8 +16,9 @@ export const metadata: Metadata = {
 export default async function OnboardingPage({
 	searchParams,
 }: {
-	searchParams: { [key: string]: string | string[] | undefined };
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+	const params = await searchParams;
 	const isDraftMode = (await draftMode()).isEnabled;
 	const [onboarding, filters] = await Promise.all([
 		client.fetch(
@@ -39,8 +40,7 @@ export default async function OnboardingPage({
 	]);
 
 	// Resolve pattern title if a pattern slug was provided
-	const patternSlug =
-		(searchParams?.pattern as string | undefined) ?? undefined;
+	const patternSlug = (params?.pattern as string | undefined) ?? undefined;
 	let patternTitle: string | undefined;
 	if (patternSlug) {
 		try {
@@ -63,8 +63,7 @@ export default async function OnboardingPage({
 		} catch {}
 	}
 
-	const returnToPath =
-		(searchParams?.returnTo as string | undefined) ?? undefined;
+	const returnToPath = (params?.returnTo as string | undefined) ?? undefined;
 
 	return (
 		<Suspense fallback={null}>

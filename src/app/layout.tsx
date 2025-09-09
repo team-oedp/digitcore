@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { cn } from "~/lib/utils";
+import { OnboardingStoreProvider } from "~/stores/onboarding";
 import "~/styles/globals.css";
 import { sans, signifier } from "./(frontend)/fonts";
 
@@ -16,7 +17,9 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={cn(sans.variable, signifier.variable)}>{children}</body>
+			<body className={cn(sans.variable, signifier.variable)}>
+				<OnboardingStoreProvider>{children}</OnboardingStoreProvider>
+			</body>
 		</html>
 	);
 }

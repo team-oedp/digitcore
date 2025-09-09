@@ -27,10 +27,7 @@ import {
 } from "~/components/ui/breadcrumb";
 import { cn } from "~/lib/utils";
 import type { Onboarding } from "~/sanity/sanity.types";
-import {
-	OnboardingStoreProvider,
-	useOnboardingStore,
-} from "~/stores/onboarding";
+import { useOnboardingStore } from "~/stores/onboarding";
 
 function getSafePath(path?: string) {
 	try {
@@ -158,33 +155,6 @@ export function OnboardingClient({
 	audienceOptions: FilterOption[];
 	themeOptions: FilterOption[];
 }) {
-	// Provide store context locally for onboarding flow
-	return (
-		<OnboardingStoreProvider>
-			<OnboardingInner
-				onboarding={onboarding}
-				patternTitle={patternTitle}
-				returnToPath={returnToPath}
-				audienceOptions={audienceOptions}
-				themeOptions={themeOptions}
-			/>
-		</OnboardingStoreProvider>
-	);
-}
-
-function OnboardingInner({
-	onboarding,
-	patternTitle,
-	returnToPath,
-	audienceOptions,
-	themeOptions,
-}: {
-	onboarding?: Onboarding;
-	patternTitle?: string;
-	returnToPath?: string;
-	audienceOptions: FilterOption[];
-	themeOptions: FilterOption[];
-}) {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 
@@ -205,11 +175,20 @@ function OnboardingInner({
 	// Mark onboarding as seen unless the user arrived via the header override flag
 	const headerOverride = searchParams.get("via") === "header";
 	const setSeen = useOnboardingStore((s) => s.setSeen);
+	const setSkipped = useOnboardingStore((s) => s.setSkipped);
+
 	useEffect(() => {
 		if (!headerOverride) {
 			setSeen(true);
 		}
 	}, [headerOverride, setSeen]);
+
+	// Handle skip action
+	const handleSkip = () => {
+		setSkipped(true);
+		const returnPath = returnToPath || "/";
+		router.push(returnPath);
+	};
 
 	const goToSlide = (n: 1 | 2 | 3) => {
 		setIsTransitioning(true);
@@ -236,14 +215,7 @@ function OnboardingInner({
 						dashed={false}
 						preserveSize={true}
 						asButton={true}
-						onClick={() => {
-							// User is skipping onboarding - set skipped cookie with shorter expiry
-							// This allows them to be redirected again on future visits
-							document.cookie =
-								"onboarding_skipped=1; path=/; max-age=86400; SameSite=Lax"; // 24 hours
-							// Use window.location to ensure middleware sees the updated cookie
-							window.location.href = "/";
-						}}
+						onClick={handleSkip}
 					>
 						<span className="text-xs">
 							{onboarding?.skipLabel || "Skip onboarding"}
@@ -386,6 +358,7 @@ function Slide({
 	onboarding?: Onboarding;
 }) {
 	const router = useRouter();
+	const setSkipped = useOnboardingStore((s) => s.setSkipped);
 	return (
 		<div className="flex h-full flex-col md:flex-row">
 			<div className="flex w-full flex-col justify-start px-3 py-3 md:w-1/2 md:py-4 md:pr-4 md:pl-4">
@@ -411,12 +384,8 @@ function Slide({
 						preserveSize={true}
 						asButton={true}
 						onClick={() => {
-							// User is skipping onboarding - set skipped cookie with shorter expiry
-							// This allows them to be redirected again on future visits
-							document.cookie =
-								"onboarding_skipped=1; path=/; max-age=86400; SameSite=Lax"; // 24 hours
-							// Use window.location to ensure middleware sees the updated cookie
-							window.location.href = "/";
+							setSkipped(true);
+							router.push("/");
 						}}
 					>
 						<span className="text-xs">
@@ -444,6 +413,8 @@ function Slide1({
 	onboarding?: Onboarding;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
 }) {
+	const setSkipped = useOnboardingStore((s) => s.setSkipped);
+
 	const toTitleCase = (s: string) =>
 		s
 			.split("-")
@@ -539,9 +510,8 @@ function Slide1({
 							<ActionButton
 								href={`/pattern/${patternSlug}`}
 								onClick={() => {
-									// User is skipping to go directly to pattern - set skipped cookie
-									document.cookie =
-										"onboarding_skipped=1; path=/; max-age=86400; SameSite=Lax"; // 24 hours
+									// User is skipping to go directly to pattern
+									setSkipped(true);
 								}}
 							>
 								<span>{patternTitle || toTitleCase(patternSlug)}</span>
@@ -556,9 +526,8 @@ function Slide1({
 							<ActionButton
 								href={getSafePath(returnToPath)}
 								onClick={() => {
-									// User is skipping to go to return path - set skipped cookie
-									document.cookie =
-										"onboarding_skipped=1; path=/; max-age=86400; SameSite=Lax"; // 24 hours
+									// User is skipping to go to return path
+									setSkipped(true);
 								}}
 							>
 								<span>{friendlyLabelFromPath(getSafePath(returnToPath))}</span>
@@ -872,10 +841,8 @@ function Slide3({
 									}`}
 									onClick={() => {
 										setCompleted(true);
-										// User completed the full onboarding - set completed cookie
-										// This ensures they won't be redirected again
-										document.cookie =
-											"onboarding_completed=1; path=/; max-age=31536000; SameSite=Lax"; // 1 year
+										// User completed the full onboarding
+										// The store will persist this state
 									}}
 									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 								>
