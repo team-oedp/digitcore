@@ -18,7 +18,7 @@ import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { cn } from "~/lib/utils";
 
 const navItems = [
-	{ href: "/onboarding", label: "Start here", isIndented: false },
+	{ href: "/onboarding?via=header", label: "Start here", isIndented: false },
 	{ href: "/explore", label: "Explore", isIndented: false },
 	{ href: "/patterns", label: "Patterns", isIndented: true },
 	{ href: "/tags", label: "Tags", isIndented: true },

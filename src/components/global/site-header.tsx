@@ -78,7 +78,7 @@ export function SiteHeader() {
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href="/onboarding">Start here</Link>
+									<Link href="/onboarding?via=header">Start here</Link>
 								</Button>
 							</li>
 							<li>

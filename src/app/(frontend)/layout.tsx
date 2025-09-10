@@ -3,8 +3,10 @@ import "~/styles/globals.css";
 import type { Metadata } from "next";
 import { VisualEditing } from "next-sanity";
 import { draftMode } from "next/headers";
+import { Suspense } from "react";
 import { sans, signifier } from "~/app/(frontend)/fonts";
 import { DisableDraftMode } from "~/components/global/disable-draft-mode";
+import { OnboardingRedirect } from "~/components/global/onboarding-redirect";
 import { SiteLayout } from "~/components/global/site-layout";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
@@ -56,6 +58,9 @@ export default async function Layout({
 					<TRPCReactProvider>
 						<CarrierBagStoreProvider>
 							<PageContentStoreProvider>
+								<Suspense fallback={null}>
+									<OnboardingRedirect />
+								</Suspense>
 								<SiteLayout footerData={footerData}>{children}</SiteLayout>
 							</PageContentStoreProvider>
 						</CarrierBagStoreProvider>
