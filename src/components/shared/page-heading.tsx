@@ -1,109 +1,103 @@
 "use client";
 
-import { motion } from "motion/react";
-import { useEffect, useId, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 
-function useScrollThreshold(threshold: number) {
-	const [isScrolledPast, setIsScrolledPast] = useState(false);
+export function PageHeading({ title }: { title: string }) {
 	const elementRef = useRef<HTMLDivElement>(null);
+	const [scrollContainer, setScrollContainer] = useState<HTMLElement | null>(
+		null,
+	);
 
+	// Find the scrollable container on mount
 	useEffect(() => {
 		const element = elementRef.current;
 		if (!element) return;
 
 		// Find the scrollable parent container
-		let scrollContainer = element.parentElement;
-		while (
-			scrollContainer &&
-			!scrollContainer.classList.contains("overflow-y-auto")
-		) {
-			scrollContainer = scrollContainer.parentElement;
+		let container = element.parentElement;
+		while (container && !container.classList.contains("overflow-y-auto")) {
+			container = container.parentElement;
 		}
 
-		if (!scrollContainer) {
-			// Fallback to window scroll if no scrollable container found
-			const onWindowScroll = () => {
-				const current = window.scrollY;
-				// Use hysteresis to prevent flickering
-				if (!isScrolledPast && current > threshold) {
-					setIsScrolledPast(true);
-				} else if (isScrolledPast && current < threshold - 20) {
-					setIsScrolledPast(false);
-				}
-			};
+		setScrollContainer(container);
+	}, []);
 
-			window.addEventListener("scroll", onWindowScroll);
-			return () => window.removeEventListener("scroll", onWindowScroll);
-		}
+	// Use scroll hook with the appropriate container
+	const { scrollY } = useScroll({
+		container: scrollContainer ? { current: scrollContainer } : undefined,
+	});
 
-		// Use the scrollable container
-		const onContainerScroll = () => {
-			const current = scrollContainer.scrollTop;
-			// Use hysteresis to prevent flickering
-			if (!isScrolledPast && current > threshold) {
-				setIsScrolledPast(true);
-			} else if (isScrolledPast && current < threshold - 20) {
-				setIsScrolledPast(false);
-			}
-		};
+	// Define the scroll range for the animation (0 to 120px from top)
+	const scrollRange = [0, 120];
 
-		scrollContainer.addEventListener("scroll", onContainerScroll);
+	// Transform values based on scroll position
+	// Large heading opacity: 1 -> 0 (gentler fade out)
+	const largeHeadingOpacity = useTransform(
+		scrollY,
+		[0, 50], // Fades out completely by 50px
+		[1, 0],
+	);
 
-		return () => {
-			scrollContainer.removeEventListener("scroll", onContainerScroll);
-		};
-	}, [threshold, isScrolledPast]);
+	// Pill opacity: fades in AFTER large heading has faded out
+	const pillOpacity = useTransform(
+		scrollY,
+		[50, 100], // Starts fading in at 50px (after heading is gone), fully visible by 100px
+		[0, 1],
+	);
 
-	return { isScrolledPast, elementRef };
-}
+	// Background opacity for the pill (appears as pill fades in)
+	const backgroundOpacity = useTransform(
+		scrollY,
+		[60, 100], // Delayed to appear with pill
+		[0, 1],
+	);
 
-export function PageHeading({ title }: { title: string }) {
-	// set distance in pixels to trigger animation
-	const { isScrolledPast, elementRef } = useScrollThreshold(45);
+	// Border opacity for the pill (appears last)
+	const borderOpacity = useTransform(
+		scrollY,
+		[80, 120], // Appears in the final phase
+		[0, 1],
+	);
 
-	const headingId = useId();
 	return (
-		<motion.header
-			ref={elementRef}
-			id={headingId}
-			initial={false}
-			animate={{
-				backgroundColor: isScrolledPast
-					? "var(--background)"
-					: "var(--primary-foreground)",
-				borderColor: isScrolledPast
-					? "var(--brand)"
-					: "var(--primary-foreground)",
-			}}
-			transition={{
-				backgroundColor: {
-					duration: 0.3,
-					delay: 0.8,
-					ease: "easeInOut",
-				},
-				borderColor: {
-					duration: 0,
-					delay: 0.9,
-				},
-			}}
-			className="sticky top-5 z-40 w-fit rounded-md border border-solid px-1.5 py-0.5"
-		>
-			<motion.h1
-				initial={false}
-				animate={{
-					fontSize: isScrolledPast ? "18px" : undefined,
-				}}
-				transition={{
-					fontSize: {
-						duration: 0.4,
-						delay: 0.5,
-						ease: "easeInOut",
-					},
-				}}
-				className="text-page-heading"
-			>
-				{title}
-			</motion.h1>
+		<motion.header ref={elementRef} className="sticky top-5 z-40 w-fit">
+			<div className="relative">
+				{/* Large heading - fades out as you scroll */}
+				<motion.h1
+					style={{ opacity: largeHeadingOpacity }}
+					className="text-page-heading"
+				>
+					{title}
+				</motion.h1>
+
+				{/* Small pill container - fades in */}
+				<motion.div
+					style={{
+						opacity: pillOpacity,
+					}}
+					className="absolute top-0 left-0 overflow-hidden rounded-md"
+				>
+					{/* Background layer */}
+					<motion.div
+						style={{ opacity: backgroundOpacity }}
+						className="absolute inset-0 bg-background"
+					/>
+
+					{/* Border layer */}
+					<motion.div
+						style={{ opacity: borderOpacity }}
+						className="absolute inset-0 rounded-md border border-[var(--brand)]"
+					/>
+
+					{/* Text content - already at small size, no scaling needed */}
+					<div className="relative px-1.5 py-0.5">
+						<h1 className="whitespace-nowrap text-[var(--brand)] text-lg">
+							{title}
+						</h1>
+					</div>
+				</motion.div>
+			</div>
 		</motion.header>
 	);
 }

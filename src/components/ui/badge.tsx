@@ -5,7 +5,7 @@ import type * as React from "react";
 import { cn } from "~/lib/utils";
 
 const badgeVariants = cva(
-	"inline-flex w-fit shrink-0 items-center justify-start gap-1 overflow-hidden whitespace-nowrap rounded-md border px-2 font-normal transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
+	"inline-flex w-fit shrink-0 items-center justify-start gap-1 overflow-hidden whitespace-nowrap rounded-md border px-2 font-normal capitalize transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
 	{
 		variants: {
 			variant: {
@@ -20,10 +20,10 @@ const badgeVariants = cva(
 
 				// Specific badge variants
 				audience:
-					"border-blue-200 bg-blue-100 text-blue-800 hover:border-blue-400",
+					"border-[var(--audience-badge-border)] bg-[var(--audience-badge-background)] text-[var(--audience-badge-text)] hover:border-[var(--audience-badge-border-dark)]",
 				theme:
-					"border-orange-200 bg-orange-100 text-orange-800 hover:border-orange-300",
-				tag: "border-violet-200 bg-violet-100 text-violet-800 hover:border-violet-300",
+					"border-[var(--theme-badge-border)] bg-[var(--theme-badge-background)] text-[var(--theme-badge-text)] hover:border-[var(--theme-badge-border-dark)]",
+				tag: "border-[var(--tag-badge-border)] bg-[var(--tag-badge-background)] text-[var(--tag-badge-text)] hover:border-[var(--tag-badge-border-dark)]",
 				resource:
 					"border-[var(--resource-badge-border)] bg-[var(--resource-badge-background)] text-[var(--resource-badge-text)] hover:border-[var(--resource-badge-border-dark)]",
 				solution:

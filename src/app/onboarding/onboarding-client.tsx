@@ -27,10 +27,7 @@ import {
 } from "~/components/ui/breadcrumb";
 import { cn } from "~/lib/utils";
 import type { Onboarding } from "~/sanity/sanity.types";
-import {
-	OnboardingStoreProvider,
-	useOnboardingStore,
-} from "~/stores/onboarding";
+import { useOnboardingStore } from "~/stores/onboarding";
 
 function getSafePath(path?: string) {
 	try {
@@ -109,18 +106,21 @@ function ActionButton({
 	children,
 	dashed = true,
 	preserveSize = false,
+	asButton = false,
 }: {
 	href?: string;
 	onClick?: () => void;
 	children: React.ReactNode;
 	dashed?: boolean;
 	preserveSize?: boolean;
+	asButton?: boolean;
 }) {
 	const baseClass = preserveSize
 		? "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-2 text-left text-foreground text-sm uppercase font-light transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 md:text-lg"
 		: "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 text-left text-foreground text-xs uppercase font-light transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 md:px-3 md:py-2 md:text-lg";
 
-	if (href) {
+	// Use Link component when href is provided and we're not forcing button behavior
+	if (href && !asButton) {
 		return (
 			<Link href={href} className={baseClass} onClick={onClick}>
 				<span className="relative z-10 inline-flex items-center gap-2">
@@ -131,6 +131,7 @@ function ActionButton({
 		);
 	}
 
+	// Always render as button when asButton is true or no href is provided
 	return (
 		<button type="button" onClick={onClick} className={baseClass}>
 			<span className="relative z-10 inline-flex items-center gap-2">
@@ -142,33 +143,6 @@ function ActionButton({
 }
 
 export function OnboardingClient({
-	onboarding,
-	patternTitle,
-	returnToPath,
-	audienceOptions,
-	themeOptions,
-}: {
-	onboarding?: Onboarding;
-	patternTitle?: string;
-	returnToPath?: string;
-	audienceOptions: FilterOption[];
-	themeOptions: FilterOption[];
-}) {
-	// Provide store context locally for onboarding flow
-	return (
-		<OnboardingStoreProvider>
-			<OnboardingInner
-				onboarding={onboarding}
-				patternTitle={patternTitle}
-				returnToPath={returnToPath}
-				audienceOptions={audienceOptions}
-				themeOptions={themeOptions}
-			/>
-		</OnboardingStoreProvider>
-	);
-}
-
-function OnboardingInner({
 	onboarding,
 	patternTitle,
 	returnToPath,
@@ -201,11 +175,20 @@ function OnboardingInner({
 	// Mark onboarding as seen unless the user arrived via the header override flag
 	const headerOverride = searchParams.get("via") === "header";
 	const setSeen = useOnboardingStore((s) => s.setSeen);
+	const setSkipped = useOnboardingStore((s) => s.setSkipped);
+
 	useEffect(() => {
 		if (!headerOverride) {
 			setSeen(true);
 		}
 	}, [headerOverride, setSeen]);
+
+	// Handle skip action
+	const handleSkip = () => {
+		setSkipped(true);
+		const returnPath = returnToPath || "/";
+		router.push(returnPath);
+	};
 
 	const goToSlide = (n: 1 | 2 | 3) => {
 		setIsTransitioning(true);
@@ -229,15 +212,10 @@ function OnboardingInner({
 				{/* Desktop skip button - top right */}
 				<div className="absolute top-4 right-4 z-10 hidden md:block">
 					<ActionButton
-						href="/"
 						dashed={false}
 						preserveSize={true}
-						onClick={() => {
-							try {
-								document.cookie =
-									"onboarding_completed=1; path=/; max-age=31536000";
-							} catch {}
-						}}
+						asButton={true}
+						onClick={handleSkip}
 					>
 						<span className="text-xs">
 							{onboarding?.skipLabel || "Skip onboarding"}
@@ -379,6 +357,8 @@ function Slide({
 	footerText?: string;
 	onboarding?: Onboarding;
 }) {
+	const router = useRouter();
+	const setSkipped = useOnboardingStore((s) => s.setSkipped);
 	return (
 		<div className="flex h-full flex-col md:flex-row">
 			<div className="flex w-full flex-col justify-start px-3 py-3 md:w-1/2 md:py-4 md:pr-4 md:pl-4">
@@ -388,7 +368,7 @@ function Slide({
 					breadcrumbs={breadcrumbs}
 				/>
 				<div className="min-h-0 flex-1">{children}</div>
-				<footer className="hidden pt-4 text-left font-sans text-foreground text-sm md:block md:pt-8">
+				<footer className="hidden pt-4 text-left text-body-muted md:block md:pt-8">
 					{footerText || "Open Environmental Data Project"}
 				</footer>
 			</div>
@@ -400,14 +380,12 @@ function Slide({
 				{/* Mobile skip button - bottom right of icon container */}
 				<div className="absolute right-2 bottom-2 z-20 md:hidden">
 					<ActionButton
-						href="/"
 						dashed={false}
 						preserveSize={true}
+						asButton={true}
 						onClick={() => {
-							try {
-								document.cookie =
-									"onboarding_completed=1; path=/; max-age=31536000";
-							} catch {}
+							setSkipped(true);
+							router.push("/");
 						}}
 					>
 						<span className="text-xs">
@@ -435,6 +413,8 @@ function Slide1({
 	onboarding?: Onboarding;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
 }) {
+	const setSkipped = useOnboardingStore((s) => s.setSkipped);
+
 	const toTitleCase = (s: string) =>
 		s
 			.split("-")
@@ -444,7 +424,7 @@ function Slide1({
 			.join(" ");
 
 	const asset = (
-		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-2 md:p-8">
+		<div className="flex h-full w-full items-center justify-center rounded-md p-2 md:p-8">
 			{/* Mobile icons */}
 			<div className="relative md:hidden">
 				<Icon01
@@ -504,7 +484,7 @@ function Slide1({
 				{onboarding?.slide1?.body && (
 					<CustomPortableText
 						value={onboarding.slide1.body as PortableTextBlock[]}
-						className="space-y-4 font-signifier text-foreground text-sm leading-relaxed md:space-y-6 md:text-lg"
+						className="text-body"
 					/>
 				)}
 
@@ -523,17 +503,15 @@ function Slide1({
 					</ActionButton>
 
 					<div>
-						<p className="mb-2 font-light font-signifier text-foreground text-sm leading-relaxed md:text-lg">
+						<p className="mb-2 text-body">
 							{onboarding?.slide1?.secondaryCtaText || "Or, go directly to:"}
 						</p>
 						{patternSlug ? (
 							<ActionButton
 								href={`/pattern/${patternSlug}`}
 								onClick={() => {
-									try {
-										document.cookie =
-											"onboarding_completed=1; path=/; max-age=31536000";
-									} catch {}
+									// User is skipping to go directly to pattern
+									setSkipped(true);
 								}}
 							>
 								<span>{patternTitle || toTitleCase(patternSlug)}</span>
@@ -548,10 +526,8 @@ function Slide1({
 							<ActionButton
 								href={getSafePath(returnToPath)}
 								onClick={() => {
-									try {
-										document.cookie =
-											"onboarding_completed=1; path=/; max-age=31536000";
-									} catch {}
+									// User is skipping to go to return path
+									setSkipped(true);
 								}}
 							>
 								<span>{friendlyLabelFromPath(getSafePath(returnToPath))}</span>
@@ -657,11 +633,11 @@ function Slide2({
 				{onboarding?.slide2?.body && (
 					<CustomPortableText
 						value={onboarding.slide2.body as PortableTextBlock[]}
-						className="space-y-4 font-signifier text-foreground text-sm leading-relaxed md:text-lg"
+						className="text-body"
 					/>
 				)}
 
-				<div className="space-y-4 font-light font-sans text-base text-foreground leading-relaxed md:text-lg">
+				<div className="space-y-4 text-body">
 					{/* Audience buttons embedded in the text flow */}
 					<div className="flex flex-wrap items-center gap-2">
 						{audienceOptions.map((opt, _idx) => (
@@ -670,7 +646,7 @@ function Slide2({
 								type="button"
 								onClick={() => toggleAudience(opt.value)}
 								className={cn(
-									"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 text-foreground text-xs uppercase transition-colors md:px-3 md:py-2 md:text-lg",
+									"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 font-sans text-foreground text-xs uppercase transition-colors md:px-3 md:py-2 md:text-lg",
 									selectedAudienceIds.includes(opt.value)
 										? "bg-neutral-300 dark:bg-neutral-600"
 										: "bg-primary-foreground hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
@@ -687,52 +663,40 @@ function Slide2({
 					<div className="flex items-center gap-2">
 						{selectedAudienceIds.length === 0 ? (
 							<>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-									Select your
-								</span>
-								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light text-foreground text-xs uppercase md:px-3 md:py-2 md:text-base dark:bg-neutral-600">
+								<span className="text-subheading">Select your</span>
+								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light font-sans text-foreground text-xs uppercase md:px-3 md:py-2 md:text-base dark:bg-neutral-600">
 									AUDIENCE TYPE
 									<DashedBorder />
 								</span>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-									to continue.
-								</span>
+								<span className="text-subheading">to continue.</span>
 							</>
 						) : (
 							<>
-								<span className="font-light font-signifier text-foreground text-lg capitalize md:text-xl">
-									Click
-								</span>
+								<span className="text-subheading capitalize">Click</span>
 								<button
 									type="button"
 									onClick={goToSlide3}
-									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
+									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light font-sans text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 								>
 									NEXT
 									<DashedBorder />
 								</button>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-									to continue.
-								</span>
+								<span className="text-subheading">to continue.</span>
 							</>
 						)}
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-							Or, go
-						</span>
+						<span className="text-subheading">Or, go</span>
 						<button
 							type="button"
 							onClick={goToSlide1}
-							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
+							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light font-sans text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 						>
 							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
 						</button>
-						<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-							to the previous step.
-						</span>
+						<span className="text-subheading">to the previous step.</span>
 					</div>
 				</div>
 			</div>
@@ -825,7 +789,7 @@ function Slide3({
 				{onboarding?.slide3?.body && (
 					<CustomPortableText
 						value={onboarding.slide3.body as PortableTextBlock[]}
-						className="space-y-4 font-signifier text-base text-foreground leading-relaxed md:text-lg"
+						className="text-body"
 					/>
 				)}
 
@@ -853,37 +817,31 @@ function Slide3({
 					<div className="flex items-center gap-2">
 						{selectedThemeIds.length === 0 ? (
 							<>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-									Select a
-								</span>
+								<span className="text-subheading">Select a</span>
 								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-2 font-light text-base text-foreground uppercase dark:bg-neutral-600">
 									THEME
 									<DashedBorder />
 								</span>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
+								<span className="text-subheading">
 									that interests you to continue.
 								</span>
 							</>
 						) : (
 							<>
-								<span className="font-light font-signifier text-foreground text-lg capitalize md:text-xl">
-									click
-								</span>
+								<span className="text-subheading capitalize">click</span>
 								<Link
 									href="/explore"
 									onClick={() => {
 										setCompleted(true);
-										try {
-											document.cookie =
-												"onboarding_completed=1; path=/; max-age=31536000";
-										} catch {}
+										// User completed the full onboarding
+										// The store will persist this state
 									}}
 									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 								>
 									FINISH
 									<DashedBorder />
 								</Link>
-								<span className="font-light font-signifier text-foreground text-lg md:text-xl">
+								<span className="text-subheading">
 									to continue to the toolkit.
 								</span>
 							</>
@@ -891,9 +849,7 @@ function Slide3({
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-							Or, go
-						</span>
+						<span className="text-subheading">Or, go</span>
 						<button
 							type="button"
 							onClick={goToSlide2}
@@ -902,9 +858,7 @@ function Slide3({
 							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
 						</button>
-						<span className="font-light font-signifier text-foreground text-lg md:text-xl">
-							to the previous step.
-						</span>
+						<span className="text-subheading">to the previous step.</span>
 					</div>
 				</div>
 			</div>

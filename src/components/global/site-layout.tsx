@@ -58,17 +58,6 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 							{!isCarrierBagRoute && <SiteFooter footerData={footerData} />}
 						</div>
 					</div>
-					{/* {!isCarrierBagRoute && (
-						<ProgressiveBlur
-							position="bottom"
-							height="100px"
-							className="z-30"
-							blurLevels={[0.25, 0.5, 1, 2, 3, 6, 12, 24]}
-							containerRef={scrollContainerRef}
-							hideAtBottom={true}
-							bottomThreshold={100}
-						/>
-					)} */}
 				</SidebarInset>
 			</div>
 		</SidebarProvider>

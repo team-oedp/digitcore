@@ -148,14 +148,14 @@ describe("glossary-utils", () => {
 	});
 
 	describe("createGlossaryLink", () => {
-		it("should create proper glossary link", () => {
+		it("should create proper glossary link with hash", () => {
 			const link = createGlossaryLink("test-term-id");
-			expect(link).toBe("/glossary?word=test-term-id");
+			expect(link).toBe("/glossary#test-term-id");
 		});
 
-		it("should slugify spaces and special characters", () => {
+		it("should slugify spaces and special characters with hash", () => {
 			const link = createGlossaryLink("term with spaces");
-			expect(link).toBe("/glossary?word=term-with-spaces");
+			expect(link).toBe("/glossary#term-with-spaces");
 		});
 	});
 });

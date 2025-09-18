@@ -1,28 +1,358 @@
-# Sanity Rules
+---
+description: Sanity CMS configuration, schema patterns, and GROQ query conventions for the Digitcore project
+---
 
-## Schema
+# Sanity CMS Rules for Digitcore
 
-- Define schemas in `schemas/` and co-locate GROQ queries with features.
-- Name schema types in PascalCase (`Post`, `Author`).
+## Environment Variables
 
-## Queries
+Always import Sanity environment variables from `~/sanity/env` instead of using `process.env` directly:
 
-```ts
-export const postBySlugQuery = groq`
-  *[_type == "post" && slug.current == $slug][0]{
-    title,
-    body,
-    author->{
-      name,
-      image
-    }
-  }
-`;
+```typescript
+import { dataset, projectId, apiVersion } from '~/sanity/env'
 ```
 
-## Client Usage
+The [env.ts](mdc:src/sanity/env.ts) file provides pre-validated exports using the `assertValue` function pattern for consistent error handling.
 
-- Use `@sanity/client` inside server components or API routes only.
-- Memoize the Sanity client; do not create a new client per request.
+## Schema Organisation
 
----
+### File Structure
+
+- Document schemas: [src/sanity/schemaTypes/documents/](mdc:src/sanity/schemaTypes/documents/)
+- Object schemas: [src/sanity/schemaTypes/objects/](mdc:src/sanity/schemaTypes/objects/)
+- Schema index: [src/sanity/schemaTypes/index.ts](mdc:src/sanity/schemaTypes/index.ts)
+
+### Naming Conventions
+
+- Schema types: camelCase (`patternType`, `solutionType`)
+- Schema names: kebab-case strings (`'pattern'`, `'solution'`)
+- Field names: camelCase (`heroImage`, `targetAudiences`)
+
+### Core Document Types
+
+The project has these main document types:
+
+- `pattern` - Core methodologies and approaches
+- `solution` - Specific implementations within patterns  
+- `resource` - Supporting materials and tools
+- `glossaryTerm` - Definitions and explanations
+- `page` - Static content pages
+- `onboardingSlide` - Interactive onboarding content
+
+## GROQ Query Patterns
+
+### Basic Pattern Query
+
+```typescript
+export const patternBySlugQuery = groq`
+  *[_type == "pattern" && slug.current == $slug][0]{
+    _id,
+    _type,
+    title,
+    slug,
+    description,
+    heroImage{
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions,
+          lqip
+        }
+      },
+      alt,
+      caption
+    },
+    targetAudiences[]->{
+      _id,
+      title,
+      slug
+    },
+    themes[]->{
+      _id,
+      title,
+      slug  
+    },
+    tags[]->{
+      _id,
+      title,
+      slug
+    },
+    content,
+    solutions[]->{
+      _id,
+      title,
+      slug,
+      description,
+      heroImage{
+        asset->{
+          _id,
+          url,
+          metadata {
+            dimensions,
+            lqip
+          }
+        },
+        alt,
+        caption
+      }
+    },
+    resources[]->{
+      _id,
+      title,
+      slug,
+      description,
+      resourceType,
+      url
+    }
+  }
+`
+```
+
+### Search Queries with Scoring
+
+```typescript
+export const searchPatternsQuery = groq`
+  *[_type == "pattern" && (
+    title match $searchTerm + "*" ||
+    description match $searchTerm + "*" ||
+    content[].children[].text match $searchTerm + "*"
+  )] | score(
+    title match $searchTerm + "*" boost(3) ||
+    description match $searchTerm + "*" boost(2) ||
+    content[].children[].text match $searchTerm + "*"
+  ) | order(_score desc) [0...$limit] {
+    _id,
+    _type,
+    _score,
+    title,
+    slug,
+    description,
+    heroImage{
+      asset->{url, metadata{dimensions, lqip}},
+      alt
+    }
+  }
+`
+```
+
+### Reference Resolution
+
+Always resolve references with explicit field selection:
+
+```typescript
+// Good - explicit fields
+targetAudiences[]->{
+  _id,
+  title,
+  slug
+}
+
+// Avoid - resolves entire document
+targetAudiences[]->
+```
+
+## Client Configuration
+
+### Server Components (Default)
+
+```typescript
+import { createClient } from 'next-sanity'
+import { dataset, projectId, apiVersion } from '~/sanity/env'
+
+const client = createClient({
+  dataset,
+  projectId,
+  apiVersion,
+  useCdn: false, // Disable for dynamic content
+  perspective: 'published' // or 'previewDrafts' for draft mode
+})
+```
+
+### Draft Mode Support
+
+```typescript
+import { draftMode } from 'next/headers'
+
+const perspective = draftMode().isEnabled ? 'previewDrafts' : 'published'
+const client = createClient({
+  dataset,
+  projectId,
+  apiVersion,
+  useCdn: !draftMode().isEnabled,
+  perspective,
+  token: draftMode().isEnabled ? process.env.SANITY_API_READ_TOKEN : undefined
+})
+```
+
+## Type Safety
+
+### Generated Types
+
+Use Sanity's TypeScript code generation for type safety:
+
+```typescript
+import type { Pattern, Solution, Resource } from '~/sanity/types'
+
+const pattern: Pattern = await client.fetch(patternBySlugQuery, { slug })
+```
+
+### Query Result Types
+
+Define query-specific types for partial data:
+
+```typescript
+type PatternCard = {
+  _id: string
+  title: string
+  slug: { current: string }
+  description: string
+  heroImage?: {
+    asset: {
+      url: string
+      metadata: {
+        dimensions: { width: number; height: number }
+        lqip: string
+      }
+    }
+    alt?: string
+  }
+}
+```
+
+## Portable Text
+
+### Component Mapping
+
+```typescript
+import { PortableText } from 'next-sanity'
+import { portableTextComponents } from '~/components/portable-text'
+
+<PortableText 
+  value={content} 
+  components={portableTextComponents}
+/>
+```
+
+### Custom Block Components
+
+```typescript
+const portableTextComponents = {
+  block: {
+    h2: ({ children }) => (
+      <h2 className="text-2xl font-semibold mb-4">{children}</h2>
+    ),
+    normal: ({ children }) => (
+      <p className="mb-4 leading-relaxed">{children}</p>
+    )
+  },
+  marks: {
+    link: ({ children, value }) => (
+      <a href={value.href} className="text-blue-600 hover:underline">
+        {children}
+      </a>
+    )
+  }
+}
+```
+
+## Performance Best Practices
+
+### Query Optimisation
+
+- Use projection (`{title, slug}`) to limit data transfer
+- Implement pagination with `[0...$limit]`
+- Use CDN for static content (`useCdn: true`)
+- Cache queries at the component level when appropriate
+
+### Image Optimisation
+
+```typescript
+heroImage{
+  asset->{
+    _id,
+    url,
+    metadata {
+      dimensions,
+      lqip,
+      hasAlpha,
+      isOpaque
+    }
+  },
+  alt,
+  caption,
+  hotspot,
+  crop
+}
+```
+
+## Error Handling
+
+### Query Validation
+
+```typescript
+const result = await client.fetch(query, params)
+if (!result) {
+  throw new Error('Content not found')
+}
+```
+
+### Graceful Fallbacks
+
+```typescript
+const content = pattern?.content || []
+const heroImage = pattern?.heroImage?.asset?.url || '/default-pattern-image.jpg'
+```
+
+## Common Patterns
+
+### Slug-based Routing
+
+```typescript
+export async function generateStaticParams() {
+  const patterns = await client.fetch(groq`
+    *[_type == "pattern"]{ slug }
+  `)
+  
+  return patterns.map((pattern) => ({
+    slug: pattern.slug.current
+  }))
+}
+```
+
+### Related Content
+
+```typescript
+const relatedPatterns = await client.fetch(groq`
+  *[_type == "pattern" && 
+    _id != $currentId && 
+    count((targetAudiences[]._ref)[@ in $audienceIds]) > 0
+  ][0...3]{
+    _id, title, slug, description
+  }
+`, { 
+  currentId: pattern._id, 
+  audienceIds: pattern.targetAudiences?.map(a => a._id) || [] 
+})
+```
+
+### Filtering and Facets
+
+```typescript
+const facetedQuery = groq`
+  {
+    "patterns": *[_type == "pattern" 
+      ${audienceFilter}
+      ${themeFilter}
+      ${tagFilter}
+    ][0...$limit]{
+      _id, title, slug, description
+    },
+    "audienceCounts": *[_type == "targetAudience"]{
+      _id,
+      title,
+      "count": count(*[_type == "pattern" && references(^._id)])
+    }
+  }
+`
+```

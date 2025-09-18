@@ -1,11 +1,12 @@
 import "~/styles/globals.css";
 
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { VisualEditing } from "next-sanity";
-import { cookies, draftMode } from "next/headers";
-import { redirect } from "next/navigation";
+import { draftMode } from "next/headers";
+import { Suspense } from "react";
 import { sans, signifier } from "~/app/(frontend)/fonts";
 import { DisableDraftMode } from "~/components/global/disable-draft-mode";
+import { OnboardingRedirect } from "~/components/global/onboarding-redirect";
 import { SiteLayout } from "~/components/global/site-layout";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
@@ -22,14 +23,6 @@ export const metadata: Metadata = {
 	title: "Digitcore",
 	description: "Digital Toolkit for Collaborative Environmental Research",
 	icons: [{ rel: "icon", url: "/oedp-icon.png" }],
-};
-
-export const viewport: Viewport = {
-	colorScheme: "light",
-	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "white" },
-		{ media: "(prefers-color-scheme: dark)", color: "black" },
-	],
 };
 
 export default async function Layout({
@@ -67,6 +60,9 @@ export default async function Layout({
 						<OnboardingStoreProvider>
 							<CarrierBagStoreProvider>
 								<PageContentStoreProvider>
+									<Suspense fallback={null}>
+										<OnboardingRedirect />
+									</Suspense>
 									<SiteLayout footerData={footerData}>{children}</SiteLayout>
 								</PageContentStoreProvider>
 							</CarrierBagStoreProvider>
