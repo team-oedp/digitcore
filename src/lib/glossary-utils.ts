@@ -56,12 +56,20 @@ export function detectGlossaryTerms(
 		originalText: string;
 	}> = [];
 
+	// Track which terms have already been matched to only link first occurrence
+	const matchedTermIds = new Set<string>();
+
 	// Sort terms by length (longest first) to match longer terms before shorter ones
 	const sortedTerms = [...glossaryTerms].sort(
 		(a, b) => b.title.length - a.title.length,
 	);
 
 	for (const term of sortedTerms) {
+		// Skip if we've already matched this term
+		if (matchedTermIds.has(term._id)) {
+			continue;
+		}
+
 		// Create a case-insensitive regex that matches whole words
 		const pattern = new RegExp(`\\b${escapeRegExp(term.title)}\\b`, "gi");
 
@@ -84,6 +92,9 @@ export function detectGlossaryTerms(
 					endIndex,
 					originalText: match[0], // Preserve original case
 				});
+				// Mark this term as matched so we don't match it again
+				matchedTermIds.add(term._id);
+				break; // Only match the first occurrence of this term
 			}
 		}
 	}
