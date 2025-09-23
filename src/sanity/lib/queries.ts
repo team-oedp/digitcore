@@ -793,7 +793,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
 `);
 
 export const FAQ_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'frequently-asked-questions'][0]{
+  *[_type == 'page' && slug.current == 'faq'][0]{
     _id,
     _type,
     title,
@@ -830,9 +830,14 @@ export const FAQ_PAGE_QUERY = defineQuery(`
 `);
 
 export const FAQS_QUERY = defineQuery(`
-  *[_type == "faq"] | order(_createdAt asc) {
+  *[_type == "faq"] | order(category->title asc, _createdAt asc) {
     _id,
     title,
+    category->{
+      _id,
+      title,
+      description
+    },
     description
   }
 `);

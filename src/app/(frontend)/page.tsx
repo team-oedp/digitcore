@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
-import { HeadingMorph } from "~/components/shared/heading-morph";
+import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
@@ -88,7 +88,7 @@ export default async function Home() {
 	return (
 		<PageWrapper>
 			<div className="pb-44">
-				<HeadingMorph />
+				<PageHeading title="Home" />
 				<div className="flex flex-col gap-20 pt-20 lg:gap-60 lg:pt-60">
 					{sectionGroups.map((group, groupIndex) => (
 						<section

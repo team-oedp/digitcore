@@ -24,6 +24,11 @@ export const metadata: Metadata = {
 type FAQFromSanity = {
 	_id: string;
 	title: string;
+	category?: {
+		_id: string;
+		title: string;
+		description: PortableTextBlock[];
+	};
 	description: PortableTextBlock[];
 };
 
@@ -72,28 +77,115 @@ export default async function FAQPage() {
 				{/* FAQ Accordions */}
 				<section className="max-w-4xl">
 					{faqs && faqs.length > 0 ? (
-						<Accordion type="single" collapsible className="w-full">
-							{faqs.map((faq) => (
-								<AccordionItem
-									key={faq._id}
-									value={faq._id}
-									className="border-zinc-300 border-b border-dashed last:border-b"
-								>
-									<AccordionTrigger
-										showPlusMinus
-										className="accordion-heading items-center justify-between py-4"
-									>
-										<span className="text-left">{faq.title}</span>
-									</AccordionTrigger>
-									<AccordionContent className="pt-2 pb-4">
-										<CustomPortableText
-											value={faq.description}
-											className="accordion-detail"
-										/>
-									</AccordionContent>
-								</AccordionItem>
-							))}
-						</Accordion>
+						<div className="space-y-12">
+							{(() => {
+								// Separate uncategorized FAQs from categorized ones
+								const uncategorizedFaqs = faqs.filter(faq => !faq.category);
+								const categorizedFaqs = faqs.filter(faq => faq.category);
+
+								// Group categorized FAQs by category
+								const groupedFaqs = categorizedFaqs.reduce(
+									(groups, faq) => {
+										if (faq.category) {
+											const categoryId = faq.category._id;
+											if (!groups[categoryId]) {
+												groups[categoryId] = {
+													category: faq.category,
+													faqs: [],
+												};
+											}
+											groups[categoryId].faqs.push(faq);
+										}
+										return groups;
+									},
+									{} as Record<
+										string,
+										{
+											category: {
+												_id: string;
+												title: string;
+												description: PortableTextBlock[];
+											};
+											faqs: FAQFromSanity[];
+										}
+									>,
+								);
+
+								return (
+									<>
+										{/* Uncategorized FAQs at the top */}
+										{uncategorizedFaqs.length > 0 && (
+											<div className="space-y-6">
+												<Accordion type="multiple" className="w-full">
+													{uncategorizedFaqs.map((faq) => (
+														<AccordionItem
+															key={faq._id}
+															value={faq._id}
+															className="border-zinc-300 border-b border-dashed last:border-b"
+														>
+															<AccordionTrigger
+																showPlusMinus
+																className="accordion-heading items-center justify-between py-4"
+															>
+																<span className="text-left">{faq.title}</span>
+															</AccordionTrigger>
+															<AccordionContent className="pt-2 pb-4">
+																<CustomPortableText
+																	value={faq.description}
+																	className="accordion-detail"
+																/>
+															</AccordionContent>
+														</AccordionItem>
+													))}
+												</Accordion>
+											</div>
+										)}
+
+										{/* Categorized FAQs */}
+										{Object.entries(groupedFaqs).map(
+											([categoryId, { category, faqs: categoryFaqs }]) => (
+												<div key={categoryId} className="space-y-6">
+													<div>
+														<h2 className="font-medium text-neutral-900 text-xl">
+															{category.title}
+														</h2>
+														{category.description &&
+															category.description.length > 0 && (
+																<CustomPortableText
+																	value={category.description}
+																	className="mt-2 text-neutral-600 text-sm"
+																/>
+															)}
+													</div>
+													<Accordion type="multiple" className="w-full">
+														{categoryFaqs.map((faq) => (
+															<AccordionItem
+																key={faq._id}
+																value={faq._id}
+																className="border-zinc-300 border-b border-dashed last:border-b"
+															>
+																<AccordionTrigger
+																	showPlusMinus
+																	className="accordion-heading items-center justify-between py-4"
+																>
+																	<span className="text-left">{faq.title}</span>
+																</AccordionTrigger>
+																<AccordionContent className="pt-2 pb-4">
+																	<CustomPortableText
+																		value={faq.description}
+																		className="accordion-detail"
+																	/>
+																</AccordionContent>
+															</AccordionItem>
+														))}
+													</Accordion>
+												</div>
+											),
+										)}
+									</>
+								);
+							})()}
+						</div>
 					) : (
 						<p className="text-neutral-500">
 							No FAQs available at the moment. Please check back later.

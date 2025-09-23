@@ -152,11 +152,7 @@ export default async function GlossaryPage() {
 									>
 										<h2 className="text-subheading">{letter}</h2>
 
-										<Accordion
-											type="single"
-											collapsible
-											className="w-full min-w-0"
-										>
+										<Accordion type="multiple" className="w-full min-w-0">
 											{terms.map((term) => (
 												<AccordionItem
 													key={term.docId}
