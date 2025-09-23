@@ -80,8 +80,8 @@ export default async function FAQPage() {
 						<div className="space-y-12">
 							{(() => {
 								// Separate uncategorized FAQs from categorized ones
-								const uncategorizedFaqs = faqs.filter(faq => !faq.category);
-								const categorizedFaqs = faqs.filter(faq => faq.category);
+								const uncategorizedFaqs = faqs.filter((faq) => !faq.category);
+								const categorizedFaqs = faqs.filter((faq) => faq.category);
 
 								// Group categorized FAQs by category
 								const groupedFaqs = categorizedFaqs.reduce(
@@ -146,7 +146,7 @@ export default async function FAQPage() {
 											([categoryId, { category, faqs: categoryFaqs }]) => (
 												<div key={categoryId} className="space-y-6">
 													<div>
-														<h2 className="font-medium text-neutral-900 text-xl">
+														<h2 className="text-section-heading">
 															{category.title}
 														</h2>
 														{category.description &&
