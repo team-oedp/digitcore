@@ -29,25 +29,37 @@ export type Footer = {
     }>
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
     level?: number
     _type: 'block'
     _key: string
@@ -78,25 +90,37 @@ export type Footer = {
     }>
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
     level?: number
     _type: 'block'
     _key: string
@@ -189,25 +213,37 @@ export type SiteSettings = {
     }>
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
     level?: number
     _type: 'block'
     _key: string
@@ -230,25 +266,37 @@ export type Onboarding = {
     }>
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
     level?: number
     _type: 'block'
     _key: string
@@ -272,25 +320,37 @@ export type Onboarding = {
       }>
       style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
       listItem?: 'bullet'
-      markDefs?: Array<{
-        linkType?: 'href' | 'page' | 'pattern'
-        href?: string
-        page?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'page'
-        }
-        pattern?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'pattern'
-        }
-        openInNewTab?: boolean
-        _type: 'link'
-        _key: string
-      }>
+      markDefs?: Array<
+        | {
+            glossary?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'glossary'
+            }
+            _type: 'glossaryTerm'
+            _key: string
+          }
+        | {
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }
+      >
       level?: number
       _type: 'block'
       _key: string
@@ -309,25 +369,37 @@ export type Onboarding = {
       }>
       style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
       listItem?: 'bullet'
-      markDefs?: Array<{
-        linkType?: 'href' | 'page' | 'pattern'
-        href?: string
-        page?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'page'
-        }
-        pattern?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'pattern'
-        }
-        openInNewTab?: boolean
-        _type: 'link'
-        _key: string
-      }>
+      markDefs?: Array<
+        | {
+            glossary?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'glossary'
+            }
+            _type: 'glossaryTerm'
+            _key: string
+          }
+        | {
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }
+      >
       level?: number
       _type: 'block'
       _key: string
@@ -344,25 +416,37 @@ export type Onboarding = {
       }>
       style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
       listItem?: 'bullet'
-      markDefs?: Array<{
-        linkType?: 'href' | 'page' | 'pattern'
-        href?: string
-        page?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'page'
-        }
-        pattern?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'pattern'
-        }
-        openInNewTab?: boolean
-        _type: 'link'
-        _key: string
-      }>
+      markDefs?: Array<
+        | {
+            glossary?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'glossary'
+            }
+            _type: 'glossaryTerm'
+            _key: string
+          }
+        | {
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }
+      >
       level?: number
       _type: 'block'
       _key: string
@@ -386,25 +470,37 @@ export type CarrierBag = {
     }>
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
     level?: number
     _type: 'block'
     _key: string
@@ -433,25 +529,37 @@ export type Faq = {
     }>
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
     level?: number
     _type: 'block'
     _key: string
@@ -476,47 +584,6 @@ export type FaqCategory = {
     listItem?: never
     markDefs?: Array<{
       href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
-}
-
-export type Glossary = {
-  _id: string
-  _type: 'glossary'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
-    listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
       _type: 'link'
       _key: string
     }>
@@ -661,25 +728,37 @@ export type ContentList = {
       }>
       style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
       listItem?: 'bullet'
-      markDefs?: Array<{
-        linkType?: 'href' | 'page' | 'pattern'
-        href?: string
-        page?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'page'
-        }
-        pattern?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'pattern'
-        }
-        openInNewTab?: boolean
-        _type: 'link'
-        _key: string
-      }>
+      markDefs?: Array<
+        | {
+            glossary?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'glossary'
+            }
+            _type: 'glossaryTerm'
+            _key: string
+          }
+        | {
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }
+      >
       level?: number
       _type: 'block'
       _key: string
@@ -701,25 +780,37 @@ export type Content = {
     }>
     style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
     listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
     level?: number
     _type: 'block'
     _key: string
@@ -735,25 +826,37 @@ export type BlockContent = Array<{
   }>
   style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
   listItem?: 'bullet'
-  markDefs?: Array<{
-    linkType?: 'href' | 'page' | 'pattern'
-    href?: string
-    page?: {
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      [internalGroqTypeReferenceTo]?: 'page'
-    }
-    pattern?: {
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      [internalGroqTypeReferenceTo]?: 'pattern'
-    }
-    openInNewTab?: boolean
-    _type: 'link'
-    _key: string
-  }>
+  markDefs?: Array<
+    | {
+        glossary?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'glossary'
+        }
+        _type: 'glossaryTerm'
+        _key: string
+      }
+    | {
+        linkType?: 'href' | 'page' | 'pattern'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        pattern?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'pattern'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }
+  >
   level?: number
   _type: 'block'
   _key: string
@@ -795,6 +898,16 @@ export type Page = {
         _key: string
       } & ContentList)
   >
+}
+
+export type Glossary = {
+  _id: string
+  _type: 'glossary'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  description?: BlockContent
 }
 
 export type Pattern = {
@@ -1048,7 +1161,6 @@ export type AllSanitySchemaTypes =
   | CarrierBag
   | Faq
   | FaqCategory
-  | Glossary
   | Suggestion
   | Solution
   | Resource
@@ -1059,6 +1171,7 @@ export type AllSanitySchemaTypes =
   | BlockContent
   | Link
   | Page
+  | Glossary
   | Pattern
   | Theme
   | Icon
@@ -1077,7 +1190,7 @@ export type AllSanitySchemaTypes =
 export declare const internalGroqTypeReferenceTo: unique symbol
 // Source: lib/queries.ts
 // Variable: PATTERNS_QUERY
-// Query: *[_type == "pattern" && defined(slug.current)][]{    _id,    _type,    title,    description,    "descriptionPlainText": pt::text(description),    "slug": slug.current,    tags[]->,    audiences[]->,    theme->{      _id,      title,      description    },    solutions[]->,    resources[]->{      ...,      solutions[]->{...},    },  }
+// Query: *[_type == "pattern" && defined(slug.current)][]{    _id,    _type,    title,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "descriptionPlainText": pt::text(description),    "slug": slug.current,    tags[]->,    audiences[]->,    theme->{      _id,      title,      description    },    solutions[]->,    resources[]->{      ...,      solutions[]->{...},    },  }
 export type PATTERNS_QUERYResult = Array<{
   _id: string
   _type: 'pattern'
@@ -1091,11 +1204,14 @@ export type PATTERNS_QUERYResult = Array<{
     }>
     style?: 'normal'
     listItem?: never
-    markDefs?: Array<{
+    markDefs: Array<{
       href?: string
       _type: 'link'
       _key: string
-    }>
+      page: null
+      pattern: null
+      glossary: null
+    }> | null
     level?: number
     _type: 'block'
     _key: string
@@ -1253,7 +1369,7 @@ export type PATTERNS_QUERYResult = Array<{
   }> | null
 }>
 // Variable: PATTERN_QUERY
-// Query: *[_type == "pattern" && slug.current == $slug][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    description,    "descriptionPlainText": pt::text(description),    "slug": slug.current,    tags[]->{...},	    audiences[]->{...},	    theme->{...},    solutions[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      title,      description,      audiences[]->{ _id, title }    },    resources[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      title,      description,      links,      solutions[]->{...},    },  }
+// Query: *[_type == "pattern" && slug.current == $slug][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "descriptionPlainText": pt::text(description),    "slug": slug.current,    tags[]->{...},	    audiences[]->{...},	    theme->{...},    solutions[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      audiences[]->{ _id, title }    },    resources[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      links,      solutions[]->{...},    },  }
 export type PATTERN_QUERYResult = {
   _id: string
   _type: 'pattern'
@@ -1270,11 +1386,14 @@ export type PATTERN_QUERYResult = {
     }>
     style?: 'normal'
     listItem?: never
-    markDefs?: Array<{
+    markDefs: Array<{
       href?: string
       _type: 'link'
       _key: string
-    }>
+      page: null
+      pattern: null
+      glossary: null
+    }> | null
     level?: number
     _type: 'block'
     _key: string
@@ -1357,11 +1476,14 @@ export type PATTERN_QUERYResult = {
       }>
       style?: 'normal'
       listItem?: never
-      markDefs?: Array<{
+      markDefs: Array<{
         href?: string
         _type: 'link'
         _key: string
-      }>
+        page: null
+        pattern: null
+        glossary: null
+      }> | null
       level?: number
       _type: 'block'
       _key: string
@@ -1387,11 +1509,14 @@ export type PATTERN_QUERYResult = {
       }>
       style?: 'normal'
       listItem?: never
-      markDefs?: Array<{
+      markDefs: Array<{
         href?: string
         _type: 'link'
         _key: string
-      }>
+        page: null
+        pattern: null
+        glossary: null
+      }> | null
       level?: number
       _type: 'block'
       _key: string
@@ -1473,7 +1598,7 @@ export type PATTERN_BASE_QUERYResult = {
   resourceIds: Array<string> | null
 } | null
 // Variable: SOLUTIONS_BY_IDS_QUERY
-// Query: *[_type == "solution" && _id in $ids]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    description,    audiences[]->{      _id,      _type,      title    }  }
+// Query: *[_type == "solution" && _id in $ids]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    audiences[]->{      _id,      _type,      title    }  }
 export type SOLUTIONS_BY_IDS_QUERYResult = Array<{
   _id: string
   _type: 'solution'
@@ -1490,11 +1615,14 @@ export type SOLUTIONS_BY_IDS_QUERYResult = Array<{
     }>
     style?: 'normal'
     listItem?: never
-    markDefs?: Array<{
+    markDefs: Array<{
       href?: string
       _type: 'link'
       _key: string
-    }>
+      page: null
+      pattern: null
+      glossary: null
+    }> | null
     level?: number
     _type: 'block'
     _key: string
@@ -1506,7 +1634,7 @@ export type SOLUTIONS_BY_IDS_QUERYResult = Array<{
   }> | null
 }>
 // Variable: RESOURCES_BY_IDS_QUERY
-// Query: *[_type == "resource" && _id in $ids]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    description,    links,    "solutionIds": solutions[]._ref  }
+// Query: *[_type == "resource" && _id in $ids]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    links,    "solutionIds": solutions[]._ref  }
 export type RESOURCES_BY_IDS_QUERYResult = Array<{
   _id: string
   _type: 'resource'
@@ -1523,11 +1651,14 @@ export type RESOURCES_BY_IDS_QUERYResult = Array<{
     }>
     style?: 'normal'
     listItem?: never
-    markDefs?: Array<{
+    markDefs: Array<{
       href?: string
       _type: 'link'
       _key: string
-    }>
+      page: null
+      pattern: null
+      glossary: null
+    }> | null
     level?: number
     _type: 'block'
     _key: string
@@ -1543,7 +1674,7 @@ export type TAGS_BY_IDS_QUERYResult = Array<{
   title: string | null
 }>
 // Variable: GLOSSARY_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'glossary'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current      }    },  }
+// Query: *[_type == 'page' && slug.current == 'glossary'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },  }
 export type GLOSSARY_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -1558,15 +1689,28 @@ export type GLOSSARY_PAGE_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page: string | null
-      pattern: string | null
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }> | null
+    markDefs: Array<
+      | {
+          glossary: {
+            _id: string
+            title: string | null
+          } | null
+          _type: 'glossaryTerm'
+          _key: string
+          page: null
+          pattern: null
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page: string | null
+          pattern: string | null
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+          glossary: null
+        }
+    > | null
     level?: number
     _type: 'block'
     _key: string
@@ -1577,38 +1721,7 @@ export type GLOSSARY_PAGE_QUERYResult = {
 export type GLOSSARY_TERMS_QUERYResult = Array<{
   _id: string
   title: string | null
-  description: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
-    listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
+  description: BlockContent | null
 }>
 // Variable: AUDIENCES_BY_IDS_QUERY
 // Query: *[_type == "audience" && _id in $ids]{    _id,    _type,    title,    description  }
@@ -1653,7 +1766,7 @@ export type PAGES_SLUGS_QUERYResult = Array<{
   slug: string | null
 }>
 // Variable: PAGE_BY_SLUG_QUERY
-// Query: *[_type == 'page' && slug.current == $slug][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current      }    },  }
+// Query: *[_type == 'page' && slug.current == $slug][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },  }
 export type PAGE_BY_SLUG_QUERYResult = {
   _id: string
   _type: 'page'
@@ -1668,22 +1781,35 @@ export type PAGE_BY_SLUG_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page: string | null
-      pattern: string | null
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }> | null
+    markDefs: Array<
+      | {
+          glossary: {
+            _id: string
+            title: string | null
+          } | null
+          _type: 'glossaryTerm'
+          _key: string
+          page: null
+          pattern: null
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page: string | null
+          pattern: string | null
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+          glossary: null
+        }
+    > | null
     level?: number
     _type: 'block'
     _key: string
   }> | null
 } | null
 // Variable: EXPLORE_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'explore'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current      }    },  }
+// Query: *[_type == 'page' && slug.current == 'explore'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },  }
 export type EXPLORE_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -1698,15 +1824,28 @@ export type EXPLORE_PAGE_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page: string | null
-      pattern: string | null
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }> | null
+    markDefs: Array<
+      | {
+          glossary: {
+            _id: string
+            title: string | null
+          } | null
+          _type: 'glossaryTerm'
+          _key: string
+          page: null
+          pattern: null
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page: string | null
+          pattern: string | null
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+          glossary: null
+        }
+    > | null
     level?: number
     _type: 'block'
     _key: string
@@ -2171,25 +2310,37 @@ export type ONBOARDING_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
     level?: number
     _type: 'block'
     _key: string
@@ -2213,25 +2364,37 @@ export type ONBOARDING_QUERYResult = {
       }>
       style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
       listItem?: 'bullet'
-      markDefs?: Array<{
-        linkType?: 'href' | 'page' | 'pattern'
-        href?: string
-        page?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'page'
-        }
-        pattern?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'pattern'
-        }
-        openInNewTab?: boolean
-        _type: 'link'
-        _key: string
-      }>
+      markDefs?: Array<
+        | {
+            glossary?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'glossary'
+            }
+            _type: 'glossaryTerm'
+            _key: string
+          }
+        | {
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }
+      >
       level?: number
       _type: 'block'
       _key: string
@@ -2250,25 +2413,37 @@ export type ONBOARDING_QUERYResult = {
       }>
       style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
       listItem?: 'bullet'
-      markDefs?: Array<{
-        linkType?: 'href' | 'page' | 'pattern'
-        href?: string
-        page?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'page'
-        }
-        pattern?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'pattern'
-        }
-        openInNewTab?: boolean
-        _type: 'link'
-        _key: string
-      }>
+      markDefs?: Array<
+        | {
+            glossary?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'glossary'
+            }
+            _type: 'glossaryTerm'
+            _key: string
+          }
+        | {
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }
+      >
       level?: number
       _type: 'block'
       _key: string
@@ -2285,25 +2460,37 @@ export type ONBOARDING_QUERYResult = {
       }>
       style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
       listItem?: 'bullet'
-      markDefs?: Array<{
-        linkType?: 'href' | 'page' | 'pattern'
-        href?: string
-        page?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'page'
-        }
-        pattern?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'pattern'
-        }
-        openInNewTab?: boolean
-        _type: 'link'
-        _key: string
-      }>
+      markDefs?: Array<
+        | {
+            glossary?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'glossary'
+            }
+            _type: 'glossaryTerm'
+            _key: string
+          }
+        | {
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }
+      >
       level?: number
       _type: 'block'
       _key: string
@@ -2337,15 +2524,29 @@ export type TAGS_PAGE_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page: string | null
-      pattern: string | null
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }> | null
+    markDefs: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+          page: null
+          pattern: null
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page: string | null
+          pattern: string | null
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    > | null
     level?: number
     _type: 'block'
     _key: string
@@ -2364,15 +2565,29 @@ export type TAGS_PAGE_QUERYResult = {
           }>
           style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
           listItem?: 'bullet'
-          markDefs: Array<{
-            linkType?: 'href' | 'page' | 'pattern'
-            href?: string
-            page: string | null
-            pattern: string | null
-            openInNewTab?: boolean
-            _type: 'link'
-            _key: string
-          }> | null
+          markDefs: Array<
+            | {
+                glossary?: {
+                  _ref: string
+                  _type: 'reference'
+                  _weak?: boolean
+                  [internalGroqTypeReferenceTo]?: 'glossary'
+                }
+                _type: 'glossaryTerm'
+                _key: string
+                page: null
+                pattern: null
+              }
+            | {
+                linkType?: 'href' | 'page' | 'pattern'
+                href?: string
+                page: string | null
+                pattern: string | null
+                openInNewTab?: boolean
+                _type: 'link'
+                _key: string
+              }
+          > | null
           level?: number
           _type: 'block'
           _key: string
@@ -2398,25 +2613,37 @@ export type TAGS_PAGE_QUERYResult = {
             }>
             style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
             listItem?: 'bullet'
-            markDefs?: Array<{
-              linkType?: 'href' | 'page' | 'pattern'
-              href?: string
-              page?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'page'
-              }
-              pattern?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'pattern'
-              }
-              openInNewTab?: boolean
-              _type: 'link'
-              _key: string
-            }>
+            markDefs?: Array<
+              | {
+                  glossary?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'glossary'
+                  }
+                  _type: 'glossaryTerm'
+                  _key: string
+                }
+              | {
+                  linkType?: 'href' | 'page' | 'pattern'
+                  href?: string
+                  page?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'page'
+                  }
+                  pattern?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'pattern'
+                  }
+                  openInNewTab?: boolean
+                  _type: 'link'
+                  _key: string
+                }
+            >
             level?: number
             _type: 'block'
             _key: string
@@ -2443,32 +2670,44 @@ export type CARRIER_BAG_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
     level?: number
     _type: 'block'
     _key: string
   }> | null
 } | null
 // Variable: PATTERNS_BY_SLUGS_QUERY
-// Query: *[_type == "pattern" && defined(slug.current) && slug.current in $slugs]{    ...,    _id,    _type,    title,    description,    "slug": slug.current,    tags[]->,    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      _type,      title,      description,      audiences[]->{ _id, title }    },    resources[]->{      _id,      _type,      title,      description,      links,      solutions[]->{ _id, title }    }  }
+// Query: *[_type == "pattern" && defined(slug.current) && slug.current in $slugs]{    ...,    _id,    _type,    title,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "slug": slug.current,    tags[]->,    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      _type,      title,      description,      audiences[]->{ _id, title }    },    resources[]->{      _id,      _type,      title,      description,      links,      solutions[]->{ _id, title }    }  }
 export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
   _id: string
   _type: 'pattern'
@@ -2486,11 +2725,14 @@ export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
     }>
     style?: 'normal'
     listItem?: never
-    markDefs?: Array<{
+    markDefs: Array<{
       href?: string
       _type: 'link'
       _key: string
-    }>
+      page: null
+      pattern: null
+      glossary: null
+    }> | null
     level?: number
     _type: 'block'
     _key: string
@@ -2594,7 +2836,7 @@ export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
   publishedAt?: string
 }>
 // Variable: VALUES_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'values'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current      }    },    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    }  }
+// Query: *[_type == 'page' && slug.current == 'values'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }    },    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    }  }
 export type VALUES_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -2609,15 +2851,28 @@ export type VALUES_PAGE_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page: string | null
-      pattern: string | null
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }> | null
+    markDefs: Array<
+      | {
+          glossary: {
+            _id: string
+            title: string | null
+          } | null
+          _type: 'glossaryTerm'
+          _key: string
+          page: null
+          pattern: null
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page: string | null
+          pattern: string | null
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+          glossary: null
+        }
+    > | null
     level?: number
     _type: 'block'
     _key: string
@@ -2636,15 +2891,28 @@ export type VALUES_PAGE_QUERYResult = {
           }>
           style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
           listItem?: 'bullet'
-          markDefs: Array<{
-            linkType?: 'href' | 'page' | 'pattern'
-            href?: string
-            page: string | null
-            pattern: string | null
-            openInNewTab?: boolean
-            _type: 'link'
-            _key: string
-          }> | null
+          markDefs: Array<
+            | {
+                glossary: {
+                  _id: string
+                  title: string | null
+                } | null
+                _type: 'glossaryTerm'
+                _key: string
+                page: null
+                pattern: null
+              }
+            | {
+                linkType?: 'href' | 'page' | 'pattern'
+                href?: string
+                page: string | null
+                pattern: string | null
+                openInNewTab?: boolean
+                _type: 'link'
+                _key: string
+                glossary: null
+              }
+          > | null
           level?: number
           _type: 'block'
           _key: string
@@ -2670,25 +2938,37 @@ export type VALUES_PAGE_QUERYResult = {
             }>
             style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
             listItem?: 'bullet'
-            markDefs?: Array<{
-              linkType?: 'href' | 'page' | 'pattern'
-              href?: string
-              page?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'page'
-              }
-              pattern?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'pattern'
-              }
-              openInNewTab?: boolean
-              _type: 'link'
-              _key: string
-            }>
+            markDefs?: Array<
+              | {
+                  glossary?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'glossary'
+                  }
+                  _type: 'glossaryTerm'
+                  _key: string
+                }
+              | {
+                  linkType?: 'href' | 'page' | 'pattern'
+                  href?: string
+                  page?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'page'
+                  }
+                  pattern?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'pattern'
+                  }
+                  openInNewTab?: boolean
+                  _type: 'link'
+                  _key: string
+                }
+            >
             level?: number
             _type: 'block'
             _key: string
@@ -2719,25 +2999,37 @@ export type PATTERNS_PAGE_QUERYResult = {
           }>
           style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
           listItem?: 'bullet'
-          markDefs?: Array<{
-            linkType?: 'href' | 'page' | 'pattern'
-            href?: string
-            page?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'page'
-            }
-            pattern?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'pattern'
-            }
-            openInNewTab?: boolean
-            _type: 'link'
-            _key: string
-          }>
+          markDefs?: Array<
+            | {
+                glossary?: {
+                  _ref: string
+                  _type: 'reference'
+                  _weak?: boolean
+                  [internalGroqTypeReferenceTo]?: 'glossary'
+                }
+                _type: 'glossaryTerm'
+                _key: string
+              }
+            | {
+                linkType?: 'href' | 'page' | 'pattern'
+                href?: string
+                page?: {
+                  _ref: string
+                  _type: 'reference'
+                  _weak?: boolean
+                  [internalGroqTypeReferenceTo]?: 'page'
+                }
+                pattern?: {
+                  _ref: string
+                  _type: 'reference'
+                  _weak?: boolean
+                  [internalGroqTypeReferenceTo]?: 'pattern'
+                }
+                openInNewTab?: boolean
+                _type: 'link'
+                _key: string
+              }
+          >
           level?: number
           _type: 'block'
           _key: string
@@ -2763,25 +3055,37 @@ export type PATTERNS_PAGE_QUERYResult = {
             }>
             style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
             listItem?: 'bullet'
-            markDefs?: Array<{
-              linkType?: 'href' | 'page' | 'pattern'
-              href?: string
-              page?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'page'
-              }
-              pattern?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'pattern'
-              }
-              openInNewTab?: boolean
-              _type: 'link'
-              _key: string
-            }>
+            markDefs?: Array<
+              | {
+                  glossary?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'glossary'
+                  }
+                  _type: 'glossaryTerm'
+                  _key: string
+                }
+              | {
+                  linkType?: 'href' | 'page' | 'pattern'
+                  href?: string
+                  page?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'page'
+                  }
+                  pattern?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'pattern'
+                  }
+                  openInNewTab?: boolean
+                  _type: 'link'
+                  _key: string
+                }
+            >
             level?: number
             _type: 'block'
             _key: string
@@ -2791,7 +3095,7 @@ export type PATTERNS_PAGE_QUERYResult = {
   > | null
 } | null
 // Variable: ABOUT_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'about'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current      }    },    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    }  }
+// Query: *[_type == 'page' && slug.current == 'about'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    }  }
 export type ABOUT_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -2806,15 +3110,28 @@ export type ABOUT_PAGE_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page: string | null
-      pattern: string | null
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }> | null
+    markDefs: Array<
+      | {
+          glossary: {
+            _id: string
+            title: string | null
+          } | null
+          _type: 'glossaryTerm'
+          _key: string
+          page: null
+          pattern: null
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page: string | null
+          pattern: string | null
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+          glossary: null
+        }
+    > | null
     level?: number
     _type: 'block'
     _key: string
@@ -2833,15 +3150,28 @@ export type ABOUT_PAGE_QUERYResult = {
           }>
           style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
           listItem?: 'bullet'
-          markDefs: Array<{
-            linkType?: 'href' | 'page' | 'pattern'
-            href?: string
-            page: string | null
-            pattern: string | null
-            openInNewTab?: boolean
-            _type: 'link'
-            _key: string
-          }> | null
+          markDefs: Array<
+            | {
+                glossary: {
+                  _id: string
+                  title: string | null
+                } | null
+                _type: 'glossaryTerm'
+                _key: string
+                page: null
+                pattern: null
+              }
+            | {
+                linkType?: 'href' | 'page' | 'pattern'
+                href?: string
+                page: string | null
+                pattern: string | null
+                openInNewTab?: boolean
+                _type: 'link'
+                _key: string
+                glossary: null
+              }
+          > | null
           level?: number
           _type: 'block'
           _key: string
@@ -2867,25 +3197,37 @@ export type ABOUT_PAGE_QUERYResult = {
             }>
             style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
             listItem?: 'bullet'
-            markDefs?: Array<{
-              linkType?: 'href' | 'page' | 'pattern'
-              href?: string
-              page?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'page'
-              }
-              pattern?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'pattern'
-              }
-              openInNewTab?: boolean
-              _type: 'link'
-              _key: string
-            }>
+            markDefs?: Array<
+              | {
+                  glossary?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'glossary'
+                  }
+                  _type: 'glossaryTerm'
+                  _key: string
+                }
+              | {
+                  linkType?: 'href' | 'page' | 'pattern'
+                  href?: string
+                  page?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'page'
+                  }
+                  pattern?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'pattern'
+                  }
+                  openInNewTab?: boolean
+                  _type: 'link'
+                  _key: string
+                }
+            >
             level?: number
             _type: 'block'
             _key: string
@@ -2895,7 +3237,7 @@ export type ABOUT_PAGE_QUERYResult = {
   > | null
 } | null
 // Variable: HOME_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == '/'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current      }    },    // Full content blocks, including contentList sections    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    },    // Convenience projections for specific content lists by title    "audiences": content[_type == 'contentList' && title == 'Audiences'][0].items[]{      _key,      title,      description    },    "values": content[_type == 'contentList' && title == 'Values'][0].items[]{      _key,      title,      description    }  }
+// Query: *[_type == 'page' && slug.current == '/'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    // Full content blocks, including contentList sections    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    },    // Convenience projections for specific content lists by title    "audiences": content[_type == 'contentList' && title == 'Audiences'][0].items[]{      _key,      title,      description    },    "values": content[_type == 'contentList' && title == 'Values'][0].items[]{      _key,      title,      description    }  }
 export type HOME_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -2910,15 +3252,28 @@ export type HOME_PAGE_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page: string | null
-      pattern: string | null
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }> | null
+    markDefs: Array<
+      | {
+          glossary: {
+            _id: string
+            title: string | null
+          } | null
+          _type: 'glossaryTerm'
+          _key: string
+          page: null
+          pattern: null
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page: string | null
+          pattern: string | null
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+          glossary: null
+        }
+    > | null
     level?: number
     _type: 'block'
     _key: string
@@ -2937,15 +3292,28 @@ export type HOME_PAGE_QUERYResult = {
           }>
           style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
           listItem?: 'bullet'
-          markDefs: Array<{
-            linkType?: 'href' | 'page' | 'pattern'
-            href?: string
-            page: string | null
-            pattern: string | null
-            openInNewTab?: boolean
-            _type: 'link'
-            _key: string
-          }> | null
+          markDefs: Array<
+            | {
+                glossary: {
+                  _id: string
+                  title: string | null
+                } | null
+                _type: 'glossaryTerm'
+                _key: string
+                page: null
+                pattern: null
+              }
+            | {
+                linkType?: 'href' | 'page' | 'pattern'
+                href?: string
+                page: string | null
+                pattern: string | null
+                openInNewTab?: boolean
+                _type: 'link'
+                _key: string
+                glossary: null
+              }
+          > | null
           level?: number
           _type: 'block'
           _key: string
@@ -2971,25 +3339,37 @@ export type HOME_PAGE_QUERYResult = {
             }>
             style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
             listItem?: 'bullet'
-            markDefs?: Array<{
-              linkType?: 'href' | 'page' | 'pattern'
-              href?: string
-              page?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'page'
-              }
-              pattern?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'pattern'
-              }
-              openInNewTab?: boolean
-              _type: 'link'
-              _key: string
-            }>
+            markDefs?: Array<
+              | {
+                  glossary?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'glossary'
+                  }
+                  _type: 'glossaryTerm'
+                  _key: string
+                }
+              | {
+                  linkType?: 'href' | 'page' | 'pattern'
+                  href?: string
+                  page?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'page'
+                  }
+                  pattern?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'pattern'
+                  }
+                  openInNewTab?: boolean
+                  _type: 'link'
+                  _key: string
+                }
+            >
             level?: number
             _type: 'block'
             _key: string
@@ -3009,25 +3389,37 @@ export type HOME_PAGE_QUERYResult = {
       }>
       style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
       listItem?: 'bullet'
-      markDefs?: Array<{
-        linkType?: 'href' | 'page' | 'pattern'
-        href?: string
-        page?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'page'
-        }
-        pattern?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'pattern'
-        }
-        openInNewTab?: boolean
-        _type: 'link'
-        _key: string
-      }>
+      markDefs?: Array<
+        | {
+            glossary?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'glossary'
+            }
+            _type: 'glossaryTerm'
+            _key: string
+          }
+        | {
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }
+      >
       level?: number
       _type: 'block'
       _key: string
@@ -3045,25 +3437,37 @@ export type HOME_PAGE_QUERYResult = {
       }>
       style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
       listItem?: 'bullet'
-      markDefs?: Array<{
-        linkType?: 'href' | 'page' | 'pattern'
-        href?: string
-        page?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'page'
-        }
-        pattern?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'pattern'
-        }
-        openInNewTab?: boolean
-        _type: 'link'
-        _key: string
-      }>
+      markDefs?: Array<
+        | {
+            glossary?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'glossary'
+            }
+            _type: 'glossaryTerm'
+            _key: string
+          }
+        | {
+            linkType?: 'href' | 'page' | 'pattern'
+            href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
+            openInNewTab?: boolean
+            _type: 'link'
+            _key: string
+          }
+      >
       level?: number
       _type: 'block'
       _key: string
@@ -3071,7 +3475,7 @@ export type HOME_PAGE_QUERYResult = {
   }> | null
 } | null
 // Variable: FAQ_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'faq'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current      }    },    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    }  }
+// Query: *[_type == 'page' && slug.current == 'faq'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    }  }
 export type FAQ_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -3086,15 +3490,28 @@ export type FAQ_PAGE_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page: string | null
-      pattern: string | null
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }> | null
+    markDefs: Array<
+      | {
+          glossary: {
+            _id: string
+            title: string | null
+          } | null
+          _type: 'glossaryTerm'
+          _key: string
+          page: null
+          pattern: null
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page: string | null
+          pattern: string | null
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+          glossary: null
+        }
+    > | null
     level?: number
     _type: 'block'
     _key: string
@@ -3113,15 +3530,28 @@ export type FAQ_PAGE_QUERYResult = {
           }>
           style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
           listItem?: 'bullet'
-          markDefs: Array<{
-            linkType?: 'href' | 'page' | 'pattern'
-            href?: string
-            page: string | null
-            pattern: string | null
-            openInNewTab?: boolean
-            _type: 'link'
-            _key: string
-          }> | null
+          markDefs: Array<
+            | {
+                glossary: {
+                  _id: string
+                  title: string | null
+                } | null
+                _type: 'glossaryTerm'
+                _key: string
+                page: null
+                pattern: null
+              }
+            | {
+                linkType?: 'href' | 'page' | 'pattern'
+                href?: string
+                page: string | null
+                pattern: string | null
+                openInNewTab?: boolean
+                _type: 'link'
+                _key: string
+                glossary: null
+              }
+          > | null
           level?: number
           _type: 'block'
           _key: string
@@ -3147,25 +3577,37 @@ export type FAQ_PAGE_QUERYResult = {
             }>
             style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
             listItem?: 'bullet'
-            markDefs?: Array<{
-              linkType?: 'href' | 'page' | 'pattern'
-              href?: string
-              page?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'page'
-              }
-              pattern?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'pattern'
-              }
-              openInNewTab?: boolean
-              _type: 'link'
-              _key: string
-            }>
+            markDefs?: Array<
+              | {
+                  glossary?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'glossary'
+                  }
+                  _type: 'glossaryTerm'
+                  _key: string
+                }
+              | {
+                  linkType?: 'href' | 'page' | 'pattern'
+                  href?: string
+                  page?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'page'
+                  }
+                  pattern?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'pattern'
+                  }
+                  openInNewTab?: boolean
+                  _type: 'link'
+                  _key: string
+                }
+            >
             level?: number
             _type: 'block'
             _key: string
@@ -3175,15 +3617,34 @@ export type FAQ_PAGE_QUERYResult = {
   > | null
 } | null
 // Variable: FAQS_QUERY
-// Query: *[_type == "faq"] | order(category asc, _createdAt asc) {    _id,    title,    category,    description  }
+// Query: *[_type == "faq"] | order(category->title asc, _createdAt asc) {    _id,    title,    category->{      _id,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      }    },    description[]  }
 export type FAQS_QUERYResult = Array<{
   _id: string
   title: string | null
   category: {
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    [internalGroqTypeReferenceTo]?: 'faqCategory'
+    _id: string
+    title: string | null
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal'
+      listItem?: never
+      markDefs: Array<{
+        href?: string
+        _type: 'link'
+        _key: string
+        page: null
+        pattern: null
+        glossary: null
+      }> | null
+      level?: number
+      _type: 'block'
+      _key: string
+    }> | null
   } | null
   description: Array<{
     children?: Array<{
@@ -3194,25 +3655,37 @@ export type FAQS_QUERYResult = Array<{
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
     level?: number
     _type: 'block'
     _key: string
@@ -3238,7 +3711,7 @@ export type ICONS_QUERYResult = Array<{
   } | null
 }>
 // Variable: ACKNOWLEDGEMENTS_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'acknowledgements'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current      }    },    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    }  }
+// Query: *[_type == 'page' && slug.current == 'acknowledgements'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    }  }
 export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -3253,15 +3726,28 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page: string | null
-      pattern: string | null
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }> | null
+    markDefs: Array<
+      | {
+          glossary: {
+            _id: string
+            title: string | null
+          } | null
+          _type: 'glossaryTerm'
+          _key: string
+          page: null
+          pattern: null
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page: string | null
+          pattern: string | null
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+          glossary: null
+        }
+    > | null
     level?: number
     _type: 'block'
     _key: string
@@ -3280,15 +3766,28 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
           }>
           style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
           listItem?: 'bullet'
-          markDefs: Array<{
-            linkType?: 'href' | 'page' | 'pattern'
-            href?: string
-            page: string | null
-            pattern: string | null
-            openInNewTab?: boolean
-            _type: 'link'
-            _key: string
-          }> | null
+          markDefs: Array<
+            | {
+                glossary: {
+                  _id: string
+                  title: string | null
+                } | null
+                _type: 'glossaryTerm'
+                _key: string
+                page: null
+                pattern: null
+              }
+            | {
+                linkType?: 'href' | 'page' | 'pattern'
+                href?: string
+                page: string | null
+                pattern: string | null
+                openInNewTab?: boolean
+                _type: 'link'
+                _key: string
+                glossary: null
+              }
+          > | null
           level?: number
           _type: 'block'
           _key: string
@@ -3314,25 +3813,37 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
             }>
             style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
             listItem?: 'bullet'
-            markDefs?: Array<{
-              linkType?: 'href' | 'page' | 'pattern'
-              href?: string
-              page?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'page'
-              }
-              pattern?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'pattern'
-              }
-              openInNewTab?: boolean
-              _type: 'link'
-              _key: string
-            }>
+            markDefs?: Array<
+              | {
+                  glossary?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'glossary'
+                  }
+                  _type: 'glossaryTerm'
+                  _key: string
+                }
+              | {
+                  linkType?: 'href' | 'page' | 'pattern'
+                  href?: string
+                  page?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'page'
+                  }
+                  pattern?: {
+                    _ref: string
+                    _type: 'reference'
+                    _weak?: boolean
+                    [internalGroqTypeReferenceTo]?: 'pattern'
+                  }
+                  openInNewTab?: boolean
+                  _type: 'link'
+                  _key: string
+                }
+            >
             level?: number
             _type: 'block'
             _key: string
@@ -3374,25 +3885,37 @@ export type FOOTER_QUERYResult = {
     }>
     style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
     listItem?: 'bullet'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'pattern'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
-      }
-      pattern?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'pattern'
-      }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
     level?: number
     _type: 'block'
     _key: string
@@ -3455,21 +3978,21 @@ export type FILTER_OPTIONS_QUERYResult = {
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "pattern" && defined(slug.current)][]{\n    _id,\n    _type,\n    title,\n    description,\n    "descriptionPlainText": pt::text(description),\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->,\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->,\n    resources[]->{\n      ...,\n      solutions[]->{...},\n    },\n  }': PATTERNS_QUERYResult
-    '*[_type == "pattern" && slug.current == $slug][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    description,\n    "descriptionPlainText": pt::text(description),\n    "slug": slug.current,\n    tags[]->{...},\n\t    audiences[]->{...},\n\t    theme->{...},\n    solutions[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      description,\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      description,\n      links,\n      solutions[]->{...},\n    },\n  }': PATTERN_QUERYResult
+    '*[_type == "pattern" && defined(slug.current)][]{\n    _id,\n    _type,\n    title,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->,\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->,\n    resources[]->{\n      ...,\n      solutions[]->{...},\n    },\n  }': PATTERNS_QUERYResult
+    '*[_type == "pattern" && slug.current == $slug][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    "slug": slug.current,\n    tags[]->{...},\n\t    audiences[]->{...},\n\t    theme->{...},\n    solutions[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      links,\n      solutions[]->{...},\n    },\n  }': PATTERN_QUERYResult
     '*[_type == "pattern" && defined(slug.current)]{\n    "slug": slug.current\n  }': PATTERN_PAGES_SLUGS_QUERYResult
     '*[_type == "pattern" && slug.current == $slug][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    description,\n    "descriptionPlainText": pt::text(description),\n    "slug": slug.current,\n    "tagIds": tags[]._ref,\n    "audienceIds": audiences[]._ref,\n    "themeId": theme._ref,\n    "solutionIds": solutions[]._ref,\n    "resourceIds": resources[]._ref\n  }': PATTERN_BASE_QUERYResult
-    '*[_type == "solution" && _id in $ids]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    description,\n    audiences[]->{\n      _id,\n      _type,\n      title\n    }\n  }': SOLUTIONS_BY_IDS_QUERYResult
-    '*[_type == "resource" && _id in $ids]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    description,\n    links,\n    "solutionIds": solutions[]._ref\n  }': RESOURCES_BY_IDS_QUERYResult
+    '*[_type == "solution" && _id in $ids]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    audiences[]->{\n      _id,\n      _type,\n      title\n    }\n  }': SOLUTIONS_BY_IDS_QUERYResult
+    '*[_type == "resource" && _id in $ids]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    links,\n    "solutionIds": solutions[]._ref\n  }': RESOURCES_BY_IDS_QUERYResult
     '*[_type == "tag" && _id in $ids]{\n    _id,\n    _type,\n    title\n  }': TAGS_BY_IDS_QUERYResult
-    '\n  *[_type == \'page\' && slug.current == \'glossary\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n  }': GLOSSARY_PAGE_QUERYResult
+    '\n  *[_type == \'page\' && slug.current == \'glossary\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n  }': GLOSSARY_PAGE_QUERYResult
     '\n  *[_type == "glossary"] | order(title asc) {\n    _id,\n    title,\n    description\n  }': GLOSSARY_TERMS_QUERYResult
     '*[_type == "audience" && _id in $ids]{\n    _id,\n    _type,\n    title,\n    description\n  }': AUDIENCES_BY_IDS_QUERYResult
     '*[_type == "theme" && _id == $id][0]{\n    _id,\n    _type,\n    title\n  }': THEME_BY_ID_QUERYResult
     '*[_type == $type && defined(slug.current)]{\n    "slug": slug.current\n  }': SLUGS_BY_TYPE_QUERYResult
     '*[_type == "page" && defined(slug.current)]{\n    "slug": slug.current\n  }': PAGES_SLUGS_QUERYResult
-    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n  }': PAGE_BY_SLUG_QUERYResult
-    '\n  *[_type == \'page\' && slug.current == \'explore\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n  }': EXPLORE_PAGE_QUERYResult
+    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n  }': PAGE_BY_SLUG_QUERYResult
+    '\n  *[_type == \'page\' && slug.current == \'explore\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n  }': EXPLORE_PAGE_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current)][]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->,\n    resources[]->{\n      ...,\n      solutions[]->{...},\n    },\n  }': PATTERNS_WITH_THEMES_QUERYResult
     '\n  *[_type == "theme" && defined(_id)] | order(title asc) {\n    _id,\n    title,\n    description,\n    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id)] {\n      _id,\n      _type,\n      title,\n      description,\n      "slug": slug.current,\n      tags[]->,\n      audiences[]->{\n        _id,\n        title\n      },\n      theme->{\n        _id,\n        title,\n        description\n      },\n      solutions[]->,\n      resources[]->{\n        ...,\n        solutions[]->{...},\n      },\n    }\n  }[count(patterns) > 0]\n': PATTERNS_GROUPED_BY_THEME_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Enhanced search scoring across relevant fields\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_QUERYResult
@@ -3482,15 +4005,15 @@ declare module '@sanity/client' {
     '\n  *[_type == "tag"] | order(title asc) {\n    _id,\n    title,\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current\n    }\n  }[count(patterns) > 0]\n': TAGS_WITH_PATTERNS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'tags\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': TAGS_PAGE_QUERYResult
     "\n  *[_type == 'carrierBag'][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    information,\n  }\n": CARRIER_BAG_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs]{\n    ...,\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      _type,\n      title,\n      description,\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      title,\n      description,\n      links,\n      solutions[]->{ _id, title }\n    }\n  }\n': PATTERNS_BY_SLUGS_QUERYResult
-    '\n  *[_type == \'page\' && slug.current == \'values\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': VALUES_PAGE_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs]{\n    ...,\n    _id,\n    _type,\n    title,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      _type,\n      title,\n      description,\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      title,\n      description,\n      links,\n      solutions[]->{ _id, title }\n    }\n  }\n': PATTERNS_BY_SLUGS_QUERYResult
+    '\n  *[_type == \'page\' && slug.current == \'values\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': VALUES_PAGE_QUERYResult
     "\n  *[_type == 'page' && slug.current == 'patterns'][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    description,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body,\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n": PATTERNS_PAGE_QUERYResult
-    '\n  *[_type == \'page\' && slug.current == \'about\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': ABOUT_PAGE_QUERYResult
-    '\n  *[_type == \'page\' && slug.current == \'/\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    // Full content blocks, including contentList sections\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    },\n    // Convenience projections for specific content lists by title\n    "audiences": content[_type == \'contentList\' && title == \'Audiences\'][0].items[]{\n      _key,\n      title,\n      description\n    },\n    "values": content[_type == \'contentList\' && title == \'Values\'][0].items[]{\n      _key,\n      title,\n      description\n    }\n  }\n': HOME_PAGE_QUERYResult
-    '\n  *[_type == \'page\' && slug.current == \'faq\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': FAQ_PAGE_QUERYResult
-    '\n  *[_type == "faq"] | order(category asc, _createdAt asc) {\n    _id,\n    title,\n    category,\n    description\n  }\n': FAQS_QUERYResult
+    '\n  *[_type == \'page\' && slug.current == \'about\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': ABOUT_PAGE_QUERYResult
+    '\n  *[_type == \'page\' && slug.current == \'/\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    // Full content blocks, including contentList sections\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    },\n    // Convenience projections for specific content lists by title\n    "audiences": content[_type == \'contentList\' && title == \'Audiences\'][0].items[]{\n      _key,\n      title,\n      description\n    },\n    "values": content[_type == \'contentList\' && title == \'Values\'][0].items[]{\n      _key,\n      title,\n      description\n    }\n  }\n': HOME_PAGE_QUERYResult
+    '\n  *[_type == \'page\' && slug.current == \'faq\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': FAQ_PAGE_QUERYResult
+    '\n  *[_type == "faq"] | order(category->title asc, _createdAt asc) {\n    _id,\n    title,\n    category->{\n      _id,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      }\n    },\n    description[]\n  }\n': FAQS_QUERYResult
     '\n  *[_type == "icon"] | order(title asc) {\n    _id,\n    _type,\n    title,\n    svg\n  }\n': ICONS_QUERYResult
-    '\n  *[_type == \'page\' && slug.current == \'acknowledgements\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': ACKNOWLEDGEMENTS_PAGE_QUERYResult
+    '\n  *[_type == \'page\' && slug.current == \'acknowledgements\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': ACKNOWLEDGEMENTS_PAGE_QUERYResult
     '\n  *[_type == \'footer\'][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    externalLinks[]{\n      _key,\n      label,\n      url\n    },\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n    license\n  }\n': FOOTER_QUERYResult
     '\n  *[_type == "pattern" && _id in $patternIds]{\n    _id,\n    _updatedAt\n  }\n': PATTERNS_STALENESS_CHECK_QUERYResult
     '\n  *[_type == "audience"] | order(title asc) {\n    _id,\n    title,\n    "value": _id,\n    "label": title\n  }\n': AUDIENCES_QUERYResult

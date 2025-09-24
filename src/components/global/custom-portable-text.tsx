@@ -16,13 +16,9 @@ import {
 	type PortableTextComponents,
 } from "next-sanity";
 
-import {
-	type GlossaryTerm,
-	processTextWithGlossaryTerms,
-} from "~/lib/glossary-utils";
+import type { GlossaryTerm } from "~/lib/glossary-utils";
 import { cn } from "~/lib/utils";
 import { GlossaryPill } from "./glossary-pill";
-import { useGlossary } from "./glossary-provider";
 import ResolvedLink from "./resolved-link";
 
 export function CustomPortableText({
@@ -34,59 +30,19 @@ export function CustomPortableText({
 	className?: string;
 	value: PortableTextBlock[];
 	as?: React.ElementType;
-	glossaryTerms?: GlossaryTerm[];
+	glossaryTerms?: GlossaryTerm[]; // kept for backward-compat; no longer used for auto-detection
 }) {
-	const glossaryStore = useGlossary();
-
-	const processText = (text: string, blockKey?: string) => {
-		if (!glossaryTerms || glossaryTerms.length === 0) {
-			return text;
-		}
-
-		return processTextWithGlossaryTerms(
-			text,
-			glossaryTerms,
-			(term, text, key, shouldStyle) => (
-				<GlossaryPill key={key} term={term} shouldStyle={shouldStyle}>
-					{text}
-				</GlossaryPill>
-			),
-			glossaryStore.hasSeenTerm,
-			glossaryStore.addSeenTerm,
-		);
-	};
+	// Glossary terms are now editor-annotated; no auto-detection during render.
 
 	const components: PortableTextComponents = {
-		block: {
-			normal: ({ children, value }) => {
-				const processedChildren = Array.isArray(children)
-					? children.map((child, index) => {
-							if (typeof child === "string") {
-								return processText(child, value?._key);
-							}
-							return child;
-						})
-					: typeof children === "string"
-						? processText(children, value?._key)
-						: children;
-
-				return <p className={className}>{processedChildren}</p>;
+block: {
+			normal: ({ children }) => {
+				return <p className={className}>{children}</p>;
 			},
 			h1: ({ children, value }) => {
-				const processedChildren = Array.isArray(children)
-					? children.map((child, index) => {
-							if (typeof child === "string") {
-								return processText(child, value?._key);
-							}
-							return child;
-						})
-					: typeof children === "string"
-						? processText(children, value?._key)
-						: children;
-
 				return (
 					<h1 className={cn(className, "group relative")}>
-						{processedChildren}
+						{children}
 						<a
 							href={`#${value?._key}`}
 							className="-ml-6 absolute top-0 bottom-0 left-0 flex items-center opacity-0 transition-opacity group-hover:opacity-100"
@@ -111,20 +67,9 @@ export function CustomPortableText({
 				);
 			},
 			h2: ({ children, value }) => {
-				const processedChildren = Array.isArray(children)
-					? children.map((child, index) => {
-							if (typeof child === "string") {
-								return processText(child, value?._key);
-							}
-							return child;
-						})
-					: typeof children === "string"
-						? processText(children, value?._key)
-						: children;
-
 				return (
 					<h2 className={cn(className, "group relative")}>
-						{processedChildren}
+						{children}
 						<a
 							href={`#${value?._key}`}
 							className="-ml-6 absolute top-0 bottom-0 left-0 flex items-center opacity-0 transition-opacity group-hover:opacity-100"
@@ -148,55 +93,44 @@ export function CustomPortableText({
 					</h2>
 				);
 			},
-			h3: ({ children, value }) => {
-				const processedChildren = Array.isArray(children)
-					? children.map((child, index) => {
-							if (typeof child === "string") {
-								return processText(child, value?._key);
-							}
-							return child;
-						})
-					: typeof children === "string"
-						? processText(children, value?._key)
-						: children;
-
-				return <h3 className={className}>{processedChildren}</h3>;
+			h3: ({ children }) => {
+				return <h3 className={className}>{children}</h3>;
 			},
-			h4: ({ children, value }) => {
-				const processedChildren = Array.isArray(children)
-					? children.map((child, index) => {
-							if (typeof child === "string") {
-								return processText(child, value?._key);
-							}
-							return child;
-						})
-					: typeof children === "string"
-						? processText(children, value?._key)
-						: children;
-
-				return <h4 className={className}>{processedChildren}</h4>;
+			h4: ({ children }) => {
+				return <h4 className={className}>{children}</h4>;
 			},
-			blockquote: ({ children, value }) => {
-				const processedChildren = Array.isArray(children)
-					? children.map((child, index) => {
-							if (typeof child === "string") {
-								return processText(child, value?._key);
-							}
-							return child;
-						})
-					: typeof children === "string"
-						? processText(children, value?._key)
-						: children;
-
-				return <blockquote>{processedChildren}</blockquote>;
+			blockquote: ({ children }) => {
+				return <blockquote>{children}</blockquote>;
 			},
 		},
-		marks: {
+marks: {
 			link: ({ children, value: link }) => {
 				return (
 					<ResolvedLink link={link} forceNewTab={Boolean(link?.openInNewTab)}>
 						{children}
 					</ResolvedLink>
+				);
+			},
+			glossaryTerm: ({ children, value }) => {
+				// value.glossary may be a resolved object from queries, fallback to children text
+				const v = value as unknown as { glossary?: { _id?: string; title?: string } };
+				const titleFromValue = v?.glossary?.title;
+				const idFromValue = v?.glossary?._id ?? "";
+				const childText = Array.isArray(children)
+					? children.filter((c): c is string => typeof c === "string").join("")
+					: typeof children === "string"
+						? children
+						: undefined;
+				const term: GlossaryTerm | null = titleFromValue
+					? { _id: idFromValue, title: titleFromValue }
+					: childText
+						? { _id: idFromValue, title: childText }
+						: null;
+				if (!term) return <>{children}</>;
+				return (
+					<GlossaryPill term={term} shouldStyle>
+						{children}
+					</GlossaryPill>
 				);
 			},
 			strong: ({ children }) => (
@@ -209,33 +143,11 @@ export function CustomPortableText({
 			number: ({ children }) => <ol>{children}</ol>,
 		},
 		listItem: {
-			bullet: ({ children, value }) => {
-				const processedChildren = Array.isArray(children)
-					? children.map((child, index) => {
-							if (typeof child === "string") {
-								return processText(child, value?._key);
-							}
-							return child;
-						})
-					: typeof children === "string"
-						? processText(children, value?._key)
-						: children;
-
-				return <li>{processedChildren}</li>;
+			bullet: ({ children }) => {
+				return <li>{children}</li>;
 			},
-			number: ({ children, value }) => {
-				const processedChildren = Array.isArray(children)
-					? children.map((child, index) => {
-							if (typeof child === "string") {
-								return processText(child, value?._key);
-							}
-							return child;
-						})
-					: typeof children === "string"
-						? processText(children, value?._key)
-						: children;
-
-				return <li>{processedChildren}</li>;
+			number: ({ children }) => {
+				return <li>{children}</li>;
 			},
 		},
 	};
