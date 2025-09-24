@@ -448,6 +448,15 @@
 		@apply prose max-w-none text-neutral-700 text-base font-normal md:text-base text-left dark:text-neutral-300;
 	}
 
+	.text-box-trim {
+		/* Experimental CSS properties not supported by Firefox yet */
+		/* text-box-trim: trim-both;
+		text-box-edge: cap alphabetic; */
+		display: inline-block;
+		line-height: 1;
+		vertical-align: middle;
+	}
+
 	.text-button {
 		font-size: 0.875rem; /* 14px */
 		line-height: calc(1.25 / 0.875); /* 1.429 */

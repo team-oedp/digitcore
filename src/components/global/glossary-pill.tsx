@@ -34,7 +34,7 @@ export function GlossaryPill({
 		<Link
 			href={createGlossaryLink(term.title)}
 			className={cn(
-				"inline-flex cursor-pointer items-center gap-1 rounded-md text-link",
+				"inline-flex items-center gap-1 rounded-md border border-neutral-200 bg-primary/5 px-2.5 py-0 text-box-trim text-primary no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary",
 				className,
 			)}
 			title={`View definition of "${term.title}"`}
