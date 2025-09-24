@@ -413,7 +413,7 @@
 
 	/* Font utilities */
 	.text-body {
-		@apply font-signifier text-sm md:text-lg text-primary prose max-w-none dark:text-foreground;
+		@apply font-sans text-sm md:text-lg text-primary prose max-w-none dark:text-foreground;
 	}
 
 	.text-body-muted {
@@ -421,7 +421,7 @@
 	}
 
 	.text-description-muted {
-		@apply font-signifier text-sm md:text-base text-neutral-500 prose max-w-none dark:text-neutral-400;
+		@apply font-sans text-sm md:text-base text-neutral-500 prose max-w-none dark:text-neutral-400;
 	}
 
 	.text-minor {

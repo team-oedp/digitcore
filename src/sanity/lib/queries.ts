@@ -360,7 +360,7 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
       _id,
       title,
       description,
-      solution[]->{
+      solutions[]->{
         _id,
         title
       }
@@ -516,7 +516,7 @@ export const PATTERN_SIMPLE_SEARCH_QUERY = defineQuery(`
       _id,
       title,
       description,
-      solution[]->{
+      solutions[]->{
         _id,
         title
       }
@@ -564,7 +564,7 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
       _id,
       title,
       description,
-      solution[]->{
+      solutions[]->{
         _id,
         title
       }

@@ -47,8 +47,8 @@ type PatternSearchResultData = BaseSearchResultData & {
 	descriptionPlainText?: string | null;
 	theme?: {
 		_id: string;
-		title?: string;
-		description?: Array<unknown>;
+		title: string | null;
+		description: Array<unknown> | null;
 	} | null;
 	tags?: Array<{
 		_id: string;
@@ -68,10 +68,6 @@ type PatternSearchResultData = BaseSearchResultData & {
 		title?: string;
 		description?: Array<unknown>;
 		solutions?: Array<{
-			_id: string;
-			title?: string;
-		}> | null;
-		solution?: Array<{
 			_id: string;
 			title?: string;
 		}> | null;

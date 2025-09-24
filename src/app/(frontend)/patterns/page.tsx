@@ -17,6 +17,17 @@ import type {
 
 type PatternWithTheme = PATTERNS_WITH_THEMES_QUERYResult[0];
 
+type ThemeGroup = {
+	theme: NonNullable<PatternWithTheme["theme"]>;
+	patterns: PatternWithTheme[];
+};
+
+// Type assertion function to align Sanity types with SearchResultItem expectations
+function preparePatternForSearchResult(pattern: PatternWithTheme) {
+	// Type assertion due to complex Sanity type structure
+	return pattern as Parameters<typeof SearchResultItem>[0]["pattern"];
+}
+
 export default async function PatternsPage() {
 	const isDraftMode = (await draftMode()).isEnabled;
 
@@ -55,13 +66,7 @@ export default async function PatternsPage() {
 	);
 
 	// Group patterns by theme
-	const themeGroups = new Map<
-		string,
-		{
-			theme: NonNullable<PatternWithTheme["theme"]>;
-			patterns: PatternWithTheme[];
-		}
-	>();
+	const themeGroups = new Map<string, ThemeGroup>();
 	for (const pattern of allPatterns) {
 		if (pattern.theme?._id) {
 			const themeId = pattern.theme._id;
@@ -93,7 +98,7 @@ export default async function PatternsPage() {
 				{!allPatterns || allPatterns.length === 0 ? (
 					<div className="p-8">
 						<p className="text-body">
-							No patterns found. Please try again later.
+							No patterns found in database. Please check again later.
 						</p>
 					</div>
 				) : (
@@ -117,31 +122,7 @@ export default async function PatternsPage() {
 									<SearchResultItem
 										key={pattern._id}
 										showPatternIcon={true}
-										pattern={{
-											...pattern,
-											theme: pattern.theme
-												? {
-														_id: pattern.theme._id,
-														title:
-															pattern.theme.title === null
-																? undefined
-																: pattern.theme.title,
-														description: pattern.theme.description as
-															| unknown[]
-															| undefined,
-													}
-												: null,
-											audiences:
-												pattern.audiences?.map((aud) => ({
-													...aud,
-													title: aud.title === null ? undefined : aud.title,
-												})) ?? null,
-											resources:
-												pattern.resources?.map((resource) => ({
-													...resource,
-													solution: resource.solutions || null,
-												})) ?? null,
-										}}
+										pattern={preparePatternForSearchResult(pattern)}
 									/>
 								))}
 							</div>
