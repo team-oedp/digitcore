@@ -9,7 +9,7 @@ import type { GlossaryTerm } from "~/lib/glossary-utils";
 import { client } from "~/sanity/lib/client";
 import { GLOSSARY_TERMS_QUERY, HOME_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
-import type { ContentList, Page } from "~/sanity/sanity.types";
+import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "DIGITCORE Toolkit | Home",
@@ -38,113 +38,61 @@ export default async function Home() {
 
 	const contentSections = (data?.content ?? []) as NonNullable<Page["content"]>;
 
-	function isContentListSection(
-		section: unknown,
-	): section is ContentList & { _key?: string } {
-		if (typeof section !== "object" || section === null) return false;
-		return (
-			"_type" in section &&
-			((section as { _type?: unknown })._type === "contentList" ||
-				(section as { _type?: unknown })._type === "cardCarousel") // Support legacy data
-		);
-	}
-
-	// Group content sections with their following content lists
-	function groupSections() {
-		const groups: Array<{
-			content?: (typeof contentSections)[0];
-			contentLists: Array<(typeof contentSections)[0]>;
-		}> = [];
-
-		let currentGroup: {
-			content?: (typeof contentSections)[0];
-			contentLists: Array<(typeof contentSections)[0]>;
-		} = { contentLists: [] };
-
-		for (const section of contentSections) {
-			if (section._type === "content") {
-				// If we have a previous group, push it
-				if (currentGroup.content || currentGroup.contentLists.length > 0) {
-					groups.push(currentGroup);
-				}
-				// Start a new group with this content section
-				currentGroup = { content: section, contentLists: [] };
-			} else if (isContentListSection(section)) {
-				// Add this content list to the current group
-				currentGroup.contentLists.push(section);
-			}
-		}
-
-		// Push the final group if it has content
-		if (currentGroup.content || currentGroup.contentLists.length > 0) {
-			groups.push(currentGroup);
-		}
-
-		return groups;
-	}
-
-	const sectionGroups = groupSections();
-
 	return (
 		<PageWrapper>
 			<div className="pb-44">
 				<PageHeading title="Home" />
 				<div className="flex flex-col gap-20 pt-20 lg:gap-60 lg:pt-60">
-					{sectionGroups.map((group, groupIndex) => (
-						<section
-							key={group.content?._key || `group-${groupIndex}`}
-							className="flex flex-col gap-5"
-						>
-							{/* Render the content section */}
-							{group.content && group.content._type === "content" && (
-								<>
-									{group.content.heading && (
-										<SectionHeading heading={group.content.heading} />
+					{contentSections.map((section, sectionIndex) => {
+						if (section._type === "content") {
+							return (
+								<section
+									key={section._key || `content-${sectionIndex}`}
+									className="flex flex-col gap-5"
+								>
+									{section.heading && (
+										<SectionHeading heading={section.heading} />
 									)}
-									{group.content.body && (
+									{section.body && (
 										<CustomPortableText
-											value={group.content.body as PortableTextBlock[]}
+											value={section.body as PortableTextBlock[]}
 											className="text-body"
 											glossaryTerms={glossaryTerms}
 										/>
 									)}
-								</>
-							)}
+								</section>
+							);
+						}
 
-							{/* Render all content lists that belong to this content section */}
-							{group.contentLists.map((contentList, listIndex) => {
-								if (!isContentListSection(contentList)) return null;
-
-								const listItems = (contentList as ContentList).items || [];
-
-								return (
-									<div
-										key={contentList._key || `list-${listIndex}`}
-										className="mt-8 mb-8 space-y-6"
-									>
-										{Array.isArray(listItems) &&
-											listItems.length > 0 &&
-											listItems.slice(0, 6).map((item) => (
-												<div key={item._key} className="pl-8">
-													<div className="mb-3 pb-2">
-														<h3 className="text-heading-compact">
-															{item.title}
-														</h3>
-													</div>
-													{item.description && (
-														<CustomPortableText
-															value={item.description as PortableTextBlock[]}
-															className="mt-3 text-body"
-															glossaryTerms={glossaryTerms}
-														/>
-													)}
+						if (section._type === "contentList") {
+							const listItems = section.items || [];
+							return (
+								<section
+									key={section._key || `contentList-${sectionIndex}`}
+									className="mt-8 mb-8 space-y-6"
+								>
+									{Array.isArray(listItems) &&
+										listItems.length > 0 &&
+										listItems.slice(0, 6).map((item) => (
+											<div key={item._key} className="pl-8">
+												<div className="mb-3 pb-2">
+													<h3 className="text-heading-compact">{item.title}</h3>
 												</div>
-											))}
-									</div>
-								);
-							})}
-						</section>
-					))}
+												{item.description && (
+													<CustomPortableText
+														value={item.description as PortableTextBlock[]}
+														className="mt-3 text-body"
+														glossaryTerms={glossaryTerms}
+													/>
+												)}
+											</div>
+										))}
+								</section>
+							);
+						}
+
+						return null;
+					})}
 				</div>
 			</div>
 		</PageWrapper>

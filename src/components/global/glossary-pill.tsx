@@ -11,13 +11,25 @@ type GlossaryPillProps = {
 	term: GlossaryTerm;
 	children: React.ReactNode;
 	className?: string;
+	shouldStyle?: boolean;
 };
 
 /**
- * Component that renders a glossary term as a styled pill
- * Clicking on the pill navigates to the glossary page with the term highlighted
+ * Component that renders a glossary term as a styled pill or plain text
+ * Only first occurrences get styled with icon and link
  */
-export function GlossaryPill({ term, children, className }: GlossaryPillProps) {
+export function GlossaryPill({
+	term,
+	children,
+	className,
+	shouldStyle = true,
+}: GlossaryPillProps) {
+	// If this is not the first occurrence, render as plain text
+	if (!shouldStyle) {
+		return <>{children}</>;
+	}
+
+	// First occurrence gets icon and link
 	return (
 		<Link
 			href={createGlossaryLink(term.title)}
