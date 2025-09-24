@@ -448,6 +448,11 @@
 		@apply prose max-w-none text-neutral-700 text-base font-normal md:text-base text-left dark:text-neutral-300;
 	}
 
+	/* for inline links and glossary pill elements */
+	.pill-tight {
+		@apply inline-flex leading-[0.9] align-middle items-center;
+	}
+
 	.text-box-trim {
 		/* Experimental CSS properties not supported by Firefox yet */
 		/* text-box-trim: trim-both;
