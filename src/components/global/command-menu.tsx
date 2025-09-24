@@ -113,9 +113,9 @@ export function CommandMenu() {
 	const pathname = usePathname();
 
 	const { resolvedTheme: theme } = useTheme();
-	const _patternSlug = pathname.startsWith("/pattern/")
+	const _patternSlug = pathname?.startsWith("/pattern/")
 		? pathname.split("/").pop()
-		: undefined;
+		: null;
 
 	// Comprehensive search using enhanced server-side search action
 	const [query, setQuery] = useState("");
@@ -239,8 +239,8 @@ export function CommandMenu() {
 		if (pathname === "/glossary") return "Glossary";
 		if (pathname === "/onboarding") return "Onboarding";
 		if (pathname === "/carrier-bag") return "Carrier Bag";
-		if (pathname.startsWith("/pattern/")) return "Pattern";
-		return pathname.split("/").pop()?.replace(/-/g, " ") || "Unknown";
+		if (pathname?.startsWith("/pattern/")) return "Pattern";
+		return pathname?.split("/").pop()?.replace(/-/g, " ") || "Unknown";
 	};
 
 	const currentPage = getCurrentPageTitle();

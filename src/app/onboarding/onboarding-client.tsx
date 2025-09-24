@@ -159,7 +159,7 @@ export function OnboardingClient({
 	const router = useRouter();
 
 	const initialStep = (() => {
-		const value = Number(searchParams.get("step") ?? "1");
+		const value = Number(searchParams?.get("step") ?? "1");
 		return value >= 1 && value <= 3 ? value : 1;
 	})();
 
@@ -168,12 +168,12 @@ export function OnboardingClient({
 	);
 	const [isTransitioning, setIsTransitioning] = useState(false);
 
-	const patternSlug = (searchParams.get("pattern") ?? undefined) as
+	const patternSlug = (searchParams?.get("pattern") ?? undefined) as
 		| string
 		| undefined;
 
 	// Mark onboarding as seen unless the user arrived via the header override flag
-	const headerOverride = searchParams.get("via") === "header";
+	const headerOverride = searchParams?.get("via") === "header";
 	const setSeen = useOnboardingStore((s) => s.setSeen);
 	const setSkipped = useOnboardingStore((s) => s.setSkipped);
 
@@ -197,7 +197,7 @@ export function OnboardingClient({
 			setIsTransitioning(false);
 		}, 300);
 
-		const params = new URLSearchParams(searchParams.toString());
+		const params = new URLSearchParams(searchParams?.toString());
 		params.set("step", String(n));
 		router.replace(`?${params.toString()}`, { scroll: false });
 	};
