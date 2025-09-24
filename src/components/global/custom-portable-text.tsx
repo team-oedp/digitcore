@@ -35,7 +35,7 @@ export function CustomPortableText({
 	// Glossary terms are now editor-annotated; no auto-detection during render.
 
 	const components: PortableTextComponents = {
-block: {
+		block: {
 			normal: ({ children }) => {
 				return <p className={className}>{children}</p>;
 			},
@@ -103,7 +103,7 @@ block: {
 				return <blockquote>{children}</blockquote>;
 			},
 		},
-marks: {
+		marks: {
 			link: ({ children, value: link }) => {
 				return (
 					<ResolvedLink link={link} forceNewTab={Boolean(link?.openInNewTab)}>
@@ -113,7 +113,9 @@ marks: {
 			},
 			glossaryTerm: ({ children, value }) => {
 				// value.glossary may be a resolved object from queries, fallback to children text
-				const v = value as unknown as { glossary?: { _id?: string; title?: string } };
+				const v = value as unknown as {
+					glossary?: { _id?: string; title?: string };
+				};
 				const titleFromValue = v?.glossary?.title;
 				const idFromValue = v?.glossary?._id ?? "";
 				const childText = Array.isArray(children)

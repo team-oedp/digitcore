@@ -1,5 +1,5 @@
+import { TextIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { TextIcon } from '@sanity/icons';
 /**
  * This is the schema type for block content used in the post document type
  * Importing this type into the studio configuration's `schema` property
@@ -46,7 +46,7 @@ export const blockContentType = defineType({
 						name: "glossaryTerm",
 						type: "object",
 						title: "Glossary Term",
-            icon: TextIcon,
+						icon: TextIcon,
 						fields: [
 							defineField({
 								name: "glossary",
