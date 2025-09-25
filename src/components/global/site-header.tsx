@@ -9,6 +9,7 @@ import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { Icon } from "../shared/icon";
+import { FontToggle } from "../theme/font-toggle";
 import { LanguageSelector } from "../theme/language-selector";
 import { ModeToggle } from "../theme/mode-toggle";
 import { CommandMenu } from "./command-menu";
@@ -155,6 +156,7 @@ export function SiteHeader() {
 					</nav>
 				</div>
 				<LanguageSelector className="hidden md:block" />
+				<FontToggle className="hidden md:block" />
 				<ModeToggle className="hidden md:block" />
 				<CommandMenu />
 				<button

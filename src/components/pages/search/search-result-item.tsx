@@ -235,7 +235,7 @@ function PatternSearchResult({
 						{/* Smooth expand/collapse using CSS max-height + line clamp */}
 						<div
 							className={cn(
-								"relative overflow-hidden transition-[max-height] duration-600 ease-[cubic-bezier(0.22,1,0.36,1)]",
+								"relative overflow-hidden transition-[max-height] duration-600 ease-&lsqb;cubic-bezier(0.22,1,0.36,1)&rsqb;",
 								showFullDescription
 									? "max-h-[1500px]"
 									: "line-clamp-3 max-h-[96px]",

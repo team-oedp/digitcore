@@ -416,6 +416,17 @@
 		@apply font-signifier text-sm md:text-lg text-primary prose max-w-none dark:text-foreground;
 	}
 
+	/* Font toggle utilities */
+	.font-sans-body .text-body,
+	.font-sans-body .text-description-muted {
+		@apply font-sans;
+	}
+
+	.font-serif-body .text-body,
+	.font-serif-body .text-description-muted {
+		@apply font-signifier;
+	}
+
 	.text-body-muted {
 		@apply text-sm md:text-base text-neutral-500 prose max-w-none dark:text-neutral-400;
 	}

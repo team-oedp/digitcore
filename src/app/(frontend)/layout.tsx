@@ -15,6 +15,7 @@ import { FOOTER_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
+import { FontStoreProvider } from "~/stores/font";
 import { OnboardingStoreProvider } from "~/stores/onboarding";
 import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
@@ -57,16 +58,18 @@ export default async function Layout({
 					disableTransitionOnChange
 				>
 					<TRPCReactProvider>
-						<OnboardingStoreProvider>
-							<CarrierBagStoreProvider>
-								<PageContentStoreProvider>
-									<Suspense fallback={null}>
-										<OnboardingRedirect />
-									</Suspense>
-									<SiteLayout footerData={footerData}>{children}</SiteLayout>
-								</PageContentStoreProvider>
-							</CarrierBagStoreProvider>
-						</OnboardingStoreProvider>
+						<FontStoreProvider>
+							<OnboardingStoreProvider>
+								<CarrierBagStoreProvider>
+									<PageContentStoreProvider>
+										<Suspense fallback={null}>
+											<OnboardingRedirect />
+										</Suspense>
+										<SiteLayout footerData={footerData}>{children}</SiteLayout>
+									</PageContentStoreProvider>
+								</CarrierBagStoreProvider>
+							</OnboardingStoreProvider>
+						</FontStoreProvider>
 					</TRPCReactProvider>
 					{isDraftMode && (
 						<>

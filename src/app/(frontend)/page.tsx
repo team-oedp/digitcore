@@ -4,8 +4,10 @@ import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { HeadingMorph } from "~/components/shared/heading-morph";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import PatternCombination from "~/components/shared/pattern-combination";
 import { SectionHeading } from "~/components/shared/section-heading";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
+import { cn } from "~/lib/utils";
 import { client } from "~/sanity/lib/client";
 import { GLOSSARY_TERMS_QUERY, HOME_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -88,18 +90,45 @@ export default async function Home() {
 	return (
 		<PageWrapper>
 			<div className="pb-44">
-				<HeadingMorph />
-				<div className="flex flex-col gap-20 pt-20 lg:gap-60 lg:pt-60">
+				<HeadingMorph
+					text="Welcome to the Digital Toolkit for Collaborative Environmental Research"
+					transitionText="DIGITCORE"
+					morphDistancePx={{ base: 200, sm: 220, md: 300, lg: 300, xl: 340 }}
+					containerClass="overflow-y-auto"
+					randomizeSelection
+					fadeNonTarget
+					fadeSelectedInPlace
+					uppercasePrefix
+					distanceToDisappear={{
+						base: 320,
+						sm: 350,
+						md: 430,
+						lg: 430,
+						xl: 470,
+					}}
+					breakpoints={{ md: 765 }}
+				/>
+				<div className="flex flex-col gap-16 pt-16 lg:gap-20 lg:pt-48">
 					{sectionGroups.map((group, groupIndex) => (
 						<section
 							key={group.content?._key || `group-${groupIndex}`}
-							className="flex flex-col gap-5"
+							className={cn(
+								"flex flex-col gap-4",
+								groupIndex === 0 ? "pt-24 md:pt-70 lg:pt-70" : "",
+							)}
 						>
 							{/* Render the content section */}
 							{group.content && group.content._type === "content" && (
 								<>
 									{group.content.heading && (
-										<SectionHeading heading={group.content.heading} />
+										<>
+											{groupIndex > 0 && (
+												<div className="pb-4">
+													<PatternCombination randomPatterns={3} size="md" />
+												</div>
+											)}
+											<SectionHeading heading={group.content.heading} />
+										</>
 									)}
 									{group.content.body && (
 										<CustomPortableText
@@ -120,7 +149,7 @@ export default async function Home() {
 								return (
 									<div
 										key={contentList._key || `list-${listIndex}`}
-										className="mt-8 mb-8 space-y-6"
+										className="space-y-6"
 									>
 										{Array.isArray(listItems) &&
 											listItems.length > 0 &&

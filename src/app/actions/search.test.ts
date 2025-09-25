@@ -92,6 +92,7 @@ describe("searchPatterns", () => {
 			audiences: ["urban-planners"],
 			themes: ["sustainability"],
 			tags: ["climate-change"],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -143,6 +144,7 @@ describe("searchPatterns", () => {
 			audiences: ["students"],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -199,6 +201,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -231,6 +234,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -270,6 +274,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -342,6 +347,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		});
@@ -372,6 +378,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		});
@@ -402,6 +409,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		});
@@ -424,6 +432,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -461,6 +470,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -513,6 +523,7 @@ describe("searchPatternsWithParams", () => {
 			audiences: ["students"],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -588,6 +599,7 @@ describe("searchPatternsWithParams", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -635,6 +647,7 @@ describe("searchPatternsWithParams", () => {
 			audiences: ["students", "researchers"],
 			themes: ["sustainability", "innovation"],
 			tags: ["climate", "environment"],
+			enhance: false,
 			page: 2,
 			limit: 50,
 		};
