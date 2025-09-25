@@ -10,6 +10,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
+import { ArrowTiltButton } from "~/components/shared/arrow-tilt-button";
 import {
 	BadgeGroup,
 	BadgeGroupContainer,
@@ -207,14 +208,22 @@ function PatternSearchResult({
 					})}
 				</div>
 			)}
-			<Link
-				href={`/pattern/${pattern.slug}`}
-				className="group inline-flex items-start gap-3"
+			<div
+				className={cn(
+					"inline-flex w-full justify-between",
+					isPatternsPage && "group",
+				)}
 			>
-				<h3 className="text-left font-normal text-lg text-primary uppercase leading-none md:text-xl">
-					{title}
-				</h3>
-			</Link>
+				<Link
+					href={`/pattern/${pattern.slug}`}
+					className="inline-flex flex-1 items-start justify-start gap-3"
+				>
+					<h3 className="text-left font-normal text-lg text-primary uppercase leading-none md:text-xl">
+						{title}
+					</h3>
+				</Link>
+				{isPatternsPage && <ArrowTiltButton />}
+			</div>
 		</div>
 	);
 
