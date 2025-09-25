@@ -449,17 +449,12 @@
 	}
 
 	/* for inline links and glossary pill elements */
-	.pill-tight {
+	.text-box-trim {
 		@apply inline-flex leading-[0.9] align-middle items-center;
 	}
 
-	.text-box-trim {
-		/* Experimental CSS properties not supported by Firefox yet */
-		/* text-box-trim: trim-both;
-		text-box-edge: cap alphabetic; */
-		display: inline-block;
-		line-height: 1;
-		vertical-align: middle;
+	.pill {
+		@apply items-center gap-1 rounded-md border border-neutral-300 bg-primary/5 px-2.5 pt-0.5 pb-1 text-primary no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary;
 	}
 
 	.text-button {

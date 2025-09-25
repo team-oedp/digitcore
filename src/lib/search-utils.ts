@@ -2,6 +2,9 @@
  * Search utilities for text processing, highlighting, and truncation
  */
 
+import type { PortableTextBlock } from "next-sanity";
+export type { PortableTextBlock };
+
 export type TruncationResult = {
 	text: string;
 	isTruncated: boolean;
@@ -146,8 +149,8 @@ export function extractTextFromPortableText(
 		.map(
 			(block) =>
 				block.children
-					?.filter((child: PortableTextChild) => child._type === "span")
-					?.map((child: PortableTextChild) => child.text)
+					?.filter((child) => child._type === "span")
+					?.map((child) => child.text)
 					?.join("") || "",
 		)
 		.join(" ")
@@ -190,11 +193,3 @@ export function getMatchExplanation(
 		matchLocations,
 	};
 }
-
-// Type for Sanity Portable Text block and child
-export type PortableTextChild = { text?: string; _type: string; _key: string };
-export type PortableTextBlock = {
-	children?: PortableTextChild[];
-	_type: string;
-	_key: string;
-};

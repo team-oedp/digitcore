@@ -1,8 +1,7 @@
+import type { PortableTextBlock } from "next-sanity";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, expect, it } from "vitest";
 import {
-	type PortableTextBlock,
-	type PortableTextChild,
 	extractTextFromPortableText,
 	getMatchExplanation,
 	hasMatchInTitle,
@@ -256,7 +255,7 @@ describe("search-utils", () => {
 							_type: "link",
 							_key: "1b",
 							text: "Should be ignored",
-						} as unknown as PortableTextChild,
+						},
 					],
 				},
 			];
@@ -270,6 +269,7 @@ describe("search-utils", () => {
 				{
 					_type: "block",
 					_key: "1",
+					children: [],
 				},
 				{
 					_type: "block",

@@ -1,25 +1,27 @@
 "use client";
 
 import {
-	ArrowRight02Icon,
-	ChartRelationshipIcon,
-	Tag01Icon,
+  ArrowRight02Icon,
+  ChartRelationshipIcon,
+  Tag01Icon,
 } from "@hugeicons/core-free-icons";
+import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
 import {
-	BadgeGroup,
-	BadgeGroupContainer,
+  BadgeGroup,
+  BadgeGroupContainer,
 } from "~/components/shared/badge-group";
 import { Icon } from "~/components/shared/icon";
 import { Badge } from "~/components/ui/badge";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
-	extractTextFromPortableText,
-	getMatchExplanation,
-	highlightMatches,
-	truncateWithContext,
+  extractTextFromPortableText,
+  getMatchExplanation,
+  highlightMatches,
+  truncateWithContext,
 } from "~/lib/search-utils";
 import { cn } from "~/lib/utils";
 import { SearchResultPreview } from "./search-result-preview";
@@ -30,15 +32,7 @@ type BaseSearchResultData = {
 	_type: string;
 	title?: string | null;
 	slug?: string | null;
-	description?: Array<{
-		children?: Array<{
-			text?: string;
-			_type: string;
-			_key: string;
-		}>;
-		_type: string;
-		_key: string;
-	}> | null;
+	description?: PortableTextBlock[] | null;
 };
 
 // Pattern-specific type - Updated to handle both search results and patterns page
@@ -129,7 +123,6 @@ function SearchResultBase({
 	return (
 		<div className="relative w-full border-neutral-400 border-t border-dashed pb-9">
 			<div className="flex flex-col py-4">
-				{/* Header with title */}
 				<div className="mb-4">
 					{titleElement ? (
 						titleElement
@@ -149,7 +142,6 @@ function SearchResultBase({
 						</div>
 					)}
 				</div>
-				{/* Content area with full width */}
 				<div className="w-full space-y-4">{children}</div>
 			</div>
 		</div>
@@ -167,11 +159,15 @@ function PatternSearchResult({
 	showPatternIcon?: boolean;
 }) {
 	const [showFullDescription, setShowFullDescription] = useState(false);
+	const pathname = usePathname();
 	const title = pattern.title || "Untitled Pattern";
 	const theme = pattern.theme;
 	const tags = pattern.tags || [];
 	const audiences = pattern.audiences || [];
 	const rawDescription = pattern.description || [];
+
+	// Hide tags and audiences on /patterns page
+	const isPatternsPage = pathname === "/patterns";
 
 	// Get the pattern-specific icon
 	const PatternIcon = getPatternIconWithMapping(pattern.slug || "");
@@ -195,9 +191,9 @@ function PatternSearchResult({
 
 	// Create clickable title element using Next.js Link
 	const titleElement = (
-		<div className="flex items-start gap-3">
+		<div className="flex items-center gap-3">
 			{showPatternIcon && PatternIcon && (
-				<div className="h-6 w-6 flex-shrink-0 text-neutral-500">
+				<div className="flex h-4 w-4 flex-shrink-0 text-neutral-500">
 					{React.createElement(PatternIcon, {
 						className: "h-full w-full fill-icon/40 text-icon/70 opacity-40",
 					})}
@@ -210,9 +206,6 @@ function PatternSearchResult({
 				<h3 className="text-left font-normal text-lg text-primary uppercase leading-tight md:text-xl">
 					{title}
 				</h3>
-				<span className="mt-0.5 inline-flex items-center rounded-full border-[0.75px] border-border bg-background px-2 py-0.5 font-normal text-[10px] text-muted-foreground uppercase transition-colors group-hover:border-primary/40 group-hover:bg-primary/5 group-hover:text-primary/80">
-					View
-				</span>
 			</Link>
 		</div>
 	);
@@ -228,7 +221,6 @@ function PatternSearchResult({
 				{/* Description with Search Context */}
 				{descriptionResult.text && (
 					<div className="mb-4">
-						{/* Smooth expand/collapse using CSS max-height + line clamp */}
 						<div
 							className={cn(
 								"relative overflow-hidden transition-[max-height] duration-600 ease-[cubic-bezier(0.22,1,0.36,1)]",
@@ -245,35 +237,19 @@ function PatternSearchResult({
 							</span>
 						</div>
 
-						{/* Show more/less button below description */}
-						{descriptionResult.isTruncated && (
-							<button
-								onClick={() => setShowFullDescription(!showFullDescription)}
-								type="button"
-								aria-label={
-									showFullDescription
-										? "Collapse description"
-										: "Expand description"
-								}
-								className="mt-3 inline-flex items-center text-neutral-600 text-xs uppercase transition-colors hover:text-neutral-800 focus:text-neutral-800 focus:outline-none"
-							>
-								{showFullDescription ? "Show less" : "Show more"}
-							</button>
-						)}
-
 						{/* Match Indicators */}
 						{searchTerm &&
 							(matchExplanation.titleMatch ||
 								matchExplanation.descriptionMatch) && (
 								<div className="mt-2 flex items-center gap-2 text-description-muted">
-									<span className="text-minor">Match found in:</span>
+									<span className="text-minor">Match found in</span>
 									{matchExplanation.titleMatch && (
-										<span className="rounded bg-blue-100 px-2 py-1 text-blue-700">
+										<span className="inline-flex items-center gap-1 rounded-md bg-blue-100 px-2.5 pt-0.5 pb-1 align-middle text-blue-700 text-primary leading-[0.9] no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary">
 											Title
 										</span>
 									)}
 									{matchExplanation.descriptionMatch && (
-										<span className="rounded bg-green-100 px-2 py-1 text-green-700">
+										<span className="inline-flex items-center gap-1 rounded-md bg-green-100 px-2.5 pt-0.5 pb-1 align-middle text-green-700 text-primary leading-[0.9] no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary">
 											Description
 										</span>
 									)}
@@ -302,8 +278,8 @@ function PatternSearchResult({
 						</BadgeGroup>
 					)}
 
-					{/* Audience Badges */}
-					{audiences.length > 0 && (
+					{/* Audience Badges - Hidden on /patterns page */}
+					{!isPatternsPage && audiences.length > 0 && (
 						<BadgeGroup>
 							{audiences.map((audience) => (
 								<Badge
@@ -322,8 +298,8 @@ function PatternSearchResult({
 						</BadgeGroup>
 					)}
 
-					{/* Tag Badges */}
-					{tags.length > 0 && (
+					{/* Tag Badges - Hidden on /patterns page */}
+					{!isPatternsPage && tags.length > 0 && (
 						<BadgeGroup>
 							{tags.map((tag) => (
 								<Badge

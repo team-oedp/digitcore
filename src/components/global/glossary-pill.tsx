@@ -34,7 +34,7 @@ export function GlossaryPill({
 		<Link
 			href={createGlossaryLink(term.title)}
 			className={cn(
-				"pill-tight items-center gap-1 rounded-md border border-neutral-300 bg-primary/5 px-2.5 pt-0.5 pb-1 text-primary no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary",
+				"inline-flex items-center gap-1 rounded-md border border-neutral-300 bg-primary/5 px-2.5 pt-0.5 pb-1 align-middle text-primary leading-[0.9] no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary",
 				className,
 			)}
 			title={`View definition of "${term.title}"`}
