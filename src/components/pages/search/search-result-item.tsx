@@ -123,7 +123,7 @@ function SearchResultBase({
 	patternIcon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 }) {
 	return (
-		<div className="relative w-full border-neutral-400 border-t border-dashed pb-9">
+		<div className="relative w-full border-neutral-400 border-t border-dashed pb-9 transition-colors duration-200 ease-out hover:bg-neutral-100/50">
 			<div className="flex flex-col py-4">
 				<div className="mb-4">
 					{titleElement ? (
@@ -202,7 +202,7 @@ function PatternSearchResult({
 	const titleElement = (
 		<div className="flex items-start gap-3">
 			{showPatternIcon && PatternIcon && (
-				<div className="mt-0.5 flex h-4 w-4 flex-shrink-0 text-neutral-500">
+				<div className="mt-1 flex h-4 w-4 flex-shrink-0 text-neutral-500">
 					{React.createElement(PatternIcon, {
 						className: "h-full w-full fill-icon/40 text-icon/70 opacity-40",
 					})}
@@ -218,7 +218,7 @@ function PatternSearchResult({
 					href={`/pattern/${pattern.slug}`}
 					className="inline-flex flex-1 items-start justify-start gap-3"
 				>
-					<h3 className="text-left font-normal text-lg text-primary uppercase leading-none md:text-xl">
+					<h3 className="text-left font-normal text-lg text-primary leading-none md:text-2xl">
 						{title}
 					</h3>
 				</Link>
@@ -246,7 +246,7 @@ function PatternSearchResult({
 									: "line-clamp-3 max-h-[96px]",
 							)}
 						>
-							<span className="block text-description-muted">
+							<span className="block text-body-muted">
 								{renderHighlightedText(displayDescription, searchTerm)}
 							</span>
 						</div>
@@ -255,7 +255,7 @@ function PatternSearchResult({
 						{searchTerm &&
 							(matchExplanation.titleMatch ||
 								matchExplanation.descriptionMatch) && (
-								<div className="mt-2 flex items-center gap-2 text-description-muted">
+								<div className="mt-2 flex items-center gap-2 text-body-muted">
 									<span className="text-minor">Match found in</span>
 									{matchExplanation.titleMatch && (
 										<span className="inline-flex items-center gap-1 rounded-md bg-blue-100 px-2.5 pt-0.5 pb-1 align-middle text-blue-700 text-primary leading-[0.9] no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary">
@@ -280,7 +280,7 @@ function PatternSearchResult({
 				{/* Badges Groups */}
 				<BadgeGroupContainer>
 					{/* Theme Badges */}
-					{theme && (
+					{!isPatternsPage && theme && (
 						<BadgeGroup>
 							<Badge
 								variant="theme"
