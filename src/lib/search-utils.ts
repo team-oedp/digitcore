@@ -166,6 +166,22 @@ export function hasMatchInTitle(title: string, searchTerm: string): boolean {
 }
 
 /**
+ * Extract the first sentence from text, truncating at the first period
+ */
+export function extractFirstSentence(text: string): string {
+	if (!text) return "";
+
+	const firstPeriodIndex = text.indexOf(".");
+	if (firstPeriodIndex === -1) {
+		// No period found, return the entire text
+		return text;
+	}
+
+	// Return text up to and including the first period
+	return text.substring(0, firstPeriodIndex + 1);
+}
+
+/**
  * Generate match explanation for debugging
  */
 export function getMatchExplanation(

@@ -1,9 +1,9 @@
 "use client";
 
 import {
-  ArrowRight02Icon,
-  ChartRelationshipIcon,
-  Tag01Icon,
+	ArrowRight02Icon,
+	ChartRelationshipIcon,
+	Tag01Icon,
 } from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
@@ -11,17 +11,18 @@ import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
 import {
-  BadgeGroup,
-  BadgeGroupContainer,
+	BadgeGroup,
+	BadgeGroupContainer,
 } from "~/components/shared/badge-group";
 import { Icon } from "~/components/shared/icon";
 import { Badge } from "~/components/ui/badge";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
-  extractTextFromPortableText,
-  getMatchExplanation,
-  highlightMatches,
-  truncateWithContext,
+	extractFirstSentence,
+	extractTextFromPortableText,
+	getMatchExplanation,
+	highlightMatches,
+	truncateWithContext,
 } from "~/lib/search-utils";
 import { cn } from "~/lib/utils";
 import { SearchResultPreview } from "./search-result-preview";
@@ -173,13 +174,20 @@ function PatternSearchResult({
 	const PatternIcon = getPatternIconWithMapping(pattern.slug || "");
 
 	// Process description for search context
-	const descriptionResult = truncateWithContext(
-		extractTextFromPortableText(rawDescription),
-		searchTerm,
-		200,
-	);
+	const fullDescriptionText = extractTextFromPortableText(rawDescription);
+
+	// On patterns page, show only first sentence; otherwise use normal truncation
+	const descriptionResult = isPatternsPage
+		? {
+				text: extractFirstSentence(fullDescriptionText),
+				isTruncated: false,
+				hasMatch: false,
+				matchCount: 0,
+			}
+		: truncateWithContext(fullDescriptionText, searchTerm, 200);
+
 	const displayDescription = showFullDescription
-		? extractTextFromPortableText(rawDescription)
+		? fullDescriptionText
 		: descriptionResult.text;
 
 	// Check where matches occur
@@ -191,9 +199,9 @@ function PatternSearchResult({
 
 	// Create clickable title element using Next.js Link
 	const titleElement = (
-		<div className="flex items-center gap-3">
+		<div className="flex items-start gap-3">
 			{showPatternIcon && PatternIcon && (
-				<div className="flex h-4 w-4 flex-shrink-0 text-neutral-500">
+				<div className="mt-0.5 flex h-4 w-4 flex-shrink-0 text-neutral-500">
 					{React.createElement(PatternIcon, {
 						className: "h-full w-full fill-icon/40 text-icon/70 opacity-40",
 					})}
@@ -203,7 +211,7 @@ function PatternSearchResult({
 				href={`/pattern/${pattern.slug}`}
 				className="group inline-flex items-start gap-3"
 			>
-				<h3 className="text-left font-normal text-lg text-primary uppercase leading-tight md:text-xl">
+				<h3 className="text-left font-normal text-lg text-primary uppercase leading-none md:text-xl">
 					{title}
 				</h3>
 			</Link>
@@ -230,10 +238,7 @@ function PatternSearchResult({
 							)}
 						>
 							<span className="block text-description-muted">
-								{renderHighlightedText(
-									extractTextFromPortableText(rawDescription),
-									searchTerm,
-								)}
+								{renderHighlightedText(displayDescription, searchTerm)}
 							</span>
 						</div>
 
