@@ -10,13 +10,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
-import { ArrowTiltButton } from "~/components/shared/arrow-tilt-button";
 import {
 	BadgeGroup,
 	BadgeGroupContainer,
 } from "~/components/shared/badge-group";
 import { Icon } from "~/components/shared/icon";
 import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	extractFirstSentence,
@@ -224,7 +224,9 @@ function PatternSearchResult({
 						{title}
 					</h3>
 				</Link>
-				{isPatternsPage && <ArrowTiltButton />}
+				<Button variant="visit" size="sm" asChild className="text-sm">
+					<Link href={`/pattern/${pattern.slug}`}>Visit pattern</Link>
+				</Button>
 			</div>
 		</div>
 	);
@@ -247,7 +249,7 @@ function PatternSearchResult({
 								showFullDescription ? "max-h-[1500px]" : "line-clamp-3",
 							)}
 						>
-							<span className="block font-light text-3xl text-neutral-500">
+							<span className="block font-light text-neutral-500 text-xl">
 								{renderHighlightedText(displayDescription, searchTerm)}
 							</span>
 						</div>

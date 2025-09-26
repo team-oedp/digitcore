@@ -4,6 +4,7 @@ import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { cn } from "~/lib/utils";
 import { client } from "~/sanity/lib/client";
 import {
 	PATTERNS_PAGE_QUERY,
@@ -118,12 +119,19 @@ export default async function PatternsPage() {
 							</div>
 
 							<div className="space-y-0 pt-12">
-								{patterns.map((pattern) => (
-									<SearchResultItem
+								{patterns.map((pattern, index) => (
+									<div
 										key={pattern._id}
-										showPatternIcon={true}
-										pattern={preparePatternForSearchResult(pattern)}
-									/>
+										className={cn(
+											index === patterns.length - 1 &&
+												"border-neutral-400 border-b border-dashed",
+										)}
+									>
+										<SearchResultItem
+											showPatternIcon={true}
+											pattern={preparePatternForSearchResult(pattern)}
+										/>
+									</div>
 								))}
 							</div>
 						</div>

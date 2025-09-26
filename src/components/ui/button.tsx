@@ -25,6 +25,8 @@ const buttonVariants = cva(
 					"border-[var(--solution-button-border)] bg-[var(--solution-button-background)] text-[var(--solution-button-text)] hover:opacity-80",
 				resource:
 					"border-[var(--resource-button-border)] bg-[var(--resource-button-background)] text-[var(--resource-button-text)] hover:opacity-80",
+				visit:
+					"rounded-full border border-[var(--visit-pattern-border)] bg-[var(--visit-pattern-bg)] font-normal text-[var(--visit-pattern-text)] uppercase hover:opacity-80 focus-visible:ring-green-500/20",
 			},
 			size: {
 				default: "h-9 px-4 py-2 has-[>svg]:px-3",

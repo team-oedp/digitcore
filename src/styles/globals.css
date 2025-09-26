@@ -284,6 +284,10 @@
 	--resource-button-text: oklch(0.35 0.15 330);
 	--resource-button-background: oklch(0.9 0.1 330);
 	--resource-button-border: oklch(0.8 0.15 330);
+
+	--visit-pattern-bg: oklch(0.92 0.11 157.2);
+	--visit-pattern-border: oklch(0.86 0.14 157.2);
+	--visit-pattern-text: oklch(0.35 0.12 180);
 }
 
 .dark {
@@ -364,6 +368,10 @@
 	--page-badge-background: var(--color-magenta-light--dark);
 	--page-badge-border: var(--color-magenta-default--dark);
 	--page-badge-border-dark: var(--color-magenta-border-dark--dark);
+
+	--visit-pattern-bg: oklch(0.15 0.08 157.2);
+	--visit-pattern-border: oklch(0.25 0.1 157.2);
+	--visit-pattern-text: oklch(0.7 0.12 180);
 }
 
 @layer base {
