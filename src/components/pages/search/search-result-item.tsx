@@ -115,21 +115,28 @@ function SearchResultBase({
 	titleElement,
 	showPatternIcon = false,
 	patternIcon,
+	isPatternsPage = false,
 }: {
 	children: React.ReactNode;
 	title: string;
 	titleElement?: React.ReactNode;
 	showPatternIcon?: boolean;
 	patternIcon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
+	isPatternsPage?: boolean;
 }) {
 	return (
-		<div className="relative w-full border-neutral-400 border-t border-dashed pb-9 transition-colors duration-200 ease-out hover:bg-neutral-100/50">
+		<div
+			className={cn(
+				"relative h-[184px] w-full border-neutral-400 border-t border-dashed pb-9",
+				isPatternsPage && "group",
+			)}
+		>
 			<div className="flex flex-col py-4">
 				<div className="mb-4">
 					{titleElement ? (
 						titleElement
 					) : (
-						<div className="flex items-start gap-3">
+						<div className="flex items-start gap-8">
 							{showPatternIcon && patternIcon && (
 								<div className="h-6 w-6 flex-shrink-0 text-neutral-500">
 									{React.createElement(patternIcon, {
@@ -138,7 +145,7 @@ function SearchResultBase({
 									})}
 								</div>
 							)}
-							<h3 className="w-full text-left font-normal text-lg text-primary uppercase leading-tight md:text-xl">
+							<h3 className="w-full text-left font-light text-lg text-primary capitalize leading-tight md:text-2xl">
 								{title}
 							</h3>
 						</div>
@@ -208,17 +215,12 @@ function PatternSearchResult({
 					})}
 				</div>
 			)}
-			<div
-				className={cn(
-					"inline-flex w-full justify-between",
-					isPatternsPage && "group",
-				)}
-			>
+			<div className="inline-flex w-full justify-between">
 				<Link
 					href={`/pattern/${pattern.slug}`}
 					className="inline-flex flex-1 items-start justify-start gap-3"
 				>
-					<h3 className="text-left font-normal text-lg text-primary leading-none md:text-2xl">
+					<h3 className="text-left font-light text-lg text-primary capitalize leading-none md:text-3xl">
 						{title}
 					</h3>
 				</Link>
@@ -234,6 +236,7 @@ function PatternSearchResult({
 				titleElement={titleElement}
 				showPatternIcon={showPatternIcon}
 				patternIcon={PatternIcon}
+				isPatternsPage={isPatternsPage}
 			>
 				{/* Description with Search Context */}
 				{descriptionResult.text && (
@@ -258,17 +261,17 @@ function PatternSearchResult({
 								<div className="mt-2 flex items-center gap-2 text-body-muted">
 									<span className="text-minor">Match found in</span>
 									{matchExplanation.titleMatch && (
-										<span className="inline-flex items-center gap-1 rounded-md bg-blue-100 px-2.5 pt-0.5 pb-1 align-middle text-blue-700 text-primary leading-[0.9] no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary">
+										<span className="inline-flex items-center gap-1 rounded-md bg-blue-100 px-2.5 pt-0.5 pb-1 align-middle text-blue-700 leading-[0.9] no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary">
 											Title
 										</span>
 									)}
 									{matchExplanation.descriptionMatch && (
-										<span className="inline-flex items-center gap-1 rounded-md bg-green-100 px-2.5 pt-0.5 pb-1 align-middle text-green-700 text-primary leading-[0.9] no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary">
+										<span className="inline-flex items-center gap-1 rounded-md bg-green-100 px-2.5 pt-0.5 pb-1 align-middle text-green-700 leading-[0.9] no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary">
 											Description
 										</span>
 									)}
 									{descriptionResult.matchCount > 1 && (
-										<span className="text-description-muted">
+										<span className="text-body-muted">
 											({descriptionResult.matchCount} matches)
 										</span>
 									)}
@@ -366,7 +369,7 @@ function _ResourceSearchResult({
 	);
 
 	return (
-		<SearchResultBase title={title}>
+		<SearchResultBase title={title} isPatternsPage={false}>
 			{/* Solutions */}
 			{solutions.length > 0 && (
 				<BadgeGroup className="mb-3">
@@ -449,7 +452,7 @@ function _SolutionSearchResult({
 	);
 
 	return (
-		<SearchResultBase title={title}>
+		<SearchResultBase title={title} isPatternsPage={false}>
 			{/* Audiences */}
 			{audiences.length > 0 && (
 				<BadgeGroup className="mb-3">
