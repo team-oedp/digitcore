@@ -127,7 +127,7 @@ function SearchResultBase({
 	return (
 		<div
 			className={cn(
-				"relative h-[184px] w-full border-neutral-400 border-t border-dashed pb-9",
+				"relative h-[200px] w-full border-neutral-400 border-t border-dashed pb-0",
 				isPatternsPage && "group",
 			)}
 		>
@@ -136,7 +136,7 @@ function SearchResultBase({
 					{titleElement ? (
 						titleElement
 					) : (
-						<div className="flex items-start gap-8">
+						<div className="flex items-start gap-6">
 							{showPatternIcon && patternIcon && (
 								<div className="h-6 w-6 flex-shrink-0 text-neutral-500">
 									{React.createElement(patternIcon, {
@@ -151,7 +151,7 @@ function SearchResultBase({
 						</div>
 					)}
 				</div>
-				<div className="w-full space-y-4">{children}</div>
+				<div className="w-full space-y-0">{children}</div>
 			</div>
 		</div>
 	);
@@ -207,9 +207,9 @@ function PatternSearchResult({
 
 	// Create clickable title element using Next.js Link
 	const titleElement = (
-		<div className="flex items-start gap-3">
+		<div className="flex items-start gap-6">
 			{showPatternIcon && PatternIcon && (
-				<div className="mt-1 flex h-4 w-4 flex-shrink-0 text-neutral-500">
+				<div className="mt-1 flex h-6 w-6 flex-shrink-0 text-neutral-500">
 					{React.createElement(PatternIcon, {
 						className: "h-full w-full fill-icon/40 text-icon/70 opacity-40",
 					})}
@@ -244,12 +244,10 @@ function PatternSearchResult({
 						<div
 							className={cn(
 								"relative overflow-hidden transition-[max-height] duration-600 ease-[cubic-bezier(0.22,1,0.36,1)]",
-								showFullDescription
-									? "max-h-[1500px]"
-									: "line-clamp-3 max-h-[96px]",
+								showFullDescription ? "max-h-[1500px]" : "line-clamp-3",
 							)}
 						>
-							<span className="block text-body-muted">
+							<span className="block font-light text-3xl text-neutral-500">
 								{renderHighlightedText(displayDescription, searchTerm)}
 							</span>
 						</div>
