@@ -273,14 +273,17 @@
 	--page-badge-border: var(--color-magenta-default);
 	--page-badge-border-dark: var(--color-magenta-border-dark);
 
-	--pattern-button-text: oklch(45.48% 0.1529 142.555);
-	--pattern-button-background: oklch(0.97 0.06 140);
-	--pattern-button-border: oklch(77.44% 0.1942 154.297);
+	/* Visit Pattern Button */
+	--pattern-button-text: oklch(0.51 0.1218 156.56); /* #027A48 */
+	--pattern-button-background: oklch(0.9788 0.0221 160.24); /* #ECFDF3 */
+	--pattern-button-border: oklch(0.9039 0.1006 157.23); /* #A6F4C5 */
 
+	/* Visit Solution Button */
 	--solution-button-text: oklch(0.3 0.2 300);
 	--solution-button-background: oklch(0.9 0.08 300);
 	--solution-button-border: oklch(0.8 0.12 300);
 
+	/* Visit Resource Button */
 	--resource-button-text: oklch(0.35 0.15 330);
 	--resource-button-background: oklch(0.9 0.1 330);
 	--resource-button-border: oklch(0.8 0.15 330);
@@ -291,6 +294,8 @@
 }
 
 .dark {
+	/* TODO: check container-background color for dark mode */
+	/* --container-background */
 	--background: var(--color-neutral-950);
 	--foreground: var(--color-neutral-50);
 	--card: var(--color-neutral-900);
@@ -414,6 +419,30 @@
 }
 
 @layer utilities {
+	.border-dashed-brand {
+		--dash: 5px;
+		--gap: 3px;
+		--border-image: repeating-linear-gradient(
+			90deg,
+			var(--muted-foreground) 0,
+			var(--muted-foreground) var(--dash),
+			transparent var(--dash),
+			transparent calc(var(--dash) + var(--gap))
+		);
+	}
+
+	.border-dashed-brand-t {
+		@apply border-dashed-brand;
+		border-top: 1px solid transparent;
+		border-image: var(--border-image) 2;
+	}
+
+	.border-dashed-brand-b {
+		@apply border-dashed-brand;
+		border-bottom: 1px solid transparent;
+		border-image: var(--border-image) 2;
+	}
+
 	.scrollbar-hidden::-webkit-scrollbar {
 		display: none;
 	}

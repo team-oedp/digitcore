@@ -256,7 +256,10 @@ export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
     title,
     description,
     "slug": slug.current,
-    tags[]->,
+    tags[]->{
+      _id,
+      title
+    },
     audiences[]->{
       _id,
       title
@@ -266,10 +269,19 @@ export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
       title,
       description
     },
-    solutions[]->,
+    solutions[]->{
+      _id,
+      title,
+      description
+    },
     resources[]->{
-      ...,
-      solutions[]->{...},
+      _id,
+      title,
+      description,
+      solutions[]->{
+        _id,
+        title
+      }
     },
   }`);
 
