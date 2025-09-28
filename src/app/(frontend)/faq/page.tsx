@@ -16,7 +16,7 @@ import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
-	title: "FAQ | DIGITCORE Toolkit",
+	title: "FAQ | DIGITCORE",
 	description:
 		"Frequently asked questions about the DIGITCORE Toolkit for Collaborative Environmental Research.",
 };

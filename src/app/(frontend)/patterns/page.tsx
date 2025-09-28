@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
@@ -23,11 +24,11 @@ type ThemeGroup = {
 	patterns: PatternWithTheme[];
 };
 
-// Type assertion function to align Sanity types with SearchResultItem expectations
-function preparePatternForSearchResult(pattern: PatternWithTheme) {
-	// Type assertion due to complex Sanity type structure
-	return pattern as Parameters<typeof SearchResultItem>[0]["pattern"];
-}
+export const metadata: Metadata = {
+	title: "Patterns | DIGITCORE",
+	description:
+		"Open infrastructure and environmental research values and principles.",
+};
 
 export default async function PatternsPage() {
 	const isDraftMode = (await draftMode()).isEnabled;
@@ -123,13 +124,12 @@ export default async function PatternsPage() {
 									<div
 										key={pattern._id}
 										className={cn(
-											index === patterns.length - 1 &&
-												"border-neutral-400 border-b border-dashed",
+											index === patterns.length - 1 && "border-dashed-brand-b",
 										)}
 									>
 										<SearchResultItem
 											showPatternIcon={true}
-											pattern={preparePatternForSearchResult(pattern)}
+											pattern={pattern}
 										/>
 									</div>
 								))}

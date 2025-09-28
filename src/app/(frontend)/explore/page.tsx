@@ -17,7 +17,7 @@ import type { Page } from "~/sanity/sanity.types";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-	title: "Explore | DIGITCORE Toolkit",
+	title: "Explore | DIGITCORE",
 	description: "Explore patterns, tags, glossary terms, and resources.",
 };
 

@@ -5,8 +5,8 @@ import "~/styles/globals.css";
 import { sans, signifier } from "./(frontend)/fonts";
 
 export const metadata: Metadata = {
-	title: "Digitcore",
-	description: "Digitcore Sanity Studio",
+	title: "DIGITCORE",
+	description: "Digital Toolkit for Collaborative Environmental Research",
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

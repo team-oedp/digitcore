@@ -12,7 +12,7 @@ import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
-	title: "DIGITCORE Toolkit | Home",
+	title: "Home | DIGITCORE",
 	description:
 		"Community-centered open infrastructure empowering equitable collaboration between researchers, developers, and frontline communities.",
 };

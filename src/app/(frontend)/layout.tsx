@@ -20,7 +20,7 @@ import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
-	title: "Digitcore",
+	title: "DIGITCORE",
 	description: "Digital Toolkit for Collaborative Environmental Research",
 };
 
