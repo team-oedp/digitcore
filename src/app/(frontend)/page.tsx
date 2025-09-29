@@ -4,10 +4,9 @@ import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { HeadingMorph } from "~/components/shared/heading-morph";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import PatternCombination from "~/components/shared/pattern-combination";
+import PatternCombination from "~/components/shared/pattern-combination-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
-import { cn } from "~/lib/utils";
 import { client } from "~/sanity/lib/client";
 import { GLOSSARY_TERMS_QUERY, HOME_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -93,29 +92,28 @@ export default async function Home() {
 				<HeadingMorph
 					text="Welcome to the Digital Toolkit for Collaborative Environmental Research"
 					transitionText="DIGITCORE"
-					morphDistancePx={{ base: 200, sm: 220, md: 300, lg: 300, xl: 340 }}
+					morphDistancePx={{ base: 240, sm: 260, md: 320, lg: 360, xl: 400 }}
 					containerClass="overflow-y-auto"
 					randomizeSelection
 					fadeNonTarget
 					fadeSelectedInPlace
 					uppercasePrefix
+					headerHeightVh={90}
+					scrollLockDistancePx={{ base: 80, md: 120, lg: 140 }}
 					distanceToDisappear={{
-						base: 320,
-						sm: 350,
-						md: 430,
-						lg: 430,
-						xl: 470,
+						base: 360,
+						sm: 380,
+						md: 460,
+						lg: 520,
+						xl: 560,
 					}}
 					breakpoints={{ md: 765 }}
 				/>
-				<div className="flex flex-col gap-16 pt-16 lg:gap-20 lg:pt-48">
+				<div className="flex flex-col gap-16">
 					{sectionGroups.map((group, groupIndex) => (
 						<section
 							key={group.content?._key || `group-${groupIndex}`}
-							className={cn(
-								"flex flex-col gap-4",
-								groupIndex === 0 ? "pt-24 md:pt-70 lg:pt-70" : "",
-							)}
+							className="flex flex-col gap-4"
 						>
 							{/* Render the content section */}
 							{group.content && group.content._type === "content" && (

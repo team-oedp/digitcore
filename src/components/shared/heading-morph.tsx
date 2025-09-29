@@ -7,6 +7,7 @@ import {
 	useTransform,
 } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import PatternFadeRotate from "~/components/shared/pattern-fade-rotate";
 
 type ResponsiveNumber =
 	| number
@@ -24,6 +25,14 @@ type HeadingMorphProps = {
 	uppercasePrefix?: boolean;
 	distanceToDisappear?: ResponsiveNumber;
 	breakpoints?: { sm?: number; md?: number; lg?: number; xl?: number };
+	/** Fixed height for the header block. Defaults to measured content height. */
+	headerHeightPx?: ResponsiveNumber;
+	/** Fixed height using viewport units. If provided, overrides headerHeightPx. */
+	headerHeightVh?: number;
+	/** Extra scroll distance to keep the header pinned before underlying content starts to scroll. */
+	scrollLockDistancePx?: ResponsiveNumber;
+	/** Extra distance to keep the target word fully visible before fading. */
+	lingerDistancePx?: ResponsiveNumber;
 };
 
 export function HeadingMorph({
@@ -37,11 +46,17 @@ export function HeadingMorph({
 	uppercasePrefix,
 	distanceToDisappear,
 	breakpoints,
+	headerHeightPx,
+	headerHeightVh,
+	scrollLockDistancePx,
+	lingerDistancePx,
 }: HeadingMorphProps) {
 	const elementRef = useRef<HTMLDivElement>(null);
+	const contentMeasureRef = useRef<HTMLDivElement>(null);
 	const [scrollContainer, setScrollContainer] = useState<HTMLElement | null>(
 		null,
 	);
+	const [measuredHeight, setMeasuredHeight] = useState<number>(0);
 
 	// Source sentence and target word for reordering
 	const sourceText = text ?? "";
@@ -66,6 +81,45 @@ export function HeadingMorph({
 
 		setScrollContainer(container);
 	}, [containerClass]);
+
+	// Measure content height (updates on resize/changes)
+	useEffect(() => {
+		const node = contentMeasureRef.current;
+		if (!node) return;
+		function measure() {
+			setMeasuredHeight(node?.offsetHeight || 0);
+		}
+		measure();
+		let ro: ResizeObserver | undefined;
+		if (typeof ResizeObserver !== "undefined") {
+			ro = new ResizeObserver(() => measure());
+			ro.observe(node);
+		}
+		window.addEventListener("resize", measure);
+		return () => {
+			if (ro) ro.disconnect();
+			window.removeEventListener("resize", measure);
+		};
+	}, []);
+
+	// Ensure no initial pre-scroll above the header container on mount
+	useEffect(() => {
+		// When we first attach, snap the scroll container to top if it's within a tiny epsilon
+		const epsilon = 2;
+		if (scrollContainer) {
+			const current = (scrollContainer as HTMLElement).scrollTop || 0;
+			if (current > 0 && current <= epsilon) {
+				(scrollContainer as HTMLElement).scrollTop = 0;
+			}
+		} else if (typeof window !== "undefined") {
+			const current = window.scrollY || document.documentElement.scrollTop || 0;
+			if (current > 0 && current <= epsilon) {
+				window.scrollTo(0, 0);
+			}
+		}
+		// Run once after mount/scroll container detection
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [scrollContainer]);
 
 	// Use scroll hook with the appropriate container
 	const { scrollY } = useScroll({
@@ -123,6 +177,16 @@ export function HeadingMorph({
 	}
 
 	const effectiveMorphDistance = resolveResponsiveNumber(morphDistancePx, 200);
+	const effectiveHeaderHeightPx = resolveResponsiveNumber(
+		headerHeightPx,
+		measuredHeight || 0,
+	);
+	// We'll compute the scroll lock AFTER we know how long the non-target fade tail is
+	const providedLock = resolveResponsiveNumber(scrollLockDistancePx, 0);
+	const effectiveLingerDistance = resolveResponsiveNumber(
+		lingerDistancePx,
+		120,
+	);
 	const effectiveDisappearDistance = (() => {
 		if (typeof distanceToDisappear === "number") return distanceToDisappear;
 		if (distanceToDisappear === undefined) return undefined;
@@ -177,6 +241,12 @@ export function HeadingMorph({
 		60,
 		Math.floor((effectiveMorphDistance ?? 200) * 0.3),
 	);
+	// Ensure we reserve at least morph distance + tail fade so non-target letters fully fade
+	const minimumLock = Math.max(
+		0,
+		Math.floor(effectiveMorphDistance + tailExtraPx + 40),
+	);
+	const effectiveScrollLockDistance = Math.max(providedLock, minimumLock);
 	const tailProgress = useTransform(
 		scrollY,
 		[effectiveMorphDistance, effectiveMorphDistance + tailExtraPx],
@@ -345,38 +415,15 @@ export function HeadingMorph({
 	const fadeEnd = hasDisappear
 		? Math.max(fadeStart + 1, effectiveDisappearDistance as number)
 		: 1;
-	const fadeRange = (hasDisappear ? [1, 0] : [1, 1]) as [number, number];
-	const largeHeadingOpacity = useTransform(
-		scrollY,
-		[fadeStart, fadeEnd],
-		fadeRange,
-	);
+	const largeHeadingOpacity = hasDisappear
+		? useTransform(
+				scrollY,
+				[fadeStart, fadeStart + effectiveLingerDistance, fadeEnd],
+				[1, 1, 0],
+			)
+		: useTransform(scrollY, [0, 1], [1, 1]);
 
-	const [isHidden, setIsHidden] = useState<boolean>(false);
-	const hiddenRef = useRef<boolean>(false);
-	// Hysteresis to avoid flicker around the threshold (in pixels)
-	const DISAPPEAR_EPS = 2;
-	useMotionValueEvent(scrollY, "change", (v) => {
-		if (!hasDisappear) {
-			if (hiddenRef.current) {
-				hiddenRef.current = false;
-				setIsHidden(false);
-			}
-			return;
-		}
-		const threshold = effectiveDisappearDistance as number;
-		// If currently visible, only hide once we're past threshold + eps
-		if (!hiddenRef.current && v >= threshold + DISAPPEAR_EPS) {
-			hiddenRef.current = true;
-			setIsHidden(true);
-			return;
-		}
-		// If currently hidden, only show once we're below threshold - eps
-		if (hiddenRef.current && v <= threshold - DISAPPEAR_EPS) {
-			hiddenRef.current = false;
-			setIsHidden(false);
-		}
-	});
+	// No unmounting; we only fade with largeHeadingOpacity so content doesn’t jump
 
 	// Pill opacity: fades in AFTER large heading has faded out
 	const pillOpacity = useTransform(
@@ -399,82 +446,105 @@ export function HeadingMorph({
 		[0, 1],
 	);
 
-	if (isHidden) return null;
+	const containerHeightStyle =
+		typeof headerHeightVh === "number" && headerHeightVh > 0
+			? `calc(${headerHeightVh}vh + ${effectiveScrollLockDistance}px)`
+			: effectiveHeaderHeightPx + effectiveScrollLockDistance;
 
 	return (
-		<motion.header
-			ref={elementRef}
-			className="sticky top-5 z-40 w-fit"
-			style={{ opacity: largeHeadingOpacity }}
-			initial={false}
+		<div
+			className="m-0 overscroll-y-contain p-0 px-5 pt-0"
+			style={{ height: containerHeightStyle, paddingTop: 0 }}
 		>
-			<div className="relative">
-				{/* Large heading */}
-				<motion.h1 className="text-page-heading" initial={false}>
-					{(() => {
-						// Build prefix characters from selected indices
-						const prefixChars: string[] = [];
-						const usedSet = new Set<number>();
-						for (let i = 0; i < stepCount; i++) {
-							const idx = targetIndices[i] ?? -1;
-							if (idx !== -1) {
-								usedSet.add(idx);
-								prefixChars.push(sourceText.charAt(idx));
+			<motion.header
+				ref={elementRef}
+				className="sticky top-0 z-40 m-0 w-fit p-0"
+				style={{ opacity: largeHeadingOpacity, pointerEvents: "none" }}
+				initial={false}
+			>
+				<div
+					className="relative flex h-full flex-col pt-5"
+					ref={contentMeasureRef}
+				>
+					{/* Large heading */}
+					<motion.h1
+						className="relative z-20 mb-6 text-page-heading"
+						initial={false}
+					>
+						{(() => {
+							// Build prefix characters from selected indices
+							const prefixChars: string[] = [];
+							const usedSet = new Set<number>();
+							for (let i = 0; i < stepCount; i++) {
+								const idx = targetIndices[i] ?? -1;
+								if (idx !== -1) {
+									usedSet.add(idx);
+									prefixChars.push(sourceText.charAt(idx));
+								}
 							}
-						}
-						return (
-							<>
-								{uppercasePrefix ? (
-									<span className="uppercase">{prefixChars.join("")}</span>
-								) : (
-									<span>{prefixChars.join("")}</span>
-								)}
-								{/* Removed trailing full stop after target word completion */}
-								{(() => {
-									// Ensure a single space between constructed word and the first rendered remainder character
-									if (prefixChars.length === 0) return null;
-									for (const { ch, pos } of sourceChars) {
-										const isTargetLetter = allTargetIndices.has(pos);
-										const isSelected = usedSet.has(pos);
-										// Skip characters that won't render (selected target letters)
-										if (isTargetLetter && isSelected) continue;
-										// This is the first character that will render; add a space if it's not already a space
-										return ch === " " ? null : (
-											<span key="__prefix_space__"> </span>
-										);
-									}
-									return null;
-								})()}
-								{/* Render remainder per-character: non-target letters fade; target letters stay until selected */}
-								<span>
-									{sourceChars.map(({ id, ch, pos }) => {
-										const isTargetLetter = allTargetIndices.has(pos);
-										const isSelected = usedSet.has(pos);
-										if (!isTargetLetter) {
-											return (
-												<motion.span
-													key={id}
-													style={{
-														opacity: fadeNonTarget
-															? (charOpacity[pos] ?? 1)
-															: 1,
-													}}
-													initial={false}
-												>
-													{ch}
-												</motion.span>
+							return (
+								<>
+									{uppercasePrefix ? (
+										<span className="uppercase">{prefixChars.join("")}</span>
+									) : (
+										<span>{prefixChars.join("")}</span>
+									)}
+									{/* Removed trailing full stop after target word completion */}
+									{(() => {
+										// Ensure a single space between constructed word and the first rendered remainder character
+										if (prefixChars.length === 0) return null;
+										for (const { ch, pos } of sourceChars) {
+											const isTargetLetter = allTargetIndices.has(pos);
+											const isSelected = usedSet.has(pos);
+											// Skip characters that won't render (selected target letters)
+											if (isTargetLetter && isSelected) continue;
+											// This is the first character that will render; add a space if it's not already a space
+											return ch === " " ? null : (
+												<span key="__prefix_space__"> </span>
 											);
 										}
-										// Target letters: when selected, remove original position
-										if (isSelected) return null;
-										return <span key={id}>{ch}</span>;
-									})}
-								</span>
-							</>
-						);
-					})()}
-				</motion.h1>
-			</div>
-		</motion.header>
+										return null;
+									})()}
+									{/* Render remainder per-character: non-target letters fade; target letters stay until selected */}
+									<span>
+										{sourceChars.map(({ id, ch, pos }) => {
+											const isTargetLetter = allTargetIndices.has(pos);
+											const isSelected = usedSet.has(pos);
+											if (!isTargetLetter) {
+												return (
+													<motion.span
+														key={id}
+														style={{
+															opacity: fadeNonTarget
+																? (charOpacity[pos] ?? 1)
+																: 1,
+														}}
+														initial={false}
+													>
+														{ch}
+													</motion.span>
+												);
+											}
+											// Target letters: when selected, remove original position
+											if (isSelected) return null;
+											return <span key={id}>{ch}</span>;
+										})}
+									</span>
+								</>
+							);
+						})()}
+					</motion.h1>
+
+					{/* Decorative patterns - placed in-flow below and right, never overlapping text */}
+					<div className="pointer-events-none mt-8 flex w-full justify-end">
+						<PatternFadeRotate
+							randomPatterns={3}
+							size="lg"
+							gate={reorderProgress}
+						/>
+					</div>
+				</div>
+			</motion.header>
+		</div>
 	);
 }

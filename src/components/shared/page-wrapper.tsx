@@ -11,7 +11,7 @@ export function PageWrapper({
 	return (
 		<div
 			className={cn(
-				"min-h-screen 3xl:max-w-6xl max-w-4xl px-5 py-5 2xl:max-w-5xl",
+				"min-h-screen 3xl:max-w-6xl max-w-4xl px-5 pt-0 pb-5 2xl:max-w-5xl",
 				className,
 			)}
 		>
