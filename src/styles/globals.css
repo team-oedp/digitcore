@@ -295,7 +295,7 @@
 
 .dark {
 	/* TODO: check container-background color for dark mode */
-	/* --container-background */
+	--container-background: var(--color-neutral-950);
 	--background: var(--color-neutral-950);
 	--foreground: var(--color-neutral-50);
 	--card: var(--color-neutral-900);
@@ -373,6 +373,23 @@
 	--page-badge-background: var(--color-magenta-light--dark);
 	--page-badge-border: var(--color-magenta-default--dark);
 	--page-badge-border-dark: var(--color-magenta-border-dark--dark);
+
+	/* Dark Mode Button Colors */
+
+	/* Pattern Button - Dark Mode */
+	--pattern-button-text--dark: oklch(0.85 0.15 156.56); /* Light green text */
+	--pattern-button-background--dark: oklch(0.2 0.08 156.56); /* Dark green background */
+	--pattern-button-border--dark: oklch(0.4 0.12 157.23); /* Medium green border */
+
+	/* Solution Button - Dark Mode */
+	--solution-button-text--dark: oklch(0.85 0.12 300); /* Light purple text */
+	--solution-button-background--dark: oklch(0.25 0.1 300); /* Dark purple background */
+	--solution-button-border--dark: oklch(0.45 0.15 300); /* Medium purple border */
+
+	/* Resource Button - Dark Mode */
+	--resource-button-text--dark: oklch(0.85 0.1 330); /* Light magenta text */
+	--resource-button-background--dark: oklch(0.25 0.08 330); /* Dark magenta background */
+	--resource-button-border--dark: oklch(0.45 0.12 330); /* Medium magenta border */
 
 	--visit-pattern-bg: oklch(0.15 0.08 157.2);
 	--visit-pattern-border: oklch(0.25 0.1 157.2);
@@ -541,7 +558,7 @@
 		line-height: var(--text-section-heading-mobile--line-height);
 		font-weight: 300; /* light */
 		text-transform: capitalize;
-		color: var(--text-neutral-800);
+		color: var(--text-primary);
 		text-align: left;
 
 		@media (min-width: 768px) {

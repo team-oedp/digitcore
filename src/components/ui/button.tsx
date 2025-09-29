@@ -20,11 +20,11 @@ const buttonVariants = cva(
 					"hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
 				link: "text-muted-foreground hover:text-foreground",
 				pattern:
-					"border border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] font-medium text-[var(--pattern-button-text)] capitalize hover:opacity-80",
+					"border border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] font-medium text-[var(--pattern-button-text)] capitalize hover:opacity-80 dark:border-[var(--pattern-button-border--dark)] dark:bg-[var(--pattern-button-background--dark)] dark:text-[var(--pattern-button-text--dark)]",
 				solution:
-					"border border-[var(--solution-button-border)] bg-[var(--solution-button-background)] font-medium text-[var(--solution-button-text)] capitalize hover:opacity-80",
+					"border border-[var(--solution-button-border)] bg-[var(--solution-button-background)] font-medium text-[var(--solution-button-text)] capitalize hover:opacity-80 dark:border-[var(--solution-button-border--dark)] dark:bg-[var(--solution-button-background--dark)] dark:text-[var(--solution-button-text--dark)]",
 				resource:
-					"border border-[var(--resource-button-border)] bg-[var(--resource-button-background)] font-medium text-[var(--resource-button-text)] capitalize hover:opacity-80",
+					"border border-[var(--resource-button-border)] bg-[var(--resource-button-background)] font-medium text-[var(--resource-button-text)] capitalize hover:opacity-80 dark:border-[var(--resource-button-border--dark)] dark:bg-[var(--resource-button-background--dark)] dark:text-[var(--resource-button-text--dark)]",
 			},
 			size: {
 				default: "h-9 px-4 py-2 has-[>svg]:px-3",
