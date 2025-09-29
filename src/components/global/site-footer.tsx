@@ -6,7 +6,7 @@ import Link from "next/link";
 import { GitHubIcon } from "~/components/icons/logos/github-icon";
 import { ZenodoIcon } from "~/components/icons/logos/zenodo-icon";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
-import { CustomPortableText } from "./custom-portable-text";
+import { CustomPortableText } from "../sanity/custom-portable-text";
 
 type SiteFooterProps = {
 	footerData: FOOTER_QUERYResult;
