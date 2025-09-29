@@ -201,7 +201,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 										className="inline-flex items-center gap-1 rounded-md border border-neutral-300 bg-primary/5 px-2.5 pt-0.5 pb-1 align-middle text-primary leading-normal no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
 										target="_blank"
 										rel="noopener noreferrer"
-										href={licenseLink.url || ""}
+										href={licenseLink.href || ""}
 									>
 										{licenseLink.label ||
 											"CC-BY-SA 4.0 Open Environmental Data Project"}
