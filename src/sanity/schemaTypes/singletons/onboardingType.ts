@@ -3,13 +3,21 @@ import { defineField, defineType } from "sanity";
 
 export const onboardingType = defineType({
 	name: "onboarding",
-	title: "Onboarding",
+	title: "Orientation",
 	type: "document",
 	icon: PresentationIcon,
 	fields: [
 		defineField({
 			name: "title",
 			type: "string",
+		}),
+		defineField({
+			name: "slug",
+			title: "Slug",
+			type: "slug",
+			options: {
+				source: "title",
+			},
 		}),
 		defineField({
 			name: "description",
