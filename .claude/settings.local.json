@@ -1,10 +1,11 @@
 {
-	"permissions": {
-		"allow": [
-			"Bash(npm run typecheck:*)",
-			"Bash(npm test:*)",
-			"Bash(npm run check:write:*)"
-		],
-		"deny": []
-	}
+  "permissions": {
+    "allow": [
+      "Bash(npm run typecheck:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run check:write:*)",
+      "Bash(npm run dev:*)"
+    ],
+    "deny": []
+  }
 }

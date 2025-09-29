@@ -5,6 +5,7 @@ import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { ClickableBadge } from "~/components/pages/pattern/clickable-badge";
 import {
 	BadgeGroup,
 	BadgeGroupContainer,
@@ -70,7 +71,11 @@ type SearchResultItemProps = {
 // Shared base layout component
 function SearchResultBase({ children }: { children: React.ReactNode }) {
 	return (
-		<div className="relative max-h-[280px] min-h-[200px] w-full overflow-hidden border-dashed-brand-t pb-0">
+		<div
+			className={cn(
+				"relative max-h-[280px] min-h-[160px] w-full overflow-hidden border-dashed-brand-t pb-0 lg:min-h-[220px]",
+			)}
+		>
 			<div className="flex flex-col py-4">
 				<div className="w-full space-y-0">{children}</div>
 			</div>
@@ -226,13 +231,19 @@ function PatternSearchResult({
 					{/* Theme Badges */}
 					{!isPatternsPage && theme && (
 						<BadgeGroup>
-							<Badge
-								variant="theme"
-								icon={<ThemeMiniBadge />}
-								className="capitalize"
+							<ClickableBadge
+								type="theme"
+								id={theme._id}
+								title={theme.title || undefined}
 							>
-								{theme.title}
-							</Badge>
+								<Badge
+									variant="theme"
+									icon={<ThemeMiniBadge />}
+									className="cursor-pointer capitalize"
+								>
+									{theme.title}
+								</Badge>
+							</ClickableBadge>
 						</BadgeGroup>
 					)}
 
@@ -240,18 +251,25 @@ function PatternSearchResult({
 					{!shouldHideBadges && audiences.length > 0 && (
 						<BadgeGroup>
 							{audiences.map((audience) => (
-								<Badge
+								<ClickableBadge
 									key={audience._id}
-									variant="audience"
-									icon={
-										<Icon
-											icon={ChartRelationshipIcon}
-											className="h-3.5 w-3.5 capitalize"
-										/>
-									}
+									type="audience"
+									id={audience._id}
+									title={audience.title || undefined}
 								>
-									{audience.title}
-								</Badge>
+									<Badge
+										variant="audience"
+										className="cursor-pointer"
+										icon={
+											<Icon
+												icon={ChartRelationshipIcon}
+												className="h-3.5 w-3.5 capitalize"
+											/>
+										}
+									>
+										{audience.title}
+									</Badge>
+								</ClickableBadge>
 							))}
 						</BadgeGroup>
 					)}
@@ -260,15 +278,25 @@ function PatternSearchResult({
 					{!shouldHideBadges && tags.length > 0 && (
 						<BadgeGroup>
 							{tags.map((tag) => (
-								<Badge
+								<ClickableBadge
 									key={tag._id}
-									variant="tag"
-									icon={
-										<Icon icon={Tag01Icon} className="h-3.5 w-3.5 capitalize" />
-									}
+									type="tag"
+									id={tag._id}
+									title={tag.title || undefined}
 								>
-									{tag.title}
-								</Badge>
+									<Badge
+										variant="tag"
+										className="cursor-pointer"
+										icon={
+											<Icon
+												icon={Tag01Icon}
+												className="h-3.5 w-3.5 capitalize"
+											/>
+										}
+									>
+										{tag.title}
+									</Badge>
+								</ClickableBadge>
 							))}
 						</BadgeGroup>
 					)}

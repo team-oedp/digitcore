@@ -127,10 +127,10 @@
 	--color-moss-default: oklch(0.75 0.2 120);
 	--color-moss-light: oklch(0.9 0.1 120);
 
-	--color-purple-border-dark: oklch(0.75 0.12 270);
-	--color-purple-dark: oklch(0.3 0.2 270);
-	--color-purple-default: oklch(0.85 0.08 270);
-	--color-purple-light: oklch(0.9 0.06 270);
+	--color-purple-border-dark: oklch(66.344% 0.17703 299.908);
+	--color-purple-dark: oklch(0.496 0.265 301.924);
+	--color-purple-default: oklch(0.8943 0.0549 293.28);
+	--color-purple-light: oklch(97.7% 0.014 308.299);
 
 	--color-coral-border-dark: oklch(0.7 0.18 25);
 	--color-coral-dark: oklch(0.4 0.15 25);
