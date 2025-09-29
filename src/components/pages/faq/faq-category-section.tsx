@@ -1,5 +1,5 @@
 import type { PortableTextBlock } from "next-sanity";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { Accordion } from "~/components/ui/accordion";
 import type { FAQS_QUERYResult } from "~/sanity/sanity.types";
 import { FAQAccordionItem } from "./faq-accordion-item";

@@ -55,7 +55,7 @@ vi.mock("@hugeicons/react", () => ({
 }));
 
 // Mock the CustomPortableText component
-vi.mock("~/components/global/custom-portable-text", () => ({
+vi.mock("~/components/sanity/custom-portable-text", () => ({
 	CustomPortableText: ({ value, className }: CustomPortableTextProps) => (
 		<div className={className} data-testid="portable-text">
 			{value?.[0]?.children?.[0]?.text || ""}

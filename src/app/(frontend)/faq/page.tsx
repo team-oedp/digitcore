@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { FAQCategorySection } from "~/components/pages/faq/faq-category-section";
 import { UncategorizedFAQSection } from "~/components/pages/faq/uncategorized-faq-section";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
