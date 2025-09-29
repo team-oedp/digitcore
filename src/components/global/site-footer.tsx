@@ -1,10 +1,11 @@
 import { Mail01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
+import { DigitcoreIcon } from "~/components/icons/logos/digitcore-icon";
 import { GitHubIcon } from "~/components/icons/logos/github-icon";
 import { ZenodoIcon } from "~/components/icons/logos/zenodo-icon";
+import { Icon } from "~/components/shared/icon";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
 import { CustomPortableText } from "../sanity/custom-portable-text";
 
@@ -55,21 +56,16 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 				}));
 
 	return (
-		<footer className="mx-3 mt-auto h-[400px] rounded-md bg-secondary">
+		<footer className="mx-3 mt-auto h-[200px] rounded-md bg-secondary">
 			<div className="pb-3">
-				<div className="flex h-[400px] flex-col px-4 py-3 md:px-8 md:py-6">
+				<div className="flex h-[200px] flex-col px-4 py-3 md:px-8 md:py-6">
 					{/* Mobile Layout - Vertical Stack */}
 					<div className="flex h-full flex-col justify-between md:hidden">
 						{/* 1. Logo + Title */}
 						<div className="flex items-start">
-							<Image
-								src="/oedp-icon.png"
-								alt="Digital Toolkit logo"
-								width={24}
-								height={24}
-								className="mt-1 mr-3"
-								style={{ height: "auto" }}
-								priority
+							<DigitcoreIcon
+								className="mt-1 mr-3 h-6 w-6 text-primary"
+								aria-label="Digital Toolkit logo"
 							/>
 							<h2 className="text-balance font-normal text-md">{title}</h2>
 						</div>
@@ -123,11 +119,24 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 									aria-label="Email Open Environmental Data Project"
 									className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 								>
-									<HugeiconsIcon
-										icon={Mail01Icon}
-										size={24}
-										color="currentColor"
-										strokeWidth={1.5}
+									<Icon icon={Mail01Icon} size={24} strokeWidth={1.5} />
+								</a>
+
+								{/* OEDP Icon */}
+								<a
+									href="https://openenvironmentaldata.org"
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label="Open Environmental Data Project (opens in new tab)"
+									className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+								>
+									<Image
+										src="/oedp-icon.png"
+										alt="OEDP logo"
+										width={24}
+										height={24}
+										className="h-6 w-6"
+										style={{ height: "auto" }}
 									/>
 								</a>
 							</div>
@@ -142,7 +151,9 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 									as="div"
 								/>
 							) : (
-								<p>Open Environmental Data Project 2025</p>
+								<p>
+									Open Environmental Data Project {new Date().getFullYear()}
+								</p>
 							)}
 						</div>
 					</div>
@@ -153,14 +164,9 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 						<div className="mb-8 grid grid-cols-12 gap-16">
 							<div className="col-span-8 flex items-start">
 								<div className="flex items-center">
-									<Image
-										src="/oedp-icon.png"
-										alt="Digital Toolkit logo"
-										width={24}
-										height={24}
-										className="mr-3"
-										style={{ height: "auto" }}
-										priority
+									<DigitcoreIcon
+										className="mr-3 h-6 w-6 text-primary"
+										aria-label="Digital Toolkit logo"
 									/>
 									<h2 className="text-balance font-normal text-lg">{title}</h2>
 								</div>
@@ -200,11 +206,24 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 										aria-label="Email Open Environmental Data Project"
 										className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 									>
-										<HugeiconsIcon
-											icon={Mail01Icon}
-											size={24}
-											color="currentColor"
-											strokeWidth={1.5}
+										<Icon icon={Mail01Icon} size={24} strokeWidth={1.5} />
+									</a>
+
+									{/* OEDP Icon */}
+									<a
+										href="https://openenvironmentaldata.org"
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label="Open Environmental Data Project (opens in new tab)"
+										className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+									>
+										<Image
+											src="/oedp-icon.png"
+											alt="OEDP logo"
+											width={24}
+											height={24}
+											className="h-6 w-6"
+											style={{ height: "auto" }}
 										/>
 									</a>
 								</div>
@@ -222,14 +241,16 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 										as="div"
 									/>
 								) : (
-									<p>Open Environmental Data Project 2025</p>
+									<p>
+										Open Environmental Data Project {new Date().getFullYear()}
+									</p>
 								)}
 							</div>
 
-							{/* Internal links vertical column anchored at bottom, moved two columns over */}
+							{/* Internal links vertical column anchored at bottom, right-aligned against edge */}
 							{internalLinks.length > 0 && (
 								<nav
-									className="col-span-3 col-start-7 self-end"
+									className="col-span-3 col-start-10 self-end text-right"
 									aria-label="Internal navigation links"
 								>
 									<ul className="space-y-1">
