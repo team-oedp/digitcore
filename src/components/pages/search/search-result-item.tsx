@@ -20,6 +20,7 @@ import {
 	highlightMatches,
 	truncateWithContext,
 } from "~/lib/search-utils";
+import { cn } from "~/lib/utils";
 import type { PatternDescription } from "~/sanity/lib/types";
 import { SearchResultPreview } from "./search-result-preview";
 
@@ -94,8 +95,10 @@ function PatternSearchResult({
 	const audiences = pattern.audiences || [];
 	const rawDescription = pattern.description || [];
 
-	// Hide tags and audiences on /patterns page
+	// Hide tags and audiences on /patterns and /explore pages
 	const isPatternsPage = pathname === "/patterns";
+	const isExplorePage = pathname === "/explore";
+	const shouldHideBadges = isPatternsPage || isExplorePage;
 
 	// Get the pattern-specific icon
 	const PatternIcon = getPatternIconWithMapping(pattern.slug || "");
@@ -126,7 +129,10 @@ function PatternSearchResult({
 
 	// TODO: SearchResultPreview is intended only to preview the pattern that references a hovered solution or resource
 	return (
-		<SearchResultPreview patternDescription={displayDescription} patternTitle={title}>
+		<SearchResultPreview
+			patternDescription={displayDescription}
+			patternTitle={title}
+		>
 			<SearchResultBase>
 				{/* Title with Pattern Icon and Visit Button */}
 				<div className="mb-4">
@@ -144,7 +150,12 @@ function PatternSearchResult({
 								href={`/pattern/${pattern.slug}`}
 								className="inline-flex flex-1 items-start justify-start gap-3"
 							>
-								<h3 className="line-clamp-2 text-left font-light text-lg text-neutral-800 leading-tight md:text-3xl">
+								<h3
+									className={cn(
+										"line-clamp-2 text-left font-light text-lg text-neutral-800 leading-tight md:text-xl",
+										isPatternsPage && "md:text-3xl",
+									)}
+								>
 									{title}
 								</h3>
 							</Link>
@@ -210,8 +221,8 @@ function PatternSearchResult({
 						</BadgeGroup>
 					)}
 
-					{/* Audience Badges - Hidden on /patterns page */}
-					{!isPatternsPage && audiences.length > 0 && (
+					{/* Audience Badges - Hidden on /patterns and /explore pages */}
+					{!shouldHideBadges && audiences.length > 0 && (
 						<BadgeGroup>
 							{audiences.map((audience) => (
 								<Badge
@@ -230,8 +241,8 @@ function PatternSearchResult({
 						</BadgeGroup>
 					)}
 
-					{/* Tag Badges - Hidden on /patterns page */}
-					{!isPatternsPage && tags.length > 0 && (
+					{/* Tag Badges - Hidden on /patterns and /explore pages */}
+					{!shouldHideBadges && tags.length > 0 && (
 						<BadgeGroup>
 							{tags.map((tag) => (
 								<Badge
