@@ -60,7 +60,7 @@ export default async function FAQPage() {
 					<div>
 						<PageHeading title={pageData.title} />
 						<CustomPortableText
-							value={pageData.description}
+							value={pageData.description as PortableTextBlock[]}
 							className="mt-8 text-body"
 						/>
 					</div>

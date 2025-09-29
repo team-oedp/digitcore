@@ -1,3 +1,4 @@
+import type { PortableTextBlock } from "next-sanity";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
 import {
 	AccordionContent,
@@ -29,10 +30,12 @@ export function FAQAccordionItem({
 				<span className="text-left">{title}</span>
 			</AccordionTrigger>
 			<AccordionContent className="pt-2 pb-4">
-				<CustomPortableText
-					value={description}
-					className="accordion-detail"
-				/>
+				{description && (
+					<CustomPortableText
+						value={description as PortableTextBlock[]}
+						className="accordion-detail"
+					/>
+				)}
 			</AccordionContent>
 		</AccordionItem>
 	);

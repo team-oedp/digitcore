@@ -1,3 +1,4 @@
+import type { PortableTextBlock } from "next-sanity";
 import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { Accordion } from "~/components/ui/accordion";
 import type { FAQS_QUERYResult } from "~/sanity/sanity.types";
@@ -18,7 +19,7 @@ export function FAQCategorySection({
 				<h2 className="text-section-heading">{category.title}</h2>
 				{category.description && category.description.length > 0 && (
 					<CustomPortableText
-						value={category.description}
+						value={category.description as PortableTextBlock[]}
 						className="mt-2 text-neutral-600 text-sm"
 					/>
 				)}
