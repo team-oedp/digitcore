@@ -70,7 +70,7 @@ type SearchResultItemProps = {
 // Shared base layout component
 function SearchResultBase({ children }: { children: React.ReactNode }) {
 	return (
-		<div className="relative h-[200px] w-full border-dashed-brand-t pb-0">
+		<div className="relative max-h-[280px] min-h-[200px] w-full overflow-hidden border-dashed-brand-t pb-0">
 			<div className="flex flex-col py-4">
 				<div className="w-full space-y-0">{children}</div>
 			</div>
@@ -98,7 +98,7 @@ function PatternSearchResult({
 	// Hide tags and audiences on /patterns and /explore pages
 	const isPatternsPage = pathname === "/patterns";
 	const isExplorePage = pathname === "/explore";
-	const shouldHideBadges = isPatternsPage || isExplorePage;
+	const shouldHideBadges = isPatternsPage;
 
 	// Get the pattern-specific icon
 	const PatternIcon = getPatternIconWithMapping(pattern.slug || "");
@@ -108,17 +108,25 @@ function PatternSearchResult({
 		rawDescription as PortableTextBlock[],
 	);
 
-	// On patterns page, show only first sentence; otherwise use normal truncation
-	const descriptionResult = isPatternsPage
-		? {
-				text: extractFirstSentence(fullDescriptionText),
-				isTruncated: false,
-				hasMatch: false,
-				matchCount: 0,
-			}
-		: truncateWithContext(fullDescriptionText, searchTerm, 200);
+	// Show only first sentence unless there's a match, then allow normal truncation
+	const descriptionResult = truncateWithContext(
+		fullDescriptionText,
+		searchTerm,
+		200,
+	);
 
-	const displayDescription = descriptionResult.text;
+	// If no search term or no match, use only the first sentence
+	const finalDescriptionResult =
+		!searchTerm || !descriptionResult.hasMatch
+			? {
+					text: extractFirstSentence(fullDescriptionText),
+					isTruncated: false,
+					hasMatch: false,
+					matchCount: 0,
+				}
+			: descriptionResult;
+
+	const displayDescription = finalDescriptionResult.text;
 
 	// Check where matches occur
 	const matchExplanation = getMatchExplanation(
@@ -174,7 +182,14 @@ function PatternSearchResult({
 				{/* Description with Search Context */}
 				{descriptionResult.text && (
 					<div className="mb-4">
-						<div className="relative line-clamp-3 overflow-hidden">
+						<div
+							className={cn(
+								"relative overflow-hidden",
+								finalDescriptionResult.hasMatch
+									? "line-clamp-2"
+									: "line-clamp-1",
+							)}
+						>
 							<span className="block font-light text-neutral-400 text-sm md:text-lg dark:text-foreground">
 								{renderHighlightedText(displayDescription, searchTerm)}
 							</span>
@@ -196,9 +211,9 @@ function PatternSearchResult({
 											Description
 										</span>
 									)}
-									{descriptionResult.matchCount > 1 && (
+									{finalDescriptionResult.matchCount > 1 && (
 										<span className="text-body-muted">
-											({descriptionResult.matchCount} matches)
+											({finalDescriptionResult.matchCount} matches)
 										</span>
 									)}
 								</div>

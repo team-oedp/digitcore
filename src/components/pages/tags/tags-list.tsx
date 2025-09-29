@@ -74,7 +74,7 @@ export function TagsList({
 												className="inline-block w-max whitespace-normal break-words"
 											>
 												<Badge
-													variant="page"
+													variant="pattern"
 													icon={
 														<Icon
 															icon={FlowConnectionIcon}
