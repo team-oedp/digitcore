@@ -5,6 +5,7 @@ import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import type { SearchPattern } from "~/app/actions/search";
 import { ClickableBadge } from "~/components/pages/pattern/clickable-badge";
 import {
 	BadgeGroup,
@@ -20,47 +21,13 @@ import {
 	processDescriptionForDisplay,
 } from "~/lib/search-utils";
 import { cn } from "~/lib/utils";
-import type { PatternDescription } from "~/sanity/lib/types";
+import type { PATTERNS_WITH_THEMES_QUERYResult } from "~/sanity/sanity.types";
 
-// Use the centralized Sanity field types
-type SanityBlockContent = PatternDescription;
+// Union type that can accept both Sanity query results and search patterns
+type PatternType = PATTERNS_WITH_THEMES_QUERYResult[number] | SearchPattern;
 
 type SearchResultItemProps = {
-	pattern: {
-		_id: string;
-		_type: "pattern";
-		_score?: number;
-		title: string | null;
-		description: SanityBlockContent | null;
-		slug: string | null;
-		tags?: Array<{
-			_id: string;
-			title?: string;
-		}> | null;
-		audiences?: Array<{
-			_id: string;
-			title: string | null;
-		}> | null;
-		theme?: {
-			_id: string;
-			title: string | null;
-			description?: Array<unknown> | null;
-		} | null;
-		solutions?: Array<{
-			_id: string;
-			title?: string;
-			description?: Array<unknown>;
-		}> | null;
-		resources?: Array<{
-			_id: string;
-			title?: string;
-			description?: Array<unknown>;
-			solutions?: Array<{
-				_id: string;
-				title?: string;
-			}> | null;
-		}> | null;
-	};
+	pattern: PatternType;
 	searchTerm?: string;
 	showPatternIcon?: boolean;
 };
