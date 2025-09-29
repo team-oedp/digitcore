@@ -107,9 +107,7 @@ export default async function PatternsPage() {
 						<div key={theme._id}>
 							<div className="flex flex-col gap-5 pt-12 pb-12 md:pt-36">
 								<div className="flex flex-col gap-1">
-									<p className="text-muted-foreground text-xxs uppercase">
-										Theme
-									</p>
+									<p className="text-neutral-400 text-xxs uppercase">Theme</p>
 									<h2 className="text-section-heading">{theme.title}</h2>
 								</div>
 								<CustomPortableText
@@ -123,8 +121,7 @@ export default async function PatternsPage() {
 									<div
 										key={pattern._id}
 										className={cn(
-									index === patterns.length - 1 &&
-										"border-dashed-brand border-dashed-brand-b",
+											index === patterns.length - 1 && "border-dashed-brand-b",
 										)}
 									>
 										<SearchResultItem

@@ -4,7 +4,7 @@ import { ChartRelationshipIcon, Tag01Icon } from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import {
 	BadgeGroup,
 	BadgeGroupContainer,
@@ -20,7 +20,6 @@ import {
 	highlightMatches,
 	truncateWithContext,
 } from "~/lib/search-utils";
-import { cn } from "~/lib/utils";
 import type { PatternDescription } from "~/sanity/lib/types";
 import { SearchResultPreview } from "./search-result-preview";
 
@@ -68,48 +67,10 @@ type SearchResultItemProps = {
 };
 
 // Shared base layout component
-function SearchResultBase({
-	children,
-	title,
-	titleElement,
-	showPatternIcon = false,
-	patternIcon,
-	isPatternsPage = false,
-}: {
-	children: React.ReactNode;
-	title: string;
-	titleElement?: React.ReactNode;
-	showPatternIcon?: boolean;
-	patternIcon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
-	isPatternsPage?: boolean;
-}) {
+function SearchResultBase({ children }: { children: React.ReactNode }) {
 	return (
-		<div
-			className={cn(
-				"relative h-[200px] w-full border-dashed-brand border-dashed-brand-b pb-0",
-				isPatternsPage && "group",
-			)}
-		>
+		<div className="relative h-[200px] w-full border-dashed-brand-t pb-0">
 			<div className="flex flex-col py-4">
-				<div className="mb-4">
-					{titleElement ? (
-						titleElement
-					) : (
-						<div className="flex items-start gap-6">
-							{showPatternIcon && patternIcon && (
-								<div className="h-6 w-6 flex-shrink-0 text-neutral-500">
-									{React.createElement(patternIcon, {
-										className:
-											"h-full w-full fill-icon/40 text-icon/70 opacity-40",
-									})}
-								</div>
-							)}
-							<h3 className="w-full text-left font-light text-lg text-primary capitalize leading-tight md:text-2xl">
-								{title}
-							</h3>
-						</div>
-					)}
-				</div>
 				<div className="w-full space-y-0">{children}</div>
 			</div>
 		</div>
@@ -126,7 +87,6 @@ function PatternSearchResult({
 	searchTerm?: string;
 	showPatternIcon?: boolean;
 }) {
-	const [showFullDescription, setShowFullDescription] = useState(false);
 	const pathname = usePathname();
 	const title = pattern.title || "Untitled Pattern";
 	const theme = pattern.theme;
@@ -155,9 +115,7 @@ function PatternSearchResult({
 			}
 		: truncateWithContext(fullDescriptionText, searchTerm, 200);
 
-	const displayDescription = showFullDescription
-		? fullDescriptionText
-		: descriptionResult.text;
+	const displayDescription = descriptionResult.text;
 
 	// Check where matches occur
 	const matchExplanation = getMatchExplanation(
@@ -166,46 +124,47 @@ function PatternSearchResult({
 		searchTerm,
 	);
 
-	// Create clickable title element using Next.js Link
-	const titleElement = (
-		<div className="flex items-start gap-6">
-			{showPatternIcon && PatternIcon && (
-				<div className="mt-2 flex h-6 w-6 flex-shrink-0 text-neutral-500">
-					{React.createElement(PatternIcon, {
-						className: "h-full w-full fill-icon/40 text-icon/70 opacity-40",
-					})}
-				</div>
-			)}
-			<div className="inline-flex w-full justify-between">
-				<Link
-					href={`/pattern/${pattern.slug}`}
-					className="inline-flex flex-1 items-start justify-start gap-3"
-				>
-					<h3 className="line-clamp-2 text-left font-light text-lg text-neutral capitalize leading-tight md:text-3xl">
-						{title}
-					</h3>
-				</Link>
-				<Button variant="pattern" size="sm" asChild className="text-sm">
-					<Link href={`/pattern/${pattern.slug}`}>Visit pattern</Link>
-				</Button>
-			</div>
-		</div>
-	);
-
+	// TODO: SearchResultPreview is intended only to preview the pattern that references a hovered solution or resource
 	return (
-		<SearchResultPreview description={displayDescription} patternTitle={title}>
-			<SearchResultBase
-				title={title}
-				titleElement={titleElement}
-				showPatternIcon={showPatternIcon}
-				patternIcon={PatternIcon}
-				isPatternsPage={isPatternsPage}
-			>
+		<SearchResultPreview patternDescription={displayDescription} patternTitle={title}>
+			<SearchResultBase>
+				{/* Title with Pattern Icon and Visit Button */}
+				<div className="mb-4">
+					<div className="flex items-start justify-start gap-3 lg:gap-6">
+						{showPatternIcon && PatternIcon && (
+							<div className="mt-1 flex h-5 w-5 flex-shrink-0 text-neutral-500 lg:mt-2 lg:h-6 lg:w-6">
+								{React.createElement(PatternIcon, {
+									className:
+										"h-full w-full fill-icon/40 text-icon/70 opacity-40",
+								})}
+							</div>
+						)}
+						<div className="inline-flex w-full items-start justify-between gap-6">
+							<Link
+								href={`/pattern/${pattern.slug}`}
+								className="inline-flex flex-1 items-start justify-start gap-3"
+							>
+								<h3 className="line-clamp-2 text-left font-light text-lg text-neutral-800 leading-tight md:text-3xl">
+									{title}
+								</h3>
+							</Link>
+							<Button
+								variant="pattern"
+								size="sm"
+								asChild
+								className="text-xs lg:text-sm"
+							>
+								<Link href={`/pattern/${pattern.slug}`}>Visit pattern</Link>
+							</Button>
+						</div>
+					</div>
+				</div>
+
 				{/* Description with Search Context */}
 				{descriptionResult.text && (
 					<div className="mb-4">
 						<div className="relative line-clamp-3 overflow-hidden">
-							<span className="block font-light text-neutral-500 text-xl dark:text-foreground">
+							<span className="block font-light text-neutral-400 text-sm md:text-lg dark:text-foreground">
 								{renderHighlightedText(displayDescription, searchTerm)}
 							</span>
 						</div>

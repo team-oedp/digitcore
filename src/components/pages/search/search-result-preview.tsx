@@ -11,28 +11,28 @@ import {
 
 type SearchResultPreviewProps = {
 	children: React.ReactNode;
-	description: string;
 	patternTitle: string;
+	patternDescription: string;
 };
 
 export function SearchResultPreview({
 	children,
-	description,
 	patternTitle,
+	patternDescription,
 }: SearchResultPreviewProps) {
 	return (
 		<HoverCard openDelay={100}>
 			<HoverCardTrigger asChild>{children}</HoverCardTrigger>
 			<HoverCardContent className="w-80 p-0" align="start" sideOffset={8}>
 				<div className="flex flex-col gap-3.5 rounded-lg bg-neutral-100 p-3.5">
-					<p className="font-normal text-sm text-zinc-700 leading-[18px]">
-						{description}
+					<p className="font-normal text-neutral-800 text-sm leading-normal">
+						{patternDescription}
 					</p>
 					<button
 						type="button"
-						className="flex items-center gap-0.5 text-sm text-zinc-700 leading-5 transition-colors hover:text-zinc-900"
+						className="flex items-center gap-0.5 text-neutral-800 text-sm leading-normal transition-colors hover:text-neutral-900"
 					>
-						<span>Go to pattern</span>
+						<span>Visit pattern</span>
 						<HugeiconsIcon icon={CircleArrowRight02Icon} className="h-5 w-5" />
 					</button>
 				</div>
