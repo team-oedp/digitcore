@@ -232,6 +232,29 @@ export function SiteHeader() {
 														<Link href="/values">Values</Link>
 													</Button>
 												</motion.div>
+												<motion.div
+													initial={{ opacity: 0, filter: "blur(4px)" }}
+													animate={{ opacity: 1, filter: "blur(0px)" }}
+													exit={{ opacity: 0, filter: "blur(4px)" }}
+													transition={{
+														duration: 0.3,
+														ease: [0.4, 0, 0.2, 1],
+														delay: 0.15,
+													}}
+												>
+													<Button
+														variant="link"
+														asChild
+														className={cn(
+															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
+															pathname === "/themes"
+																? "text-foreground"
+																: "text-muted-foreground",
+														)}
+													>
+														<Link href="/themes">Themes</Link>
+													</Button>
+												</motion.div>
 											</motion.div>
 										)}
 									</AnimatePresence>

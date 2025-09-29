@@ -977,6 +977,45 @@ export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
   }
 `);
 
+export const THEMES_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'themes'][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
+      }
+    },
+    content[]{
+      _key,
+      _type,
+      heading,
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
+      // For contentList type
+      title,
+      items[]{
+        _key,
+        title,
+        description
+      }
+    }
+  }
+`);
+
 export const FOOTER_QUERY = defineQuery(`
   *[_type == 'footer'][0]{
     _id,
@@ -1000,7 +1039,7 @@ export const FOOTER_QUERY = defineQuery(`
         "slug": slug.current
       }
     },
-    license
+    licenseLink
   }
 `);
 

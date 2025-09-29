@@ -6,20 +6,20 @@ import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
 import { client } from "~/sanity/lib/client";
-import { ACKNOWLEDGEMENTS_PAGE_QUERY } from "~/sanity/lib/queries";
+import { THEMES_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
-	title: "Acknowledgements | DIGITCORE",
+	title: "Themes | DIGITCORE",
 	description:
-		"Acknowledgements and credits for the DIGITCORE project and its contributors.",
+		"Explore the six themes that organize environmental research best practices.",
 };
 
-export default async function AcknowledgementsPage() {
+export default async function ThemesPage() {
 	const isDraftMode = (await draftMode()).isEnabled;
 	const data = (await client.fetch(
-		ACKNOWLEDGEMENTS_PAGE_QUERY,
+		THEMES_PAGE_QUERY,
 		{},
 		isDraftMode
 			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
