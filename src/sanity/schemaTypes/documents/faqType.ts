@@ -12,6 +12,13 @@ export const faqType = defineType({
 			type: "string",
 		}),
 		defineField({
+			name: "category",
+			title: "Category",
+			type: "reference",
+			to: [{ type: "faqCategory" }],
+			description: "Group FAQs by category for better organization",
+		}),
+		defineField({
 			name: "description",
 			type: "blockContent",
 		}),

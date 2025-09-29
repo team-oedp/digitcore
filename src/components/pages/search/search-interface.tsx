@@ -59,12 +59,12 @@ export function SearchInterface({
 		try {
 			return parseSearchParams(
 				searchParamsSchema.parse({
-					q: searchParams.get("q") ?? undefined,
-					audiences: searchParams.get("audiences") ?? undefined,
-					themes: searchParams.get("themes") ?? undefined,
-					tags: searchParams.get("tags") ?? undefined,
-					page: searchParams.get("page") ?? undefined,
-					limit: searchParams.get("limit") ?? undefined,
+					q: searchParams?.get("q") ?? undefined,
+					audiences: searchParams?.get("audiences") ?? undefined,
+					themes: searchParams?.get("themes") ?? undefined,
+					tags: searchParams?.get("tags") ?? undefined,
+					page: searchParams?.get("page") ?? undefined,
+					limit: searchParams?.get("limit") ?? undefined,
 				}),
 			);
 		} catch (error) {
@@ -144,7 +144,7 @@ export function SearchInterface({
 				location,
 			);
 
-			router.push(newUrl);
+			if (newUrl) router.push(newUrl);
 		},
 		[pathname, router, location],
 	);

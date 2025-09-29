@@ -144,7 +144,8 @@ export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
 					slug: pattern.slug
 						? { current: pattern.slug, _type: "slug" as const }
 						: undefined,
-					description: pattern.description ?? undefined,
+					description: (pattern.description ??
+						undefined) as unknown as Pattern["description"],
 				},
 			],
 			solutions:
@@ -157,7 +158,8 @@ export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
 							_updatedAt: new Date().toISOString(),
 							_rev: "",
 							title: solution.title || undefined,
-							description: solution.description || undefined,
+							description: (solution.description ||
+								undefined) as unknown as Solution["description"],
 						}) as Solution,
 				) || [],
 			resources:
@@ -170,7 +172,8 @@ export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
 							_updatedAt: new Date().toISOString(),
 							_rev: "",
 							title: resource.title || undefined,
-							description: resource.description || undefined,
+							description: (resource.description ||
+								undefined) as unknown as Resource["description"],
 						}) as Resource,
 				) || [],
 			tags:

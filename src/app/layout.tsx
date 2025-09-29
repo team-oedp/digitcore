@@ -7,7 +7,7 @@ import { sans, signifier } from "./(frontend)/fonts";
 export const metadata: Metadata = {
 	title: "Digitcore",
 	description: "Digitcore Sanity Studio",
-	icons: [{ rel: "icon", url: "/oedp-icon.png" }],
+	icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
 export default function RootLayout({

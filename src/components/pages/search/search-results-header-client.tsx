@@ -20,12 +20,12 @@ export function SearchResultsHeaderClient({
 
 	try {
 		const rawParams = {
-			q: searchParams.get("q") ?? undefined,
-			audiences: searchParams.get("audiences") ?? undefined,
-			themes: searchParams.get("themes") ?? undefined,
-			tags: searchParams.get("tags") ?? undefined,
-			page: searchParams.get("page") ?? undefined,
-			limit: searchParams.get("limit") ?? undefined,
+			q: searchParams?.get("q") ?? undefined,
+			audiences: searchParams?.get("audiences") ?? undefined,
+			themes: searchParams?.get("themes") ?? undefined,
+			tags: searchParams?.get("tags") ?? undefined,
+			page: searchParams?.get("page") ?? undefined,
+			limit: searchParams?.get("limit") ?? undefined,
 		};
 		const validatedParams = searchParamsSchema.parse(rawParams);
 		const parsedParams = parseSearchParams(validatedParams);
