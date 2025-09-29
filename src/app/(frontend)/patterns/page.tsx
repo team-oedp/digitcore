@@ -26,8 +26,7 @@ type ThemeGroup = {
 
 export const metadata: Metadata = {
 	title: "Patterns | DIGITCORE",
-	description:
-		"Open infrastructure and environmental research values and principles.",
+	description: "Open environmental research patterns and themes.",
 };
 
 export default async function PatternsPage() {
@@ -124,7 +123,8 @@ export default async function PatternsPage() {
 									<div
 										key={pattern._id}
 										className={cn(
-											index === patterns.length - 1 && "border-dashed-brand-b",
+									index === patterns.length - 1 &&
+										"border-dashed-brand border-dashed-brand-b",
 										)}
 									>
 										<SearchResultItem

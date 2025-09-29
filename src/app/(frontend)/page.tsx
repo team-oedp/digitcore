@@ -14,7 +14,7 @@ import type { Page } from "~/sanity/sanity.types";
 export const metadata: Metadata = {
 	title: "Home | DIGITCORE",
 	description:
-		"Community-centered open infrastructure empowering equitable collaboration between researchers, developers, and frontline communities.",
+		"DIGITCORE outlines challenges, problems, and phenomena experienced or observed by community organizations, researchers, and open source technologists working on collaborative environmental research. This toolkit is designed to help you make decisions about tools, modes of interaction, research design, and process.",
 };
 
 export default async function Home() {

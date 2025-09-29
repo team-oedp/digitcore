@@ -86,7 +86,7 @@ function SearchResultBase({
 	return (
 		<div
 			className={cn(
-				"relative h-[200px] w-full border-dashed-brand-b pb-0",
+				"relative h-[200px] w-full border-dashed-brand border-dashed-brand-b pb-0",
 				isPatternsPage && "group",
 			)}
 		>

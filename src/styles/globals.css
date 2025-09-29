@@ -432,13 +432,11 @@
 	}
 
 	.border-dashed-brand-t {
-		@apply border-dashed-brand;
 		border-top: 1px solid transparent;
 		border-image: var(--border-image) 2;
 	}
 
 	.border-dashed-brand-b {
-		@apply border-dashed-brand;
 		border-bottom: 1px solid transparent;
 		border-image: var(--border-image) 2;
 	}
