@@ -7,7 +7,7 @@ import {
 	useTransform,
 } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import PatternFadeRotate from "~/components/shared/pattern-fade-rotate";
+import PatternGrid from "~/components/shared/pattern-grid";
 
 type ResponsiveNumber =
 	| number
@@ -446,6 +446,15 @@ export function HeadingMorph({
 		[0, 1],
 	);
 
+	// Grid layout constants for background behind heading
+	const gridRows = 3;
+	const gridCellSize = 192; // match PatternCombination "md"
+	const gridGapPx = 20;
+	const gridTopExtra = 64; // extra space above the grid
+	const gridTopGutter = gridGapPx + gridTopExtra;
+	const gridHeightPx =
+		gridTopGutter + gridRows * gridCellSize + (gridRows - 1) * gridGapPx;
+
 	const containerHeightStyle =
 		typeof headerHeightVh === "number" && headerHeightVh > 0
 			? `calc(${headerHeightVh}vh + ${effectiveScrollLockDistance}px)`
@@ -466,6 +475,25 @@ export function HeadingMorph({
 					className="relative flex h-full flex-col pt-5"
 					ref={contentMeasureRef}
 				>
+					{/* Background pattern grid behind text: 200vw wide and 100vh high */}
+					<div
+						className="-translate-x-1/2 absolute top-0 left-1/2 z-0"
+						style={{
+							width: "200vw",
+							height: gridHeightPx,
+							maxHeight: "100vh",
+							paddingTop: gridTopGutter,
+						}}
+					>
+						<PatternGrid
+							className="h-full w-full"
+							gate={reorderProgress}
+							cellSize={gridCellSize}
+							gapPx={gridGapPx}
+							rows={gridRows}
+						/>
+					</div>
+
 					{/* Large heading */}
 					<motion.h1
 						className="relative z-20 mb-6 text-page-heading"
@@ -535,14 +563,7 @@ export function HeadingMorph({
 						})()}
 					</motion.h1>
 
-					{/* Decorative patterns - placed in-flow below and right, never overlapping text */}
-					<div className="pointer-events-none mt-8 flex w-full justify-end">
-						<PatternFadeRotate
-							randomPatterns={3}
-							size="lg"
-							gate={reorderProgress}
-						/>
-					</div>
+					{/* Removed overlapping pattern fade; grid serves as the only decorative background */}
 				</div>
 			</motion.header>
 		</div>
