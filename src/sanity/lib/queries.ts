@@ -1038,7 +1038,7 @@ export const THEMES_QUERY = defineQuery(`
 `);
 
 export const TAGS_QUERY = defineQuery(`
-  *[_type == "tag"] | order(title asc) {
+  *[_type == "tag" && count(*[_type == "pattern" && references(^._id)]) > 0] | order(title asc) {
     _id,
     title,
     "value": _id,
@@ -1060,7 +1060,7 @@ export const FILTER_OPTIONS_QUERY = defineQuery(`
       "value": _id,
       "label": title
     },
-    "tags": *[_type == "tag"] | order(title asc) {
+    "tags": *[_type == "tag" && count(*[_type == "pattern" && references(^._id)]) > 0] | order(title asc) {
       _id,
       title,
       "value": _id,
