@@ -113,7 +113,11 @@ export default async function Home() {
 					{sectionGroups.map((group, groupIndex) => (
 						<section
 							key={group.content?._key || `group-${groupIndex}`}
-							className="flex flex-col gap-4"
+							className={
+								groupIndex === 0
+									? "flex flex-col gap-4 pb-[4.5rem]"
+									: "flex flex-col gap-4"
+							}
 						>
 							{/* Render the content section */}
 							{group.content && group.content._type === "content" && (

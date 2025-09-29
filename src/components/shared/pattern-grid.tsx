@@ -148,6 +148,26 @@ export default function PatternGrid({
 		};
 	}, [gate]);
 
+	// Track global window scroll to drive post-morph fade-out reliably
+	const { scrollY } = useScroll();
+	const smoothWindowY = useSpring(scrollY, {
+		stiffness: 140,
+		damping: 26,
+		mass: 0.45,
+	});
+	const [winY, setWinY] = useState(0);
+	useMotionValueEvent(smoothWindowY, "change", (v) => setWinY(v ?? 0));
+
+	// Capture window scroll position when morph (gate) completes to start fade-out
+	const gateWindowYRef = useRef<number>(0);
+	const prevGpRef = useRef<number>(0);
+	useEffect(() => {
+		if (prevGpRef.current < 0.98 && gp >= 0.98) {
+			gateWindowYRef.current = winY;
+		}
+		prevGpRef.current = gp;
+	}, [gp, winY]);
+
 	// compute grid size from container size (supports 200vw x 100vh)
 	const [cw, setCw] = useState(0);
 	const [ch, setCh] = useState(0);
@@ -198,7 +218,7 @@ export default function PatternGrid({
 						// staggered fade: start earlier so grid is visible sooner
 						const jitter = seeded(i);
 						const start = 0.12 + jitter * 0.18; // ~0.12..0.30
-						const end = Math.min(0.9, start + 0.28 + seeded(i + 7) * 0.1);
+						const end = Math.min(0.95, start + 0.45 + seeded(i + 7) * 0.15); // slower fade-in window
 						// compute opacity numerically (no hooks inside map)
 						// Important: do NOT hard-gate here; it makes all tiles pop at once.
 						let baseOpacity = 0;
@@ -214,6 +234,7 @@ export default function PatternGrid({
 						const gateFactor = gate
 							? Math.min(1, Math.max(0, (gp - gateDelay) / gateWindow))
 							: 1;
+						// Only fade-in (no fade-out); keep opacity based on base+gate
 						const opacity = baseOpacity * gateFactor;
 						// slight rotation variance for liveliness
 						const dir = seeded(i + 3) > 0.5 ? 1 : -1;
