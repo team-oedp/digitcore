@@ -18,7 +18,7 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
 	title: "Explore | DIGITCORE",
-	description: "Explore patterns, tags, glossary terms, and resources.",
+	description: "Explore patterns, tags, themes, and audiences.",
 };
 
 export default async function ExplorePage({
