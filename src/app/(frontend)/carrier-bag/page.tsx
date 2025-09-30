@@ -7,9 +7,9 @@ import type { CarrierBag as CarrierBagDocument } from "~/sanity/sanity.types";
 import { CarrierBagPage } from "./carrier-bag-page";
 
 export const metadata: Metadata = {
-	title: "Carrier Bag | DIGITCORE Toolkit",
+	title: "Carrier Bag | DIGITCORE",
 	description:
-		"Personal space to collect and organize patterns inspired by the carrier bag theory.",
+		"Collect and organize patterns in this personal store inspired by the carrier bag theory.",
 };
 
 export default async function CarrierBag() {

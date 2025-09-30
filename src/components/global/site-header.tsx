@@ -48,7 +48,7 @@ export function SiteHeader() {
 	}, [clearExpiredUpdates]);
 
 	return (
-		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-primary-foreground">
+		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-container-background">
 			<nav className="flex w-full items-center justify-between gap-3.5 px-5 py-1.5">
 				<div className="flex w-full items-center gap-6">
 					<Link

@@ -53,8 +53,8 @@ export async function generateMetadata({
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
 		.join(" ");
 	return {
-		title: `${readable} | Pattern | DIGITCORE Toolkit`,
-		description: `Learn how the ${readable} pattern can support community-centered projects.`,
+		title: `${readable} | Pattern | DIGITCORE`,
+		description: `${readable}.`,
 	};
 }
 

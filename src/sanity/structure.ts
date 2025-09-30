@@ -29,7 +29,7 @@ export const structure: StructureResolver = (S) =>
 				.child(S.document().schemaType("carrierBag").documentId("carrierBag"))
 				.icon(BasketIcon),
 			S.listItem()
-				.title("Onboarding")
+				.title("Orientation")
 				.child(S.document().schemaType("onboarding").documentId("onboarding"))
 				.icon(PresentationIcon),
 			S.listItem()

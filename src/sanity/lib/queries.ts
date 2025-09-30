@@ -256,7 +256,10 @@ export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
     title,
     description,
     "slug": slug.current,
-    tags[]->,
+    tags[]->{
+      _id,
+      title
+    },
     audiences[]->{
       _id,
       title
@@ -266,10 +269,19 @@ export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
       title,
       description
     },
-    solutions[]->,
+    solutions[]->{
+      _id,
+      title,
+      description
+    },
     resources[]->{
-      ...,
-      solutions[]->{...},
+      _id,
+      title,
+      description,
+      solutions[]->{
+        _id,
+        title
+      }
     },
   }`);
 
@@ -360,7 +372,7 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
       _id,
       title,
       description,
-      solution[]->{
+      solutions[]->{
         _id,
         title
       }
@@ -516,7 +528,7 @@ export const PATTERN_SIMPLE_SEARCH_QUERY = defineQuery(`
       _id,
       title,
       description,
-      solution[]->{
+      solutions[]->{
         _id,
         title
       }
@@ -564,7 +576,7 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
       _id,
       title,
       description,
-      solution[]->{
+      solutions[]->{
         _id,
         title
       }
@@ -1026,7 +1038,7 @@ export const THEMES_QUERY = defineQuery(`
 `);
 
 export const TAGS_QUERY = defineQuery(`
-  *[_type == "tag"] | order(title asc) {
+  *[_type == "tag" && count(*[_type == "pattern" && references(^._id)]) > 0] | order(title asc) {
     _id,
     title,
     "value": _id,
@@ -1048,7 +1060,7 @@ export const FILTER_OPTIONS_QUERY = defineQuery(`
       "value": _id,
       "label": title
     },
-    "tags": *[_type == "tag"] | order(title asc) {
+    "tags": *[_type == "tag" && count(*[_type == "pattern" && references(^._id)]) > 0] | order(title asc) {
       _id,
       title,
       "value": _id,

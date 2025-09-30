@@ -11,7 +11,7 @@ import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
-	title: "Acknowledgements | DIGITCORE Toolkit",
+	title: "Acknowledgements | DIGITCORE",
 	description:
 		"Acknowledgements and credits for the DIGITCORE Toolkit project and its contributors.",
 };

@@ -16,7 +16,7 @@ import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
-	title: "Tags | DIGITCORE Toolkit",
+	title: "Tags | DIGITCORE",
 	description:
 		"Explore tags to discover new pathways through the toolkit's patterns.",
 };

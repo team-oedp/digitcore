@@ -41,7 +41,7 @@ export type Footer = {
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
           href?: string
           page?: {
             _ref: string
@@ -102,7 +102,7 @@ export type Footer = {
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
           href?: string
           page?: {
             _ref: string
@@ -225,7 +225,7 @@ export type SiteSettings = {
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
           href?: string
           page?: {
             _ref: string
@@ -257,6 +257,7 @@ export type Onboarding = {
   _updatedAt: string
   _rev: string
   title?: string
+  slug?: Slug
   description?: Array<{
     children?: Array<{
       marks?: Array<string>
@@ -278,7 +279,7 @@ export type Onboarding = {
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
           href?: string
           page?: {
             _ref: string
@@ -332,7 +333,7 @@ export type Onboarding = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'page' | 'pattern'
+            linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
             href?: string
             page?: {
               _ref: string
@@ -381,7 +382,7 @@ export type Onboarding = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'page' | 'pattern'
+            linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
             href?: string
             page?: {
               _ref: string
@@ -428,7 +429,7 @@ export type Onboarding = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'page' | 'pattern'
+            linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
             href?: string
             page?: {
               _ref: string
@@ -482,7 +483,7 @@ export type CarrierBag = {
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
           href?: string
           page?: {
             _ref: string
@@ -541,7 +542,7 @@ export type Faq = {
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
           href?: string
           page?: {
             _ref: string
@@ -740,7 +741,7 @@ export type ContentList = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'page' | 'pattern'
+            linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
             href?: string
             page?: {
               _ref: string
@@ -792,7 +793,7 @@ export type Content = {
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
           href?: string
           page?: {
             _ref: string
@@ -838,7 +839,7 @@ export type BlockContent = Array<{
         _key: string
       }
     | {
-        linkType?: 'href' | 'page' | 'pattern'
+        linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
         href?: string
         page?: {
           _ref: string
@@ -865,7 +866,7 @@ export type BlockContent = Array<{
 export type Link = {
   _type: 'link'
   label?: string
-  linkType?: 'href' | 'page' | 'pattern'
+  linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
   href?: string
   page?: {
     _ref: string
@@ -1701,7 +1702,7 @@ export type GLOSSARY_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -1793,7 +1794,7 @@ export type PAGE_BY_SLUG_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -1836,7 +1837,7 @@ export type EXPLORE_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -1852,7 +1853,7 @@ export type EXPLORE_PAGE_QUERYResult = {
   }> | null
 } | null
 // Variable: PATTERNS_WITH_THEMES_QUERY
-// Query: *[_type == "pattern" && defined(slug.current)][]{    _id,    _type,    title,    description,    "slug": slug.current,    tags[]->,    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->,    resources[]->{      ...,      solutions[]->{...},    },  }
+// Query: *[_type == "pattern" && defined(slug.current)][]{    _id,    _type,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solutions[]->{        _id,        title      }    },  }
 export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
   _id: string
   _type: 'pattern'
@@ -1878,11 +1879,7 @@ export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
   slug: string | null
   tags: Array<{
     _id: string
-    _type: 'tag'
-    _createdAt: string
-    _updatedAt: string
-    _rev: string
-    title?: string
+    title: string | null
   }> | null
   audiences: Array<{
     _id: string
@@ -1912,12 +1909,8 @@ export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
   } | null
   solutions: Array<{
     _id: string
-    _type: 'solution'
-    _createdAt: string
-    _updatedAt: string
-    _rev: string
-    title?: string
-    description?: Array<{
+    title: string | null
+    description: Array<{
       children?: Array<{
         marks?: Array<string>
         text?: string
@@ -1934,23 +1927,12 @@ export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
       level?: number
       _type: 'block'
       _key: string
-    }>
-    audiences?: Array<{
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      _key: string
-      [internalGroqTypeReferenceTo]?: 'audience'
-    }>
+    }> | null
   }> | null
   resources: Array<{
     _id: string
-    _type: 'resource'
-    _createdAt: string
-    _updatedAt: string
-    _rev: string
-    title?: string
-    description?: Array<{
+    title: string | null
+    description: Array<{
       children?: Array<{
         marks?: Array<string>
         text?: string
@@ -1967,41 +1949,11 @@ export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
       level?: number
       _type: 'block'
       _key: string
-    }>
+    }> | null
     solutions: Array<{
       _id: string
-      _type: 'solution'
-      _createdAt: string
-      _updatedAt: string
-      _rev: string
-      title?: string
-      description?: Array<{
-        children?: Array<{
-          marks?: Array<string>
-          text?: string
-          _type: 'span'
-          _key: string
-        }>
-        style?: 'normal'
-        listItem?: never
-        markDefs?: Array<{
-          href?: string
-          _type: 'link'
-          _key: string
-        }>
-        level?: number
-        _type: 'block'
-        _key: string
-      }>
-      audiences?: Array<{
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        _key: string
-        [internalGroqTypeReferenceTo]?: 'audience'
-      }>
+      title: string | null
     }> | null
-    mainLink?: string
   }> | null
 }>
 // Variable: PATTERNS_GROUPED_BY_THEME_QUERY
@@ -2180,7 +2132,7 @@ export type PATTERNS_GROUPED_BY_THEME_QUERYResult = Array<{
   }>
 }>
 // Variable: PATTERN_SEARCH_QUERY
-// Query: *[_type == "pattern" && defined(slug.current)    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Enhanced search scoring across relevant fields  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solution[]->{        _id,        title      }    }  }
+// Query: *[_type == "pattern" && defined(slug.current)    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Enhanced search scoring across relevant fields  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solutions[]->{        _id,        title      }    }  }
 export type PATTERN_SEARCH_QUERYResult = Array<never>
 // Variable: SOLUTION_SEARCH_QUERY
 // Query: *[_type == "solution"]  | score(      // Exact matches get highest scores      boost(title match $searchTerm, 12),      boost(pt::text(description) match $searchTerm, 10),            // Partial matches      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  [_score > 0]  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    description,    audiences[]->{      _id,      title    },    // Find parent patterns for navigation    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{      _id,      title,      "slug": slug.current    }[0...3]  }
@@ -2192,10 +2144,10 @@ export type RESOURCE_SEARCH_QUERYResult = Array<never>
 // Query: *[_type == "tag" && title match ($searchTerm + "*")]  | score(      boost(title match $searchTerm, 15),      boost(title match ($searchTerm + "*"), 10),      title match ($searchTerm + "*")    )  [_score > 0]  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    // Find patterns that use this tag    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{      _id,      title,      "slug": slug.current    }[0...5]  }
 export type TAG_SEARCH_QUERYResult = Array<never>
 // Variable: PATTERN_SIMPLE_SEARCH_QUERY
-// Query: *[_type == "pattern" && defined(slug.current)]  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solution[]->{        _id,        title      }    }  }
+// Query: *[_type == "pattern" && defined(slug.current)]  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solutions[]->{        _id,        title      }    }  }
 export type PATTERN_SIMPLE_SEARCH_QUERYResult = Array<never>
 // Variable: PATTERN_FILTER_QUERY
-// Query: *[_type == "pattern" && defined(slug.current)    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Order by title only  | order(title asc)  {    _id,    _type,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solution[]->{        _id,        title      }    }  }
+// Query: *[_type == "pattern" && defined(slug.current)    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Order by title only  | order(title asc)  {    _id,    _type,    title,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solutions[]->{        _id,        title      }    }  }
 export type PATTERN_FILTER_QUERYResult = Array<{
   _id: string
   _type: 'pattern'
@@ -2292,7 +2244,10 @@ export type PATTERN_FILTER_QUERYResult = Array<{
       _type: 'block'
       _key: string
     }> | null
-    solution: null
+    solutions: Array<{
+      _id: string
+      title: string | null
+    }> | null
   }> | null
 }>
 // Variable: ONBOARDING_QUERY
@@ -2322,7 +2277,7 @@ export type ONBOARDING_QUERYResult = {
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page?: {
             _ref: string
@@ -2376,7 +2331,7 @@ export type ONBOARDING_QUERYResult = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'page' | 'pattern'
+            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
             page?: {
               _ref: string
@@ -2425,7 +2380,7 @@ export type ONBOARDING_QUERYResult = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'page' | 'pattern'
+            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
             page?: {
               _ref: string
@@ -2472,7 +2427,7 @@ export type ONBOARDING_QUERYResult = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'page' | 'pattern'
+            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
             page?: {
               _ref: string
@@ -2538,7 +2493,7 @@ export type TAGS_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -2579,7 +2534,7 @@ export type TAGS_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'page' | 'pattern'
+                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -2625,7 +2580,7 @@ export type TAGS_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'page' | 'pattern'
+                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -2682,7 +2637,7 @@ export type CARRIER_BAG_QUERYResult = {
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page?: {
             _ref: string
@@ -2863,7 +2818,7 @@ export type VALUES_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -2903,7 +2858,7 @@ export type VALUES_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'page' | 'pattern'
+                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -2950,7 +2905,7 @@ export type VALUES_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'page' | 'pattern'
+                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -3011,7 +2966,7 @@ export type PATTERNS_PAGE_QUERYResult = {
                 _key: string
               }
             | {
-                linkType?: 'href' | 'page' | 'pattern'
+                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                 href?: string
                 page?: {
                   _ref: string
@@ -3067,7 +3022,7 @@ export type PATTERNS_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'page' | 'pattern'
+                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -3122,7 +3077,7 @@ export type ABOUT_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -3162,7 +3117,7 @@ export type ABOUT_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'page' | 'pattern'
+                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -3209,7 +3164,7 @@ export type ABOUT_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'page' | 'pattern'
+                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -3264,7 +3219,7 @@ export type HOME_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -3304,7 +3259,7 @@ export type HOME_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'page' | 'pattern'
+                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -3351,7 +3306,7 @@ export type HOME_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'page' | 'pattern'
+                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -3401,7 +3356,7 @@ export type HOME_PAGE_QUERYResult = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'page' | 'pattern'
+            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
             page?: {
               _ref: string
@@ -3449,7 +3404,7 @@ export type HOME_PAGE_QUERYResult = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'page' | 'pattern'
+            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
             page?: {
               _ref: string
@@ -3502,7 +3457,7 @@ export type FAQ_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -3542,7 +3497,7 @@ export type FAQ_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'page' | 'pattern'
+                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -3589,7 +3544,7 @@ export type FAQ_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'page' | 'pattern'
+                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -3667,7 +3622,7 @@ export type FAQS_QUERYResult = Array<{
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page?: {
             _ref: string
@@ -3738,7 +3693,7 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -3778,7 +3733,7 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'page' | 'pattern'
+                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -3825,7 +3780,7 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'page' | 'pattern'
+                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -3897,7 +3852,7 @@ export type FOOTER_QUERYResult = {
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern'
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
           page?: {
             _ref: string
@@ -3944,7 +3899,7 @@ export type THEMES_QUERYResult = Array<{
   label: string | null
 }>
 // Variable: TAGS_QUERY
-// Query: *[_type == "tag"] | order(title asc) {    _id,    title,    "value": _id,    "label": title  }
+// Query: *[_type == "tag" && count(*[_type == "pattern" && references(^._id)]) > 0] | order(title asc) {    _id,    title,    "value": _id,    "label": title  }
 export type TAGS_QUERYResult = Array<{
   _id: string
   title: string | null
@@ -3952,7 +3907,7 @@ export type TAGS_QUERYResult = Array<{
   label: string | null
 }>
 // Variable: FILTER_OPTIONS_QUERY
-// Query: {    "audiences": *[_type == "audience"] | order(title asc) {      _id,      title,      "value": _id,      "label": title    },    "themes": *[_type == "theme"] | order(title asc) {      _id,      title,      "value": _id,      "label": title    },    "tags": *[_type == "tag"] | order(title asc) {      _id,      title,      "value": _id,      "label": title    }  }
+// Query: {    "audiences": *[_type == "audience"] | order(title asc) {      _id,      title,      "value": _id,      "label": title    },    "themes": *[_type == "theme"] | order(title asc) {      _id,      title,      "value": _id,      "label": title    },    "tags": *[_type == "tag" && count(*[_type == "pattern" && references(^._id)]) > 0] | order(title asc) {      _id,      title,      "value": _id,      "label": title    }  }
 export type FILTER_OPTIONS_QUERYResult = {
   audiences: Array<{
     _id: string
@@ -3993,14 +3948,14 @@ declare module '@sanity/client' {
     '*[_type == "page" && defined(slug.current)]{\n    "slug": slug.current\n  }': PAGES_SLUGS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n  }': PAGE_BY_SLUG_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'explore\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n  }': EXPLORE_PAGE_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current)][]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->,\n    resources[]->{\n      ...,\n      solutions[]->{...},\n    },\n  }': PATTERNS_WITH_THEMES_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current)][]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    },\n  }': PATTERNS_WITH_THEMES_QUERYResult
     '\n  *[_type == "theme" && defined(_id)] | order(title asc) {\n    _id,\n    title,\n    description,\n    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id)] {\n      _id,\n      _type,\n      title,\n      description,\n      "slug": slug.current,\n      tags[]->,\n      audiences[]->{\n        _id,\n        title\n      },\n      theme->{\n        _id,\n        title,\n        description\n      },\n      solutions[]->,\n      resources[]->{\n        ...,\n        solutions[]->{...},\n      },\n    }\n  }[count(patterns) > 0]\n': PATTERNS_GROUPED_BY_THEME_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Enhanced search scoring across relevant fields\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Enhanced search scoring across relevant fields\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_QUERYResult
     '\n  *[_type == "solution"]\n  | score(\n      // Exact matches get highest scores\n      boost(title match $searchTerm, 12),\n      boost(pt::text(description) match $searchTerm, 10),\n      \n      // Partial matches\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    audiences[]->{\n      _id,\n      title\n    },\n    // Find parent patterns for navigation\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...3]\n  }\n': SOLUTION_SEARCH_QUERYResult
     '\n  *[_type == "resource"]\n  | score(\n      // Exact matches get highest scores\n      boost(title match $searchTerm, 12),\n      boost(pt::text(description) match $searchTerm, 10),\n      \n      // Partial matches\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    links,\n    solutions[]->{\n      _id,\n      title\n    },\n    // Find parent patterns for navigation\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...3]\n  }\n': RESOURCE_SEARCH_QUERYResult
     '\n  *[_type == "tag" && title match ($searchTerm + "*")]\n  | score(\n      boost(title match $searchTerm, 15),\n      boost(title match ($searchTerm + "*"), 10),\n      title match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    // Find patterns that use this tag\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...5]\n  }\n': TAG_SEARCH_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current)]\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SIMPLE_SEARCH_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Order by title only\n  | order(title asc)\n  {\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solution[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_FILTER_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current)]\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SIMPLE_SEARCH_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Order by title only\n  | order(title asc)\n  {\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_FILTER_QUERYResult
     "\n  *[_type == 'onboarding'][0]{\n    _id,\n    _type,\n    title,\n    description,\n    skipLabel,\n    backLabel,\n    footerText,\n    breadcrumbs,\n    slide1{\n      title,\n      body,\n      primaryCtaLabel,\n      secondaryCtaText\n    },\n    slide2{\n      title,\n      body\n    },\n    slide3{\n      title,\n      body\n    }\n  }\n": ONBOARDING_QUERYResult
     '\n  *[_type == "tag"] | order(title asc) {\n    _id,\n    title,\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current\n    }\n  }[count(patterns) > 0]\n': TAGS_WITH_PATTERNS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'tags\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': TAGS_PAGE_QUERYResult
@@ -4018,7 +3973,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "pattern" && _id in $patternIds]{\n    _id,\n    _updatedAt\n  }\n': PATTERNS_STALENESS_CHECK_QUERYResult
     '\n  *[_type == "audience"] | order(title asc) {\n    _id,\n    title,\n    "value": _id,\n    "label": title\n  }\n': AUDIENCES_QUERYResult
     '\n  *[_type == "theme"] | order(title asc) {\n    _id,\n    title,\n    "value": _id,\n    "label": title\n  }\n': THEMES_QUERYResult
-    '\n  *[_type == "tag"] | order(title asc) {\n    _id,\n    title,\n    "value": _id,\n    "label": title\n  }\n': TAGS_QUERYResult
-    '\n  {\n    "audiences": *[_type == "audience"] | order(title asc) {\n      _id,\n      title,\n      "value": _id,\n      "label": title\n    },\n    "themes": *[_type == "theme"] | order(title asc) {\n      _id,\n      title,\n      "value": _id,\n      "label": title\n    },\n    "tags": *[_type == "tag"] | order(title asc) {\n      _id,\n      title,\n      "value": _id,\n      "label": title\n    }\n  }\n': FILTER_OPTIONS_QUERYResult
+    '\n  *[_type == "tag" && count(*[_type == "pattern" && references(^._id)]) > 0] | order(title asc) {\n    _id,\n    title,\n    "value": _id,\n    "label": title\n  }\n': TAGS_QUERYResult
+    '\n  {\n    "audiences": *[_type == "audience"] | order(title asc) {\n      _id,\n      title,\n      "value": _id,\n      "label": title\n    },\n    "themes": *[_type == "theme"] | order(title asc) {\n      _id,\n      title,\n      "value": _id,\n      "label": title\n    },\n    "tags": *[_type == "tag" && count(*[_type == "pattern" && references(^._id)]) > 0] | order(title asc) {\n      _id,\n      title,\n      "value": _id,\n      "label": title\n    }\n  }\n': FILTER_OPTIONS_QUERYResult
   }
 }

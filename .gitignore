@@ -49,9 +49,12 @@ yarn-error.log*
 dist/
 
 # claude
+.claude/
+.claude/*
 CLAUDE.md
 
 # warp
 WARP.md
 
+# gemini
 GEMINI.md

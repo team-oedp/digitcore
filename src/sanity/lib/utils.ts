@@ -35,7 +35,6 @@ export function linkResolver(link: Link | undefined) {
 		typeof (link as unknown as { pattern?: unknown })?.pattern === "string"
 			? ((link as unknown as { pattern?: string }).pattern as string)
 			: undefined;
-
 	switch (link.linkType) {
 		case "href":
 			return link.href || null;
@@ -45,6 +44,8 @@ export function linkResolver(link: Link | undefined) {
 		case "pattern":
 			if (patternSlug) return `/patterns/${patternSlug}`;
 			return null;
+		case "onboarding":
+			return "/onboarding";
 		default:
 			return null;
 	}

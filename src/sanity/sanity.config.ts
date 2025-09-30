@@ -7,7 +7,7 @@ import { schema } from "./schemaTypes/index";
 import { structure } from "./structure";
 
 export default defineConfig({
-	title: "Digitcore",
+	title: "DIGITCORE",
 	projectId,
 	dataset,
 	plugins: [

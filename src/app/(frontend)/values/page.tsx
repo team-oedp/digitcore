@@ -11,7 +11,7 @@ import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
-	title: "Values | DIGITCORE Toolkit",
+	title: "Values | DIGITCORE",
 	description:
 		"Open infrastructure and environmental research values and principles.",
 };

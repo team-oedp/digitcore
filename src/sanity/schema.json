@@ -220,6 +220,10 @@
                                 {
                                   "type": "string",
                                   "value": "pattern"
+                                },
+                                {
+                                  "type": "string",
+                                  "value": "onboarding"
                                 }
                               ]
                             },
@@ -654,6 +658,10 @@
                                 {
                                   "type": "string",
                                   "value": "pattern"
+                                },
+                                {
+                                  "type": "string",
+                                  "value": "onboarding"
                                 }
                               ]
                             },
@@ -1434,6 +1442,10 @@
                                 {
                                   "type": "string",
                                   "value": "pattern"
+                                },
+                                {
+                                  "type": "string",
+                                  "value": "onboarding"
                                 }
                               ]
                             },
@@ -1609,6 +1621,14 @@
         "type": "objectAttribute",
         "value": {
           "type": "string"
+        },
+        "optional": true
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
         },
         "optional": true
       },
@@ -1791,6 +1811,10 @@
                                 {
                                   "type": "string",
                                   "value": "pattern"
+                                },
+                                {
+                                  "type": "string",
+                                  "value": "onboarding"
                                 }
                               ]
                             },
@@ -2167,6 +2191,10 @@
                                       {
                                         "type": "string",
                                         "value": "pattern"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "value": "onboarding"
                                       }
                                     ]
                                   },
@@ -2510,6 +2538,10 @@
                                       {
                                         "type": "string",
                                         "value": "pattern"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "value": "onboarding"
                                       }
                                     ]
                                   },
@@ -2839,6 +2871,10 @@
                                       {
                                         "type": "string",
                                         "value": "pattern"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "value": "onboarding"
                                       }
                                     ]
                                   },
@@ -3200,6 +3236,10 @@
                                 {
                                   "type": "string",
                                   "value": "pattern"
+                                },
+                                {
+                                  "type": "string",
+                                  "value": "onboarding"
                                 }
                               ]
                             },
@@ -3587,6 +3627,10 @@
                                 {
                                   "type": "string",
                                   "value": "pattern"
+                                },
+                                {
+                                  "type": "string",
+                                  "value": "onboarding"
                                 }
                               ]
                             },
@@ -4912,6 +4956,10 @@
                                           {
                                             "type": "string",
                                             "value": "pattern"
+                                          },
+                                          {
+                                            "type": "string",
+                                            "value": "onboarding"
                                           }
                                         ]
                                       },
@@ -5271,6 +5319,10 @@
                                   {
                                     "type": "string",
                                     "value": "pattern"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "value": "onboarding"
                                   }
                                 ]
                               },
@@ -5588,6 +5640,10 @@
                             {
                               "type": "string",
                               "value": "pattern"
+                            },
+                            {
+                              "type": "string",
+                              "value": "onboarding"
                             }
                           ]
                         },
@@ -5757,6 +5813,10 @@
               {
                 "type": "string",
                 "value": "pattern"
+              },
+              {
+                "type": "string",
+                "value": "onboarding"
               }
             ]
           },

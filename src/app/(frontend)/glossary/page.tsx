@@ -23,7 +23,7 @@ import type { Page } from "~/sanity/sanity.types";
 import { GlossaryScroll } from "./glossary-scroll";
 
 export const metadata: Metadata = {
-	title: "Glossary | DIGITCORE Toolkit",
+	title: "Glossary | DIGITCORE",
 	description:
 		"Searchable reference for key terms and concepts used in the toolkit.",
 };
