@@ -34,16 +34,19 @@ export function toGlossaryAnchorId(input: string): string {
  * Detects glossary terms in text and returns an array of matched terms with positions
  * @param text - The text to search for glossary terms
  * @param glossaryTerms - Array of glossary terms to detect
+ * @param isTermSeen - Function to check if a term has been seen before
  * @returns Array of matches with term info and position
  */
 export function detectGlossaryTerms(
 	text: string,
 	glossaryTerms: GlossaryTerm[],
+	isTermSeen?: (termId: string) => boolean,
 ): Array<{
 	term: GlossaryTerm;
 	startIndex: number;
 	endIndex: number;
 	originalText: string;
+	shouldStyle: boolean;
 }> {
 	if (!text || !glossaryTerms || glossaryTerms.length === 0) {
 		return [];
@@ -54,7 +57,11 @@ export function detectGlossaryTerms(
 		startIndex: number;
 		endIndex: number;
 		originalText: string;
+		shouldStyle: boolean;
 	}> = [];
+
+	// Track which terms have already been matched in this text to avoid duplicates
+	const matchedTermIds = new Set<string>();
 
 	// Sort terms by length (longest first) to match longer terms before shorter ones
 	const sortedTerms = [...glossaryTerms].sort(
@@ -62,6 +69,11 @@ export function detectGlossaryTerms(
 	);
 
 	for (const term of sortedTerms) {
+		// Skip if we've already matched this term in this text
+		if (matchedTermIds.has(term._id)) {
+			continue;
+		}
+
 		// Create a case-insensitive regex that matches whole words
 		const pattern = new RegExp(`\\b${escapeRegExp(term.title)}\\b`, "gi");
 
@@ -78,12 +90,20 @@ export function detectGlossaryTerms(
 			);
 
 			if (!hasOverlap) {
+				// Check if this term has been seen before across the session
+				const hasBeenSeen = isTermSeen ? isTermSeen(term._id) : false;
+
 				matches.push({
 					term,
 					startIndex,
 					endIndex,
 					originalText: match[0], // Preserve original case
+					shouldStyle: !hasBeenSeen, // Only style if not seen before
 				});
+
+				// Mark this term as matched so we don't match it again in this text
+				matchedTermIds.add(term._id);
+				break; // Only match the first occurrence of this term in this text
 			}
 		}
 	}
@@ -104,6 +124,8 @@ function escapeRegExp(string: string): string {
  * @param text - The text to process
  * @param glossaryTerms - Array of glossary terms to detect
  * @param renderTerm - Function to render a detected glossary term
+ * @param isTermSeen - Function to check if a term has been seen before
+ * @param markTermSeen - Function to mark a term as seen
  * @returns Array of React nodes with glossary terms wrapped
  */
 export function processTextWithGlossaryTerms(
@@ -113,9 +135,12 @@ export function processTextWithGlossaryTerms(
 		term: GlossaryTerm,
 		text: string,
 		key: string,
+		shouldStyle: boolean,
 	) => React.ReactNode,
+	isTermSeen?: (termId: string) => boolean,
+	markTermSeen?: (termId: string) => void,
 ): React.ReactNode[] {
-	const matches = detectGlossaryTerms(text, glossaryTerms);
+	const matches = detectGlossaryTerms(text, glossaryTerms, isTermSeen);
 
 	if (matches.length === 0) {
 		return [text];
@@ -130,9 +155,19 @@ export function processTextWithGlossaryTerms(
 			result.push(text.substring(lastIndex, match.startIndex));
 		}
 
+		// Mark the term as seen if it should be styled (first occurrence)
+		if (match.shouldStyle && markTermSeen) {
+			markTermSeen(match.term._id);
+		}
+
 		// Add the wrapped glossary term
 		result.push(
-			renderTerm(match.term, match.originalText, `glossary-${index}`),
+			renderTerm(
+				match.term,
+				match.originalText,
+				`glossary-${index}`,
+				match.shouldStyle,
+			),
 		);
 
 		lastIndex = match.endIndex;

@@ -5,7 +5,15 @@ export const PATTERNS_QUERY =
     _id,
     _type,
     title,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
+      }
+    },
     "descriptionPlainText": pt::text(description),
     "slug": slug.current,
     tags[]->,
@@ -30,7 +38,15 @@ export const PATTERN_QUERY =
     _updatedAt,
     _rev,
     title,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
+      }
+    },
     "descriptionPlainText": pt::text(description),
     "slug": slug.current,
     tags[]->{...},
@@ -43,7 +59,15 @@ export const PATTERN_QUERY =
       _updatedAt,
       _rev,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       audiences[]->{ _id, title }
     },
     resources[]->{
@@ -53,7 +77,15 @@ export const PATTERN_QUERY =
       _updatedAt,
       _rev,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       links,
       solutions[]->{...},
     },
@@ -91,7 +123,15 @@ export const SOLUTIONS_BY_IDS_QUERY =
     _updatedAt,
     _rev,
     title,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
+      }
+    },
     audiences[]->{
       _id,
       _type,
@@ -107,7 +147,15 @@ export const RESOURCES_BY_IDS_QUERY =
     _updatedAt,
     _rev,
     title,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
+      }
+    },
     links,
     "solutionIds": solutions[]._ref
   }`);
@@ -129,7 +177,8 @@ export const GLOSSARY_PAGE_QUERY = defineQuery(`
       markDefs[]{
         ...,
         "page": page->slug.current,
-        "pattern": pattern->slug.current
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
       }
     },
   }`);
@@ -177,7 +226,8 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
       markDefs[]{
         ...,
         "page": page->slug.current,
-        "pattern": pattern->slug.current
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
       }
     },
   }`);
@@ -193,7 +243,8 @@ export const EXPLORE_PAGE_QUERY = defineQuery(`
       markDefs[]{
         ...,
         "page": page->slug.current,
-        "pattern": pattern->slug.current
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
       }
     },
   }`);
@@ -626,7 +677,15 @@ export const PATTERNS_BY_SLUGS_QUERY = defineQuery(`
     _id,
     _type,
     title,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
+      }
+    },
     "slug": slug.current,
     tags[]->,
     audiences[]->{
@@ -665,10 +724,11 @@ export const VALUES_PAGE_QUERY = defineQuery(`
     description[]{
       ...,
       markDefs[]{
-        ...,
-        "page": page->slug.current,
-        "pattern": pattern->slug.current
-      }
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
     },
     content[]{
       _key,
@@ -679,7 +739,8 @@ export const VALUES_PAGE_QUERY = defineQuery(`
         markDefs[]{
           ...,
           "page": page->slug.current,
-          "pattern": pattern->slug.current
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
         }
       },
       // For contentList type
@@ -727,7 +788,8 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
       markDefs[]{
         ...,
         "page": page->slug.current,
-        "pattern": pattern->slug.current
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
       }
     },
     content[]{
@@ -739,7 +801,8 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
         markDefs[]{
           ...,
           "page": page->slug.current,
-          "pattern": pattern->slug.current
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
         }
       },
       // For contentList type
@@ -764,7 +827,8 @@ export const HOME_PAGE_QUERY = defineQuery(`
       markDefs[]{
         ...,
         "page": page->slug.current,
-        "pattern": pattern->slug.current
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
       }
     },
     // Full content blocks, including contentList sections
@@ -777,7 +841,8 @@ export const HOME_PAGE_QUERY = defineQuery(`
         markDefs[]{
           ...,
           "page": page->slug.current,
-          "pattern": pattern->slug.current
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
         }
       },
       // For contentList type
@@ -803,7 +868,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
 `);
 
 export const FAQ_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'frequently-asked-questions'][0]{
+  *[_type == 'page' && slug.current == 'faq'][0]{
     _id,
     _type,
     title,
@@ -813,7 +878,8 @@ export const FAQ_PAGE_QUERY = defineQuery(`
       markDefs[]{
         ...,
         "page": page->slug.current,
-        "pattern": pattern->slug.current
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
       }
     },
     content[]{
@@ -825,7 +891,8 @@ export const FAQ_PAGE_QUERY = defineQuery(`
         markDefs[]{
           ...,
           "page": page->slug.current,
-          "pattern": pattern->slug.current
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
         }
       },
       // For contentList type
@@ -840,10 +907,23 @@ export const FAQ_PAGE_QUERY = defineQuery(`
 `);
 
 export const FAQS_QUERY = defineQuery(`
-  *[_type == "faq"] | order(_createdAt asc) {
+  *[_type == "faq"] | order(category->title asc, _createdAt asc) {
     _id,
     title,
-    description
+    category->{
+      _id,
+      title,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      }
+    },
+    description[]
   }
 `);
 
@@ -867,7 +947,8 @@ export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
       markDefs[]{
         ...,
         "page": page->slug.current,
-        "pattern": pattern->slug.current
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
       }
     },
     content[]{
@@ -879,7 +960,8 @@ export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
         markDefs[]{
           ...,
           "page": page->slug.current,
-          "pattern": pattern->slug.current
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
         }
       },
       // For contentList type

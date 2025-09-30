@@ -37,9 +37,9 @@ export function OnboardingRedirect() {
 
 		// Skip for API routes, static assets, and studio
 		if (
-			pathname.startsWith("/api/") ||
-			pathname.startsWith("/_next/") ||
-			pathname.startsWith("/studio")
+			pathname?.startsWith("/api/") ||
+			pathname?.startsWith("/_next/") ||
+			pathname?.startsWith("/studio")
 		) {
 			return;
 		}
@@ -55,7 +55,7 @@ export function OnboardingRedirect() {
 			const url = new URL("/onboarding", window.location.origin);
 
 			// Preserve pattern slug if navigating to a pattern page
-			if (pathname.startsWith("/pattern/")) {
+			if (pathname?.startsWith("/pattern/")) {
 				const segments = pathname.split("/");
 				const slug = segments[2];
 				if (slug) {
@@ -66,7 +66,7 @@ export function OnboardingRedirect() {
 			// Preserve the original destination with query params
 			const fullPath =
 				pathname +
-				(searchParams.toString() ? `?${searchParams.toString()}` : "");
+				(searchParams?.toString() ? `?${searchParams.toString()}` : "");
 			url.searchParams.set("returnTo", fullPath);
 
 			// Perform the redirect

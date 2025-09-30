@@ -89,6 +89,48 @@ describe("glossary-utils", () => {
 			const matches = detectGlossaryTerms("Some text", []);
 			expect(matches).toHaveLength(0);
 		});
+
+		it("should only match the first occurrence of each term", () => {
+			const text =
+				"API is great. The API documentation explains how API works and why API is useful.";
+			const matches = detectGlossaryTerms(text, mockGlossaryTerms);
+
+			// Should only find one match for "API" (the first occurrence)
+			expect(matches).toHaveLength(1);
+			const firstMatch = matches[0];
+			expect(firstMatch).toBeDefined();
+			if (firstMatch) {
+				expect(firstMatch.term.title).toBe("API");
+				expect(firstMatch.startIndex).toBe(0); // First "API" at the beginning
+				expect(firstMatch.endIndex).toBe(3);
+				expect(firstMatch.originalText).toBe("API");
+			}
+		});
+
+		it("should only match first occurrence of different terms", () => {
+			const text =
+				"Open Source API and API development. The Open Source community loves API usage.";
+			const matches = detectGlossaryTerms(text, mockGlossaryTerms);
+
+			// Should find first occurrence of "Open Source" and first occurrence of "API"
+			expect(matches).toHaveLength(2);
+
+			// Matches should be sorted by position
+			const openSourceMatch = matches[0];
+			const apiMatch = matches[1];
+
+			expect(openSourceMatch).toBeDefined();
+			if (openSourceMatch) {
+				expect(openSourceMatch.term.title).toBe("Open Source");
+				expect(openSourceMatch.startIndex).toBe(0);
+			}
+
+			expect(apiMatch).toBeDefined();
+			if (apiMatch) {
+				expect(apiMatch.term.title).toBe("API");
+				expect(apiMatch.startIndex).toBe(12); // First "API" after "Open Source "
+			}
+		});
 	});
 
 	describe("processTextWithGlossaryTerms", () => {
@@ -142,8 +184,32 @@ describe("glossary-utils", () => {
 				renderTerm,
 			);
 
+			// Should only match the first occurrence (API), not the second (api)
 			expect(result).toContain("[API]");
-			expect(result).toContain("[api]");
+			expect(result).not.toContain("[api]");
+			// The second "api" should remain as plain text
+			expect(result.join("")).toBe("The [API] and api are the same.");
+		});
+
+		it("should only process first occurrence of terms in processTextWithGlossaryTerms", () => {
+			const text = "API is great. The API documentation shows API usage.";
+			const renderTerm = (term: GlossaryTerm, text: string, key: string) =>
+				`<span key="${key}" data-term="${term._id}">${text}</span>`;
+
+			const result = processTextWithGlossaryTerms(
+				text,
+				mockGlossaryTerms,
+				renderTerm,
+			);
+
+			// Should have 2 elements: wrapped first API, then remaining text
+			expect(result).toHaveLength(2);
+			expect(result[0]).toBe(
+				'<span key="glossary-0" data-term="term1">API</span>',
+			);
+			expect(result[1]).toBe(
+				" is great. The API documentation shows API usage.",
+			);
 		});
 	});
 

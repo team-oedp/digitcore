@@ -38,7 +38,7 @@ export function SearchClientWrapper() {
 	useEffect(() => {
 		const performSearch = async () => {
 			// Create a string representation of search params for deduplication
-			const currentSearchString = searchParams.toString();
+			const currentSearchString = searchParams?.toString() ?? "";
 
 			// Prevent duplicate searches for the same parameters
 			if (currentSearchString === lastSearchParamsRef.current) {
@@ -53,13 +53,13 @@ export function SearchClientWrapper() {
 
 			// Parse parameters to check if we have any search criteria
 			const rawParams = {
-				q: searchParams.get("q") ?? undefined,
-				audiences: searchParams.get("audiences") ?? undefined,
-				themes: searchParams.get("themes") ?? undefined,
-				tags: searchParams.get("tags") ?? undefined,
-				enhance: searchParams.get("enhance") ?? undefined,
-				page: searchParams.get("page") ?? undefined,
-				limit: searchParams.get("limit") ?? undefined,
+				q: searchParams?.get("q") ?? undefined,
+				audiences: searchParams?.get("audiences") ?? undefined,
+				themes: searchParams?.get("themes") ?? undefined,
+				tags: searchParams?.get("tags") ?? undefined,
+				enhance: searchParams?.get("enhance") ?? undefined,
+				page: searchParams?.get("page") ?? undefined,
+				limit: searchParams?.get("limit") ?? undefined,
 			};
 
 			const validatedParams = searchParamsSchema.parse(rawParams);
@@ -235,13 +235,13 @@ export function SearchClientWrapper() {
 	}, [location, searchId]);
 
 	// Check current search criteria from URL
-	const currentSearchTerm = searchParams.get("q")?.trim() || "";
+	const currentSearchTerm = searchParams?.get("q")?.trim() || "";
 	const currentAudiences =
-		searchParams.get("audiences")?.split(",").filter(Boolean) || [];
+		searchParams?.get("audiences")?.split(",").filter(Boolean) || [];
 	const currentThemes =
-		searchParams.get("themes")?.split(",").filter(Boolean) || [];
+		searchParams?.get("themes")?.split(",").filter(Boolean) || [];
 	const currentTags =
-		searchParams.get("tags")?.split(",").filter(Boolean) || [];
+		searchParams?.get("tags")?.split(",").filter(Boolean) || [];
 
 	const hasSearchCriteria =
 		!!currentSearchTerm ||

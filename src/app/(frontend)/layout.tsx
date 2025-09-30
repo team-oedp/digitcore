@@ -6,6 +6,7 @@ import { draftMode } from "next/headers";
 import { Suspense } from "react";
 import { sans, signifier } from "~/app/(frontend)/fonts";
 import { DisableDraftMode } from "~/components/global/disable-draft-mode";
+import { GlossaryProvider } from "~/components/global/glossary-provider";
 import { OnboardingRedirect } from "~/components/global/onboarding-redirect";
 import { SiteLayout } from "~/components/global/site-layout";
 import { ThemeProvider } from "~/components/theme/theme-provider";
@@ -23,7 +24,6 @@ import { TRPCReactProvider } from "~/trpc/react";
 export const metadata: Metadata = {
 	title: "Digitcore",
 	description: "Digital Toolkit for Collaborative Environmental Research",
-	icons: [{ rel: "icon", url: "/oedp-icon.png" }],
 };
 
 export default async function Layout({
@@ -65,7 +65,9 @@ export default async function Layout({
 										<Suspense fallback={null}>
 											<OnboardingRedirect />
 										</Suspense>
-										<SiteLayout footerData={footerData}>{children}</SiteLayout>
+										<GlossaryProvider>
+											<SiteLayout footerData={footerData}>{children}</SiteLayout>
+										</GlossaryProvider>
 									</PageContentStoreProvider>
 								</CarrierBagStoreProvider>
 							</OnboardingStoreProvider>
