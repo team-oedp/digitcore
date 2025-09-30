@@ -13,7 +13,10 @@ import {
 	TAGS_WITH_PATTERNS_QUERY,
 } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
-import type { Page } from "~/sanity/sanity.types";
+import type {
+	Page,
+	TAGS_WITH_PATTERNS_QUERYResult,
+} from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "Tags | DIGITCORE",
@@ -21,38 +24,17 @@ export const metadata: Metadata = {
 		"Explore tags to discover new pathways through the toolkit's patterns.",
 };
 
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const ALPHABET = Array.from({ length: 26 }, (_, i) =>
+	String.fromCharCode(65 + i),
+);
 
-// Type definitions
-type Pattern = {
-	_id: string;
-	title: string;
-	slug: string;
-};
-
-type TagFromSanity = {
-	_id: string;
-	title: string;
-	patterns: Pattern[];
-};
-
-type Tag = {
-	id: string;
-	name: string;
-	letter: string;
-	resources: {
-		id: string;
-		title: string;
-		slug: string;
-	}[];
-};
-
-export type TagsByLetter = Partial<Record<string, Tag[]>>;
+export type TagsByLetter = Partial<
+	Record<string, TAGS_WITH_PATTERNS_QUERYResult>
+>;
 
 export default async function Tags() {
 	const isDraftMode = (await draftMode()).isEnabled;
 
-	// Fetch page data from Sanity
 	const pageData = (await client.fetch(
 		TAGS_PAGE_QUERY,
 		{},
@@ -62,7 +44,7 @@ export default async function Tags() {
 	)) as Page | null;
 
 	// Fetch tags with patterns from Sanity
-	const tagsData = await client.fetch(
+	const tagsData = (await client.fetch(
 		TAGS_WITH_PATTERNS_QUERY,
 		{},
 		isDraftMode
@@ -76,33 +58,20 @@ export default async function Tags() {
 					perspective: "published",
 					useCdn: true,
 				},
-	);
-
-	// Transform Sanity data to match the component's expected format
-	const transformedTags: Tag[] =
-		(tagsData as TagFromSanity[])?.map((tag) => {
-			const firstLetter = tag.title.charAt(0).toUpperCase();
-			return {
-				id: tag._id,
-				name: tag.title,
-				letter: firstLetter,
-				resources: tag.patterns.map((pattern) => ({
-					id: pattern._id,
-					title: pattern.title,
-					slug: pattern.slug,
-				})),
-			};
-		}) || [];
+	)) as TAGS_WITH_PATTERNS_QUERYResult | null;
 
 	// Group tags by letter and ensure strict alphabetical ordering within each group
-	const tagsByLetter = transformedTags.reduce<TagsByLetter>((acc, tag) => {
-		const group = acc[tag.letter] ?? [];
-		group.push(tag);
-		// Sort the group alphabetically by name to ensure strict ordering
-		group.sort((a, b) => a.name.localeCompare(b.name));
-		acc[tag.letter] = group;
-		return acc;
-	}, {});
+	const tagsByLetter =
+		tagsData?.reduce<TagsByLetter>((acc, tag) => {
+			const title = tag.title ?? "";
+			const letter = title.charAt(0).toUpperCase();
+			const group = acc[letter] ?? [];
+			group.push(tag);
+			// Sort the group alphabetically by title to ensure strict ordering
+			group.sort((a, b) => (a.title ?? "").localeCompare(b.title ?? ""));
+			acc[letter] = group;
+			return acc;
+		}, {}) ?? {};
 
 	if (!pageData) return null;
 
@@ -129,7 +98,7 @@ export default async function Tags() {
 				</div>
 
 				{/* Scrolling section */}
-				<div className="flex flex-col pb-44">
+				<div className="flex flex-col">
 					{pageData.title && <PageHeading title={pageData.title} />}
 					{pageData.description && (
 						<CustomPortableText
@@ -137,7 +106,7 @@ export default async function Tags() {
 							className="mt-8 text-body"
 						/>
 					)}
-					<div className="pt-20 lg:pt-60">
+					<div className="pt-14 lg:pt-14">
 						<TagsList tagsByLetter={tagsByLetter} alphabet={ALPHABET} />
 					</div>
 				</div>

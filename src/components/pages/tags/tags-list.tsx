@@ -4,20 +4,10 @@ import { FlowConnectionIcon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { Icon } from "~/components/shared/icon";
 import { Badge } from "~/components/ui/badge";
+import type { TAGS_WITH_PATTERNS_QUERYResult } from "~/sanity/sanity.types";
 
-// Type definitions
-type Tag = {
-	id: string;
-	name: string;
-	letter: string;
-	resources: {
-		id: string;
-		title: string;
-		slug: string;
-	}[];
-};
-
-type TagsByLetter = Partial<Record<string, Tag[]>>;
+// Type definitions using Sanity's auto-generated query result types
+type TagsByLetter = Partial<Record<string, TAGS_WITH_PATTERNS_QUERYResult>>;
 
 /**
  * TagsList component displays tags organized alphabetically with letter navigation.
@@ -35,8 +25,8 @@ export function TagsList({
 	alphabet: string[];
 }) {
 	return (
-		<div className="space-y-8 pb-[200px] md:pb-[800px]" data-scroll-container>
-			<div id="tags-content" className="flex-1 space-y-16">
+		<div className="space-y-8 pb-[144px] md:pb-[144px]" data-scroll-container>
+			<div id="tags-content" className="flex-1 space-y-4">
 				{alphabet.map((letter) => {
 					const tags = tagsByLetter[letter];
 					if (!tags || tags.length === 0) return null;
@@ -50,27 +40,24 @@ export function TagsList({
 							<h2 className="text-subheading">{letter}</h2>
 
 							{tags.map((tag) => (
-								<div key={tag.id} className="mb-12 space-y-4">
+								<div key={tag._id} className="mb-12 space-y-4">
 									<div className="inline-block w-fit rounded-md bg-neutral-100 px-2 py-1 dark:bg-neutral-800">
 										<h3 className="text-neutral-800 text-subheading dark:text-neutral-200">
-											{tag.name}
+											{tag.title ?? ""}
 										</h3>
 									</div>
 
 									<p className="mb-4 text-body-muted">
-										Tagged to the following pages. Showing{" "}
-										{Math.min(tag.resources.length, 10)}{" "}
-										{Math.min(tag.resources.length, 10) === 1
-											? "link"
-											: "links"}
+										Tagged to the following {Math.min(tag.patterns.length, 10)}{" "}
+										{Math.min(tag.patterns.length, 10) === 1 ? "page" : "pages"}
 										.
 									</p>
 
 									<div className="flex flex-wrap gap-2">
-										{tag.resources.slice(0, 10).map((resource) => (
+										{tag.patterns.slice(0, 10).map((pattern) => (
 											<Link
-												key={resource.id}
-												href={`/pattern/${resource.slug}`}
+												key={pattern._id}
+												href={`/pattern/${pattern.slug ?? ""}`}
 												className="inline-block w-max whitespace-normal break-words"
 											>
 												<Badge
@@ -84,7 +71,7 @@ export function TagsList({
 														/>
 													}
 												>
-													{resource.title}
+													{pattern.title ?? ""}
 												</Badge>
 											</Link>
 										))}

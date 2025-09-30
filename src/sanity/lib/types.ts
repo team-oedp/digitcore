@@ -55,3 +55,14 @@ export type ReferenceTarget<T> = T extends { _ref: string; _type: infer U }
 export type DereferencedReference<T> = T extends { _ref: string }
 	? { _id: string; _type: string; [key: string]: unknown }
 	: T;
+
+// Query result type that matches Sanity return type
+export type TagWithPatternsQueryResult = Array<{
+	_id: string;
+	title: string | null;
+	patterns: Array<{
+		_id: string;
+		title: string | null;
+		slug: string | null;
+	}>;
+}>;

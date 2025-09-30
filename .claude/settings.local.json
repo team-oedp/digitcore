@@ -5,7 +5,8 @@
       "Bash(npm test:*)",
       "Bash(npm run check:write:*)",
       "Bash(npm run dev:*)",
-      "WebFetch(domain:www.sanity.io)"
+      "WebFetch(domain:www.sanity.io)",
+      "Bash(mkdir:*)"
     ],
     "deny": []
   }
