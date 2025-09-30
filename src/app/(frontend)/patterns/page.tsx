@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { cn } from "~/lib/utils";

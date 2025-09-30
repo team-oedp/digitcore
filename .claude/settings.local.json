@@ -6,7 +6,9 @@
       "Bash(npm run check:write:*)",
       "Bash(npm run dev:*)",
       "WebFetch(domain:www.sanity.io)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Read(//Users/henrybabbage/Desktop/**)",
+      "Read(//Users/henrybabbage/Downloads/**)"
     ],
     "deny": []
   }

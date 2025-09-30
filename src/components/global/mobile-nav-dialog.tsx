@@ -18,20 +18,19 @@ import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { cn } from "~/lib/utils";
 
 const navItems = [
-	{ href: "/onboarding?via=header", label: "Start here", isIndented: false },
-	{ href: "/explore", label: "Explore", isIndented: false },
+	{ href: "/onboarding?via=header", label: "Orientation", isIndented: false },
+	{ href: null, label: "Explore", isIndented: false, isHeading: true },
+	{ href: "/search", label: "Search", isIndented: true },
 	{ href: "/patterns", label: "Patterns", isIndented: true },
 	{ href: "/tags", label: "Tags", isIndented: true },
 	{ href: "/values", label: "Values", isIndented: true },
+	{ href: "/themes", label: "Themes", isIndented: true },
 	{ href: "/about", label: "About", isIndented: false },
 ];
 
 const languages = [
 	{ code: "EN", label: "English" },
 	{ code: "ES", label: "Spanish" },
-	{ code: "PT", label: "Português" },
-	{ code: "FR", label: "Français" },
-	{ code: "KR", label: "한국어" },
 ];
 
 export function MobileNavDialog() {
@@ -45,7 +44,7 @@ export function MobileNavDialog() {
 			<SheetTrigger asChild>
 				<button
 					type="button"
-					className="group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear hover:bg-main-foreground/40 focus-visible:ring-1 focus-visible:ring-neutral-300/80 md:hidden dark:border-border/50 dark:focus-visible:ring-neutral-800 dark:hover:border-white/10 dark:hover:bg-main-foreground/20"
+					className="group relative flex items-center outline-none md:hidden"
 					aria-label="Open navigation menu"
 				>
 					<Menu className="h-4 w-4 text-primary" />
@@ -67,22 +66,28 @@ export function MobileNavDialog() {
 
 				<nav className="flex-1 overflow-y-auto px-4 py-6">
 					<ul className="space-y-1">
-						{navItems.map((item) => (
-							<li key={item.href}>
-								<Button
-									variant="ghost"
-									asChild
-									className={cn(
-										"w-full justify-start font-normal text-base",
-										item.isIndented ? "pr-1.5 pl-8" : "px-1.5",
-										pathname === item.href
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
-									onClick={() => setOpen(false)}
-								>
-									<Link href={item.href}>{item.label}</Link>
-								</Button>
+						{navItems.map((item, index) => (
+							<li key={item.href || `heading-${index}`}>
+								{item.isHeading ? (
+									<div className="px-1.5 font-normal text-base text-muted-foreground">
+										{item.label}
+									</div>
+								) : (
+									<Button
+										variant="ghost"
+										asChild
+										className={cn(
+											"w-full justify-start font-normal text-base hover:bg-transparent",
+											item.isIndented ? "pr-1.5 pl-8" : "px-1.5",
+											pathname === item.href
+												? "bg-accent text-foreground"
+												: "text-muted-foreground hover:text-foreground",
+										)}
+										onClick={() => setOpen(false)}
+									>
+										<Link href={item.href || "#"}>{item.label}</Link>
+									</Button>
+								)}
 							</li>
 						))}
 					</ul>
@@ -100,14 +105,15 @@ export function MobileNavDialog() {
 								value={selectedLanguage}
 								onValueChange={(value) => value && setSelectedLanguage(value)}
 								className="flex-wrap justify-start gap-2"
+								variant="ghost"
 							>
 								{languages.map((lang) => (
 									<ToggleGroupItem
 										key={lang.code}
 										value={lang.code}
-										className="min-w-[60px] flex-none"
+										className="min-w-[60px] flex-none border-0"
 										aria-label={`Select ${lang.label}`}
-										disabled={lang.code !== "EN"}
+										disabled={lang.code === "ES"}
 									>
 										{lang.code}
 									</ToggleGroupItem>
@@ -127,15 +133,12 @@ export function MobileNavDialog() {
 								value={theme}
 								onValueChange={(value) => value && setTheme(value)}
 								className="gap-3"
+								variant="ghost"
 							>
 								<ToggleGroupItem
 									value="light"
 									aria-label="Light mode"
-									className={cn(
-										theme === "light"
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
+									className="border-0 text-muted-foreground hover:text-foreground data-[state=on]:text-foreground"
 								>
 									<Sun className="mr-1 h-4 w-4" />
 									Light
@@ -143,11 +146,7 @@ export function MobileNavDialog() {
 								<ToggleGroupItem
 									value="dark"
 									aria-label="Dark mode"
-									className={cn(
-										theme === "dark"
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
+									className="border-0 text-muted-foreground hover:text-foreground data-[state=on]:text-foreground"
 								>
 									<Moon className="mr-1 h-4 w-4" />
 									Dark
@@ -155,11 +154,7 @@ export function MobileNavDialog() {
 								<ToggleGroupItem
 									value="system"
 									aria-label="System mode"
-									className={cn(
-										theme === "system"
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
+									className="border-0 text-muted-foreground hover:text-foreground data-[state=on]:text-foreground"
 								>
 									<Monitor className="mr-1 h-4 w-4" />
 									System

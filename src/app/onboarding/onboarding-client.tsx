@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { FilterOption } from "~/app/actions/filter-options";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
 import Icon01 from "~/components/icons/shapes/icon-01";
 import Icon02 from "~/components/icons/shapes/icon-02";
 import Icon03 from "~/components/icons/shapes/icon-03";
@@ -16,6 +15,7 @@ import Icon06 from "~/components/icons/shapes/icon-06";
 import Icon07 from "~/components/icons/shapes/icon-07";
 import Icon08 from "~/components/icons/shapes/icon-08";
 import Icon09 from "~/components/icons/shapes/icon-09";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { Icon } from "~/components/shared/icon";
 import {
 	Breadcrumb,

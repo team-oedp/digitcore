@@ -6,40 +6,40 @@ import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
 import { client } from "~/sanity/lib/client";
-import { VALUES_PAGE_QUERY } from "~/sanity/lib/queries";
+import { THEMES_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
-	title: "Values | DIGITCORE",
+	title: "Themes | DIGITCORE",
 	description:
-		"Open infrastructure and environmental research values and principles.",
+		"Explore the six themes that organize environmental research best practices.",
 };
 
-export default async function ValuesPage() {
+export default async function ThemesPage() {
 	const isDraftMode = (await draftMode()).isEnabled;
-	const pageData = (await client.fetch(
-		VALUES_PAGE_QUERY,
+	const data = (await client.fetch(
+		THEMES_PAGE_QUERY,
 		{},
 		isDraftMode
 			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
 			: { perspective: "published", useCdn: true },
 	)) as Page | null;
 
-	if (!pageData) return null;
+	if (!data) return null;
 
 	return (
 		<PageWrapper>
 			<div className="flex flex-col pb-44">
-				{pageData.title && <PageHeading title={pageData.title} />}
-				{pageData.description && (
+				{data.title && <PageHeading title={data.title} />}
+				{data.description && (
 					<CustomPortableText
-						value={pageData.description as PortableTextBlock[]}
+						value={data.description as PortableTextBlock[]}
 						className="mt-8 text-body"
 					/>
 				)}
-				<div className="flex flex-col gap-20 pt-20 lg:gap-60 lg:pt-60">
-					{pageData.content?.map((section) => (
+				<div className="flex flex-col gap-8 pt-20 lg:pt-60">
+					{data.content?.map((section) => (
 						<section key={section._key} className="flex flex-col gap-5">
 							{section._type === "content" && section.heading && (
 								<SectionHeading heading={section.heading} />
@@ -47,7 +47,7 @@ export default async function ValuesPage() {
 							{section._type === "content" && section.body && (
 								<CustomPortableText
 									value={section.body as PortableTextBlock[]}
-									className="text-body"
+									className="prose"
 								/>
 							)}
 						</section>

@@ -81,50 +81,7 @@ export type Footer = {
     }
     _key: string
   }>
-  license?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
-    listItem?: 'bullet'
-    markDefs?: Array<
-      | {
-          glossary?: {
-            _ref: string
-            _type: 'reference'
-            _weak?: boolean
-            [internalGroqTypeReferenceTo]?: 'glossary'
-          }
-          _type: 'glossaryTerm'
-          _key: string
-        }
-      | {
-          linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
-          href?: string
-          page?: {
-            _ref: string
-            _type: 'reference'
-            _weak?: boolean
-            [internalGroqTypeReferenceTo]?: 'page'
-          }
-          pattern?: {
-            _ref: string
-            _type: 'reference'
-            _weak?: boolean
-            [internalGroqTypeReferenceTo]?: 'pattern'
-          }
-          openInNewTab?: boolean
-          _type: 'link'
-          _key: string
-        }
-    >
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
+  licenseLink?: Link
 }
 
 export type SiteSettings = {
@@ -3808,7 +3765,7 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
   > | null
 } | null
 // Variable: FOOTER_QUERY
-// Query: *[_type == 'footer'][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    externalLinks[]{      _key,      label,      url    },    internalLinks[]{      _key,      label,      page->{        _id,        _type,        title,        "slug": slug.current      }    },    license  }
+// Query: *[_type == 'footer'][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    externalLinks[]{      _key,      label,      url    },    internalLinks[]{      _key,      label,      page->{        _id,        _type,        title,        "slug": slug.current      }    },    licenseLink  }
 export type FOOTER_QUERYResult = {
   _id: string
   _type: 'footer'
@@ -3831,50 +3788,7 @@ export type FOOTER_QUERYResult = {
       slug: string | null
     } | null
   }> | null
-  license: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
-    listItem?: 'bullet'
-    markDefs?: Array<
-      | {
-          glossary?: {
-            _ref: string
-            _type: 'reference'
-            _weak?: boolean
-            [internalGroqTypeReferenceTo]?: 'glossary'
-          }
-          _type: 'glossaryTerm'
-          _key: string
-        }
-      | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
-          href?: string
-          page?: {
-            _ref: string
-            _type: 'reference'
-            _weak?: boolean
-            [internalGroqTypeReferenceTo]?: 'page'
-          }
-          pattern?: {
-            _ref: string
-            _type: 'reference'
-            _weak?: boolean
-            [internalGroqTypeReferenceTo]?: 'pattern'
-          }
-          openInNewTab?: boolean
-          _type: 'link'
-          _key: string
-        }
-    >
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
+  licenseLink: Link | null
 } | null
 // Variable: PATTERNS_STALENESS_CHECK_QUERY
 // Query: *[_type == "pattern" && _id in $patternIds]{    _id,    _updatedAt  }
@@ -3969,7 +3883,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "faq"] | order(category->title asc, _createdAt asc) {\n    _id,\n    title,\n    category->{\n      _id,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      }\n    },\n    description[]\n  }\n': FAQS_QUERYResult
     '\n  *[_type == "icon"] | order(title asc) {\n    _id,\n    _type,\n    title,\n    svg\n  }\n': ICONS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'acknowledgements\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': ACKNOWLEDGEMENTS_PAGE_QUERYResult
-    '\n  *[_type == \'footer\'][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    externalLinks[]{\n      _key,\n      label,\n      url\n    },\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n    license\n  }\n': FOOTER_QUERYResult
+    '\n  *[_type == \'footer\'][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    externalLinks[]{\n      _key,\n      label,\n      url\n    },\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n    licenseLink\n  }\n': FOOTER_QUERYResult
     '\n  *[_type == "pattern" && _id in $patternIds]{\n    _id,\n    _updatedAt\n  }\n': PATTERNS_STALENESS_CHECK_QUERYResult
     '\n  *[_type == "audience"] | order(title asc) {\n    _id,\n    title,\n    "value": _id,\n    "label": title\n  }\n': AUDIENCES_QUERYResult
     '\n  *[_type == "theme"] | order(title asc) {\n    _id,\n    title,\n    "value": _id,\n    "label": title\n  }\n': THEMES_QUERYResult

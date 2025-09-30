@@ -18,8 +18,8 @@ import {
 
 import type { GlossaryTerm } from "~/lib/glossary-utils";
 import { cn } from "~/lib/utils";
-import { GlossaryPill } from "./glossary-pill";
-import ResolvedLink from "./resolved-link";
+import { GlossaryPill } from "../global/glossary-pill";
+import ResolvedLink from "../global/resolved-link";
 
 export function CustomPortableText({
 	className,

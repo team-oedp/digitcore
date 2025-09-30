@@ -12,12 +12,12 @@ import {
 import type { PortableTextBlock } from "next-sanity";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { BlueskyIcon } from "~/components/icons/logos/bluesky-icon";
 import { InstagramIcon } from "~/components/icons/logos/instagram-icon";
 import { LinkedInIcon } from "~/components/icons/logos/linkedin-icon";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
-import { CopyButton } from "~/components/shared/copy-button";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
+import { CopyButton } from "~/components/shared/buttons/copy-button";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
