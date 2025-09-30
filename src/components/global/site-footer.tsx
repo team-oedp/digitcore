@@ -55,11 +55,11 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 				}));
 
 	return (
-		<footer className="mx-3 mt-auto h-[400px] rounded-md bg-secondary">
-			<div className="pb-3">
-				<div className="flex h-[400px] flex-col px-4 py-3 md:px-8 md:py-6">
+		<footer className="mx-3 mt-auto rounded-md bg-secondary">
+			<div className="pb-0">
+				<div className="flex flex-col px-4 py-4 md:px-6 md:py-6">
 					{/* Mobile Layout - Vertical Stack */}
-					<div className="flex h-full flex-col justify-between md:hidden">
+					<div className="flex flex-col gap-4 md:hidden">
 						{/* 1. Logo + Title */}
 						<div className="flex items-start">
 							<Image
@@ -94,7 +94,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 
 						{/* 3. External Icon Links */}
 						<nav aria-label="External links">
-							<div className="flex items-center gap-4">
+							<div className="flex items-center gap-3">
 								{/* GitHub Icon */}
 								<a
 									href="https://github.com/oedp"
@@ -103,7 +103,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 									aria-label="GitHub (opens in new tab)"
 									className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 								>
-									<GitHubIcon className="h-6 w-6" />
+									<GitHubIcon className="h-[1.2rem] w-[1.2rem]" />
 								</a>
 
 								{/* Zenodo Icon */}
@@ -114,7 +114,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 									aria-label="Zenodo (opens in new tab)"
 									className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 								>
-									<ZenodoIcon className="h-6 w-6" />
+									<ZenodoIcon className="h-[1.2rem] w-[1.2rem]" />
 								</a>
 
 								{/* Email Icon */}
@@ -125,7 +125,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 								>
 									<HugeiconsIcon
 										icon={Mail01Icon}
-										size={24}
+										size={19.2}
 										color="currentColor"
 										strokeWidth={1.5}
 									/>
@@ -148,9 +148,9 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 					</div>
 
 					{/* Desktop Layout - Grid */}
-					<div className="hidden md:flex md:h-full md:flex-col">
+					<div className="hidden md:flex md:flex-col">
 						{/* Top section with logo + title on left, external icon links on right */}
-						<div className="mb-8 grid grid-cols-12 gap-16">
+						<div className="mb-4 grid grid-cols-12 gap-6">
 							<div className="col-span-8 flex items-start">
 								<div className="flex items-center">
 									<Image
@@ -171,7 +171,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 								className="col-span-4 col-start-9 flex justify-end"
 								aria-label="External links"
 							>
-								<div className="flex items-center gap-4">
+								<div className="flex items-center gap-3">
 									{/* GitHub Icon */}
 									<a
 										href="https://github.com/oedp"
@@ -180,7 +180,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 										aria-label="GitHub (opens in new tab)"
 										className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 									>
-										<GitHubIcon className="h-6 w-6" />
+										<GitHubIcon className="h-[1.2rem] w-[1.2rem]" />
 									</a>
 
 									{/* Zenodo Icon */}
@@ -191,7 +191,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 										aria-label="Zenodo (opens in new tab)"
 										className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 									>
-										<ZenodoIcon className="h-6 w-6" />
+										<ZenodoIcon className="h-[1.2rem] w-[1.2rem]" />
 									</a>
 
 									{/* Email Icon */}
@@ -202,7 +202,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 									>
 										<HugeiconsIcon
 											icon={Mail01Icon}
-											size={24}
+											size={19.2}
 											color="currentColor"
 											strokeWidth={1.5}
 										/>
@@ -211,10 +211,10 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 							</nav>
 						</div>
 
-						{/* Bottom section with internal text links column anchored to bottom, and license */}
+						{/* Bottom section with internal text links on the right, license on the left */}
 						<div className="mt-auto grid grid-cols-12 items-end">
-							{/* License bottom-left */}
-							<div className="col-span-4 col-start-1 self-end text-left text-primary text-xs">
+							{/* License left column */}
+							<div className="col-span-6 col-start-1 self-end text-left text-primary text-xs">
 								{license ? (
 									<CustomPortableText
 										value={license as PortableTextBlock[]}
@@ -226,10 +226,10 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 								)}
 							</div>
 
-							{/* Internal links vertical column anchored at bottom, moved two columns over */}
+							{/* Internal links right side, text left-aligned */}
 							{internalLinks.length > 0 && (
 								<nav
-									className="col-span-3 col-start-7 self-end"
+									className="col-span-4 col-start-9 self-end text-right"
 									aria-label="Internal navigation links"
 								>
 									<ul className="space-y-1">

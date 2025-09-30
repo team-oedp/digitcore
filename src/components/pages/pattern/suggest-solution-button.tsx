@@ -18,15 +18,18 @@ export function SuggestSolutionButton({
 			trigger={
 				<button
 					type="button"
-					className="group inline-flex items-center gap-1 rounded-md border border-gray-800 border-dashed bg-white px-3 py-1 text-neutral-600 text-sm uppercase transition-all duration-500 ease-in-out hover:bg-gray-800 hover:text-white"
+					className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-background px-2 py-1 transition-colors hover:bg-secondary md:gap-2.5 dark:hover:bg-neutral-800"
 				>
 					<HugeiconsIcon
 						icon={DashboardSquareEditIcon}
-						size={16}
+						size={14}
 						color="currentColor"
 						strokeWidth={1.5}
+						className="text-neutral-500 dark:text-neutral-400"
 					/>
-					<span>Know of another resource or solution? Suggest one</span>
+					<span className="font-normal text-primary text-xs uppercase md:text-sm">
+						Know of another resource or solution? Suggest one
+					</span>
 				</button>
 			}
 		/>
