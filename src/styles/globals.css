@@ -17,6 +17,7 @@
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
+	--color-container-background: var(--container-background);
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--color-card: var(--card);
@@ -126,10 +127,10 @@
 	--color-moss-default: oklch(0.75 0.2 120);
 	--color-moss-light: oklch(0.9 0.1 120);
 
-	--color-purple-border-dark: oklch(0.75 0.12 270);
-	--color-purple-dark: oklch(0.3 0.2 270);
-	--color-purple-default: oklch(0.85 0.08 270);
-	--color-purple-light: oklch(0.9 0.06 270);
+	--color-purple-border-dark: oklch(66.344% 0.17703 299.908);
+	--color-purple-dark: oklch(0.496 0.265 301.924);
+	--color-purple-default: oklch(0.8943 0.0549 293.28);
+	--color-purple-light: oklch(97.7% 0.014 308.299);
 
 	--color-coral-border-dark: oklch(0.7 0.18 25);
 	--color-coral-dark: oklch(0.4 0.15 25);
@@ -196,10 +197,12 @@
 	--color-green-default--dark: oklch(0.35 0.06 120);
 	--color-green-light--dark: oklch(0.45 0.08 120);
 
-	--color-grey-light: oklch(0.95 0 0); /* #f2f2f2 */
+	--color-offwhite-light: oklch(0.9791 0 129.63); /* #f8f8f8 */
+	--color-offwhite-default: oklch(0.95 0 0); /* #f2f2f2 */
 
 	--radius: 0.625rem;
 	--background: var(--color-neutral-100);
+	--container-background: var(--color-offwhite-light);
 	--foreground: var(--color-neutral-950);
 	--card: var(--color-neutral-50);
 	--card-foreground: var(--color-neutral-950);
@@ -270,20 +273,29 @@
 	--page-badge-border: var(--color-magenta-default);
 	--page-badge-border-dark: var(--color-magenta-border-dark);
 
-	--pattern-button-text: oklch(45.48% 0.1529 142.555);
-	--pattern-button-background: oklch(0.97 0.06 140);
-	--pattern-button-border: oklch(77.44% 0.1942 154.297);
+	/* Visit Pattern Button */
+	--pattern-button-text: oklch(0.51 0.1218 156.56); /* #027A48 */
+	--pattern-button-background: oklch(0.9788 0.0221 160.24); /* #ECFDF3 */
+	--pattern-button-border: oklch(0.9039 0.1006 157.23); /* #A6F4C5 */
 
+	/* Visit Solution Button */
 	--solution-button-text: oklch(0.3 0.2 300);
 	--solution-button-background: oklch(0.9 0.08 300);
 	--solution-button-border: oklch(0.8 0.12 300);
 
+	/* Visit Resource Button */
 	--resource-button-text: oklch(0.35 0.15 330);
 	--resource-button-background: oklch(0.9 0.1 330);
 	--resource-button-border: oklch(0.8 0.15 330);
+
+	--visit-pattern-bg: oklch(0.92 0.11 157.2);
+	--visit-pattern-border: oklch(0.86 0.14 157.2);
+	--visit-pattern-text: oklch(0.35 0.12 180);
 }
 
 .dark {
+	/* TODO: check container-background color for dark mode */
+	--container-background: var(--color-neutral-950);
 	--background: var(--color-neutral-950);
 	--foreground: var(--color-neutral-50);
 	--card: var(--color-neutral-900);
@@ -361,6 +373,27 @@
 	--page-badge-background: var(--color-magenta-light--dark);
 	--page-badge-border: var(--color-magenta-default--dark);
 	--page-badge-border-dark: var(--color-magenta-border-dark--dark);
+
+	/* Dark Mode Button Colors */
+
+	/* Pattern Button - Dark Mode */
+	--pattern-button-text--dark: oklch(0.85 0.15 156.56); /* Light green text */
+	--pattern-button-background--dark: oklch(0.2 0.08 156.56); /* Dark green background */
+	--pattern-button-border--dark: oklch(0.4 0.12 157.23); /* Medium green border */
+
+	/* Solution Button - Dark Mode */
+	--solution-button-text--dark: oklch(0.85 0.12 300); /* Light purple text */
+	--solution-button-background--dark: oklch(0.25 0.1 300); /* Dark purple background */
+	--solution-button-border--dark: oklch(0.45 0.15 300); /* Medium purple border */
+
+	/* Resource Button - Dark Mode */
+	--resource-button-text--dark: oklch(0.85 0.1 330); /* Light magenta text */
+	--resource-button-background--dark: oklch(0.25 0.08 330); /* Dark magenta background */
+	--resource-button-border--dark: oklch(0.45 0.12 330); /* Medium magenta border */
+
+	--visit-pattern-bg: oklch(0.15 0.08 157.2);
+	--visit-pattern-border: oklch(0.25 0.1 157.2);
+	--visit-pattern-text: oklch(0.7 0.12 180);
 }
 
 @layer base {
@@ -403,6 +436,34 @@
 }
 
 @layer utilities {
+	.border-dashed-brand-t {
+		--dash: 5px;
+		--gap: 3px;
+		border-top: 1px solid transparent;
+		border-image: repeating-linear-gradient(
+				90deg,
+				var(--muted-foreground) 0,
+				var(--muted-foreground) var(--dash),
+				transparent var(--dash),
+				transparent calc(var(--dash) + var(--gap))
+			)
+			1 0 0 0;
+	}
+
+	.border-dashed-brand-b {
+		--dash: 5px;
+		--gap: 3px;
+		border-bottom: 1px solid transparent;
+		border-image: repeating-linear-gradient(
+				90deg,
+				var(--muted-foreground) 0,
+				var(--muted-foreground) var(--dash),
+				transparent var(--dash),
+				transparent calc(var(--dash) + var(--gap))
+			)
+			0 0 1 0;
+	}
+
 	.scrollbar-hidden::-webkit-scrollbar {
 		display: none;
 	}
@@ -413,7 +474,7 @@
 
 	/* Font utilities */
 	.text-body {
-		@apply font-signifier text-sm md:text-lg text-primary prose max-w-none dark:text-foreground;
+		@apply font-sans text-sm md:text-lg text-neutral-800 prose max-w-none dark:text-foreground;
 	}
 
 	/* Font toggle utilities */
@@ -432,7 +493,7 @@
 	}
 
 	.text-description-muted {
-		@apply font-signifier text-sm md:text-base text-neutral-500 prose max-w-none dark:text-neutral-400;
+		@apply font-sans text-sm md:text-base text-neutral-500 prose max-w-none dark:text-neutral-400;
 	}
 
 	.text-minor {
@@ -460,17 +521,12 @@
 	}
 
 	/* for inline links and glossary pill elements */
-	.pill-tight {
+	.text-box-trim {
 		@apply inline-flex leading-[0.9] align-middle items-center;
 	}
 
-	.text-box-trim {
-		/* Experimental CSS properties not supported by Firefox yet */
-		/* text-box-trim: trim-both;
-		text-box-edge: cap alphabetic; */
-		display: inline-block;
-		line-height: 1;
-		vertical-align: middle;
+	.pill {
+		@apply items-center gap-1 rounded-md border border-neutral-300 bg-primary/5 px-2.5 pt-0.5 pb-1 text-primary no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary;
 	}
 
 	.text-button {

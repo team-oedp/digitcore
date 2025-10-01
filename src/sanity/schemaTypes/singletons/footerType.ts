@@ -130,9 +130,9 @@ export const footerType = defineType({
 			],
 		}),
 		defineField({
-			name: "license",
-			title: "License",
-			type: "blockContent",
+			name: "licenseLink",
+			title: "License Link",
+			type: "link",
 		}),
 	],
 	preview: {

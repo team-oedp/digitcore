@@ -5,7 +5,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { Badge } from "~/components/ui/badge";
 import { SolutionPreview } from "./solution-preview";
 

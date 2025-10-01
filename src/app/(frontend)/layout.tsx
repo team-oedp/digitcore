@@ -1,14 +1,14 @@
 import "~/styles/globals.css";
 
 import type { Metadata } from "next";
-import { VisualEditing } from "next-sanity";
+import { VisualEditing } from "next-sanity/visual-editing";
 import { draftMode } from "next/headers";
 import { Suspense } from "react";
 import { sans, signifier } from "~/app/(frontend)/fonts";
-import { DisableDraftMode } from "~/components/global/disable-draft-mode";
 import { GlossaryProvider } from "~/components/global/glossary-provider";
 import { OnboardingRedirect } from "~/components/global/onboarding-redirect";
 import { SiteLayout } from "~/components/global/site-layout";
+import { DisableDraftMode } from "~/components/sanity/disable-draft-mode";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
 import { client } from "~/sanity/lib/client";
@@ -22,7 +22,7 @@ import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
-	title: "Digitcore",
+	title: "DIGITCORE",
 	description: "Digital Toolkit for Collaborative Environmental Research",
 };
 

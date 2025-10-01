@@ -134,15 +134,12 @@ export function MobileNavDialog() {
 									value={theme}
 									onValueChange={(value) => value && setTheme(value)}
 									className="gap-3"
+									variant="ghost"
 								>
 									<ToggleGroupItem
 										value="light"
 										aria-label="Light mode"
-										className={cn(
-											theme === "light"
-												? "bg-accent text-foreground"
-												: "text-muted-foreground hover:text-foreground",
-										)}
+										className="border-0 text-muted-foreground hover:text-foreground data-[state=on]:text-foreground"
 									>
 										<Sun className="mr-1 h-4 w-4" />
 										Light
@@ -150,11 +147,7 @@ export function MobileNavDialog() {
 									<ToggleGroupItem
 										value="dark"
 										aria-label="Dark mode"
-										className={cn(
-											theme === "dark"
-												? "bg-accent text-foreground"
-												: "text-muted-foreground hover:text-foreground",
-										)}
+										className="border-0 text-muted-foreground hover:text-foreground data-[state=on]:text-foreground"
 									>
 										<Moon className="mr-1 h-4 w-4" />
 										Dark
@@ -162,11 +155,7 @@ export function MobileNavDialog() {
 									<ToggleGroupItem
 										value="system"
 										aria-label="System mode"
-										className={cn(
-											theme === "system"
-												? "bg-accent text-foreground"
-												: "text-muted-foreground hover:text-foreground",
-										)}
+										className="border-0 text-muted-foreground hover:text-foreground data-[state=on]:text-foreground"
 									>
 										<Monitor className="mr-1 h-4 w-4" />
 										System

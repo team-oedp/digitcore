@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { HeadingMorph } from "~/components/shared/heading-morph";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import PatternCombination from "~/components/shared/pattern-combination-wrapper";
@@ -13,9 +13,9 @@ import { token } from "~/sanity/lib/token";
 import type { ContentList, Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
-	title: "DIGITCORE Toolkit | Home",
+	title: "Home | DIGITCORE",
 	description:
-		"Community-centered open infrastructure empowering equitable collaboration between researchers, developers, and frontline communities.",
+		"DIGITCORE outlines challenges, problems, and phenomena experienced or observed by community organizations, researchers, and open source technologists working on collaborative environmental research. This toolkit is designed to help you make decisions about tools, modes of interaction, research design, and process.",
 };
 
 export default async function Home() {

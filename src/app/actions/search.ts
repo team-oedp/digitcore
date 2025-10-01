@@ -116,12 +116,12 @@ export type SearchPattern = {
 	}> | null;
 	audiences: Array<{
 		_id: string;
-		title?: string;
+		title: string | null;
 	}> | null;
 	theme: {
 		_id: string;
-		title?: string;
-		description?: Array<unknown>;
+		title: string | null;
+		description: Array<unknown> | null;
 	} | null;
 	solutions: Array<{
 		_id: string;
@@ -133,10 +133,6 @@ export type SearchPattern = {
 		title?: string;
 		description?: Array<unknown>;
 		solutions?: Array<{
-			_id: string;
-			title?: string;
-		}> | null;
-		solution?: Array<{
 			_id: string;
 			title?: string;
 		}> | null;

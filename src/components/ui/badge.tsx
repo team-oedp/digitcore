@@ -29,7 +29,7 @@ const badgeVariants = cva(
 				solution:
 					"border-[var(--solution-badge-border)] bg-[var(--solution-badge-background)] text-[var(--solution-badge-text)] hover:border-[var(--solution-badge-border-dark)]",
 				pattern:
-					"border-[var(--pattern-badge-border)] bg-[var(--pattern-badge-background)] text-[var(--pattern-badge-text)] hover:border-[var(--pattern-badge-border-dark)]",
+					"border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] text-[var(--pattern-button-text)] hover:border-[var(--pattern-badge-border-dark)]",
 				page: "border-[var(--page-badge-border)] bg-[var(--page-badge-background)] text-[var(--page-badge-text)] hover:border-[var(--page-badge-border-dark)]",
 			},
 			size: {

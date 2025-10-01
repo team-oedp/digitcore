@@ -1,45 +1,68 @@
+import type { Pattern, Resource, Solution } from "../sanity.types";
+
+// Core Sanity document type constraint
+export type SanityDocument = {
+	_type: string;
+	_id: string;
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+};
+
+// Utility to make types more readable
 export type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & unknown;
 
-/**
- * Represents a reference in Sanity to another entity. Note that the
- * generic type is strictly for TypeScript meta programming.
- */
-export declare type SanityReference<_T> = {
-	_type: "reference";
-	_ref: string;
+// Extract a specific field type from a Sanity document
+export type FieldType<
+	T extends SanityDocument,
+	K extends keyof T,
+> = NonNullable<T[K]>;
+
+// Get all field types from a document type
+export type DocumentFields<T extends SanityDocument> = {
+	[K in keyof T]: FieldType<T, K>;
 };
 
-/**
- * Represents a reference in Sanity to another entity with a key. Note that the
- * generic type is strictly for TypeScript meta programming.
- */
-export declare type SanityKeyedReference<_T> = {
-	_type: "reference";
-	_key: string;
-	_ref: string;
-};
+// Document-specific field type collections
+export type PatternFields = DocumentFields<Pattern>;
+export type ResourceFields = DocumentFields<Resource>;
+export type SolutionFields = DocumentFields<Solution>;
 
-export declare type SanityKeyed<T> = T extends object
-	? T & {
-			_key: string;
-		}
+// Commonly used field types for convenience
+export type PatternDescription = PatternFields["description"];
+export type PatternTitle = PatternFields["title"];
+export type PatternSlug = PatternFields["slug"];
+export type PatternSolutions = PatternFields["solutions"];
+export type PatternResources = PatternFields["resources"];
+
+export type ResourceDescription = ResourceFields["description"];
+export type ResourceTitle = ResourceFields["title"];
+
+export type SolutionDescription = SolutionFields["description"];
+export type SolutionTitle = SolutionFields["title"];
+
+// Array element extraction utilities
+export type ArrayElement<T> = T extends (infer U)[] ? U : never;
+
+// Reference resolution utilities
+export type ReferenceTarget<T> = T extends { _ref: string; _type: infer U }
+	? U
+	: never;
+
+// Dereferenced reference type (what we get after GROQ queries)
+export type DereferencedReference<T> = T extends { _ref: string }
+	? { _id: string; _type: string; [key: string]: unknown }
 	: T;
 
-export type ResolvedSanityReferences<T> =
-	// match `SanityKeyedReference` and unwrap via `infer U`
-	T extends SanityKeyedReference<infer U>
-		? ResolvedSanityReferences<U>
-		: // match `SanityReference` and unwrap via `infer U`
-			T extends SanityReference<infer U>
-			? ResolvedSanityReferences<U>
-			: // match arrays, unwrap with `T[number]`,
-				// recursively run through `ResolvedSanityReferences`
-				// then re-wrap in an another array
-				// biome-ignore lint/suspicious/noExplicitAny: false positive
-				T extends any[]
-				? Array<ResolvedSanityReferences<T[number]>>
-				: // finally utilize mapped types to
-					// recursively run children through `ResolvedSanityReferences`
-					{ [P in keyof T]: ResolvedSanityReferences<T[P]> };
+// Query result type that matches Sanity return type
+export type TagWithPatternsQueryResult = Array<{
+	_id: string;
+	title: string | null;
+	patterns: Array<{
+		_id: string;
+		title: string | null;
+		slug: string | null;
+	}>;
+}>;

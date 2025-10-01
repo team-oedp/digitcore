@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { cn } from "~/lib/utils";
 import { client } from "~/sanity/lib/client";
 import {
 	PATTERNS_PAGE_QUERY,
@@ -16,6 +18,16 @@ import type {
 } from "~/sanity/sanity.types";
 
 type PatternWithTheme = PATTERNS_WITH_THEMES_QUERYResult[0];
+
+type ThemeGroup = {
+	theme: NonNullable<PatternWithTheme["theme"]>;
+	patterns: PatternWithTheme[];
+};
+
+export const metadata: Metadata = {
+	title: "Patterns | DIGITCORE",
+	description: "Open environmental research patterns and themes.",
+};
 
 export default async function PatternsPage() {
 	const isDraftMode = (await draftMode()).isEnabled;
@@ -55,13 +67,7 @@ export default async function PatternsPage() {
 	);
 
 	// Group patterns by theme
-	const themeGroups = new Map<
-		string,
-		{
-			theme: NonNullable<PatternWithTheme["theme"]>;
-			patterns: PatternWithTheme[];
-		}
-	>();
+	const themeGroups = new Map<string, ThemeGroup>();
 	for (const pattern of allPatterns) {
 		if (pattern.theme?._id) {
 			const themeId = pattern.theme._id;
@@ -93,7 +99,7 @@ export default async function PatternsPage() {
 				{!allPatterns || allPatterns.length === 0 ? (
 					<div className="p-8">
 						<p className="text-body">
-							No patterns found. Please try again later.
+							No patterns found in database. Please check again later.
 						</p>
 					</div>
 				) : (
@@ -101,9 +107,7 @@ export default async function PatternsPage() {
 						<div key={theme._id}>
 							<div className="flex flex-col gap-5 pt-12 pb-12 md:pt-36">
 								<div className="flex flex-col gap-1">
-									<p className="text-muted-foreground text-xxs uppercase">
-										Theme
-									</p>
+									<p className="text-neutral-400 text-xxs uppercase">Theme</p>
 									<h2 className="text-section-heading">{theme.title}</h2>
 								</div>
 								<CustomPortableText
@@ -113,36 +117,18 @@ export default async function PatternsPage() {
 							</div>
 
 							<div className="space-y-0 pt-12">
-								{patterns.map((pattern) => (
-									<SearchResultItem
+								{patterns.map((pattern, index) => (
+									<div
 										key={pattern._id}
-										showPatternIcon={true}
-										pattern={{
-											...pattern,
-											theme: pattern.theme
-												? {
-														_id: pattern.theme._id,
-														title:
-															pattern.theme.title === null
-																? undefined
-																: pattern.theme.title,
-														description: pattern.theme.description as
-															| unknown[]
-															| undefined,
-													}
-												: null,
-											audiences:
-												pattern.audiences?.map((aud) => ({
-													...aud,
-													title: aud.title === null ? undefined : aud.title,
-												})) ?? null,
-											resources:
-												pattern.resources?.map((resource) => ({
-													...resource,
-													solution: resource.solutions || null,
-												})) ?? null,
-										}}
-									/>
+										className={cn(
+											index === patterns.length - 1 && "border-dashed-brand-b",
+										)}
+									>
+										<SearchResultItem
+											showPatternIcon={true}
+											pattern={pattern}
+										/>
+									</div>
 								))}
 							</div>
 						</div>

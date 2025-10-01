@@ -38,7 +38,7 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 							"flex h-full min-h-0 flex-1 flex-col",
 							isCarrierBagRoute
 								? "overflow-hidden"
-								: "overflow-y-auto bg-background",
+								: "overflow-y-auto bg-container-background",
 						)}
 					>
 						<div

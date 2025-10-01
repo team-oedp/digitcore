@@ -1,51 +1,39 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { FAQCategorySection } from "~/components/pages/faq/faq-category-section";
+import { UncategorizedFAQSection } from "~/components/pages/faq/uncategorized-faq-section";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "~/components/ui/accordion";
 import { client } from "~/sanity/lib/client";
 import { FAQS_QUERY, FAQ_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
-import type { Page } from "~/sanity/sanity.types";
+import type {
+	FAQS_QUERYResult,
+	FAQ_PAGE_QUERYResult,
+} from "~/sanity/sanity.types";
+import { groupFaqsByCategory } from "~/utils/faq-helpers";
 
 export const metadata: Metadata = {
-	title: "FAQ | DIGITCORE Toolkit",
+	title: "FAQ | DIGITCORE",
 	description:
 		"Frequently asked questions about the DIGITCORE Toolkit for Collaborative Environmental Research.",
-};
-
-type FAQFromSanity = {
-	_id: string;
-	title: string;
-	category?: {
-		_id: string;
-		title: string;
-		description: PortableTextBlock[];
-	};
-	description: PortableTextBlock[];
 };
 
 export default async function FAQPage() {
 	const isDraftMode = (await draftMode()).isEnabled;
 
-	// Fetch page data from Sanity
-	const pageData = (await client.fetch(
+	const pageData = await client.fetch<FAQ_PAGE_QUERYResult | null>(
 		FAQ_PAGE_QUERY,
 		{},
 		isDraftMode
 			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
 			: { perspective: "published", useCdn: true },
-	)) as Page | null;
+	);
 
 	// Fetch FAQs from Sanity
-	const faqs = await client.fetch<FAQFromSanity[]>(
+	const faqs = await client.fetch<FAQS_QUERYResult | null>(
 		FAQS_QUERY,
 		{},
 		isDraftMode
@@ -61,11 +49,15 @@ export default async function FAQPage() {
 				},
 	);
 
+	const { uncategorized, grouped } = faqs
+		? groupFaqsByCategory(faqs)
+		: { uncategorized: [], grouped: {} };
+
 	return (
 		<PageWrapper>
-			<div className="flex flex-col gap-10 pb-44">
+			<div className="flex flex-col gap-20 pb-32">
 				{pageData?.title && pageData?.description && (
-					<div className="mb-20 lg:mb-60">
+					<div>
 						<PageHeading title={pageData.title} />
 						<CustomPortableText
 							value={pageData.description as PortableTextBlock[]}
@@ -78,113 +70,17 @@ export default async function FAQPage() {
 				<section className="max-w-4xl">
 					{faqs && faqs.length > 0 ? (
 						<div className="space-y-12">
-							{(() => {
-								// Separate uncategorized FAQs from categorized ones
-								const uncategorizedFaqs = faqs.filter((faq) => !faq.category);
-								const categorizedFaqs = faqs.filter((faq) => faq.category);
+							<UncategorizedFAQSection faqs={uncategorized} />
 
-								// Group categorized FAQs by category
-								const groupedFaqs = categorizedFaqs.reduce(
-									(groups, faq) => {
-										if (faq.category) {
-											const categoryId = faq.category._id;
-											if (!groups[categoryId]) {
-												groups[categoryId] = {
-													category: faq.category,
-													faqs: [],
-												};
-											}
-											groups[categoryId].faqs.push(faq);
-										}
-										return groups;
-									},
-									{} as Record<
-										string,
-										{
-											category: {
-												_id: string;
-												title: string;
-												description: PortableTextBlock[];
-											};
-											faqs: FAQFromSanity[];
-										}
-									>,
-								);
-
-								return (
-									<>
-										{/* Uncategorized FAQs at the top */}
-										{uncategorizedFaqs.length > 0 && (
-											<div className="space-y-6">
-												<Accordion type="multiple" className="w-full">
-													{uncategorizedFaqs.map((faq) => (
-														<AccordionItem
-															key={faq._id}
-															value={faq._id}
-															className="border-zinc-300 border-b border-dashed last:border-b"
-														>
-															<AccordionTrigger
-																showPlusMinus
-																className="accordion-heading items-center justify-between py-4"
-															>
-																<span className="text-left">{faq.title}</span>
-															</AccordionTrigger>
-															<AccordionContent className="pt-2 pb-4">
-																<CustomPortableText
-																	value={faq.description}
-																	className="accordion-detail"
-																/>
-															</AccordionContent>
-														</AccordionItem>
-													))}
-												</Accordion>
-											</div>
-										)}
-
-										{/* Categorized FAQs */}
-										{Object.entries(groupedFaqs).map(
-											([categoryId, { category, faqs: categoryFaqs }]) => (
-												<div key={categoryId} className="space-y-6">
-													<div>
-														<h2 className="text-section-heading">
-															{category.title}
-														</h2>
-														{category.description &&
-															category.description.length > 0 && (
-																<CustomPortableText
-																	value={category.description}
-																	className="mt-2 text-neutral-600 text-sm"
-																/>
-															)}
-													</div>
-													<Accordion type="multiple" className="w-full">
-														{categoryFaqs.map((faq) => (
-															<AccordionItem
-																key={faq._id}
-																value={faq._id}
-																className="border-zinc-300 border-b border-dashed last:border-b"
-															>
-																<AccordionTrigger
-																	showPlusMinus
-																	className="accordion-heading items-center justify-between py-4"
-																>
-																	<span className="text-left">{faq.title}</span>
-																</AccordionTrigger>
-																<AccordionContent className="pt-2 pb-4">
-																	<CustomPortableText
-																		value={faq.description}
-																		className="accordion-detail"
-																	/>
-																</AccordionContent>
-															</AccordionItem>
-														))}
-													</Accordion>
-												</div>
-											),
-										)}
-									</>
-								);
-							})()}
+							{Object.entries(grouped).map(
+								([categoryId, { category, faqs: categoryFaqs }]) => (
+									<FAQCategorySection
+										key={categoryId}
+										category={category}
+										faqs={categoryFaqs}
+									/>
+								),
+							)}
 						</div>
 					) : (
 						<p className="text-neutral-500">

@@ -76,6 +76,7 @@ export const patternType = defineType({
 			name: "audiences",
 			type: "array",
 			of: [defineArrayMember({ type: "reference", to: { type: "audience" } })],
+			validation: (Rule) => Rule.required().min(1),
 			options: {
 				layout: "list",
 			},
@@ -86,6 +87,7 @@ export const patternType = defineType({
 			title: "Theme",
 			type: "reference",
 			to: [{ type: "theme" }],
+			validation: (Rule) => Rule.required(),
 			group: "content",
 		}),
 		defineField({
@@ -101,6 +103,7 @@ export const patternType = defineType({
 			name: "resources",
 			type: "array",
 			of: [defineArrayMember({ type: "reference", to: { type: "resource" } })],
+			validation: (Rule) => Rule.required().min(1),
 			options: {
 				layout: "list",
 			},

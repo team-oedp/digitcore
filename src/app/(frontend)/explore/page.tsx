@@ -3,10 +3,10 @@ import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
 import { SearchClientWrapper } from "~/components/pages/search/search-client-wrapper";
 import { SearchInterfaceServer } from "~/components/pages/search/search-interface-server";
 import { SearchInterfaceSkeleton } from "~/components/pages/search/search-interface-skeleton";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { client } from "~/sanity/lib/client";
@@ -17,8 +17,8 @@ import type { Page } from "~/sanity/sanity.types";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-	title: "Explore | DIGITCORE Toolkit",
-	description: "Explore patterns, tags, glossary terms, and resources.",
+	title: "Explore | DIGITCORE",
+	description: "Explore patterns, tags, themes, and audiences.",
 };
 
 export default async function ExplorePage({

@@ -2,6 +2,9 @@
  * Search utilities for text processing, highlighting, and truncation
  */
 
+import type { PortableTextBlock } from "next-sanity";
+export type { PortableTextBlock };
+
 export type TruncationResult = {
 	text: string;
 	isTruncated: boolean;
@@ -9,8 +12,24 @@ export type TruncationResult = {
 	matchCount: number;
 };
 
+export type DescriptionDisplayResult = {
+	text: string;
+	hasSearchMatch: boolean;
+	matchCount: number;
+	displayType: "first-sentence" | "search-context";
+};
+
 /**
- * Truncates text while preserving context around search matches
+ * Truncates text while preserving context around search term matches.
+ *
+ * When the text exceeds maxLength, this function intelligently creates a snippet
+ * that centers around the search term match, providing relevant context while
+ * maintaining the specified character limit.
+ *
+ * @param text - The text content to truncate (string or portable text)
+ * @param searchTerm - The search term to center the snippet around
+ * @param maxLength - Maximum character length for the result (default: 200)
+ * @returns TruncationResult containing the processed text and metadata
  */
 export function truncateWithContext(
 	text: string,
@@ -146,8 +165,8 @@ export function extractTextFromPortableText(
 		.map(
 			(block) =>
 				block.children
-					?.filter((child: PortableTextChild) => child._type === "span")
-					?.map((child: PortableTextChild) => child.text)
+					?.filter((child) => child._type === "span")
+					?.map((child) => child.text)
 					?.join("") || "",
 		)
 		.join(" ")
@@ -160,6 +179,106 @@ export function extractTextFromPortableText(
 export function hasMatchInTitle(title: string, searchTerm: string): boolean {
 	if (!title || !searchTerm.trim()) return false;
 	return title.toLowerCase().includes(searchTerm.toLowerCase().trim());
+}
+
+/**
+ * Extract the first sentence from text with improved sentence boundary detection
+ */
+export function extractFirstSentence(text: string): string {
+	if (!text) return "";
+
+	// Common abbreviations that shouldn't end sentences
+	const abbreviations =
+		/\b(?:Dr|Mr|Mrs|Ms|Prof|Inc|Ltd|Corp|Co|etc|vs|e\.g|i\.e|Ph\.D|M\.D|B\.A|M\.A|U\.S|U\.K)\./gi;
+
+	// Replace abbreviations with placeholders to avoid false sentence breaks
+	const placeholderMap: Record<string, string> = {};
+	let placeholderCounter = 0;
+	const textWithPlaceholders = text.replace(abbreviations, (match) => {
+		const placeholder = `__ABBREV_${placeholderCounter++}__`;
+		placeholderMap[placeholder] = match;
+		return placeholder;
+	});
+
+	// Find the first sentence-ending punctuation
+	const sentenceEndRegex = /[.!?]/;
+	const match = textWithPlaceholders.match(sentenceEndRegex);
+
+	if (!match || match.index === undefined) {
+		// No sentence-ending punctuation found, return entire text
+		return restorePlaceholders(text, placeholderMap);
+	}
+
+	// Extract up to and including the first sentence-ending punctuation
+	const firstSentence = textWithPlaceholders.substring(0, match.index + 1);
+
+	// Restore abbreviations
+	return restorePlaceholders(firstSentence, placeholderMap);
+}
+
+/**
+ * Helper function to restore abbreviation placeholders
+ */
+function restorePlaceholders(
+	text: string,
+	placeholderMap: Record<string, string>,
+): string {
+	let result = text;
+	for (const [placeholder, original] of Object.entries(placeholderMap)) {
+		result = result.replace(placeholder, original);
+	}
+	return result;
+}
+
+/**
+ * Process description text for display, handling both search context and first-sentence fallback
+ */
+export function processDescriptionForDisplay(
+	portableText: PortableTextBlock[] | string,
+	searchTerm?: string,
+	maxLength = 200,
+): DescriptionDisplayResult {
+	const fullText = extractTextFromPortableText(portableText);
+
+	if (!fullText) {
+		return {
+			text: "",
+			hasSearchMatch: false,
+			matchCount: 0,
+			displayType: "first-sentence",
+		};
+	}
+
+	// If no search term, always show first sentence
+	if (!searchTerm?.trim()) {
+		return {
+			text: extractFirstSentence(fullText),
+			hasSearchMatch: false,
+			matchCount: 0,
+			displayType: "first-sentence",
+		};
+	}
+
+	// Check for search matches
+	const truncationResult = truncateWithContext(fullText, searchTerm, maxLength);
+
+	// If we have a match, use the search context
+	if (truncationResult.hasMatch) {
+		return {
+			text: truncationResult.text,
+			hasSearchMatch: true,
+			matchCount: truncationResult.matchCount,
+			displayType: "search-context",
+		};
+	}
+
+	// No match found, fall back to first sentence
+	return {
+		text: extractFirstSentence(fullText),
+		hasSearchMatch: false,
+		matchCount: 0,
+		displayType: "first-sentence",
+	};
 }
 
 /**
@@ -190,11 +309,3 @@ export function getMatchExplanation(
 		matchLocations,
 	};
 }
-
-// Type for Sanity Portable Text block and child
-export type PortableTextChild = { text?: string; _type: string; _key: string };
-export type PortableTextBlock = {
-	children?: PortableTextChild[];
-	_type: string;
-	_key: string;
-};

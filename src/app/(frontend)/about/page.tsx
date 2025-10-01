@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { draftMode } from "next/headers";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
@@ -11,7 +11,7 @@ import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
-	title: "About | DIGITCORE Toolkit",
+	title: "About | DIGITCORE",
 	description:
 		"Learn about DIGITCORE and our mission for open infrastructure and environmental research.",
 };

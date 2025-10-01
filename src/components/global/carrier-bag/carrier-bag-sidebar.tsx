@@ -108,12 +108,12 @@ export function CarrierBagSidebar({
 			side="right"
 			variant="inset"
 			className={cn(
-				"top-[calc(var(--header-height)+theme(spacing.2))] right-2 bottom-2 flex h-[calc(100svh-var(--header-height)-theme(spacing.4))] min-h-0 flex-col rounded-md bg-background",
+				"top-[calc(var(--header-height)+theme(spacing.2))] right-2 bottom-2 flex h-[calc(100svh-var(--header-height)-theme(spacing.4))] min-h-0 flex-col rounded-md bg-container-background",
 				className,
 			)}
 			{...props}
 		>
-			<SidebarHeader className="bg-background">
+			<SidebarHeader className="bg-container-background">
 				<div className="flex items-start justify-between p-2">
 					<div className="flex flex-col">
 						<h3 className="text-heading-compact">Carrier Bag</h3>
@@ -157,7 +157,7 @@ export function CarrierBagSidebar({
 					</div>
 				</div>
 			</SidebarHeader>
-			<SidebarContent className="flex-1 bg-background">
+			<SidebarContent className="flex-1 bg-container-background">
 				<SidebarGroup>
 					{showClearConfirmation ? (
 						<div className="flex flex-col items-center justify-center gap-4 p-6 text-center">
@@ -264,8 +264,8 @@ export function CarrierBagSidebar({
 					)}
 				</SidebarGroup>
 			</SidebarContent>
-			<SidebarFooter className="bg-background">
-				<div className="flex gap-2 p-2">
+			<SidebarFooter className="bg-container-background">
+				<div className="flex flex-row items-center gap-2 p-2">
 					<PDFPreviewModal
 						documentData={documentData}
 						disabled={items.length === 0}
