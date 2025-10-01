@@ -68,16 +68,6 @@ export function EnhanceToggle({
 		);
 	}
 
-	// If user has no preferences, show message about completing orientation
-	return (
-		<div className="flex items-center gap-2">
-			<p className="text-muted-foreground text-sm">
-				By completing the{" "}
-				<Link href="/onboarding" className="text-link">
-					Orientation
-				</Link>
-				, your search results will become more relevant and personalized to your interests.
-			</p>
-		</div>
-	);
+	// If user has no preferences, show nothing (message appears elsewhere)
+	return null;
 }

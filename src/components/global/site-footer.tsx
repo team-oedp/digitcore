@@ -5,8 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { GitHubIcon } from "~/components/icons/logos/github-icon";
 import { ZenodoIcon } from "~/components/icons/logos/zenodo-icon";
-import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
+import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
 
 type SiteFooterProps = {
 	footerData: FOOTER_QUERYResult;
@@ -56,7 +56,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 
 	return (
 		<footer className="mx-4 mt-auto mb-4 rounded-md bg-secondary">
-			<div className="pb-3">
+			<div>
 				<div className="flex flex-col px-4 py-4 md:px-6 md:py-6">
 					{/* Mobile Layout - Vertical Stack */}
 					<div className="flex flex-col gap-4 md:hidden">
