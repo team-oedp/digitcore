@@ -7,6 +7,7 @@ import { client } from "~/sanity/lib/client";
 import {
 	PATTERN_FILTER_QUERY,
 	PATTERN_SEARCH_QUERY,
+	PATTERN_SEARCH_WITH_PREFERENCES_QUERY,
 	PATTERN_SIMPLE_SEARCH_QUERY,
 	RESOURCE_SEARCH_QUERY,
 	SOLUTION_SEARCH_QUERY,
@@ -192,8 +193,8 @@ export async function searchPatterns(
 			audiences: parsedParams.audiences || [],
 			themes: parsedParams.themes || [],
 			tags: parsedParams.tags || [],
-			prefAudiences,
-			prefThemes,
+			prefAudiences: prefAudiences,
+			prefThemes: prefThemes,
 		};
 
 		logger.search(
@@ -206,37 +207,65 @@ export async function searchPatterns(
 			location,
 		);
 
-		// Determine which query to use based on search term
+		// Determine which query to use based on search term and preferences
 		const hasSearchTerm = parsedParams.searchTerm?.trim();
+		const hasPreferences = prefAudiences.length > 0 || prefThemes.length > 0;
+		
 		logger.search(
-			"Has search term",
-			{ hasSearchTerm: !!hasSearchTerm, searchTerm: parsedParams.searchTerm },
+			"Query selection criteria",
+			{ 
+				hasSearchTerm: !!hasSearchTerm, 
+				searchTerm: parsedParams.searchTerm,
+				hasPreferences,
+				prefAudiencesCount: prefAudiences.length,
+				prefThemesCount: prefThemes.length,
+			},
 			location,
 		);
 
 		let query: string;
+		let finalQueryParams: Record<string, unknown>;
+
 		if (hasSearchTerm) {
-			query = PATTERN_SEARCH_QUERY;
+			// Use appropriate search query based on preferences
+			if (hasPreferences) {
+				query = PATTERN_SEARCH_WITH_PREFERENCES_QUERY;
+				finalQueryParams = queryParams; // Include all params including preferences
+				logger.groq("Using PATTERN_SEARCH_WITH_PREFERENCES_QUERY", undefined, location);
+			} else {
+				query = PATTERN_SEARCH_QUERY;
+				finalQueryParams = {
+					audiences: queryParams.audiences,
+					themes: queryParams.themes,
+					tags: queryParams.tags,
+					// Don't include preference params for regular search
+				};
+				logger.groq("Using PATTERN_SEARCH_QUERY (no preferences)", undefined, location);
+			}
+			
 			// Escape special characters in search term for GROQ
 			const escapedSearchTerm = parsedParams.searchTerm
 				.trim()
 				.replace(/["\\]/g, "\\$&"); // Escape quotes and backslashes
-			queryParams.searchTerm = escapedSearchTerm;
+			finalQueryParams.searchTerm = escapedSearchTerm;
+			
 			logger.groq(
-				"Using PATTERN_SEARCH_QUERY with escaped search term",
+				"Search term escaped",
 				{ original: parsedParams.searchTerm, escaped: escapedSearchTerm },
 				location,
 			);
 		} else {
+			// Use filter query (no search term, only filters)
 			query = PATTERN_FILTER_QUERY;
-			logger.groq(
-				"Using PATTERN_FILTER_QUERY (no search term)",
-				undefined,
-				location,
-			);
+			finalQueryParams = hasPreferences ? queryParams : {
+				audiences: queryParams.audiences,
+				themes: queryParams.themes,
+				tags: queryParams.tags,
+			};
+			logger.groq("Using PATTERN_FILTER_QUERY", { hasPreferences }, location);
 		}
 
-		logger.groq("Final GROQ query parameters", queryParams, location);
+		logger.groq("Final GROQ query parameters", finalQueryParams, location);
 		logger.groq("Query type", hasSearchTerm ? "SEARCH" : "FILTER", location);
 
 		// Execute GROQ query
@@ -246,7 +275,7 @@ export async function searchPatterns(
 			location,
 		);
 		const startTime = Date.now();
-		const response = await client.fetch(query, queryParams);
+		const response = await client.fetch(query, finalQueryParams);
 		const endTime = Date.now();
 
 		// Extract results from Sanity client response

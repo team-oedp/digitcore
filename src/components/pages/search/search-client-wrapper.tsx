@@ -86,6 +86,20 @@ export function SearchClientWrapper() {
 				parsedParams.themes.length > 0 ||
 				parsedParams.tags.length > 0;
 
+			logger.debug(
+				"client",
+				"Search criteria validation",
+				{
+					searchId,
+					searchTerm,
+					searchTermLength: searchTerm?.length ?? 0,
+					hasValidSearchTerm,
+					hasFilters,
+					requiresMinimumChars: !hasValidSearchTerm && !hasFilters,
+				},
+				location,
+			);
+
 			// If no valid search criteria, don't search - just show empty state
 			// Require at least 4 characters for search terms to avoid excessive queries
 			if (!hasValidSearchTerm && !hasFilters) {
@@ -232,7 +246,24 @@ export function SearchClientWrapper() {
 		};
 
 		performSearch();
-	}, [searchParams, location, searchId, onboardingPreferences]);
+	}, [searchParams, location, searchId]);
+
+	// Separate effect for preference changes - only search if there are active criteria
+	useEffect(() => {
+		const currentSearchString = searchParams?.toString() ?? "";
+		const rawParams = {
+			q: searchParams?.get("q") ?? undefined,
+			audiences: searchParams?.get("audiences") ?? undefined,
+			themes: searchParams?.get("themes") ?? undefined,
+			tags: searchParams?.get("tags") ?? undefined,
+		};
+
+		const hasActiveSearch = Object.values(rawParams).some(param => param && param.trim());
+		
+		if (hasActiveSearch) {
+			performSearch();
+		}
+	}, [onboardingPreferences]);
 
 	// Cleanup effect to abort ongoing requests when component unmounts
 	useEffect(() => {
@@ -283,25 +314,28 @@ export function SearchClientWrapper() {
 				<div className="py-12" />
 			) : isLoading ? (
 				<SearchResultsSkeleton count={6} />
-			) : !searchResult?.success ? (
+			) : searchResult && !searchResult.success ? (
 				<div className="py-12 text-center">
 					<p className="mb-2 text-red-600 dark:text-red-400">Search Error</p>
 					<p className="text-base text-muted-foreground">
-						{searchResult?.error}
+						{searchResult.error}
 					</p>
 				</div>
-			) : searchResult.totalCount === 0 ? (
+			) : searchResult && searchResult.totalCount === 0 ? (
 				<div className="py-12 text-left">
 					<p className="mb-2 text-muted-foreground">No results found</p>
 					<p className="text-base text-muted-foreground/70">
 						Try adjusting your search terms or filters
 					</p>
 				</div>
-			) : (
+			) : searchResult ? (
 				<SearchResults
 					patterns={searchResult.data || []}
 					searchTerm={currentSearchTerm}
 				/>
+			) : (
+				// searchResult is null, show blank area (blocked searches)
+				<div className="py-12" />
 			)}
 		</div>
 	);

@@ -323,9 +323,74 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
       boost(title match ($searchTerm + "*"), 8),
       boost(pt::text(description) match ($searchTerm + "*"), 6),
       
+      // Basic scoring for any match
+      title match ($searchTerm + "*"),
+      pt::text(description) match ($searchTerm + "*")
+    )
+  // Filter out results with very low relevance scores
+  [_score > 0]
+  // Order by relevance score, then by title
+  | order(_score desc, title asc)
+  {
+    _id,
+    _type,
+    _score,
+    title,
+    description,
+    "slug": slug.current,
+    tags[]->{
+      _id,
+      title
+    },
+    audiences[]->{
+      _id,
+      title
+    },
+    theme->{
+      _id,
+      title,
+      description
+    },
+    solutions[]->{
+      _id,
+      title,
+      description
+    },
+    resources[]->{
+      _id,
+      title,
+      description,
+      solution[]->{
+        _id,
+        title
+      }
+    }
+  }
+`);
+
+// Enhanced search query WITH preferences boosting
+export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
+  *[_type == "pattern" && defined(slug.current)
+    // Apply audience filter if provided
+    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
+    // Apply theme filter if provided  
+    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)
+    // Apply tags filter if provided
+    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
+  ]
+  // Enhanced search scoring across relevant fields WITH preference boosting
+  | score(
+      // Primary content scoring (highest priority)
+      boost(title match $searchTerm, 15),
+      boost(pt::text(description) match $searchTerm, 12),
+      
+      // Partial/prefix matches (lower scores)
+      boost(title match ($searchTerm + "*"), 8),
+      boost(pt::text(description) match ($searchTerm + "*"), 6),
+      
       // Boost based on onboarding preferences (organize results by user interests)
-      boost(defined($prefAudiences) && count($prefAudiences) > 0 && count((audiences[]._ref)[@ in $prefAudiences]) > 0, 5),
-      boost(defined($prefThemes) && count($prefThemes) > 0 && theme._ref in $prefThemes, 4),
+      boost(count((audiences[]._ref)[@ in $prefAudiences]) > 0, 5),
+      boost(theme._ref in $prefThemes, 4),
       
       // Basic scoring for any match
       title match ($searchTerm + "*"),
@@ -538,12 +603,8 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
     // Apply tags filter if provided
     && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
   ]
-  // Score based on onboarding preferences to organize results
-  | score(
-      // Boost based on onboarding preferences (organize results by user interests)
-      boost(defined($prefAudiences) && count($prefAudiences) > 0 && count((audiences[]._ref)[@ in $prefAudiences]) > 0, 5),
-      boost(defined($prefThemes) && count($prefThemes) > 0 && theme._ref in $prefThemes, 4)
-    )
+  // Score based on basic ordering (no preferences in filter-only mode)
+  | score(1)
   // Order by preference score first, then by title
   | order(_score desc, title asc)
   {
