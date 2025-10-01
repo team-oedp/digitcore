@@ -44,12 +44,22 @@ export function SearchInterface({
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	// Get onboarding preferences for enhance toggle
-	const onboardingPreferences = useOnboardingStore((state) => ({
-		selectedAudienceIds: state.selectedAudienceIds,
-		selectedThemeIds: state.selectedThemeIds,
-		hasCompletedOnboarding: state.hasCompletedOnboarding,
-	}));
+	// Get onboarding preferences for enhance toggle - use individual selectors to avoid object recreation
+	const selectedAudienceIds = useOnboardingStore(
+		(state) => state.selectedAudienceIds,
+	);
+	const selectedThemeIds = useOnboardingStore(
+		(state) => state.selectedThemeIds,
+	);
+	const hasCompletedOnboarding = useOnboardingStore(
+		(state) => state.hasCompletedOnboarding,
+	);
+
+	const onboardingPreferences = {
+		selectedAudienceIds,
+		selectedThemeIds,
+		hasCompletedOnboarding,
+	};
 
 	logger.debug(
 		"client",
@@ -85,22 +95,27 @@ export function SearchInterface({
 	}, [searchParams]);
 
 	// Check if user has preferences from onboarding
-	const hasPreferences = 
+	const hasPreferences =
 		onboardingPreferences.hasCompletedOnboarding &&
-		(onboardingPreferences.selectedAudienceIds.length > 0 || 
-		 onboardingPreferences.selectedThemeIds.length > 0);
-	
+		(onboardingPreferences.selectedAudienceIds.length > 0 ||
+			onboardingPreferences.selectedThemeIds.length > 0);
+
 	// Get enhance state from URL, default to true if preferences exist and no URL parameter
-	const enhanceEnabled = currentParams.enhance !== undefined 
-		? currentParams.enhance 
-		: hasPreferences;
+	const enhanceEnabled =
+		currentParams.enhance !== undefined
+			? currentParams.enhance
+			: hasPreferences;
 
 	// Helper functions to get preference labels for hover text
-	const getAudienceLabels = (ids: string[]) => 
-		ids.map(id => audienceOptions.find(opt => opt.value === id)?.label).filter(Boolean) as string[];
-	
-	const getThemeLabels = (ids: string[]) => 
-		ids.map(id => themeOptions.find(opt => opt.value === id)?.label).filter(Boolean) as string[];
+	const getAudienceLabels = (ids: string[]) =>
+		ids
+			.map((id) => audienceOptions.find((opt) => opt.value === id)?.label)
+			.filter(Boolean) as string[];
+
+	const getThemeLabels = (ids: string[]) =>
+		ids
+			.map((id) => themeOptions.find((opt) => opt.value === id)?.label)
+			.filter(Boolean) as string[];
 
 	// Completely isolated search input state - no URL sync
 	const [searchTerm, setSearchTerm] = useState("");
@@ -280,8 +295,12 @@ export function SearchInterface({
 			<EnhanceToggle
 				enabled={enhanceEnabled}
 				onToggle={handleEnhanceToggle}
-				audiencePreferences={getAudienceLabels(onboardingPreferences.selectedAudienceIds)}
-				themePreferences={getThemeLabels(onboardingPreferences.selectedThemeIds)}
+				audiencePreferences={getAudienceLabels(
+					onboardingPreferences.selectedAudienceIds,
+				)}
+				themePreferences={getThemeLabels(
+					onboardingPreferences.selectedThemeIds,
+				)}
 			/>
 
 			{/* Filter Tools */}

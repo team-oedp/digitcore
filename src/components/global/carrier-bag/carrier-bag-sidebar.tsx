@@ -3,9 +3,6 @@
 import {
 	AlertCircleIcon,
 	Cancel01Icon,
-	CleaningBucketIcon,
-	Download05Icon,
-	FileDownloadIcon,
 	FolderLibraryIcon,
 	SidebarRightIcon,
 } from "@hugeicons/core-free-icons";
@@ -59,7 +56,7 @@ export function CarrierBagSidebar({
 		(state) => state.hideClearConfirmationPane,
 	);
 	const documentData = useCarrierBagDocument(items);
-	const { isCheckingStale, lastChecked } = useStaleContentCheck();
+	const { lastChecked } = useStaleContentCheck();
 	const { setOpen: setSidebarOpen, setOpenMobile, isMobile } = useSidebar();
 
 	// Sync Zustand store state to Sidebar component state
@@ -120,16 +117,7 @@ export function CarrierBagSidebar({
 				<div className="flex items-start justify-between p-2">
 					<div className="flex flex-col">
 						<h3 className="text-heading-compact">Carrier Bag</h3>
-						{isCheckingStale && (
-							<p className="text-muted-foreground text-xs">
-								Checking for updates...
-							</p>
-						)}
-						{lastChecked && !isCheckingStale && (
-							<p className="text-muted-foreground text-xs">
-								Last checked: {lastChecked.toLocaleTimeString()}
-							</p>
-						)}
+						{/* Background updates only - no loading UI to avoid confusion */}
 					</div>
 					<div className="flex items-center gap-1">
 						<Button
@@ -182,7 +170,7 @@ export function CarrierBagSidebar({
 							</div>
 							<div className="space-y-2">
 								<h3 className="font-normal text-foreground text-lg">
-									Clear all items?
+									Remove all items?
 								</h3>
 								<p className="text-muted-foreground text-sm leading-relaxed">
 									This will remove all {items.length} pattern
@@ -208,7 +196,7 @@ export function CarrierBagSidebar({
 									}}
 									className="flex-1"
 								>
-									Clear all
+									Remove all
 								</Button>
 							</div>
 						</div>
@@ -277,47 +265,44 @@ export function CarrierBagSidebar({
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarFooter className="bg-background">
-				<div className="flex flex-row items-center gap-2 p-2">
-					<Button
-						variant="outline"
-						size="sm"
-						className="h-8 w-8 border-border bg-accent p-0 text-accent-foreground hover:bg-accent/80"
-						type="button"
-						onClick={showClearConfirmationPane}
-						disabled={items.length === 0}
-						aria-label="Clear all items"
-						title="Clear all items"
-					>
-						<Icon icon={CleaningBucketIcon} size={16} />
-					</Button>
-					<Button
-						variant="outline"
-						size="sm"
-						className="h-8 w-8 border-border bg-accent p-0 text-accent-foreground hover:bg-accent/80"
-						type="button"
-						onClick={handleDownloadJson}
-						disabled={items.length === 0}
-						aria-label="Download list as JSON"
-						title="Download list as JSON"
-					>
-						<Icon icon={Download05Icon} size={16} />
-					</Button>
+				<div className="flex gap-2 p-2">
 					<PDFPreviewModal
 						documentData={documentData}
 						disabled={items.length === 0}
 					>
-						<Button
-							variant="outline"
-							size="sm"
-							className="h-8 w-8 border-border bg-accent p-0 text-accent-foreground hover:bg-accent/80"
+						<button
 							type="button"
+							className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-background px-2 py-1 transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50 md:gap-2.5 dark:hover:bg-neutral-800"
 							disabled={items.length === 0}
-							aria-label="Download as PDF"
-							title="Download as PDF"
+							aria-label="PDF"
 						>
-							<Icon icon={FileDownloadIcon} size={16} />
-						</Button>
+							<span className="hidden font-normal text-primary text-xs uppercase md:inline md:text-sm">
+								PDF
+							</span>
+						</button>
 					</PDFPreviewModal>
+					<button
+						type="button"
+						className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-background px-2 py-1 transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50 md:gap-2.5 dark:hover:bg-neutral-800"
+						onClick={handleDownloadJson}
+						disabled={items.length === 0}
+						aria-label="Download list as JSON"
+					>
+						<span className="hidden font-normal text-primary text-xs uppercase md:inline md:text-sm">
+							JSON
+						</span>
+					</button>
+					<button
+						type="button"
+						className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-background px-2 py-1 transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50 md:gap-2.5 dark:hover:bg-neutral-800"
+						onClick={showClearConfirmationPane}
+						disabled={items.length === 0}
+						aria-label="Remove all items"
+					>
+						<span className="hidden font-normal text-primary text-xs uppercase md:inline md:text-sm">
+							Remove all
+						</span>
+					</button>
 				</div>
 			</SidebarFooter>
 		</Sidebar>

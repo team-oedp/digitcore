@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { createStore, useStore } from "zustand";
 import { persist } from "zustand/middleware";
@@ -44,7 +44,7 @@ export const FontStoreProvider = ({ children }: FontStoreProviderProps) => {
 	useEffect(() => {
 		const mode = store.getState().mode;
 		const body = document.body;
-		
+
 		// Apply the font mode to the body element
 		if (mode === "sans-serif") {
 			body.classList.add("font-sans-body");
@@ -59,7 +59,7 @@ export const FontStoreProvider = ({ children }: FontStoreProviderProps) => {
 	useEffect(() => {
 		const unsubscribe = store.subscribe((state) => {
 			const body = document.body;
-			
+
 			if (state.mode === "sans-serif") {
 				body.classList.add("font-sans-body");
 				body.classList.remove("font-serif-body");

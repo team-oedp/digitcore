@@ -2,7 +2,7 @@
  * see https://www.sanity.io/docs/api-versioning for how versioning works
  */
 export const apiVersion =
-	process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2025-07-23";
+	process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2024-07-23";
 
 export const dataset = assertValue(
 	process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",

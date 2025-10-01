@@ -227,7 +227,7 @@ describe("Carrier Bag Sidebar", () => {
 
 			// Verify clear and download buttons are enabled
 			const clearButton = screen.getByRole("button", {
-				name: /clear all items/i,
+				name: /remove all items/i,
 			});
 			const downloadButton = screen.getByRole("button", {
 				name: /download list as json/i,

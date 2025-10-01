@@ -7,6 +7,7 @@ import {
 	CarrierBagItem,
 	type CarrierBagItemData,
 } from "~/components/global/carrier-bag/carrier-bag-item";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
 	MultiSelect,
@@ -187,11 +188,17 @@ export function CarrierBagContent({
 
 	return (
 		<div className="flex h-full min-h-0 w-full flex-col gap-4 overflow-hidden rounded-md bg-sidebar px-4">
-			<div className="sticky top-0 z-10 bg-sidebar pt-6 pb-2">
+			<div className="sticky top-0 z-10 bg-sidebar pt-2 pb-2">
 				<div className="flex items-start justify-between gap-6">
 					<div className="flex-1">
-						<h2 className="text-heading-compact">Carrier Bag</h2>
-						<p className="font-normal text-sm">{`${items.length} saved items`}</p>
+						<h1 className="pb-1 text-page-heading">Carrier Bag</h1>
+						<Badge
+							variant="outline"
+							size="default"
+							className="mt-1 rounded-full"
+						>
+							{`${items.length} saved items`}
+						</Badge>
 					</div>
 					{mobileTrigger && mobileTrigger}
 				</div>

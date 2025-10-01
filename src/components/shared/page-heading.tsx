@@ -1,6 +1,6 @@
 export function PageHeading({ title }: { title: string }) {
 	return (
-		<header className="w-fit">
+		<header className="w-fit pt-5">
 			<h1 className="text-page-heading">{title}</h1>
 		</header>
 	);

@@ -397,9 +397,16 @@ export async function searchPatternsWithPreferences(
 			formData.append(key, value);
 		}
 
-		// Add preference parameters for GROQ boosting
-		formData.append("prefAudiences", preferences.selectedAudienceIds.join(","));
-		formData.append("prefThemes", preferences.selectedThemeIds.join(","));
+		// Add preference parameters for GROQ boosting (only if not empty)
+		if (preferences.selectedAudienceIds.length > 0) {
+			formData.append(
+				"prefAudiences",
+				preferences.selectedAudienceIds.join(","),
+			);
+		}
+		if (preferences.selectedThemeIds.length > 0) {
+			formData.append("prefThemes", preferences.selectedThemeIds.join(","));
+		}
 
 		logger.search(
 			"Delegating to searchPatterns with preferences",

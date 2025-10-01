@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useRef } from "react";
+import { createContext, useCallback, useContext, useRef } from "react";
 import { createStore, useStore } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -189,6 +189,9 @@ export const OnboardingStoreProvider = ({
 	);
 };
 
+// Stable identity selector to avoid infinite loops
+const identitySelector = (state: OnboardingState) => state;
+
 export const useOnboardingStore = <T = OnboardingState>(
 	selector?: (state: OnboardingState) => T,
 ) => {
@@ -198,5 +201,9 @@ export const useOnboardingStore = <T = OnboardingState>(
 			"useOnboardingStore must be used within OnboardingStoreProvider",
 		);
 	}
-	return selector ? useStore(store, selector) : (useStore(store) as T);
+
+	// Use stable identity selector when no selector provided
+	const stableSelector =
+		selector || (identitySelector as (state: OnboardingState) => T);
+	return useStore(store, stableSelector);
 };

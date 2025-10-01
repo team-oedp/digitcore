@@ -1,7 +1,11 @@
 "use client";
 
 import { Sparkles } from "lucide-react";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "~/components/ui/hover-card";
+import {
+	HoverCard,
+	HoverCardContent,
+	HoverCardTrigger,
+} from "~/components/ui/hover-card";
 import { Toggle } from "~/components/ui/toggle";
 
 type EnhanceToggleProps = {
@@ -17,7 +21,8 @@ export function EnhanceToggle({
 	audiencePreferences = [],
 	themePreferences = [],
 }: EnhanceToggleProps) {
-	const hasPreferences = audiencePreferences.length > 0 || themePreferences.length > 0;
+	const hasPreferences =
+		audiencePreferences.length > 0 || themePreferences.length > 0;
 
 	// Don't render if no preferences exist
 	if (!hasPreferences) {
@@ -26,11 +31,11 @@ export function EnhanceToggle({
 
 	const generateHoverText = () => {
 		const parts: string[] = [];
-		
+
 		if (audiencePreferences.length > 0) {
 			parts.push(`audience preferences (${audiencePreferences.join(", ")})`);
 		}
-		
+
 		if (themePreferences.length > 0) {
 			parts.push(`theme preferences (${themePreferences.join(", ")})`);
 		}
@@ -57,10 +62,8 @@ export function EnhanceToggle({
 			</HoverCardTrigger>
 			<HoverCardContent className="w-80">
 				<div className="space-y-2">
-					<h4 className="text-sm font-semibold">Enhance Results</h4>
-					<p className="text-sm text-muted-foreground">
-						{generateHoverText()}
-					</p>
+					<h4 className="font-semibold text-sm">Enhance Results</h4>
+					<p className="text-muted-foreground text-sm">{generateHoverText()}</p>
 				</div>
 			</HoverCardContent>
 		</HoverCard>

@@ -239,10 +239,16 @@ export default function PatternFadeRotate({
 							? useTransform(gateBasis, [0.9, 0.98, 1], [0, 0.6, 1])
 							: undefined;
 						const finalOpacity = gateMv
-							? useTransform([opacityMv, gateMv], ([o, g]) => o * g)
+							? useTransform(
+									[opacityMv, gateMv],
+									([o, g]) => Number(o) * Number(g),
+								)
 							: opacityMv;
 						const finalRotate = gateMv
-							? useTransform([rotateMv, gateMv], ([r, g]) => r * g)
+							? useTransform(
+									[rotateMv, gateMv],
+									([r, g]) => Number(r) * Number(g),
+								)
 							: rotateMv;
 						return (
 							<div

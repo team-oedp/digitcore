@@ -304,6 +304,9 @@ export const CarrierBagStoreProvider = ({
 	);
 };
 
+// Stable identity selector to avoid infinite loops
+const carrierBagIdentitySelector = (state: CarrierBagState) => state;
+
 export const useCarrierBagStore = <T = CarrierBagState>(
 	selector?: (state: CarrierBagState) => T,
 ) => {
@@ -313,5 +316,9 @@ export const useCarrierBagStore = <T = CarrierBagState>(
 			"useCarrierBagStore must be used within CarrierBagStoreProvider",
 		);
 	}
-	return selector ? useStore(store, selector) : (useStore(store) as T);
+
+	// Use stable identity selector when no selector provided
+	const stableSelector =
+		selector || (carrierBagIdentitySelector as (state: CarrierBagState) => T);
+	return useStore(store, stableSelector);
 };

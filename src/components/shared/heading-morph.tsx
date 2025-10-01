@@ -462,7 +462,7 @@ export function HeadingMorph({
 
 	return (
 		<div
-			className="m-0 overscroll-y-contain p-0 px-5 pt-0"
+			className="m-0 overscroll-y-contain p-0 pt-0"
 			style={{ height: containerHeightStyle, paddingTop: 0 }}
 		>
 			<motion.header

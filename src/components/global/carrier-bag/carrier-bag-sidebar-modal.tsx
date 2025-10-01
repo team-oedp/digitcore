@@ -127,7 +127,7 @@ export function CarrierBagSidebarModal() {
 							onClick={clearBag}
 							disabled={!isHydrated || items.length === 0}
 						>
-							Clear all items
+							Remove all items
 						</Button>
 						<Button
 							variant="outline"

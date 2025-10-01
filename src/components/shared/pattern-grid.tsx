@@ -215,18 +215,20 @@ export default function PatternGrid({
 						const Icon = ICONS[i % ICONS.length] as React.ComponentType<
 							React.ComponentPropsWithoutRef<"svg">
 						>;
-						// staggered fade: start earlier so grid is visible sooner
+						// staggered fade: much slower response to scroll with varied end opacities
 						const jitter = seeded(i);
-						const start = 0.12 + jitter * 0.18; // ~0.12..0.30
-						const end = Math.min(0.95, start + 0.45 + seeded(i + 7) * 0.15); // slower fade-in window
+						const start = 0.1 + jitter * 0.4; // ~0.1..0.5 (much slower start)
+						const end = Math.min(0.95, start + 0.8 + seeded(i + 7) * 0.3); // extended fade-in window
+						// varied final opacity levels for visual diversity - some darker
+						const finalOpacity = 0.08 + seeded(i + 13) * 0.25; // ~0.08..0.33 (wider range, some darker)
 						// compute opacity numerically (no hooks inside map)
 						// Important: do NOT hard-gate here; it makes all tiles pop at once.
 						let baseOpacity = 0;
 						if (p <= start) baseOpacity = 0;
-						else if (p >= end) baseOpacity = 0.18;
+						else if (p >= end) baseOpacity = finalOpacity;
 						else {
 							const t = (p - start) / (end - start);
-							baseOpacity = 0.06 + 0.12 * t;
+							baseOpacity = 0.04 + (finalOpacity - 0.04) * t;
 						}
 						// Faster, per-cell gate: stronger jitter so cells fade individually
 						const gateDelay = 0.02 + jitter * 0.4; // 0.02..0.42

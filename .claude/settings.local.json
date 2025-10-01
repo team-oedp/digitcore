@@ -1,12 +1,12 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(npm run typecheck:*)",
-      "Bash(npm test:*)",
-      "Bash(npm run check:write:*)",
-      "WebFetch(domain:github.com)",
-      "Bash(grep:*)"
-    ],
-    "deny": []
-  }
+	"permissions": {
+		"allow": [
+			"Bash(npm run typecheck:*)",
+			"Bash(npm test:*)",
+			"Bash(npm run check:write:*)",
+			"WebFetch(domain:github.com)",
+			"Bash(grep:*)"
+		],
+		"deny": []
+	}
 }

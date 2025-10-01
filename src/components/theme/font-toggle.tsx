@@ -6,7 +6,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { useFontStore, type FontMode } from "~/stores/font";
+import { type FontMode, useFontStore } from "~/stores/font";
 
 interface FontToggleProps {
 	className?: string;
@@ -32,16 +32,20 @@ export function FontToggle({ className }: FontToggleProps = {}) {
 						{/* Render both Aa text in different typefaces */}
 						<span
 							aria-hidden="true"
-							className={`text-sm font-serif transition-all ${
-								mode === "serif" ? "scale-100 rotate-0 opacity-100" : "scale-0 -rotate-90 opacity-0"
+							className={`font-serif text-sm transition-all ${
+								mode === "serif"
+									? "rotate-0 scale-100 opacity-100"
+									: "-rotate-90 scale-0 opacity-0"
 							}`}
 						>
 							Aa
 						</span>
 						<span
 							aria-hidden="true"
-							className={`absolute text-sm font-sans transition-all ${
-								mode === "sans-serif" ? "scale-100 rotate-0 opacity-100" : "scale-0 rotate-90 opacity-0"
+							className={`absolute font-sans text-sm transition-all ${
+								mode === "sans-serif"
+									? "rotate-0 scale-100 opacity-100"
+									: "rotate-90 scale-0 opacity-0"
 							}`}
 						>
 							Aa

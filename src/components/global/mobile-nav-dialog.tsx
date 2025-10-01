@@ -4,7 +4,7 @@ import { Menu, Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
 	Sheet,
@@ -37,8 +37,14 @@ const languages = [
 export function MobileNavDialog() {
 	const [open, setOpen] = useState(false);
 	const [selectedLanguage, setSelectedLanguage] = useState("EN");
+	const [mounted, setMounted] = useState(false);
 	const pathname = usePathname();
 	const { theme, setTheme } = useTheme();
+
+	// Prevent hydration mismatch by only rendering theme toggle after client mount
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	return (
 		<Sheet open={open} onOpenChange={setOpen}>
@@ -117,56 +123,58 @@ export function MobileNavDialog() {
 					</div>
 
 					{/* Theme Selection */}
-					<div className="space-y-2">
-						<div className="px-1.5 font-medium text-muted-foreground text-sm">
-							Mode
+					{mounted && (
+						<div className="space-y-2">
+							<div className="px-1.5 font-medium text-muted-foreground text-sm">
+								Mode
+							</div>
+							<div className="px-1.5">
+								<ToggleGroup
+									type="single"
+									value={theme}
+									onValueChange={(value) => value && setTheme(value)}
+									className="gap-3"
+								>
+									<ToggleGroupItem
+										value="light"
+										aria-label="Light mode"
+										className={cn(
+											theme === "light"
+												? "bg-accent text-foreground"
+												: "text-muted-foreground hover:text-foreground",
+										)}
+									>
+										<Sun className="mr-1 h-4 w-4" />
+										Light
+									</ToggleGroupItem>
+									<ToggleGroupItem
+										value="dark"
+										aria-label="Dark mode"
+										className={cn(
+											theme === "dark"
+												? "bg-accent text-foreground"
+												: "text-muted-foreground hover:text-foreground",
+										)}
+									>
+										<Moon className="mr-1 h-4 w-4" />
+										Dark
+									</ToggleGroupItem>
+									<ToggleGroupItem
+										value="system"
+										aria-label="System mode"
+										className={cn(
+											theme === "system"
+												? "bg-accent text-foreground"
+												: "text-muted-foreground hover:text-foreground",
+										)}
+									>
+										<Monitor className="mr-1 h-4 w-4" />
+										System
+									</ToggleGroupItem>
+								</ToggleGroup>
+							</div>
 						</div>
-						<div className="px-1.5">
-							<ToggleGroup
-								type="single"
-								value={theme}
-								onValueChange={(value) => value && setTheme(value)}
-								className="gap-3"
-							>
-								<ToggleGroupItem
-									value="light"
-									aria-label="Light mode"
-									className={cn(
-										theme === "light"
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
-								>
-									<Sun className="mr-1 h-4 w-4" />
-									Light
-								</ToggleGroupItem>
-								<ToggleGroupItem
-									value="dark"
-									aria-label="Dark mode"
-									className={cn(
-										theme === "dark"
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
-								>
-									<Moon className="mr-1 h-4 w-4" />
-									Dark
-								</ToggleGroupItem>
-								<ToggleGroupItem
-									value="system"
-									aria-label="System mode"
-									className={cn(
-										theme === "system"
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
-								>
-									<Monitor className="mr-1 h-4 w-4" />
-									System
-								</ToggleGroupItem>
-							</ToggleGroup>
-						</div>
-					</div>
+					)}
 				</div>
 			</SheetContent>
 		</Sheet>

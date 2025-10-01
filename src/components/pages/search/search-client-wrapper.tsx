@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
 	type SearchResult,
 	searchPatternsWithParams,
@@ -26,12 +26,25 @@ export function SearchClientWrapper() {
 	const abortControllerRef = useRef<AbortController | null>(null);
 	const lastSearchParamsRef = useRef<string>("");
 
-	// Get onboarding preferences for result boosting
-	const onboardingPreferences = useOnboardingStore((state) => ({
-		selectedAudienceIds: state.selectedAudienceIds,
-		selectedThemeIds: state.selectedThemeIds,
-		hasCompletedOnboarding: state.hasCompletedOnboarding,
-	}));
+	// Get onboarding preferences for result boosting - use individual selectors to avoid object recreation
+	const selectedAudienceIds = useOnboardingStore(
+		(state) => state.selectedAudienceIds,
+	);
+	const selectedThemeIds = useOnboardingStore(
+		(state) => state.selectedThemeIds,
+	);
+	const hasCompletedOnboarding = useOnboardingStore(
+		(state) => state.hasCompletedOnboarding,
+	);
+
+	const onboardingPreferences = useMemo(
+		() => ({
+			selectedAudienceIds,
+			selectedThemeIds,
+			hasCompletedOnboarding,
+		}),
+		[selectedAudienceIds, selectedThemeIds, hasCompletedOnboarding],
+	);
 
 	logger.debug("client", "SearchClientWrapper mounted", { searchId }, location);
 
@@ -66,18 +79,20 @@ export function SearchClientWrapper() {
 			const parsedParams = parseSearchParams(validatedParams);
 
 			// Check if we have any actual search criteria
-			const hasSearchTerm = parsedParams.searchTerm?.trim();
+			const searchTerm = parsedParams.searchTerm?.trim();
+			const hasValidSearchTerm = searchTerm && searchTerm.length >= 4;
 			const hasFilters =
 				parsedParams.audiences.length > 0 ||
 				parsedParams.themes.length > 0 ||
 				parsedParams.tags.length > 0;
 
-			// If no search criteria, don't search - just show empty state
-			if (!hasSearchTerm && !hasFilters) {
+			// If no valid search criteria, don't search - just show empty state
+			// Require at least 4 characters for search terms to avoid excessive queries
+			if (!hasValidSearchTerm && !hasFilters) {
 				logger.debug(
 					"client",
-					"No search criteria - showing empty state",
-					{ searchId },
+					"No valid search criteria - showing empty state (need 4+ chars or filters)",
+					{ searchId, searchTerm, searchTermLength: searchTerm?.length ?? 0 },
 					location,
 				);
 				lastSearchParamsRef.current = currentSearchString;
@@ -107,7 +122,7 @@ export function SearchClientWrapper() {
 				{
 					searchId,
 					searchParams: currentSearchString,
-					hasSearchTerm: !!hasSearchTerm,
+					hasValidSearchTerm,
 					hasFilters,
 				},
 				location,
