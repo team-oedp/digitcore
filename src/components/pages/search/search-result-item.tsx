@@ -22,7 +22,6 @@ import {
 	truncateWithContext,
 } from "~/lib/search-utils";
 import { cn } from "~/lib/utils";
-import { SearchResultPreview } from "./search-result-preview";
 
 // Base search result type
 type BaseSearchResultData = {
@@ -222,13 +221,12 @@ function PatternSearchResult({
 	);
 
 	return (
-		<SearchResultPreview description={displayDescription} patternTitle={title}>
-			<SearchResultBase
-				title={title}
-				titleElement={titleElement}
-				showPatternIcon={showPatternIcon}
-				patternIcon={PatternIcon}
-			>
+		<SearchResultBase
+			title={title}
+			titleElement={titleElement}
+			showPatternIcon={showPatternIcon}
+			patternIcon={PatternIcon}
+		>
 				{/* Description with Search Context */}
 				{descriptionResult.text && (
 					<div className="mb-4">
@@ -343,8 +341,7 @@ function PatternSearchResult({
 						</BadgeGroup>
 					)}
 				</BadgeGroupContainer>
-			</SearchResultBase>
-		</SearchResultPreview>
+		</SearchResultBase>
 	);
 }
 
@@ -410,21 +407,16 @@ function _ResourceSearchResult({
 						<Icon icon={ArrowRight02Icon} className="h-4 w-4 text-accent" />
 					</div>
 
-					<SearchResultPreview
-						description={description}
-						patternTitle={patternInfo.title || "Pattern"}
+					<Badge
+						variant="pattern"
+						icon={
+							PatternIcon && (
+								<PatternIcon className="h-3.5 w-3.5 opacity-40" />
+							)
+						}
 					>
-						<Badge
-							variant="pattern"
-							icon={
-								PatternIcon && (
-									<PatternIcon className="h-3.5 w-3.5 opacity-40" />
-								)
-							}
-						>
-							{patternInfo.title}
-						</Badge>
-					</SearchResultPreview>
+						{patternInfo.title}
+					</Badge>
 				</div>
 			)}
 		</SearchResultBase>
@@ -499,19 +491,14 @@ function _SolutionSearchResult({
 						/>
 					</div>
 
-					<SearchResultPreview
-						description={description}
-						patternTitle={patternInfo.title || "Pattern"}
-					>
-						<div className="flex h-6 cursor-pointer items-center gap-2 py-1.5">
-							<span className="whitespace-nowrap text-[14px] text-neutral-500 capitalize tracking-[-0.28px]">
-								{patternInfo.title}
-							</span>
-							{PatternIcon && (
-								<PatternIcon className="h-3.5 w-3.5 text-neutral-500 opacity-40" />
-							)}
-						</div>
-					</SearchResultPreview>
+					<div className="flex h-6 cursor-pointer items-center gap-2 py-1.5">
+						<span className="whitespace-nowrap text-[14px] text-neutral-500 capitalize tracking-[-0.28px]">
+							{patternInfo.title}
+						</span>
+						{PatternIcon && (
+							<PatternIcon className="h-3.5 w-3.5 text-neutral-500 opacity-40" />
+						)}
+					</div>
 				</div>
 			)}
 		</SearchResultBase>
