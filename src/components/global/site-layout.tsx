@@ -55,7 +55,11 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 							>
 								{children}
 							</main>
-							{!isCarrierBagRoute && <SiteFooter footerData={footerData} />}
+							{!isCarrierBagRoute && (
+								<div>
+									<SiteFooter footerData={footerData} />
+								</div>
+							)}
 						</div>
 					</div>
 				</SidebarInset>

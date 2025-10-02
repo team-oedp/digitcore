@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
 	type SearchResult,
 	searchPatternsWithParams,
@@ -48,222 +48,202 @@ export function SearchClientWrapper() {
 
 	logger.debug("client", "SearchClientWrapper mounted", { searchId }, location);
 
-	useEffect(() => {
-		const performSearch = async () => {
-			// Create a string representation of search params for deduplication
-			const currentSearchString = searchParams?.toString() ?? "";
-
-			// Prevent duplicate searches for the same parameters
-			if (currentSearchString === lastSearchParamsRef.current) {
-				logger.debug(
-					"client",
-					"Skipping duplicate search",
-					{ searchId, currentSearchString },
-					location,
-				);
-				return;
-			}
-
-			// Parse parameters to check if we have any search criteria
-			const rawParams = {
-				q: searchParams?.get("q") ?? undefined,
-				audiences: searchParams?.get("audiences") ?? undefined,
-				themes: searchParams?.get("themes") ?? undefined,
-				tags: searchParams?.get("tags") ?? undefined,
-				enhance: searchParams?.get("enhance") ?? undefined,
-				page: searchParams?.get("page") ?? undefined,
-				limit: searchParams?.get("limit") ?? undefined,
-			};
-
-			const validatedParams = searchParamsSchema.parse(rawParams);
-			const parsedParams = parseSearchParams(validatedParams);
-
-			// Check if we have any actual search criteria
-			const searchTerm = parsedParams.searchTerm?.trim();
-			const hasValidSearchTerm = searchTerm && searchTerm.length >= 4;
-			const hasFilters =
-				parsedParams.audiences.length > 0 ||
-				parsedParams.themes.length > 0 ||
-				parsedParams.tags.length > 0;
-
-			logger.debug(
-				"client",
-				"Search criteria validation",
-				{
-					searchId,
-					searchTerm,
-					searchTermLength: searchTerm?.length ?? 0,
-					hasValidSearchTerm,
-					hasFilters,
-					requiresMinimumChars: !hasValidSearchTerm && !hasFilters,
-				},
-				location,
-			);
-
-			// If no valid search criteria, don't search - just show empty state
-			// Require at least 4 characters for search terms to avoid excessive queries
-			if (!hasValidSearchTerm && !hasFilters) {
-				logger.debug(
-					"client",
-					"No valid search criteria - showing empty state (need 4+ chars or filters)",
-					{ searchId, searchTerm, searchTermLength: searchTerm?.length ?? 0 },
-					location,
-				);
-				lastSearchParamsRef.current = currentSearchString;
-				setSearchResult(null);
-				setIsLoading(false);
-				return;
-			}
-
-			// Cancel any ongoing search
-			if (abortControllerRef.current) {
-				abortControllerRef.current.abort();
-				logger.debug(
-					"client",
-					"Aborted previous search",
-					{ searchId },
-					location,
-				);
-			}
-
-			// Create new abort controller for this search
-			abortControllerRef.current = new AbortController();
-			lastSearchParamsRef.current = currentSearchString;
-
-			logger.debug(
-				"client",
-				"Starting client-side search",
-				{
-					searchId,
-					searchParams: currentSearchString,
-					hasValidSearchTerm,
-					hasFilters,
-				},
-				location,
-			);
-			setIsLoading(true);
-
-			try {
-				logger.debug("client", "Raw URL search params", rawParams, location);
-				logger.debug(
-					"client",
-					"Validated search params",
-					validatedParams,
-					location,
-				);
-				logger.debug("client", "Parsed search params", parsedParams, location);
-
-				// Create URLSearchParams for the server action
-				const urlSearchParams = new URLSearchParams();
-				if (parsedParams.searchTerm) {
-					urlSearchParams.set("q", parsedParams.searchTerm);
-					logger.debug(
-						"client",
-						"Added search term",
-						parsedParams.searchTerm,
-						location,
-					);
-				}
-				if (parsedParams.audiences.length > 0) {
-					urlSearchParams.set("audiences", parsedParams.audiences.join(","));
-					logger.debug(
-						"client",
-						"Added audiences",
-						parsedParams.audiences,
-						location,
-					);
-				}
-				if (parsedParams.themes.length > 0) {
-					urlSearchParams.set("themes", parsedParams.themes.join(","));
-					logger.debug("client", "Added themes", parsedParams.themes, location);
-				}
-				if (parsedParams.tags.length > 0) {
-					urlSearchParams.set("tags", parsedParams.tags.join(","));
-					logger.debug("client", "Added tags", parsedParams.tags, location);
-				}
-
-				logger.debug(
-					"client",
-					"Calling server action with URLSearchParams",
-					Object.fromEntries(urlSearchParams.entries()),
-					location,
-				);
-
-				// Execute search - use preferences if enhance is enabled and preferences exist
-				const startTime = Date.now();
-				const hasPreferences =
-					onboardingPreferences.hasCompletedOnboarding &&
-					(onboardingPreferences.selectedAudienceIds.length > 0 ||
-						onboardingPreferences.selectedThemeIds.length > 0);
-
-				const shouldEnhance = parsedParams.enhance && hasPreferences;
-
-				const result = shouldEnhance
-					? await searchPatternsWithPreferences(urlSearchParams, {
-							selectedAudienceIds: onboardingPreferences.selectedAudienceIds,
-							selectedThemeIds: onboardingPreferences.selectedThemeIds,
-						})
-					: await searchPatternsWithParams(urlSearchParams);
-				const endTime = Date.now();
-
-				logger.info(
-					"client",
-					"Search completed",
-					{
-						success: result.success,
-						resultCount: result.totalCount,
-						executionTime: `${endTime - startTime}ms`,
-						error: result.error,
-					},
-					location,
-				);
-
-				setSearchResult(result);
-			} catch (error) {
-				// Don't log errors for aborted requests
-				if (error instanceof Error && error.name === "AbortError") {
-					logger.debug("client", "Search was aborted", { searchId }, location);
-					return;
-				}
-
-				logger.error("client", "Client-side search error", error, location);
-				setSearchResult({
-					success: false,
-					error: "Search failed",
-					totalCount: 0,
-					searchParams: parseSearchParams({ page: 1, limit: 20 }),
-				});
-			} finally {
-				setIsLoading(false);
-				abortControllerRef.current = null;
-				logger.debug(
-					"client",
-					"Search loading state set to false",
-					{ searchId },
-					location,
-				);
-			}
-		};
-
-		performSearch();
-	}, [searchParams, location, searchId]);
-
-	// Separate effect for preference changes - only search if there are active criteria
-	useEffect(() => {
+	const performSearch = useCallback(async () => {
+		// Create a string representation of search params for deduplication
 		const currentSearchString = searchParams?.toString() ?? "";
+
+		// Prevent duplicate searches for the same parameters
+		if (currentSearchString === lastSearchParamsRef.current) {
+			logger.debug(
+				"client",
+				"Skipping duplicate search",
+				{ searchId, currentSearchString },
+				location,
+			);
+			return;
+		}
+
+		// Parse parameters to check if we have any search criteria
 		const rawParams = {
 			q: searchParams?.get("q") ?? undefined,
 			audiences: searchParams?.get("audiences") ?? undefined,
 			themes: searchParams?.get("themes") ?? undefined,
 			tags: searchParams?.get("tags") ?? undefined,
+			enhance: searchParams?.get("enhance") ?? undefined,
+			page: searchParams?.get("page") ?? undefined,
+			limit: searchParams?.get("limit") ?? undefined,
 		};
 
-		const hasActiveSearch = Object.values(rawParams).some(param => param && param.trim());
-		
-		if (hasActiveSearch) {
-			performSearch();
+		const validatedParams = searchParamsSchema.parse(rawParams);
+		const parsedParams = parseSearchParams(validatedParams);
+
+		// Check if we have any actual search criteria
+		const searchTerm = parsedParams.searchTerm?.trim();
+		const hasValidSearchTerm = searchTerm && searchTerm.length >= 4;
+		const hasFilters =
+			parsedParams.audiences.length > 0 ||
+			parsedParams.themes.length > 0 ||
+			parsedParams.tags.length > 0;
+
+		logger.debug(
+			"client",
+			"Search criteria validation",
+			{
+				searchId,
+				searchTerm,
+				searchTermLength: searchTerm?.length ?? 0,
+				hasValidSearchTerm,
+				hasFilters,
+				requiresMinimumChars: !hasValidSearchTerm && !hasFilters,
+			},
+			location,
+		);
+
+		// If no valid search criteria, don't search - just show empty state
+		// Require at least 4 characters for search terms to avoid excessive queries
+		if (!hasValidSearchTerm && !hasFilters) {
+			logger.debug(
+				"client",
+				"No valid search criteria - showing empty state (need 4+ chars or filters)",
+				{ searchId, searchTerm, searchTermLength: searchTerm?.length ?? 0 },
+				location,
+			);
+			lastSearchParamsRef.current = currentSearchString;
+			setSearchResult(null);
+			setIsLoading(false);
+			return;
 		}
-	}, [onboardingPreferences]);
+
+		// Cancel any ongoing search
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+			logger.debug("client", "Aborted previous search", { searchId }, location);
+		}
+
+		// Create new abort controller for this search
+		abortControllerRef.current = new AbortController();
+		lastSearchParamsRef.current = currentSearchString;
+
+		logger.debug(
+			"client",
+			"Starting client-side search",
+			{
+				searchId,
+				searchParams: currentSearchString,
+				hasValidSearchTerm,
+				hasFilters,
+			},
+			location,
+		);
+		setIsLoading(true);
+
+		try {
+			logger.debug("client", "Raw URL search params", rawParams, location);
+			logger.debug(
+				"client",
+				"Validated search params",
+				validatedParams,
+				location,
+			);
+			logger.debug("client", "Parsed search params", parsedParams, location);
+
+			// Create URLSearchParams for the server action
+			const urlSearchParams = new URLSearchParams();
+			if (parsedParams.searchTerm) {
+				urlSearchParams.set("q", parsedParams.searchTerm);
+				logger.debug(
+					"client",
+					"Added search term",
+					parsedParams.searchTerm,
+					location,
+				);
+			}
+			if (parsedParams.audiences.length > 0) {
+				urlSearchParams.set("audiences", parsedParams.audiences.join(","));
+				logger.debug(
+					"client",
+					"Added audiences",
+					parsedParams.audiences,
+					location,
+				);
+			}
+			if (parsedParams.themes.length > 0) {
+				urlSearchParams.set("themes", parsedParams.themes.join(","));
+				logger.debug("client", "Added themes", parsedParams.themes, location);
+			}
+			if (parsedParams.tags.length > 0) {
+				urlSearchParams.set("tags", parsedParams.tags.join(","));
+				logger.debug("client", "Added tags", parsedParams.tags, location);
+			}
+
+			logger.debug(
+				"client",
+				"Calling server action with URLSearchParams",
+				Object.fromEntries(urlSearchParams.entries()),
+				location,
+			);
+
+			// Execute search - use preferences if enhance is enabled and preferences exist
+			const startTime = Date.now();
+			const hasPreferences =
+				onboardingPreferences.hasCompletedOnboarding &&
+				(onboardingPreferences.selectedAudienceIds.length > 0 ||
+					onboardingPreferences.selectedThemeIds.length > 0);
+
+			const shouldEnhance = parsedParams.enhance && hasPreferences;
+
+			const result = shouldEnhance
+				? await searchPatternsWithPreferences(urlSearchParams, {
+						selectedAudienceIds: onboardingPreferences.selectedAudienceIds,
+						selectedThemeIds: onboardingPreferences.selectedThemeIds,
+					})
+				: await searchPatternsWithParams(urlSearchParams);
+			const endTime = Date.now();
+
+			logger.info(
+				"client",
+				"Search completed",
+				{
+					success: result.success,
+					resultCount: result.totalCount,
+					executionTime: `${endTime - startTime}ms`,
+					error: result.error,
+				},
+				location,
+			);
+
+			setSearchResult(result);
+		} catch (error) {
+			// Don't log errors for aborted requests
+			if (error instanceof Error && error.name === "AbortError") {
+				logger.debug("client", "Search was aborted", { searchId }, location);
+				return;
+			}
+
+			logger.error("client", "Client-side search error", error, location);
+			setSearchResult({
+				success: false,
+				error: "Search failed",
+				totalCount: 0,
+				searchParams: parseSearchParams({ page: 1, limit: 20 }),
+			});
+		} finally {
+			setIsLoading(false);
+			abortControllerRef.current = null;
+			logger.debug(
+				"client",
+				"Search loading state set to false",
+				{ searchId },
+				location,
+			);
+		}
+	}, [searchParams, location, searchId, onboardingPreferences]);
+
+	useEffect(() => {
+		performSearch();
+	}, [performSearch]);
+
+	// Note: performSearch is now handled by the main useEffect above
 
 	// Cleanup effect to abort ongoing requests when component unmounts
 	useEffect(() => {

@@ -40,7 +40,7 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 
 	const headingId = useId();
 	return (
-		<header id={headingId} className="relative max-w-4xl">
+		<header id={headingId} className="relative max-w-4xl pt-5">
 			<div className="flex flex-col gap-3 md:gap-4">
 				<div className="flex items-start gap-2 md:gap-4">
 					{PatternIcon && (

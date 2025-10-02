@@ -17,7 +17,7 @@ const createFontStore = () =>
 	createStore<FontStore>()(
 		persist(
 			(set, get) => ({
-				mode: "serif" as FontMode,
+				mode: "sans-serif" as FontMode,
 				setMode: (mode: FontMode) => set({ mode }),
 				toggleMode: () =>
 					set((state) => ({

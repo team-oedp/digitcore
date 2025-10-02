@@ -101,19 +101,22 @@ export const createOnboardingStore = () =>
 						return false;
 					}
 
+					// Never show if currently skipped (and not expired)
+					if (state.hasSkippedOnboarding && state.skippedAt) {
+						const skippedTime = new Date(state.skippedAt).getTime();
+						const now = Date.now();
+						const hasExpired = now - skippedTime > SKIP_EXPIRY_MS;
+						if (!hasExpired) {
+							return false; // Skip is still valid, don't show onboarding
+						}
+					}
+
 					// Show if never seen
 					if (!state.hasSeenOnboarding) {
 						return true;
 					}
 
-					// Check if skip has expired (pure check, no side effects)
-					if (state.hasSkippedOnboarding && state.skippedAt) {
-						const skippedTime = new Date(state.skippedAt).getTime();
-						const now = Date.now();
-						const hasExpired = now - skippedTime > SKIP_EXPIRY_MS;
-						return hasExpired;
-					}
-
+					// If we reach here, user has seen but skip has expired
 					return false;
 				},
 
@@ -162,6 +165,8 @@ export const createOnboardingStore = () =>
 						state.setHasHydrated(true);
 					}
 				},
+				// Speed up hydration by skipping version check
+				version: 0,
 			},
 		),
 	);

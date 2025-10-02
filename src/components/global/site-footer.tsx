@@ -42,17 +42,10 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 		footerData?.title || "Digital Toolkit for Open Environmental Research";
 	const internalLinks = footerData?.internalLinks || [];
 	const externalLinks = footerData?.externalLinks || [];
-	const license = footerData?.license;
+	const license = footerData?.licenseLink;
 
-	// Combine internal and external links, fallback to hardcoded social links if no external links from Sanity
-	const _allExternalLinks =
-		externalLinks.length > 0
-			? externalLinks
-			: FALLBACK_SOCIAL_LINKS.map((link) => ({
-					_key: link.name.toLowerCase(),
-					label: link.name,
-					url: link.href,
-				}));
+	// Note: External links from Sanity are available but currently using hardcoded icons
+	// Future enhancement: Could integrate externalLinks data with dynamic icon rendering
 
 	return (
 		<footer className="mx-4 mt-auto mb-4 rounded-md bg-secondary">
@@ -136,11 +129,9 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 						{/* 4. License/Copyright - Last */}
 						<div className="text-left text-primary text-xs">
 							{license ? (
-								<CustomPortableText
-									value={license as PortableTextBlock[]}
-									className="prose max-w-none text-primary text-xs"
-									as="div"
-								/>
+								<Link href={license.href || "#"} className="text-link text-xs">
+									{license.label || "License"}
+								</Link>
 							) : (
 								<p>Open Environmental Data Project 2025</p>
 							)}
@@ -216,11 +207,12 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 							{/* License left column */}
 							<div className="col-span-6 col-start-1 self-end text-left text-primary text-xs">
 								{license ? (
-									<CustomPortableText
-										value={license as PortableTextBlock[]}
-										className="prose max-w-none text-primary text-xs"
-										as="div"
-									/>
+									<Link
+										href={license.href || "#"}
+										className="text-link text-xs"
+									>
+										{license.label || "License"}
+									</Link>
 								) : (
 									<p>Open Environmental Data Project 2025</p>
 								)}

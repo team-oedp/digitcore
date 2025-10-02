@@ -5,6 +5,7 @@ import {
 	ChartRelationshipIcon,
 	Tag01Icon,
 } from "@hugeicons/core-free-icons";
+import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import React, { useState } from "react";
 import type { SearchPattern } from "~/app/actions/search";
@@ -46,33 +47,33 @@ type PatternSearchResultData = BaseSearchResultData & {
 	descriptionPlainText?: string | null;
 	theme?: {
 		_id: string;
-		title?: string;
-		description?: Array<unknown>;
+		title?: string | null;
+		description?: Array<unknown> | null;
 	} | null;
 	tags?: Array<{
 		_id: string;
-		title?: string;
+		title?: string | null;
 	}> | null;
 	audiences?: Array<{
 		_id: string;
-		title: string | null;
+		title?: string | null;
 	}> | null;
 	solutions?: Array<{
 		_id: string;
-		title?: string;
-		description?: Array<unknown>;
+		title?: string | null;
+		description?: Array<unknown> | null;
 	}> | null;
 	resources?: Array<{
 		_id: string;
-		title?: string;
-		description?: Array<unknown>;
+		title?: string | null;
+		description?: Array<unknown> | null;
 		solutions?: Array<{
 			_id: string;
-			title?: string;
+			title?: string | null;
 		}> | null;
 		solution?: Array<{
 			_id: string;
-			title?: string;
+			title?: string | null;
 		}> | null;
 	}> | null;
 };
@@ -181,18 +182,18 @@ function PatternSearchResult({
 
 	// Process description for search context
 	const descriptionResult = truncateWithContext(
-		extractTextFromPortableText(rawDescription),
+		extractTextFromPortableText(rawDescription as PortableTextBlock[]),
 		searchTerm,
 		200,
 	);
 	const displayDescription = showFullDescription
-		? extractTextFromPortableText(rawDescription)
+		? extractTextFromPortableText(rawDescription as PortableTextBlock[])
 		: descriptionResult.text;
 
 	// Check where matches occur
 	const matchExplanation = getMatchExplanation(
 		title,
-		rawDescription,
+		rawDescription as PortableTextBlock[],
 		searchTerm,
 	);
 
@@ -227,120 +228,122 @@ function PatternSearchResult({
 			showPatternIcon={showPatternIcon}
 			patternIcon={PatternIcon}
 		>
-				{/* Description with Search Context */}
-				{descriptionResult.text && (
-					<div className="mb-4">
-						{/* Smooth expand/collapse using CSS max-height + line clamp */}
-						<div
-							className={cn(
-								"relative overflow-hidden transition-[max-height] duration-600 ease-&lsqb;cubic-bezier(0.22,1,0.36,1)&rsqb;",
-								showFullDescription
-									? "max-h-[1500px]"
-									: "line-clamp-3 max-h-[96px]",
-							)}
-						>
-							<span className="block text-description-muted">
-								{renderHighlightedText(
-									extractTextFromPortableText(rawDescription),
-									searchTerm,
-								)}
-							</span>
-						</div>
-
-						{/* Show more/less button below description */}
-						{descriptionResult.isTruncated && (
-							<button
-								onClick={() => setShowFullDescription(!showFullDescription)}
-								type="button"
-								aria-label={
-									showFullDescription
-										? "Collapse description"
-										: "Expand description"
-								}
-								className="mt-3 inline-flex items-center text-neutral-600 text-xs uppercase transition-colors hover:text-neutral-800 focus:text-neutral-800 focus:outline-none"
-							>
-								{showFullDescription ? "Show less" : "Show more"}
-							</button>
+			{/* Description with Search Context */}
+			{descriptionResult.text && (
+				<div className="mb-4">
+					{/* Smooth expand/collapse using CSS max-height + line clamp */}
+					<div
+						className={cn(
+							"relative overflow-hidden transition-[max-height] duration-600 ease-&lsqb;cubic-bezier(0.22,1,0.36,1)&rsqb;",
+							showFullDescription
+								? "max-h-[1500px]"
+								: "line-clamp-3 max-h-[96px]",
 						)}
-
-						{/* Match Indicators */}
-						{searchTerm &&
-							(matchExplanation.titleMatch ||
-								matchExplanation.descriptionMatch) && (
-								<div className="mt-2 flex items-center gap-2 text-description-muted">
-									<span className="text-minor">Match found in:</span>
-									{matchExplanation.titleMatch && (
-										<span className="rounded bg-blue-100 px-2 py-1 text-blue-700">
-											Title
-										</span>
-									)}
-									{matchExplanation.descriptionMatch && (
-										<span className="rounded bg-green-100 px-2 py-1 text-green-700">
-											Description
-										</span>
-									)}
-									{descriptionResult.matchCount > 1 && (
-										<span className="text-description-muted">
-											({descriptionResult.matchCount} matches)
-										</span>
-									)}
-								</div>
+					>
+						<span className="block text-description-muted">
+							{renderHighlightedText(
+								extractTextFromPortableText(
+									rawDescription as PortableTextBlock[],
+								),
+								searchTerm,
 							)}
+						</span>
 					</div>
+
+					{/* Show more/less button below description */}
+					{descriptionResult.isTruncated && (
+						<button
+							onClick={() => setShowFullDescription(!showFullDescription)}
+							type="button"
+							aria-label={
+								showFullDescription
+									? "Collapse description"
+									: "Expand description"
+							}
+							className="mt-3 inline-flex items-center text-neutral-600 text-xs uppercase transition-colors hover:text-neutral-800 focus:text-neutral-800 focus:outline-none"
+						>
+							{showFullDescription ? "Show less" : "Show more"}
+						</button>
+					)}
+
+					{/* Match Indicators */}
+					{searchTerm &&
+						(matchExplanation.titleMatch ||
+							matchExplanation.descriptionMatch) && (
+							<div className="mt-2 flex items-center gap-2 text-description-muted">
+								<span className="text-minor">Match found in:</span>
+								{matchExplanation.titleMatch && (
+									<span className="rounded bg-blue-100 px-2 py-1 text-blue-700">
+										Title
+									</span>
+								)}
+								{matchExplanation.descriptionMatch && (
+									<span className="rounded bg-green-100 px-2 py-1 text-green-700">
+										Description
+									</span>
+								)}
+								{descriptionResult.matchCount > 1 && (
+									<span className="text-description-muted">
+										({descriptionResult.matchCount} matches)
+									</span>
+								)}
+							</div>
+						)}
+				</div>
+			)}
+
+			{/* Badges Groups */}
+			<BadgeGroupContainer>
+				{/* Theme Badges */}
+				{theme && (
+					<BadgeGroup>
+						<Badge
+							variant="theme"
+							icon={<ThemeMiniBadge />}
+							className="capitalize"
+						>
+							{theme.title}
+						</Badge>
+					</BadgeGroup>
 				)}
 
-				{/* Badges Groups */}
-				<BadgeGroupContainer>
-					{/* Theme Badges */}
-					{theme && (
-						<BadgeGroup>
+				{/* Audience Badges */}
+				{audiences.length > 0 && (
+					<BadgeGroup>
+						{audiences.map((audience) => (
 							<Badge
-								variant="theme"
-								icon={<ThemeMiniBadge />}
-								className="capitalize"
+								key={audience._id}
+								variant="audience"
+								icon={
+									<Icon
+										icon={ChartRelationshipIcon}
+										className="h-3.5 w-3.5 capitalize"
+									/>
+								}
 							>
-								{theme.title}
+								{audience.title}
 							</Badge>
-						</BadgeGroup>
-					)}
+						))}
+					</BadgeGroup>
+				)}
 
-					{/* Audience Badges */}
-					{audiences.length > 0 && (
-						<BadgeGroup>
-							{audiences.map((audience) => (
-								<Badge
-									key={audience._id}
-									variant="audience"
-									icon={
-										<Icon
-											icon={ChartRelationshipIcon}
-											className="h-3.5 w-3.5 capitalize"
-										/>
-									}
-								>
-									{audience.title}
-								</Badge>
-							))}
-						</BadgeGroup>
-					)}
-
-					{/* Tag Badges */}
-					{tags.length > 0 && (
-						<BadgeGroup>
-							{tags.map((tag) => (
-								<Badge
-									key={tag._id}
-									variant="tag"
-									icon={
-										<Icon icon={Tag01Icon} className="h-3.5 w-3.5 capitalize" />
-									}
-								>
-									{tag.title}
-								</Badge>
-							))}
-						</BadgeGroup>
-					)}
-				</BadgeGroupContainer>
+				{/* Tag Badges */}
+				{tags.length > 0 && (
+					<BadgeGroup>
+						{tags.map((tag) => (
+							<Badge
+								key={tag._id}
+								variant="tag"
+								icon={
+									<Icon icon={Tag01Icon} className="h-3.5 w-3.5 capitalize" />
+								}
+							>
+								{tag.title}
+							</Badge>
+						))}
+					</BadgeGroup>
+				)}
+			</BadgeGroupContainer>
 		</SearchResultBase>
 	);
 }
@@ -410,9 +413,7 @@ function _ResourceSearchResult({
 					<Badge
 						variant="pattern"
 						icon={
-							PatternIcon && (
-								<PatternIcon className="h-3.5 w-3.5 opacity-40" />
-							)
+							PatternIcon && <PatternIcon className="h-3.5 w-3.5 opacity-40" />
 						}
 					>
 						{patternInfo.title}

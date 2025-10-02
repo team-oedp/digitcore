@@ -112,7 +112,7 @@ export type SearchPattern = {
 	slug: string | null;
 	tags: Array<{
 		_id: string;
-		title?: string;
+		title?: string | null;
 	}> | null;
 	audiences: Array<{
 		_id: string;
@@ -125,16 +125,16 @@ export type SearchPattern = {
 	} | null;
 	solutions: Array<{
 		_id: string;
-		title?: string;
-		description?: Array<unknown>;
+		title?: string | null;
+		description?: Array<unknown> | null;
 	}> | null;
 	resources: Array<{
 		_id: string;
-		title?: string;
-		description?: Array<unknown>;
+		title?: string | null;
+		description?: Array<unknown> | null;
 		solutions?: Array<{
 			_id: string;
-			title?: string;
+			title?: string | null;
 		}> | null;
 	}> | null;
 };
@@ -206,11 +206,11 @@ export async function searchPatterns(
 		// Determine which query to use based on search term and preferences
 		const hasSearchTerm = parsedParams.searchTerm?.trim();
 		const hasPreferences = prefAudiences.length > 0 || prefThemes.length > 0;
-		
+
 		logger.search(
 			"Query selection criteria",
-			{ 
-				hasSearchTerm: !!hasSearchTerm, 
+			{
+				hasSearchTerm: !!hasSearchTerm,
 				searchTerm: parsedParams.searchTerm,
 				hasPreferences,
 				prefAudiencesCount: prefAudiences.length,
@@ -227,7 +227,11 @@ export async function searchPatterns(
 			if (hasPreferences) {
 				query = PATTERN_SEARCH_WITH_PREFERENCES_QUERY;
 				finalQueryParams = queryParams; // Include all params including preferences
-				logger.groq("Using PATTERN_SEARCH_WITH_PREFERENCES_QUERY", undefined, location);
+				logger.groq(
+					"Using PATTERN_SEARCH_WITH_PREFERENCES_QUERY",
+					undefined,
+					location,
+				);
 			} else {
 				query = PATTERN_SEARCH_QUERY;
 				finalQueryParams = {
@@ -236,15 +240,19 @@ export async function searchPatterns(
 					tags: queryParams.tags,
 					// Don't include preference params for regular search
 				};
-				logger.groq("Using PATTERN_SEARCH_QUERY (no preferences)", undefined, location);
+				logger.groq(
+					"Using PATTERN_SEARCH_QUERY (no preferences)",
+					undefined,
+					location,
+				);
 			}
-			
+
 			// Escape special characters in search term for GROQ
 			const escapedSearchTerm = parsedParams.searchTerm
 				.trim()
 				.replace(/["\\]/g, "\\$&"); // Escape quotes and backslashes
 			finalQueryParams.searchTerm = escapedSearchTerm;
-			
+
 			logger.groq(
 				"Search term escaped",
 				{ original: parsedParams.searchTerm, escaped: escapedSearchTerm },
@@ -253,11 +261,13 @@ export async function searchPatterns(
 		} else {
 			// Use filter query (no search term, only filters)
 			query = PATTERN_FILTER_QUERY;
-			finalQueryParams = hasPreferences ? queryParams : {
-				audiences: queryParams.audiences,
-				themes: queryParams.themes,
-				tags: queryParams.tags,
-			};
+			finalQueryParams = hasPreferences
+				? queryParams
+				: {
+						audiences: queryParams.audiences,
+						themes: queryParams.themes,
+						tags: queryParams.tags,
+					};
 			logger.groq("Using PATTERN_FILTER_QUERY", { hasPreferences }, location);
 		}
 

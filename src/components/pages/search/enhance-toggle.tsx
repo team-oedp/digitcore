@@ -61,7 +61,9 @@ export function EnhanceToggle({
 				<HoverCardContent className="w-80">
 					<div className="space-y-2">
 						<h4 className="font-semibold text-sm">Enhance Results</h4>
-						<p className="text-muted-foreground text-sm">{generateHoverText()}</p>
+						<p className="text-muted-foreground text-sm">
+							{generateHoverText()}
+						</p>
 					</div>
 				</HoverCardContent>
 			</HoverCard>
