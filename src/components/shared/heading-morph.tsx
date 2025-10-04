@@ -423,28 +423,7 @@ export function HeadingMorph({
 			)
 		: useTransform(scrollY, [0, 1], [1, 1]);
 
-	// No unmounting; we only fade with largeHeadingOpacity so content doesn’t jump
-
-	// Pill opacity: fades in AFTER large heading has faded out
-	const pillOpacity = useTransform(
-		scrollY,
-		[230, 300], // Starts fading in after longer pause post-morph
-		[0, 1],
-	);
-
-	// Background opacity for the pill (appears as pill fades in)
-	const backgroundOpacity = useTransform(
-		scrollY,
-		[240, 300], // Delayed to appear with pill
-		[0, 1],
-	);
-
-	// Border opacity for the pill (appears last)
-	const borderOpacity = useTransform(
-		scrollY,
-		[260, 320], // Appears in the final phase
-		[0, 1],
-	);
+	// No unmounting; we only fade with largeHeadingOpacity so content doesn't jump
 
 	// Grid layout constants for background behind heading
 	const gridRows = 3;
