@@ -106,14 +106,12 @@ export function Resources({ resources }: ResourcesProps) {
 									: ""
 							}`}
 						>
-							<div className="flex flex-col gap-2.5 py-3 pb-6 md:gap-3 md:pb-9">
-								<div className="flex flex-col gap-2">
+							<div className="flex flex-col gap-2.5 pt-6 pb-6 md:gap-3 md:pt-9 md:pb-9">
+								<div className="flex flex-col gap-2.5 md:gap-2">
 									<div className="flex flex-row items-center gap-2">
-										<div className="flex h-7 flex-row items-center gap-2 md:h-8 md:gap-2.5">
-											<h3 className="font-normal text-[16px] text-primary md:text-[18px]">
-												{resource.title}
-											</h3>
-										</div>
+										<h3 className="font-normal text-[16px] text-primary leading-[20px] md:text-[18px] md:leading-[22px]">
+											{resource.title}
+										</h3>
 										{resource.links?.[0]?.href && (
 											<a
 												href={resource.links?.[0]?.href}
@@ -134,7 +132,7 @@ export function Resources({ resources }: ResourcesProps) {
 									{resource.description && (
 										<CustomPortableText
 											value={resource.description as PortableTextBlock[]}
-											className="prose max-w-none text-xs leading-normal md:text-sm"
+											className="text-body"
 										/>
 									)}
 								</div>

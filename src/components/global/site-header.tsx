@@ -121,7 +121,7 @@ export function SiteHeader() {
 								</Button>
 							</li>
 							<li className="relative" data-explore-menu>
-								<div className="flex items-center">
+								<div className="flex items-center gap-3.5">
 									<Button
 										variant="link"
 										onClick={() => setIsExploreOpen(!isExploreOpen)}
@@ -132,7 +132,7 @@ export function SiteHeader() {
 									<AnimatePresence mode="wait">
 										{isExploreOpen && (
 											<motion.div
-												className="flex items-center gap-1"
+												className="flex items-center gap-3.5"
 												initial={{ opacity: 0 }}
 												animate={{ opacity: 1 }}
 												exit={{ opacity: 0 }}
@@ -271,7 +271,7 @@ export function SiteHeader() {
 				<button
 					type="button"
 					className={cn(
-						"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:focus-visible:ring-neutral-800",
+						"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear",
 						"hidden md:flex", // Hide on mobile
 						isOnCarrierBagRoute ? "cursor-not-allowed opacity-50" : "",
 						// Add glow effect when there are unseen updates

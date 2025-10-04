@@ -38,7 +38,7 @@ export default async function AboutPage() {
 						className="mt-8 text-body"
 					/>
 				)}
-				<div className="flex flex-col gap-20 pt-20 lg:gap-60 lg:pt-60">
+				<div className="flex flex-col gap-20 pt-20 lg:gap-40 lg:pt-40">
 					{data.content?.map((section) => (
 						<section key={section._key} className="flex flex-col gap-5">
 							{section._type === "content" && section.heading && (

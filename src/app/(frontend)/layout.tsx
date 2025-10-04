@@ -49,8 +49,8 @@ export default async function Layout({
 	)) as FOOTER_QUERYResult;
 
 	return (
-		<section className={cn(sans.variable, signifier.variable)}>
-			<div className="h-screen text-foreground antialiased [--header-height:calc(--spacing(14))]">
+		<section className={cn(sans.variable, signifier.variable, "overflow-x-hidden")}>
+			<div className="h-screen overflow-x-hidden text-foreground antialiased [--header-height:calc(--spacing(14))]">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"

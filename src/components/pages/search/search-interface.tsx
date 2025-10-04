@@ -304,7 +304,7 @@ export function SearchInterface({
 			/>
 
 			{/* Filter Tools */}
-			<div className="flex w-full max-w-4xl gap-3 p-0.5">
+			<div className="flex w-full max-w-4xl flex-col gap-3 p-0.5 md:flex-row">
 				{/* Audience Multiselect */}
 				<div className="min-w-0 flex-1">
 					<div className="mb-1 text-primary text-xs">Audiences</div>

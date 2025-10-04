@@ -18,20 +18,19 @@ import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { cn } from "~/lib/utils";
 
 const navItems = [
-	{ href: "/onboarding?via=header", label: "Start here", isIndented: false },
-	{ href: "/explore", label: "Explore", isIndented: false },
+	{ href: "/onboarding?via=header", label: "Orientation", isIndented: false },
+	{ label: "Explore", isIndented: false, isSection: true },
+	{ href: "/explore", label: "Search", isIndented: true },
 	{ href: "/patterns", label: "Patterns", isIndented: true },
 	{ href: "/tags", label: "Tags", isIndented: true },
 	{ href: "/values", label: "Values", isIndented: true },
+	{ href: "/themes", label: "Themes", isIndented: true },
 	{ href: "/about", label: "About", isIndented: false },
 ];
 
 const languages = [
 	{ code: "EN", label: "English" },
 	{ code: "ES", label: "Spanish" },
-	{ code: "PT", label: "Português" },
-	{ code: "FR", label: "Français" },
-	{ code: "KR", label: "한국어" },
 ];
 
 export function MobileNavDialog() {
@@ -51,10 +50,10 @@ export function MobileNavDialog() {
 			<SheetTrigger asChild>
 				<button
 					type="button"
-					className="group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear hover:bg-main-foreground/40 focus-visible:ring-1 focus-visible:ring-neutral-300/80 md:hidden dark:border-border/50 dark:focus-visible:ring-neutral-800 dark:hover:border-white/10 dark:hover:bg-main-foreground/20"
+					className="group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear md:hidden"
 					aria-label="Open navigation menu"
 				>
-					<Menu className="h-4 w-4 text-primary" />
+					<Menu className="h-[14px] w-[14px] text-muted-foreground transition-colors group-hover:text-foreground" />
 				</button>
 			</SheetTrigger>
 			<SheetContent
@@ -62,7 +61,7 @@ export function MobileNavDialog() {
 				className="flex w-full flex-col p-0 sm:max-w-full"
 			>
 				<SheetHeader className="px-4 pt-6 pb-3">
-					<SheetTitle className="px-1.5 font-medium text-primary text-sm uppercase">
+					<SheetTitle className="px-1.5 font-medium text-base text-primary uppercase">
 						Menu
 					</SheetTitle>
 					<SheetDescription className="sr-only">
@@ -74,21 +73,32 @@ export function MobileNavDialog() {
 				<nav className="flex-1 overflow-y-auto px-4 py-6">
 					<ul className="space-y-1">
 						{navItems.map((item) => (
-							<li key={item.href}>
-								<Button
-									variant="ghost"
-									asChild
-									className={cn(
-										"w-full justify-start font-normal text-base",
-										item.isIndented ? "pr-1.5 pl-8" : "px-1.5",
-										pathname === item.href
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
-									onClick={() => setOpen(false)}
-								>
-									<Link href={item.href}>{item.label}</Link>
-								</Button>
+							<li key={item.href ?? `section-${item.label}`}>
+								{item.href ? (
+									<Button
+										variant="ghost"
+										asChild
+										className={cn(
+											"w-full justify-start font-normal text-base",
+											item.isIndented ? "pr-1.5 pl-8" : "px-1.5",
+											pathname === item.href
+												? "text-foreground"
+												: "text-muted-foreground hover:text-foreground",
+										)}
+										onClick={() => setOpen(false)}
+									>
+										<Link href={item.href}>{item.label}</Link>
+									</Button>
+								) : (
+									<div
+										className={cn(
+											"px-1.5 font-normal text-base text-muted-foreground",
+											item.isIndented ? "pr-1.5 pl-8" : "px-1.5",
+										)}
+									>
+										{item.label}
+									</div>
+								)}
 							</li>
 						))}
 					</ul>
@@ -111,9 +121,8 @@ export function MobileNavDialog() {
 									<ToggleGroupItem
 										key={lang.code}
 										value={lang.code}
-										className="min-w-[60px] flex-none"
+										className="min-w-[60px] flex-none border-0 bg-transparent text-muted-foreground hover:bg-transparent hover:text-foreground data-[state=on]:bg-transparent data-[state=on]:text-foreground"
 										aria-label={`Select ${lang.label}`}
-										disabled={lang.code !== "EN"}
 									>
 										{lang.code}
 									</ToggleGroupItem>

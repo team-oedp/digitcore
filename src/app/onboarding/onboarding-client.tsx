@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchList02Icon, Share02Icon } from "@hugeicons/core-free-icons";
+import { Home09Icon, SearchList02Icon, Share02Icon } from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -531,7 +531,7 @@ function Slide1({
 									)}
 								</span>
 								<Icon
-									icon={Share02Icon}
+									icon={Home09Icon}
 									size={20}
 									className="text-neutral-600 dark:text-neutral-400"
 									strokeWidth={1.5}

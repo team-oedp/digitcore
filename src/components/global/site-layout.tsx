@@ -35,9 +35,9 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 					<div
 						ref={scrollContainerRef}
 						className={cn(
-							"flex h-full min-h-0 flex-1 flex-col",
+							"flex h-full min-h-0 flex-1 flex-col overflow-x-hidden",
 							isCarrierBagRoute
-								? "overflow-hidden"
+								? "overflow-y-hidden"
 								: "overflow-y-auto bg-container-background",
 						)}
 					>

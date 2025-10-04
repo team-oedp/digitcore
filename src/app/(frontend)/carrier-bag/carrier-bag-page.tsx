@@ -2,7 +2,7 @@
 
 import {
 	Chatting01Icon,
-	CleaningBucketIcon,
+	Delete02Icon,
 	Download05Icon,
 	FileDownloadIcon,
 	Link05Icon,
@@ -52,7 +52,7 @@ const uiData = {
 		{ label: "Generate Link", icon: Link05Icon },
 		{ label: "Share To Socials", icon: Chatting01Icon },
 		{ label: "Download List As JSON", icon: Download05Icon },
-		{ label: "Remove All", icon: CleaningBucketIcon },
+		{ label: "Remove All", icon: Delete02Icon },
 	],
 };
 

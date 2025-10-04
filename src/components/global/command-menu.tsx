@@ -346,7 +346,7 @@ export function CommandMenu() {
 				type="button"
 				onClick={() => setIsOpen((prev) => !prev)}
 				className={cn(
-					"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:focus-visible:ring-neutral-800",
+					"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear",
 				)}
 			>
 				<CommandMenuIcon isOpen={isOpen} />
@@ -721,7 +721,9 @@ function CommandMenuIcon({ isOpen }: { isOpen: boolean }) {
 			)}
 		>
 			<Icon icon={Search02Icon} size={14} />
-			<CommandIcon size={14} /> K
+			<span className="hidden lg:flex lg:items-center lg:gap-0.5">
+				<CommandIcon size={14} /> K
+			</span>
 		</span>
 	);
 }

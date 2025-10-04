@@ -27,7 +27,7 @@ export function FontToggle({ className }: FontToggleProps = {}) {
 					<button
 						type="button"
 						aria-label="Select font style"
-						className="group relative flex h-7 items-center rounded-md px-2 py-0.5 text-muted-foreground outline-none transition-colors duration-150 ease-linear hover:text-foreground focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:focus-visible:ring-neutral-800"
+						className="group relative flex h-7 items-center rounded-md px-2 py-0.5 text-muted-foreground outline-none transition-colors duration-150 ease-linear hover:text-foreground"
 					>
 						{/* Render both Aa text in different typefaces */}
 						<span
