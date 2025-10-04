@@ -610,15 +610,13 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
   *[_type == "pattern" && defined(slug.current)
     // Apply audience filter if provided
     && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
-    // Apply theme filter if provided  
+    // Apply theme filter if provided
     && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)
     // Apply tags filter if provided
     && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
   ]
-  // Score based on basic ordering (no preferences in filter-only mode)
-  | score(1)
-  // Order by preference score first, then by title
-  | order(_score desc, title asc)
+  // Order by title (no scoring needed in filter-only mode)
+  | order(title asc)
   {
     _id,
     _type,
