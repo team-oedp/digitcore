@@ -125,7 +125,7 @@ export default async function Home() {
 									{group.content.heading && (
 										<>
 											{groupIndex > 0 && (
-												<div className="pb-4">
+												<div className="flex justify-center pb-4 md:justify-start">
 													<PatternCombination randomPatterns={3} size="md" />
 												</div>
 											)}

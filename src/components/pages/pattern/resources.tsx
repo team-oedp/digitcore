@@ -136,21 +136,25 @@ export function Resources({ resources }: ResourcesProps) {
 										/>
 									)}
 								</div>
-								<div className="flex flex-col items-start gap-2 md:flex-row md:items-center md:gap-2.5">
-									<span className="font-normal text-[#c4c4c8] text-[12px] tracking-[-0.14px] md:text-[14px]">
-										From <span className="uppercase">SOLUTION</span>
-									</span>
-									<HugeiconsIcon
-										icon={ArrowRight02Icon}
-										size={20}
-										color="#c4c4c8"
-										strokeWidth={1.5}
-										className="hidden md:block md:h-6 md:w-6"
-									/>
-									<div className="flex flex-wrap gap-1.5 md:gap-2.5">
-										{Array.isArray(resource.solutions) &&
-										resource.solutions.length > 0
-											? resource.solutions.map((solution, sIdx) => (
+								{((Array.isArray(resource.solutions) && resource.solutions.length > 0) ||
+									(Array.isArray(resource.solutionRefs) && resource.solutionRefs.length > 0)) && (
+									<div className="flex flex-col items-start gap-2 md:flex-row md:items-start md:gap-2.5">
+										<div className="flex flex-row items-center gap-2 md:gap-2.5">
+											<span className="whitespace-nowrap font-normal text-[#c4c4c8] text-[12px] tracking-[-0.14px] md:text-[14px]">
+												From <span className="uppercase">SOLUTION</span>
+											</span>
+											<HugeiconsIcon
+												icon={ArrowRight02Icon}
+												size={20}
+												color="#c4c4c8"
+												strokeWidth={1.5}
+												className="hidden md:block md:h-6 md:w-6"
+											/>
+										</div>
+										<div className="flex flex-wrap gap-1.5 md:gap-2.5">
+											{Array.isArray(resource.solutions) &&
+											resource.solutions.length > 0
+												? resource.solutions.map((solution, sIdx) => (
 													<SolutionPreview
 														key={solution._id || sIdx}
 														solutionNumber={String(sIdx + 1)}
@@ -205,8 +209,9 @@ export function Resources({ resources }: ResourcesProps) {
 														</SolutionPreview>
 													) : null,
 												)}
+										</div>
 									</div>
-								</div>
+								)}
 							</div>
 							{index < resources.length - 1 && (
 								<div className="absolute right-0 bottom-0 left-0 border-neutral-300 border-b border-dashed" />

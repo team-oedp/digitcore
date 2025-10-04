@@ -10,6 +10,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import type { SearchPattern } from "~/app/actions/search";
+import { ClickableBadge } from "~/components/pages/pattern/clickable-badge";
 import {
 	BadgeGroup,
 	BadgeGroupContainer,
@@ -23,7 +24,6 @@ import {
 	highlightMatches,
 	processDescriptionForDisplay,
 } from "~/lib/search-utils";
-import { cn } from "~/lib/utils";
 
 // Base search result type
 type BaseSearchResultData = {
@@ -214,7 +214,7 @@ function PatternSearchResult({
 					href={`/pattern/${pattern.slug}`}
 					className="inline-flex items-start gap-3"
 				>
-					<h3 className="line-clamp-2 text-left font-light text-xl text-primary leading-tight md:text-2xl">
+					<h3 className="line-clamp-2 text-left font-light text-primary text-xl leading-tight md:text-2xl">
 						{title}
 					</h3>
 				</Link>
@@ -241,7 +241,7 @@ function PatternSearchResult({
 			{descriptionResult.text && (
 				<div className="mb-4">
 					<div className="relative line-clamp-3 overflow-hidden">
-						<span className="block font-light text-description-muted text-base md:text-xl dark:text-foreground">
+						<span className="block font-light text-base text-description-muted md:text-xl dark:text-foreground">
 							{renderHighlightedText(displayDescription, searchTerm)}
 						</span>
 					</div>
@@ -278,13 +278,19 @@ function PatternSearchResult({
 					{/* Theme Badges */}
 					{theme && (
 						<BadgeGroup>
-							<Badge
-								variant="theme"
-								icon={<ThemeMiniBadge />}
-								className="cursor-pointer capitalize"
+							<ClickableBadge
+								type="theme"
+								id={theme._id}
+								title={theme.title || undefined}
 							>
-								{theme.title}
-							</Badge>
+								<Badge
+									variant="theme"
+									icon={<ThemeMiniBadge />}
+									className="cursor-pointer capitalize"
+								>
+									{theme.title}
+								</Badge>
+							</ClickableBadge>
 						</BadgeGroup>
 					)}
 
@@ -292,19 +298,25 @@ function PatternSearchResult({
 					{audiences.length > 0 && (
 						<BadgeGroup>
 							{audiences.map((audience) => (
-								<Badge
+								<ClickableBadge
 									key={audience._id}
-									variant="audience"
-									className="cursor-pointer"
-									icon={
-										<Icon
-											icon={ChartRelationshipIcon}
-											className="h-3.5 w-3.5 capitalize"
-										/>
-									}
+									type="audience"
+									id={audience._id}
+									title={audience.title || undefined}
 								>
-									{audience.title}
-								</Badge>
+									<Badge
+										variant="audience"
+										className="cursor-pointer"
+										icon={
+											<Icon
+												icon={ChartRelationshipIcon}
+												className="h-3.5 w-3.5 capitalize"
+											/>
+										}
+									>
+										{audience.title}
+									</Badge>
+								</ClickableBadge>
 							))}
 						</BadgeGroup>
 					)}
@@ -313,16 +325,25 @@ function PatternSearchResult({
 					{tags.length > 0 && (
 						<BadgeGroup>
 							{tags.map((tag) => (
-								<Badge
+								<ClickableBadge
 									key={tag._id}
-									variant="tag"
-									className="cursor-pointer"
-									icon={
-										<Icon icon={Tag01Icon} className="h-3.5 w-3.5 capitalize" />
-									}
+									type="tag"
+									id={tag._id}
+									title={tag.title || undefined}
 								>
-									{tag.title}
-								</Badge>
+									<Badge
+										variant="tag"
+										className="cursor-pointer"
+										icon={
+											<Icon
+												icon={Tag01Icon}
+												className="h-3.5 w-3.5 capitalize"
+											/>
+										}
+									>
+										{tag.title}
+									</Badge>
+								</ClickableBadge>
 							))}
 						</BadgeGroup>
 					)}
