@@ -111,11 +111,11 @@ export function CarrierBagItem({
 						)}
 					</div>
 					<div className="min-w-0 flex-1">
-						<p className="truncate font-normal text-foreground text-sm">
+						<p className="truncate font-normal text-foreground text-sm uppercase">
 							{item.title}
 						</p>
 						{item.subtitle ? (
-							<p className="truncate text-muted-foreground text-sm">
+							<p className="truncate text-muted-foreground text-sm capitalize">
 								{item.subtitle}
 							</p>
 						) : null}

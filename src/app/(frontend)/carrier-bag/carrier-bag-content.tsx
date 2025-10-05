@@ -217,8 +217,8 @@ export function CarrierBagContent({
 						}
 					}}
 				>
-					<SelectTrigger aria-label="Sort by">
-						<SelectValue placeholder="Sort by" />
+					<SelectTrigger aria-label="Sort By">
+						<SelectValue placeholder="Sort By" />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem value="az">Title (A–Z)</SelectItem>
@@ -234,10 +234,10 @@ export function CarrierBagContent({
 						setGroupByTheme(pressed);
 						setManualOrderActive(false);
 					}}
-					aria-label="Group by theme"
+					aria-label="Group by Theme"
 					className="px-3 font-normal"
 				>
-					Group by theme
+					Group by Theme
 				</Toggle>
 
 				{/* Tags multi-select */}
@@ -248,11 +248,11 @@ export function CarrierBagContent({
 						setManualOrderActive(false);
 					}}
 				>
-					<MultiSelectTrigger aria-label="Filter by tags">
-						<MultiSelectValue placeholder="Filter by tags" />
+					<MultiSelectTrigger aria-label="Filter by Tags">
+						<MultiSelectValue placeholder="Filter by Tags" />
 					</MultiSelectTrigger>
 					<MultiSelectContent
-						search={{ placeholder: "Search tags...", emptyMessage: "No tags" }}
+						search={{ placeholder: "Search Tags...", emptyMessage: "No Tags" }}
 					>
 						<MultiSelectGroup heading="Tags">
 							{availableTags.map((t) => (
@@ -272,13 +272,13 @@ export function CarrierBagContent({
 						setManualOrderActive(false);
 					}}
 				>
-					<MultiSelectTrigger aria-label="Filter by audiences">
-						<MultiSelectValue placeholder="Filter by audiences" />
+					<MultiSelectTrigger aria-label="Filter by Audiences">
+						<MultiSelectValue placeholder="Filter by Audiences" />
 					</MultiSelectTrigger>
 					<MultiSelectContent
 						search={{
-							placeholder: "Search audiences...",
-							emptyMessage: "No audiences",
+							placeholder: "Search Audiences...",
+							emptyMessage: "No Audiences",
 						}}
 					>
 						<MultiSelectGroup heading="Audiences">
@@ -293,17 +293,17 @@ export function CarrierBagContent({
 
 				<Button
 					variant="ghost"
-					className="text-muted-foreground hover:text-foreground"
+					className="text-muted-foreground capitalize hover:text-foreground"
 					onClick={clearAll}
 				>
 					Clear all
 				</Button>
 			</div>
 
-			<div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
-				<div className="flex flex-col gap-2 rounded-md border border-border border-dashed p-2">
+			<div className="mb-4 flex h-full min-h-0 flex-col gap-2">
+				<div className="flex h-full flex-col gap-2 overflow-y-auto rounded-xl border border-border border-dashed p-2">
 					{items.length === 0 ? (
-						<div className="flex flex-col items-start justify-center py-8 text-left">
+						<div className="flex h-full flex-col items-center justify-center px-4 py-8 text-center">
 							<p className="font-normal text-muted-foreground text-sm">
 								There are no patterns in your carrier bag. Start by saving one
 								from the toolkit.
@@ -363,7 +363,11 @@ export function CarrierBagContent({
 							}}
 							layoutScroll
 							as="div"
-							style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								gap: "0.5rem",
+							}}
 						>
 							{processed.flat.map((item) => {
 								type RefTheme = { _ref: string };

@@ -210,16 +210,16 @@ export function CarrierBagSidebar({
 							</div>
 						</div>
 					) : (
-						<div className="flex h-full min-h-0 flex-col gap-2 rounded-md border border-border border-dashed p-2">
+						<div className="flex h-full min-h-0 flex-col gap-2 rounded-2xl border border-border border-dashed p-2">
 							{!isHydrated ? (
 								<div className="flex flex-1 flex-col items-start justify-start px-4 py-8">
-									<p className="font-normal text-left text-muted-foreground text-sm">
+									<p className="text-left font-normal text-muted-foreground text-sm">
 										Loading...
 									</p>
 								</div>
 							) : items.length === 0 ? (
 								<div className="flex flex-1 flex-col items-start justify-start px-4 py-8">
-									<p className="font-normal text-left text-muted-foreground text-sm">
+									<p className="text-left font-normal text-muted-foreground text-sm">
 										There are no patterns in your carrier bag. Start by saving
 										one from the toolkit.
 									</p>
@@ -281,37 +281,49 @@ export function CarrierBagSidebar({
 					>
 						<button
 							type="button"
-							className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-background px-2 py-1 transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50 md:gap-2.5 dark:hover:bg-neutral-800"
+							className="group/pdf flex h-7 items-center gap-2 rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear disabled:cursor-not-allowed disabled:opacity-50"
 							disabled={items.length === 0}
 							aria-label="PDF"
 						>
-							<Icon icon={FileDownloadIcon} size={16} />
-							<span className="hidden font-normal text-primary text-xs uppercase md:inline md:text-sm">
+							<Icon
+								icon={FileDownloadIcon}
+								size={14}
+								className="text-muted-foreground transition-colors group-hover/pdf:text-foreground"
+							/>
+							<span className="hidden font-normal text-muted-foreground text-sm capitalize transition-colors group-hover/pdf:text-foreground md:inline">
 								PDF
 							</span>
 						</button>
 					</PDFPreviewModal>
 					<button
 						type="button"
-						className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-background px-2 py-1 transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50 md:gap-2.5 dark:hover:bg-neutral-800"
+						className="group/json flex h-7 items-center gap-2 rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear disabled:cursor-not-allowed disabled:opacity-50"
 						onClick={handleDownloadJson}
 						disabled={items.length === 0}
 						aria-label="Download list as JSON"
 					>
-						<Icon icon={Download05Icon} size={16} />
-						<span className="hidden font-normal text-primary text-xs uppercase md:inline md:text-sm">
+						<Icon
+							icon={Download05Icon}
+							size={14}
+							className="text-muted-foreground transition-colors group-hover/json:text-foreground"
+						/>
+						<span className="hidden font-normal text-muted-foreground text-sm capitalize transition-colors group-hover/json:text-foreground md:inline">
 							JSON
 						</span>
 					</button>
 					<button
 						type="button"
-						className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-background px-2 py-1 transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50 md:gap-2.5 dark:hover:bg-neutral-800"
+						className="group/delete flex h-7 items-center gap-2 rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear disabled:cursor-not-allowed disabled:opacity-50"
 						onClick={showClearConfirmationPane}
 						disabled={items.length === 0}
 						aria-label="Remove all items"
 					>
-						<Icon icon={Delete02Icon} size={16} />
-						<span className="hidden font-normal text-primary text-xs uppercase md:inline md:text-sm">
+						<Icon
+							icon={Delete02Icon}
+							size={14}
+							className="text-muted-foreground transition-colors group-hover/delete:text-foreground"
+						/>
+						<span className="hidden font-normal text-muted-foreground text-sm capitalize transition-colors group-hover/delete:text-foreground md:inline">
 							Remove all
 						</span>
 					</button>

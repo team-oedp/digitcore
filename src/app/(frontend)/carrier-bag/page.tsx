@@ -9,7 +9,7 @@ import { CarrierBagPage } from "./carrier-bag-page";
 export const metadata: Metadata = {
 	title: "Carrier Bag | DIGITCORE",
 	description:
-		"Collect and organize patterns in this personal store inspired by the carrier bag theory.",
+		"Collect and organize patterns in this personal store inspired by Ursula Le Guin's concept of the carrier bag.",
 };
 
 export default async function CarrierBag() {
