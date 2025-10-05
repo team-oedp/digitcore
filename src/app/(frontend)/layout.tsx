@@ -61,9 +61,7 @@ export default async function Layout({
 										<OnboardingRedirect />
 									</Suspense>
 									<GlossaryProvider>
-										<SiteLayout footerData={footerData}>
-											{children}
-										</SiteLayout>
+										<SiteLayout footerData={footerData}>{children}</SiteLayout>
 									</GlossaryProvider>
 								</PageContentStoreProvider>
 							</CarrierBagStoreProvider>
