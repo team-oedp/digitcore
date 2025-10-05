@@ -295,7 +295,7 @@ export function SearchClientWrapper() {
 			) : isLoading ? (
 				<SearchResultsSkeleton count={6} />
 			) : searchResult && !searchResult.success ? (
-				<div className="py-12 text-center">
+				<div className="py-12 text-left">
 					<p className="mb-2 text-red-600 dark:text-red-400">Search Error</p>
 					<p className="text-base text-muted-foreground">
 						{searchResult.error}

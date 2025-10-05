@@ -15,7 +15,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import type {
-	SearchPattern,
 	SearchResource,
 	SearchSolution,
 	SearchTag,
@@ -38,6 +37,7 @@ import {
 	truncateWithContext,
 } from "~/lib/search-utils";
 import { cn } from "~/lib/utils";
+import type { SearchPattern } from "~/types/search";
 import { Icon } from "../shared/icon";
 
 type CommandMenuItemProps = {

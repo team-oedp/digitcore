@@ -45,8 +45,7 @@ export default async function Home() {
 		if (typeof section !== "object" || section === null) return false;
 		return (
 			"_type" in section &&
-			((section as { _type?: unknown })._type === "contentList" ||
-				(section as { _type?: unknown })._type === "cardCarousel") // Support legacy data
+			(section as { _type?: unknown })._type === "contentList"
 		);
 	}
 
@@ -115,7 +114,7 @@ export default async function Home() {
 							key={group.content?._key || `group-${groupIndex}`}
 							className={
 								groupIndex === 0
-									? "flex flex-col gap-4 pb-[4.5rem]"
+									? "flex flex-col gap-4 pb-18"
 									: "flex flex-col gap-4"
 							}
 						>
@@ -125,7 +124,7 @@ export default async function Home() {
 									{group.content.heading && (
 										<>
 											{groupIndex > 0 && (
-												<div className="flex justify-center pb-4 md:justify-start">
+												<div className="flex justify-start pb-4">
 													<PatternCombination randomPatterns={3} size="md" />
 												</div>
 											)}

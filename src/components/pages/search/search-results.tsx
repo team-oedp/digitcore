@@ -1,6 +1,6 @@
 "use client";
 
-import type { SearchPattern } from "~/app/actions/search";
+import type { SearchPattern } from "~/types/search";
 import { SearchResultItem } from "./search-result-item";
 
 type SearchResultsProps = {

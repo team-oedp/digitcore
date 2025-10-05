@@ -8,7 +8,11 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:www.sanity.io)",
       "Bash(grep:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Read(//Users/henrybabbage/Desktop/**)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }

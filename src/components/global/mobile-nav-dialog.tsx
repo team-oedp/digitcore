@@ -79,7 +79,7 @@ export function MobileNavDialog() {
 										variant="ghost"
 										asChild
 										className={cn(
-											"w-full justify-start font-normal text-base",
+											"w-full justify-start font-normal text-base hover:bg-transparent",
 											item.isIndented ? "pr-1.5 pl-8" : "px-1.5",
 											pathname === item.href
 												? "text-foreground"

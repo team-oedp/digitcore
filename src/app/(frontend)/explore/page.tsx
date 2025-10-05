@@ -65,9 +65,7 @@ export default async function ExplorePage({
 					<Suspense fallback={<SearchInterfaceSkeleton />}>
 						<SearchInterfaceServer />
 					</Suspense>
-					<Suspense
-						fallback={<Skeleton className="h-32 w-full" />}
-					>
+					<Suspense fallback={<Skeleton className="h-32 w-full" />}>
 						<SearchClientWrapper />
 					</Suspense>
 				</div>

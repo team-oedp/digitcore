@@ -1,6 +1,10 @@
 "use client";
 
-import { Home09Icon, SearchList02Icon, Share02Icon } from "@hugeicons/core-free-icons";
+import {
+	Home09Icon,
+	SearchList02Icon,
+	Share02Icon,
+} from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";

@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { parseSearchParams, searchParamsSchema } from "~/lib/search";
 import { Skeleton } from "~/components/ui/skeleton";
+import { parseSearchParams, searchParamsSchema } from "~/lib/search";
 
 type SearchResultsHeaderClientProps = {
 	resultCount?: number;
