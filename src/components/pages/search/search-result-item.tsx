@@ -1,15 +1,10 @@
 "use client";
 
-import {
-	ArrowRight02Icon,
-	ChartRelationshipIcon,
-	Tag01Icon,
-} from "@hugeicons/core-free-icons";
+import { ChartRelationshipIcon, Tag01Icon } from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import type { SearchPattern } from "~/app/actions/search";
 import { ClickableBadge } from "~/components/pages/pattern/clickable-badge";
 import {
 	BadgeGroup,
@@ -24,95 +19,10 @@ import {
 	highlightMatches,
 	processDescriptionForDisplay,
 } from "~/lib/search-utils";
-
-// Base search result type
-type BaseSearchResultData = {
-	_id: string;
-	_type: string;
-	title?: string | null;
-	slug?: string | null;
-	description?: Array<{
-		children?: Array<{
-			text?: string;
-			_type: string;
-			_key: string;
-		}>;
-		_type: string;
-		_key: string;
-	}> | null;
-};
-
-// Pattern-specific type - Updated to handle both search results and patterns page
-type PatternSearchResultData = BaseSearchResultData & {
-	_type: "pattern";
-	descriptionPlainText?: string | null;
-	theme?: {
-		_id: string;
-		title?: string | null;
-		description?: Array<unknown> | null;
-	} | null;
-	tags?: Array<{
-		_id: string;
-		title?: string | null;
-	}> | null;
-	audiences?: Array<{
-		_id: string;
-		title?: string | null;
-	}> | null;
-	solutions?: Array<{
-		_id: string;
-		title?: string | null;
-		description?: Array<unknown> | null;
-	}> | null;
-	resources?: Array<{
-		_id: string;
-		title?: string | null;
-		description?: Array<unknown> | null;
-		solutions?: Array<{
-			_id: string;
-			title?: string | null;
-		}> | null;
-		solution?: Array<{
-			_id: string;
-			title?: string | null;
-		}> | null;
-	}> | null;
-};
-
-// Resource-specific type
-type ResourceSearchResultData = BaseSearchResultData & {
-	_type: "resource";
-	solutions?: Array<{
-		_id: string;
-		title?: string;
-	}> | null;
-	pattern?: {
-		_id: string;
-		title?: string;
-		slug?: string;
-	} | null;
-};
-
-// Solution-specific type
-type SolutionSearchResultData = BaseSearchResultData & {
-	_type: "solution";
-	audiences?: Array<{
-		_id: string;
-		title?: string;
-	}> | null;
-	pattern?: {
-		_id: string;
-		title?: string;
-		slug?: string;
-	} | null;
-};
+import type { SearchPattern } from "~/types/search";
 
 type SearchResultItemProps = {
-	pattern:
-		| SearchPattern
-		| PatternSearchResultData
-		| ResourceSearchResultData
-		| SolutionSearchResultData;
+	pattern: SearchPattern;
 	searchTerm?: string;
 	showPatternIcon?: boolean;
 };
@@ -161,18 +71,13 @@ function SearchResultBase({
 	);
 }
 
-// Pattern Search Result Component
-function PatternSearchResult({
+// Main Search Result Component
+export function SearchResultItem({
 	pattern,
 	searchTerm = "",
 	showPatternIcon = false,
-}: {
-	pattern: PatternSearchResultData;
-	searchTerm?: string;
-	showPatternIcon?: boolean;
-}) {
+}: SearchResultItemProps) {
 	const pathname = usePathname();
-	const isExplorePage = pathname === "/explore";
 	const isPatternsPage = pathname === "/patterns";
 	const title = pattern.title || "Untitled Pattern";
 	const theme = pattern.theme;
@@ -350,180 +255,6 @@ function PatternSearchResult({
 				</BadgeGroupContainer>
 			)}
 		</SearchResultBase>
-	);
-}
-
-// Resource Search Result Component
-function _ResourceSearchResult({
-	pattern,
-	searchTerm = "",
-}: {
-	pattern: ResourceSearchResultData;
-	searchTerm?: string;
-}) {
-	const title = pattern.title || "Untitled Resource";
-	const solutions = pattern.solutions || [];
-	const patternInfo = pattern.pattern;
-	const description =
-		pattern.description?.[0]?.children?.[0]?.text || "No description available";
-
-	// Get the pattern-specific icon
-	const PatternIcon = patternInfo
-		? getPatternIconWithMapping(patternInfo.slug || "")
-		: null;
-
-	const buttonElement = (
-		<a
-			href={`/pattern/${patternInfo?.slug}/#resource-${pattern.slug}`}
-			className="flex items-center gap-2 rounded-md border border-[var(--resource-button-border)] bg-[var(--resource-button-background)] px-2 py-1 text-[var(--resource-button-text)] transition-opacity hover:opacity-80 md:px-3 md:py-1"
-		>
-			<span className="font-normal text-xs uppercase">Visit Resource</span>
-			{PatternIcon && (
-				<PatternIcon className="h-3 w-3 text-[var(--resource-button-text)] opacity-40" />
-			)}
-		</a>
-	);
-
-	return (
-		<SearchResultBase title={title}>
-			{/* Solutions */}
-			{solutions.length > 0 && (
-				<BadgeGroup className="mb-3">
-					{solutions.map((solution) => (
-						<Badge
-							key={solution._id}
-							variant="solution"
-							icon={
-								<Icon icon={ChartRelationshipIcon} className="h-3.5 w-3.5" />
-							}
-						>
-							{solution.title}
-						</Badge>
-					))}
-				</BadgeGroup>
-			)}
-
-			{/* From Pattern Line */}
-			{patternInfo && (
-				<div className="mb-3 flex w-full items-center gap-2.5 overflow-hidden">
-					<div className="whitespace-nowrap text-[14px] text-neutral-500 tracking-[-0.14px]">
-						<span>From </span>
-						<span className="uppercase">PATTERN</span>
-					</div>
-
-					<div className="flex h-6 w-6 items-center justify-center">
-						<Icon icon={ArrowRight02Icon} className="h-4 w-4 text-accent" />
-					</div>
-
-					<Badge
-						variant="pattern"
-						icon={
-							PatternIcon && <PatternIcon className="h-3.5 w-3.5 opacity-40" />
-						}
-					>
-						{patternInfo.title}
-					</Badge>
-				</div>
-			)}
-		</SearchResultBase>
-	);
-}
-
-// Solution Search Result Component
-function _SolutionSearchResult({
-	pattern,
-	searchTerm = "",
-}: {
-	pattern: SolutionSearchResultData;
-	searchTerm?: string;
-}) {
-	const title = pattern.title || "Untitled Solution";
-	const audiences = pattern.audiences || [];
-	const patternInfo = pattern.pattern;
-	const description =
-		pattern.description?.[0]?.children?.[0]?.text || "No description available";
-
-	// Get the pattern-specific icon
-	const PatternIcon = patternInfo
-		? getPatternIconWithMapping(patternInfo.slug || "")
-		: null;
-
-	const buttonElement = (
-		<a
-			href={`/pattern/${patternInfo?.slug}/#solution-${pattern.slug}`}
-			className="flex items-center gap-2 rounded-md border border-[var(--solution-button-border)] bg-[var(--solution-button-background)] px-2 py-1 text-[var(--solution-button-text)] transition-opacity hover:opacity-80 md:px-3 md:py-1"
-		>
-			<span className="font-normal text-xs uppercase">Visit Solution</span>
-			{PatternIcon && (
-				<PatternIcon className="h-3 w-3 text-[var(--solution-button-text)] opacity-40" />
-			)}
-		</a>
-	);
-
-	return (
-		<SearchResultBase title={title}>
-			{/* Audiences */}
-			{audiences.length > 0 && (
-				<BadgeGroup className="mb-3">
-					{audiences.map((audience) => (
-						<Badge
-							key={audience._id}
-							variant="audience"
-							icon={
-								<Icon
-									icon={ChartRelationshipIcon}
-									className="h-3.5 w-3.5 capitalize"
-								/>
-							}
-						>
-							{audience.title}
-						</Badge>
-					))}
-				</BadgeGroup>
-			)}
-
-			{/* From Pattern Line */}
-			{patternInfo && (
-				<div className="mb-3 flex w-full items-center gap-2.5 overflow-hidden">
-					<div className="whitespace-nowrap text-[14px] text-neutral-500 tracking-[-0.14px]">
-						<span>From </span>
-						<span className="uppercase">PATTERN</span>
-					</div>
-
-					<div className="flex h-6 w-6 items-center justify-center">
-						<Icon
-							icon={ArrowRight02Icon}
-							className="h-4 w-4 text-neutral-500"
-						/>
-					</div>
-
-					<div className="flex h-6 cursor-pointer items-center gap-2 py-1.5">
-						<span className="whitespace-nowrap text-[14px] text-neutral-500 capitalize tracking-[-0.28px]">
-							{patternInfo.title}
-						</span>
-						{PatternIcon && (
-							<PatternIcon className="h-3.5 w-3.5 text-neutral-500 opacity-40" />
-						)}
-					</div>
-				</div>
-			)}
-		</SearchResultBase>
-	);
-}
-
-// Main component that routes to the appropriate sub-component
-export function SearchResultItem({
-	pattern,
-	searchTerm,
-	showPatternIcon,
-}: SearchResultItemProps) {
-	// Since SearchPattern always has _type: "pattern", we only handle that case
-	return (
-		<PatternSearchResult
-			pattern={pattern as PatternSearchResultData}
-			searchTerm={searchTerm}
-			showPatternIcon={showPatternIcon}
-		/>
 	);
 }
 

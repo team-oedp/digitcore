@@ -13,6 +13,7 @@ import {
 	SOLUTION_SEARCH_QUERY,
 	TAG_SEARCH_QUERY,
 } from "~/sanity/lib/queries";
+import type { SearchPattern } from "~/types/search";
 
 // Base content type for all search results
 export type SearchBaseContent = {
@@ -83,60 +84,6 @@ export type ComprehensiveSearchResult = {
 	error?: string;
 	totalCount: number;
 	searchParams: ParsedSearchParams;
-};
-
-export type SearchPattern = {
-	_id: string;
-	_type: "pattern";
-	_score?: number;
-	title: string | null;
-	description: Array<{
-		children?: Array<{
-			marks?: Array<string>;
-			text?: string;
-			_type: "span";
-			_key: string;
-		}>;
-		style?: "normal";
-		listItem?: never;
-		markDefs?: Array<{
-			href?: string;
-			_type: "link";
-			_key: string;
-		}>;
-		level?: number;
-		_type: "block";
-		_key: string;
-	}> | null;
-	descriptionPlainText?: string | null;
-	slug: string | null;
-	tags: Array<{
-		_id: string;
-		title?: string | null;
-	}> | null;
-	audiences: Array<{
-		_id: string;
-		title: string | null;
-	}> | null;
-	theme: {
-		_id: string;
-		title: string | null;
-		description: Array<unknown> | null;
-	} | null;
-	solutions: Array<{
-		_id: string;
-		title?: string | null;
-		description?: Array<unknown> | null;
-	}> | null;
-	resources: Array<{
-		_id: string;
-		title?: string | null;
-		description?: Array<unknown> | null;
-		solutions?: Array<{
-			_id: string;
-			title?: string | null;
-		}> | null;
-	}> | null;
 };
 
 /**
