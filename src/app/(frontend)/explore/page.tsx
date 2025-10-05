@@ -9,6 +9,7 @@ import { SearchInterfaceSkeleton } from "~/components/pages/search/search-interf
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { Skeleton } from "~/components/ui/skeleton";
 import { client } from "~/sanity/lib/client";
 import { EXPLORE_PAGE_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -65,9 +66,7 @@ export default async function ExplorePage({
 						<SearchInterfaceServer />
 					</Suspense>
 					<Suspense
-						fallback={
-							<div className="h-32 animate-pulse rounded bg-neutral-200" />
-						}
+						fallback={<Skeleton className="h-32 w-full" />}
 					>
 						<SearchClientWrapper />
 					</Suspense>

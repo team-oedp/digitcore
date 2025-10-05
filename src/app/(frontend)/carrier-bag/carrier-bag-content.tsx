@@ -301,20 +301,71 @@ export function CarrierBagContent({
 			</div>
 
 			<div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
-				{items.length === 0 ? (
-					<div className="flex flex-col items-start justify-center py-8 text-left">
-						<p className="font-normal text-muted-foreground text-sm">
-							There are no patterns in your carrier bag. Start by saving one
-							from the toolkit.
-						</p>
-					</div>
-				) : processed.groups ? (
-					processed.groups.map(({ title, items: groupItems }) => (
-						<div key={title} className="mt-2">
-							<h4 className="mb-1 font-normal text-muted-foreground text-sm">
-								{title}
-							</h4>
-							{groupItems.map((item) => {
+				<div className="flex flex-col gap-2 rounded-md border border-border border-dashed p-2">
+					{items.length === 0 ? (
+						<div className="flex flex-col items-start justify-center py-8 text-left">
+							<p className="font-normal text-muted-foreground text-sm">
+								There are no patterns in your carrier bag. Start by saving one
+								from the toolkit.
+							</p>
+						</div>
+					) : processed.groups ? (
+						processed.groups.map(({ title, items: groupItems }) => (
+							<div key={title} className="mt-2">
+								<h4 className="mb-1 font-normal text-muted-foreground text-sm">
+									{title}
+								</h4>
+								{groupItems.map((item) => {
+									type RefTheme = { _ref: string };
+									type PopulatedTheme = { title?: string | null };
+									type PatternMaybePopulatedTheme = Pattern & {
+										theme?: RefTheme | PopulatedTheme;
+									};
+
+									const pattern = item.pattern as PatternMaybePopulatedTheme;
+									// Don't show theme as subtitle when grouping by theme (redundant)
+									const themeTitle = undefined;
+
+									const itemData: CarrierBagItemData = {
+										id: pattern._id,
+										title: pattern.title || "Untitled Pattern",
+										slug: getSlugString(pattern),
+										subtitle: themeTitle,
+										isStale: isPatternStale(pattern._id),
+										isUpdating: isPatternUpdating(pattern._id),
+										isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
+									};
+									return (
+										<CarrierBagItem
+											key={pattern._id}
+											item={itemData}
+											onRemove={() => handleRemoveItem(pattern._id)}
+											onVisit={() => handleVisitItem(getSlugString(pattern))}
+										/>
+									);
+								})}
+							</div>
+						))
+					) : (
+						<Reorder.Group
+							axis="y"
+							values={items}
+							onReorder={(newOrder) => {
+								setItems(newOrder);
+								// Activate manual order when items are actually reordered
+								if (!manualOrderActive) {
+									setManualOrderActive(true);
+									// Clear filters when switching to manual order
+									setSelectedTagIds([]);
+									setSelectedAudienceIds([]);
+									setGroupByTheme(false);
+								}
+							}}
+							layoutScroll
+							as="div"
+							style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+						>
+							{processed.flat.map((item) => {
 								type RefTheme = { _ref: string };
 								type PopulatedTheme = { title?: string | null };
 								type PatternMaybePopulatedTheme = Pattern & {
@@ -322,7 +373,7 @@ export function CarrierBagContent({
 								};
 
 								const pattern = item.pattern as PatternMaybePopulatedTheme;
-								// Don't show theme as subtitle when grouping by theme (redundant)
+								// Don't show theme as subtitle when not grouping
 								const themeTitle = undefined;
 
 								const itemData: CarrierBagItemData = {
@@ -335,73 +386,24 @@ export function CarrierBagContent({
 									isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
 								};
 								return (
-									<CarrierBagItem
+									<Reorder.Item
+										as="div"
 										key={pattern._id}
-										item={itemData}
-										onRemove={() => handleRemoveItem(pattern._id)}
-										onVisit={() => handleVisitItem(getSlugString(pattern))}
-									/>
+										value={item}
+										style={{ position: "relative" }}
+									>
+										<CarrierBagItem
+											key={pattern._id}
+											item={itemData}
+											onRemove={() => handleRemoveItem(pattern._id)}
+											onVisit={() => handleVisitItem(getSlugString(pattern))}
+										/>
+									</Reorder.Item>
 								);
 							})}
-						</div>
-					))
-				) : (
-					<Reorder.Group
-						axis="y"
-						values={items}
-						onReorder={(newOrder) => {
-							setItems(newOrder);
-							// Activate manual order when items are actually reordered
-							if (!manualOrderActive) {
-								setManualOrderActive(true);
-								// Clear filters when switching to manual order
-								setSelectedTagIds([]);
-								setSelectedAudienceIds([]);
-								setGroupByTheme(false);
-							}
-						}}
-						layoutScroll
-						as="div"
-						style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-					>
-						{processed.flat.map((item) => {
-							type RefTheme = { _ref: string };
-							type PopulatedTheme = { title?: string | null };
-							type PatternMaybePopulatedTheme = Pattern & {
-								theme?: RefTheme | PopulatedTheme;
-							};
-
-							const pattern = item.pattern as PatternMaybePopulatedTheme;
-							// Don't show theme as subtitle when not grouping
-							const themeTitle = undefined;
-
-							const itemData: CarrierBagItemData = {
-								id: pattern._id,
-								title: pattern.title || "Untitled Pattern",
-								slug: getSlugString(pattern),
-								subtitle: themeTitle,
-								isStale: isPatternStale(pattern._id),
-								isUpdating: isPatternUpdating(pattern._id),
-								isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
-							};
-							return (
-								<Reorder.Item
-									as="div"
-									key={pattern._id}
-									value={item}
-									style={{ position: "relative" }}
-								>
-									<CarrierBagItem
-										key={pattern._id}
-										item={itemData}
-										onRemove={() => handleRemoveItem(pattern._id)}
-										onVisit={() => handleVisitItem(getSlugString(pattern))}
-									/>
-								</Reorder.Item>
-							);
-						})}
-					</Reorder.Group>
-				)}
+						</Reorder.Group>
+					)}
+				</div>
 			</div>
 		</div>
 	);
