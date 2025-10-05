@@ -12,6 +12,7 @@ import { PatternHeading } from "~/components/shared/pattern-heading";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import type { Pattern } from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
+import { FontStoreProvider } from "~/stores/font";
 
 // Mock the pattern icons utility
 vi.mock("~/utils/pattern-icons", () => ({
@@ -65,11 +66,22 @@ vi.mock("next/link", () => ({
 		href: string;
 		children: React.ReactNode;
 		[key: string]: unknown;
-	}) => (
-		<a href={href} {...props}>
-			{children}
-		</a>
-	),
+	}) => {
+		const { onClick: origOnClick, ...rest } =
+			(props as React.AnchorHTMLAttributes<HTMLAnchorElement>) || {};
+		return (
+			<a
+				href={href}
+				{...rest}
+				onClick={(e) => {
+					e.preventDefault();
+					origOnClick?.(e as React.MouseEvent<HTMLAnchorElement, MouseEvent>);
+				}}
+			>
+				{children}
+			</a>
+		);
+	},
 }));
 
 // Mock theme components
@@ -88,9 +100,11 @@ vi.mock("~/components/global/command-menu", () => ({
 // Create a wrapper component that provides all necessary contexts
 function TestWrapper({ children }: { children: React.ReactNode }) {
 	return (
-		<CarrierBagStoreProvider>
-			<SidebarProvider defaultOpen={false}>{children}</SidebarProvider>
-		</CarrierBagStoreProvider>
+		<FontStoreProvider>
+			<CarrierBagStoreProvider>
+				<SidebarProvider defaultOpen={false}>{children}</SidebarProvider>
+			</CarrierBagStoreProvider>
+		</FontStoreProvider>
 	);
 }
 

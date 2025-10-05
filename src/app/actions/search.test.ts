@@ -497,9 +497,45 @@ describe("searchPatterns", () => {
 			expect.any(Object),
 		);
 
-		expect(mockLogger.groq).toHaveBeenCalledWith(
-			"Using PATTERN_SEARCH_QUERY with escaped search term",
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			1,
+			"Using PATTERN_SEARCH_QUERY (no preferences)",
+			undefined,
+			expect.any(Object),
+		);
+
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			2,
+			"Search term escaped",
 			{ original: "test", escaped: "test" },
+			expect.any(Object),
+		);
+
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			3,
+			"Final GROQ query parameters",
+			{ searchTerm: "test", tags: [], themes: [], audiences: [] },
+			expect.any(Object),
+		);
+
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			4,
+			"Query type",
+			"SEARCH",
+			expect.any(Object),
+		);
+
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			5,
+			"Executing GROQ query",
+			{ queryType: "SEARCH" },
+			expect.any(Object),
+		);
+
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			6,
+			"GROQ query completed",
+			{ executionTime: "0ms", resultCount: 2 },
 			expect.any(Object),
 		);
 

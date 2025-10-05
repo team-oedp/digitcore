@@ -3,32 +3,32 @@ import type React from "react";
 import { describe, expect, it, vi } from "vitest";
 import type { DereferencedResource } from "./resources";
 
-interface HugeiconsIconProps {
+type HugeiconsIconProps = {
 	icon: { name: string };
 	size?: number | string;
 	color?: string;
 	strokeWidth?: number | string;
 	className?: string;
-}
+};
 
-interface CustomPortableTextProps {
+type CustomPortableTextProps = {
 	value?: Array<{
 		children?: Array<{ text?: string }>;
 	}>;
 	className?: string;
-}
+};
 
-interface BadgeProps {
+type BadgeProps = {
 	children?: React.ReactNode;
 	variant?: string;
 	icon?: React.ReactNode;
-}
+};
 
-interface SolutionPreviewProps {
+type SolutionPreviewProps = {
 	children?: React.ReactNode;
 	solutionNumber?: number;
 	solutionTitle?: string;
-}
+};
 
 import { Resources } from "./resources";
 
@@ -87,7 +87,7 @@ vi.mock("./solution-preview", () => ({
 }));
 
 describe("Resources Component", () => {
-	it("should display 'FROM SOLUTION →' text when resource has solution references", () => {
+	it("should display 'Related solutions' when resource has solution references", () => {
 		const mockResources: DereferencedResource[] = [
 			{
 				_id: "resource-1",
@@ -114,9 +114,8 @@ describe("Resources Component", () => {
 
 		render(<Resources resources={mockResources} />);
 
-		// Check that "FROM SOLUTION" text is displayed
-		expect(screen.getByText("From")).toBeInTheDocument();
-		expect(screen.getByText("SOLUTION")).toBeInTheDocument();
+		// Check that 'Related solutions' label is displayed
+		expect(screen.getByText(/Related\s+solutions/i)).toBeInTheDocument();
 	});
 
 	it("should display solution badges when resource has solution references", () => {
@@ -189,9 +188,8 @@ describe("Resources Component", () => {
 		const solutionBadges = screen.queryAllByTestId("badge-solution");
 		expect(solutionBadges).toHaveLength(0);
 
-		// The "FROM SOLUTION" text should still be present but with no badges
-		expect(screen.getByText("From")).toBeInTheDocument();
-		expect(screen.getByText("SOLUTION")).toBeInTheDocument();
+		// The 'Related solutions' label should not be present when there are no solution refs
+		expect(screen.queryByText(/Related\s+solutions/i)).not.toBeInTheDocument();
 	});
 
 	it("should display multiple resources with their respective solution badges", () => {
