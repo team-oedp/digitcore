@@ -7,11 +7,11 @@ import { persist } from "zustand/middleware";
 
 export type FontMode = "serif" | "sans-serif";
 
-interface FontStore {
+type FontStore = {
 	mode: FontMode;
 	setMode: (mode: FontMode) => void;
 	toggleMode: () => void;
-}
+};
 
 const createFontStore = () =>
 	createStore<FontStore>()(
@@ -34,9 +34,9 @@ type FontStoreApi = ReturnType<typeof createFontStore>;
 
 const FontStoreContext = createContext<FontStoreApi | undefined>(undefined);
 
-export interface FontStoreProviderProps {
+export type FontStoreProviderProps = {
 	children: ReactNode;
-}
+};
 
 export const FontStoreProvider = ({ children }: FontStoreProviderProps) => {
 	const [store] = useState(() => createFontStore());

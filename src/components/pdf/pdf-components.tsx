@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
 	// Theme badge styles - match web UI ochre colors
 	themeTag: {
 		backgroundColor: "#fef3e2", // ochre-light equivalent
-		borderColor: "#f59e0b", // ochre-default equivalent  
+		borderColor: "#f59e0b", // ochre-default equivalent
 		borderWidth: 1,
 		color: "#92400e", // ochre-dark equivalent
 		fontSize: 10,
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
 	// Solution audience badge styles - match web UI cerulean colors exactly
 	solutionAudienceTag: {
 		backgroundColor: "#dbeafe", // cerulean-light
-		borderColor: "#3b82f6", // cerulean-default  
+		borderColor: "#3b82f6", // cerulean-default
 		borderWidth: 1,
 		color: "#1e40af", // cerulean-dark
 		fontSize: 12,
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
 		fontStyle: "italic",
 		lineHeight: 1.4,
 	},
-	// Resource solution badge styles - match web UI coral colors  
+	// Resource solution badge styles - match web UI coral colors
 	resourceSolutionTag: {
 		backgroundColor: "#fef2f2", // coral-light equivalent
 		borderColor: "#f87171", // coral-default equivalent
@@ -460,13 +460,13 @@ const PDFPatternConnections = ({ connections }: PDFPatternConnectionsProps) => {
 	// Helper function to get appropriate badge style based on connection type
 	const getBadgeStyle = (connectionType: string) => {
 		switch (connectionType.toLowerCase()) {
-			case 'theme':
+			case "theme":
 				return styles.themeTag;
-			case 'audience':
-			case 'audiences':
+			case "audience":
+			case "audiences":
 				return styles.audienceTag;
-			case 'tag':
-			case 'tags':
+			case "tag":
+			case "tags":
 				return styles.tagBadge;
 			default:
 				return styles.tagBadge; // fallback to tag style
@@ -571,8 +571,8 @@ const PDFResources = ({ resources }: PDFResourcesProps) => {
 								Related solutions:
 							</Text>
 							<View style={styles.tagContainer}>
-								{resource.relatedSolutions.map((solution, index) => (
-									<Text key={index} style={styles.resourceSolutionTag}>
+								{resource.relatedSolutions.map((solution) => (
+									<Text key={solution} style={styles.resourceSolutionTag}>
 										{solution}
 									</Text>
 								))}

@@ -8,9 +8,9 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { type FontMode, useFontStore } from "~/stores/font";
 
-interface FontToggleProps {
+type FontToggleProps = {
 	className?: string;
-}
+};
 
 export function FontToggle({ className }: FontToggleProps = {}) {
 	const mode = useFontStore((state) => state.mode);

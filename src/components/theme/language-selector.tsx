@@ -17,9 +17,9 @@ const languages = [
 	{ code: "ES", label: "Spanish", disabled: true },
 ];
 
-interface LanguageSelectorProps {
+type LanguageSelectorProps = {
 	className?: string;
-}
+};
 
 export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
 	const [selectedLanguage, setSelectedLanguage] = React.useState(languages[0]);

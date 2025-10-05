@@ -59,7 +59,7 @@ const ICONS = [
 
 type CombinationSize = "sm" | "md" | "lg" | "xl" | number;
 
-interface PatternCombinationProps {
+type PatternCombinationProps = {
 	patterns?: number[];
 	randomPatterns?: number;
 	size?: CombinationSize;
@@ -70,7 +70,7 @@ interface PatternCombinationProps {
 	scrollParentSelector?: string;
 	/** When using randomPatterns, avoid SSR hydration by deferring icon selection to client */
 	hydrateClientOnlyWhenRandom?: boolean;
-}
+};
 
 function getSizeClasses(size: CombinationSize) {
 	if (typeof size === "number") return { container: "", px: size } as const;

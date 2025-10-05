@@ -16,9 +16,9 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Icon } from "../shared/icon";
 
-interface ModeToggleProps {
+type ModeToggleProps = {
 	className?: string;
-}
+};
 
 export function ModeToggle({ className }: ModeToggleProps = {}) {
 	const { setTheme } = useTheme();
