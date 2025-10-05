@@ -42,15 +42,15 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 	return (
 		<header id={headingId} className="relative max-w-4xl pt-5">
 			<div className="flex flex-col gap-3 md:gap-4">
-				<div className="flex items-baseline gap-2 md:gap-4">
+				<div className="flex items-start gap-4 md:gap-6">
 					{PatternIcon && (
-						<div className="h-6 w-6 flex-shrink-0 md:h-8 md:w-8">
+						<div className="mt-1 h-6 w-6 flex-shrink-0 md:mt-1.5 md:h-8 md:w-8">
 							<PatternIcon className="h-full w-full fill-icon/50 text-icon/50 opacity-40" />
 						</div>
 					)}
 					<h1 className="text-page-heading">{title}</h1>
 				</div>
-				<div className="md:ml-12 lg:ml-14">
+				<div className="ml-10 md:ml-14">
 					{pattern && (
 						<button
 							type="button"

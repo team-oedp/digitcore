@@ -7,7 +7,7 @@ import type { Solution } from "~/sanity/sanity.types";
 import { ClickableBadge } from "./clickable-badge";
 import { SuggestSolutionButton } from "./suggest-solution-button";
 
-type AudienceDisplay = {
+type AudienceBadge = {
 	_id?: string;
 	_key?: string;
 	_ref?: string;
@@ -71,7 +71,7 @@ export function Solutions({
 
 							{solution.audiences && solution.audiences.length > 0 && (
 								<div className="flex flex-wrap gap-1.5 md:gap-2">
-									{solution.audiences.map((audience: AudienceDisplay) => (
+									{solution.audiences.map((audience: AudienceBadge) => (
 										<ClickableBadge
 											key={audience._id ?? audience._key ?? audience._ref}
 											type="audience"
