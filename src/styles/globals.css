@@ -158,7 +158,7 @@
 	--sidebar-ring: oklch(0.556 0 0);
 	--brand: var(--color-green-brand-light);
 	--footer-background: var(--color-neutral-900);
-	--item-background: #262626;
+	--item-background: #333333;
 	--item-background-hover: #404040;
 }
 
