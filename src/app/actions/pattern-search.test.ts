@@ -1,4 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import {
+	afterAll,
+	beforeAll,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	vi,
+} from "vitest";
 import { searchPatternContent } from "./pattern-search";
 
 // Mock the Sanity client
@@ -8,11 +16,15 @@ vi.mock("~/sanity/lib/client", () => ({
 	},
 }));
 
-// Console logging mock
-vi.mock("console", () => ({
-	log: vi.fn(),
-	error: vi.fn(),
-}));
+// Silence noisy console output in this test file only
+beforeAll(() => {
+	vi.spyOn(console, "log").mockImplementation(() => {});
+	vi.spyOn(console, "error").mockImplementation(() => {});
+});
+
+afterAll(() => {
+	vi.restoreAllMocks();
+});
 
 // Import the mocked client to get access to the fetch function
 import { client } from "~/sanity/lib/client";

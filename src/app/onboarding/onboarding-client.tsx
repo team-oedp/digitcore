@@ -1,6 +1,10 @@
 "use client";
 
-import { SearchList02Icon, Share02Icon } from "@hugeicons/core-free-icons";
+import {
+	Home09Icon,
+	SearchList02Icon,
+	Share02Icon,
+} from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -36,7 +40,29 @@ function getSafePath(path?: string) {
 			return new URL(path).pathname || "/";
 		}
 		const cleaned = (path.split("#")[0] || "/").split("?")[0] || "/";
-		return cleaned.startsWith("/") ? cleaned || "/" : "/";
+		const safePath = cleaned.startsWith("/") ? cleaned || "/" : "/";
+
+		// Validate that the path is a known route in our application
+		const validRoutes = [
+			"/",
+			"/explore",
+			"/patterns",
+			"/tags",
+			"/faq",
+			"/glossary",
+		];
+		const validRoutePrefixes = ["/pattern/", "/tag/", "/search"];
+
+		// Check if it's an exact match or starts with a valid prefix
+		if (
+			validRoutes.includes(safePath) ||
+			validRoutePrefixes.some((prefix) => safePath.startsWith(prefix))
+		) {
+			return safePath;
+		}
+
+		// If not a valid route, return home
+		return "/";
 	} catch {
 		return "/";
 	}
@@ -183,13 +209,6 @@ export function OnboardingClient({
 		}
 	}, [headerOverride, setSeen]);
 
-	// Handle skip action
-	const handleSkip = () => {
-		setSkipped(true);
-		const returnPath = returnToPath || "/";
-		router.push(returnPath);
-	};
-
 	const goToSlide = (n: 1 | 2 | 3) => {
 		setIsTransitioning(true);
 		setTimeout(() => {
@@ -209,20 +228,6 @@ export function OnboardingClient({
 	return (
 		<div className="m-2 rounded-md bg-neutral-200 dark:bg-neutral-800">
 			<div className="relative h-[calc(100vh-1rem)] overflow-clip rounded-md bg-primary-foreground p-2 dark:bg-neutral-900">
-				{/* Desktop skip button - top right */}
-				<div className="absolute top-4 right-4 z-10 hidden md:block">
-					<ActionButton
-						dashed={false}
-						preserveSize={true}
-						asButton={true}
-						onClick={handleSkip}
-					>
-						<span className="text-xs">
-							{onboarding?.skipLabel || "Skip onboarding"}
-						</span>
-					</ActionButton>
-				</div>
-
 				<div
 					className={cn(
 						"h-full w-full transition-opacity duration-300",
@@ -376,23 +381,6 @@ function Slide({
 				{asset || (
 					<div className="h-full w-full rounded-md bg-icon/60 dark:bg-icon/30" />
 				)}
-
-				{/* Mobile skip button - bottom right of icon container */}
-				<div className="absolute right-2 bottom-2 z-20 md:hidden">
-					<ActionButton
-						dashed={false}
-						preserveSize={true}
-						asButton={true}
-						onClick={() => {
-							setSkipped(true);
-							router.push("/");
-						}}
-					>
-						<span className="text-xs">
-							{onboarding?.skipLabel || "Skip onboarding"}
-						</span>
-					</ActionButton>
-				</div>
 			</div>
 		</div>
 	);
@@ -414,6 +402,22 @@ function Slide1({
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
 }) {
 	const setSkipped = useOnboardingStore((s) => s.setSkipped);
+	const router = useRouter();
+
+	const handleSkip = () => {
+		setSkipped(true);
+
+		// If there's a returnToPath, use it; otherwise go to home
+		if (returnToPath) {
+			// Decode the URL parameter (handles %2F -> /)
+			const decodedPath = decodeURIComponent(returnToPath);
+			const safePath = getSafePath(decodedPath);
+			router.push(safePath);
+		} else {
+			// No returnTo means user came from home page, redirect to home
+			router.push("/");
+		}
+	};
 
 	const toTitleCase = (s: string) =>
 		s
@@ -504,15 +508,16 @@ function Slide1({
 
 					<div>
 						<p className="mb-2 text-body">
-							{onboarding?.slide1?.secondaryCtaText || "Or, go directly to:"}
+							{onboarding?.slide1?.secondaryCtaText ||
+								"Or skip orientation, go directly to:"}
 						</p>
 						{patternSlug ? (
 							<ActionButton
-								href={`/pattern/${patternSlug}`}
 								onClick={() => {
-									// User is skipping to go directly to pattern
 									setSkipped(true);
+									router.push(`/pattern/${patternSlug}`);
 								}}
+								asButton={true}
 							>
 								<span>{patternTitle || toTitleCase(patternSlug)}</span>
 								<Icon
@@ -523,16 +528,14 @@ function Slide1({
 								/>
 							</ActionButton>
 						) : (
-							<ActionButton
-								href={getSafePath(returnToPath)}
-								onClick={() => {
-									// User is skipping to go to return path
-									setSkipped(true);
-								}}
-							>
-								<span>{friendlyLabelFromPath(getSafePath(returnToPath))}</span>
+							<ActionButton onClick={handleSkip} asButton={true}>
+								<span>
+									{friendlyLabelFromPath(
+										returnToPath ? decodeURIComponent(returnToPath) : "/",
+									)}
+								</span>
 								<Icon
-									icon={Share02Icon}
+									icon={Home09Icon}
 									size={20}
 									className="text-neutral-600 dark:text-neutral-400"
 									strokeWidth={1.5}
@@ -830,15 +833,7 @@ function Slide3({
 							<>
 								<span className="text-subheading capitalize">click</span>
 								<Link
-									href={`/explore?themes=${encodeURIComponent(
-										selectedThemeIds.join(","),
-									)}${
-										selectedAudienceIds.length
-											? `&audiences=${encodeURIComponent(
-													selectedAudienceIds.join(","),
-												)}`
-											: ""
-									}`}
+									href="/explore"
 									onClick={() => {
 										setCompleted(true);
 										// User completed the full onboarding

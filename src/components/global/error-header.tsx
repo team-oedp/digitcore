@@ -1,6 +1,5 @@
 "use client";
 
-import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,26 +7,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import { useCarrierBagStore } from "~/stores/carrier-bag";
-import { Icon } from "../shared/icon";
-import { FontToggle } from "../theme/font-toggle";
-import { LanguageSelector } from "../theme/language-selector";
-import { ModeToggle } from "../theme/mode-toggle";
-import { CommandMenu } from "./command-menu";
-import { MobileNavDialog } from "./mobile-nav-dialog";
 
-export function SiteHeader() {
-	const isModalMode = useCarrierBagStore((state) => state.isModalMode);
-	const toggleModalMode = useCarrierBagStore((state) => state.toggleModalMode);
-	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
-	const setOpen = useCarrierBagStore((state) => state.setOpen);
-	const hasUnseenUpdates = useCarrierBagStore(
-		(state) => state.hasUnseenUpdates,
-	);
-	const clearExpiredUpdates = useCarrierBagStore(
-		(state) => state.clearExpiredUpdates,
-	);
-
+export function ErrorHeader() {
 	const [isExploreOpen, setIsExploreOpen] = useState(false);
 
 	// Close explore menu when clicking outside
@@ -48,26 +29,7 @@ export function SiteHeader() {
 		};
 	}, [isExploreOpen]);
 
-	// TODO: implement toggle of carrier bag sidebar into a modal
-	const _handleModalModeToggle = () => {
-		toggleModalMode();
-		// When switching to modal mode, ensure the modal is open
-		if (!isModalMode) {
-			setOpen(true);
-		}
-	};
-
 	const pathname = usePathname();
-	const isOnCarrierBagRoute = pathname === "/carrier-bag";
-
-	// Check for expired updates every 30 seconds
-	useEffect(() => {
-		const interval = setInterval(() => {
-			clearExpiredUpdates();
-		}, 30000); // 30 seconds
-
-		return () => clearInterval(interval);
-	}, [clearExpiredUpdates]);
 
 	return (
 		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-container-background">
@@ -264,52 +226,6 @@ export function SiteHeader() {
 						</ul>
 					</nav>
 				</div>
-				<LanguageSelector className="hidden md:block" />
-				<FontToggle className="hidden md:block" />
-				<ModeToggle className="hidden md:block" />
-				<CommandMenu />
-				<button
-					type="button"
-					className={cn(
-						"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear",
-						"hidden md:flex", // Hide on mobile
-						isOnCarrierBagRoute ? "cursor-not-allowed opacity-50" : "",
-						// Add glow effect when there are unseen updates
-						hasUnseenUpdates &&
-							!isOnCarrierBagRoute &&
-							"animate-pulse shadow-lg shadow-yellow-500/25 ring-2 ring-yellow-500/50",
-					)}
-					onClick={isOnCarrierBagRoute ? undefined : toggleOpen}
-					disabled={isOnCarrierBagRoute}
-					title={
-						isOnCarrierBagRoute
-							? "Carrier Bag (currently viewing)"
-							: hasUnseenUpdates
-								? "Carrier Bag (new updates available)"
-								: "Toggle Sidebar"
-					}
-					aria-label={
-						isOnCarrierBagRoute
-							? "Carrier Bag (currently viewing)"
-							: hasUnseenUpdates
-								? "Carrier Bag (new updates available)"
-								: "Toggle Sidebar"
-					}
-				>
-					<Icon
-						icon={Backpack03Icon}
-						size={14}
-						className={cn(
-							"flex items-center gap-0.5 text-sm transition-colors",
-							isOnCarrierBagRoute
-								? "text-foreground"
-								: hasUnseenUpdates
-									? "text-yellow-600 dark:text-yellow-400"
-									: "text-muted-foreground group-hover:text-foreground",
-						)}
-					/>
-				</button>
-				<MobileNavDialog />
 			</nav>
 		</header>
 	);

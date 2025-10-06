@@ -3,7 +3,7 @@
 import {
 	AlertCircleIcon,
 	Cancel01Icon,
-	CleaningBucketIcon,
+	Delete02Icon,
 	Download05Icon,
 	FileDownloadIcon,
 	FolderLibraryIcon,
@@ -59,7 +59,7 @@ export function CarrierBagSidebar({
 		(state) => state.hideClearConfirmationPane,
 	);
 	const documentData = useCarrierBagDocument(items);
-	const { isCheckingStale, lastChecked } = useStaleContentCheck();
+	const { lastChecked } = useStaleContentCheck();
 	const { setOpen: setSidebarOpen, setOpenMobile, isMobile } = useSidebar();
 
 	// Sync Zustand store state to Sidebar component state
@@ -120,57 +120,54 @@ export function CarrierBagSidebar({
 				<div className="flex items-start justify-between p-2">
 					<div className="flex flex-col">
 						<h3 className="text-heading-compact">Carrier Bag</h3>
-						{isCheckingStale && (
-							<p className="text-muted-foreground text-xs">
-								Checking for updates...
-							</p>
-						)}
-						{lastChecked && !isCheckingStale && (
-							<p className="text-muted-foreground text-xs">
-								Last checked: {lastChecked.toLocaleTimeString()}
-							</p>
-						)}
+						{/* Background updates only - no loading UI to avoid confusion */}
 					</div>
 					<div className="flex items-center gap-1">
-						<Button
-							variant="ghost"
-							size="sm"
-							className="hidden h-8 w-8 p-0"
+						<button
 							type="button"
+							className="hidden h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear"
 							aria-label="Pin Sidebar to Page"
 							onClick={() => console.log("Pin Sidebar to Page")}
 							disabled
 						>
-							<Icon icon={SidebarRightIcon} size={16} />
-						</Button>
+							<Icon
+								icon={SidebarRightIcon}
+								size={16}
+								className="text-muted-foreground transition-colors"
+							/>
+						</button>
 						<Link href="/carrier-bag" tabIndex={-1}>
-							<Button
-								variant="ghost"
-								size="sm"
-								className="h-8 w-8 p-0"
+							<button
 								type="button"
+								className="flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear"
 								aria-label="Expand Sidebar"
 								tabIndex={0}
 								onClick={toggleOpen}
 							>
-								<Icon icon={FolderLibraryIcon} size={16} />
-							</Button>
+								<Icon
+									icon={FolderLibraryIcon}
+									size={16}
+									className="text-muted-foreground transition-colors hover:text-foreground"
+								/>
+							</button>
 						</Link>
-						<Button
-							variant="ghost"
-							size="sm"
-							className="h-8 w-8 p-0"
+						<button
 							type="button"
+							className="flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear"
 							aria-label="Close Sidebar"
 							onClick={() => setOpen(false)}
 						>
-							<Icon icon={Cancel01Icon} size={16} />
-						</Button>
+							<Icon
+								icon={Cancel01Icon}
+								size={16}
+								className="text-muted-foreground transition-colors hover:text-foreground"
+							/>
+						</button>
 					</div>
 				</div>
 			</SidebarHeader>
 			<SidebarContent className="flex-1 bg-container-background">
-				<SidebarGroup>
+				<SidebarGroup className="flex h-full min-h-0 flex-col">
 					{showClearConfirmation ? (
 						<div className="flex flex-col items-center justify-center gap-4 p-6 text-center">
 							<div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
@@ -182,7 +179,7 @@ export function CarrierBagSidebar({
 							</div>
 							<div className="space-y-2">
 								<h3 className="font-normal text-foreground text-lg">
-									Clear all items?
+									Remove all items?
 								</h3>
 								<p className="text-muted-foreground text-sm leading-relaxed">
 									This will remove all {items.length} pattern
@@ -208,21 +205,21 @@ export function CarrierBagSidebar({
 									}}
 									className="flex-1"
 								>
-									Clear all
+									Remove all
 								</Button>
 							</div>
 						</div>
 					) : (
-						<div className="flex flex-col gap-2 rounded-md border border-border border-dashed p-2">
+						<div className="flex h-full min-h-0 flex-col gap-2 rounded-2xl border border-border border-dashed p-2">
 							{!isHydrated ? (
-								<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-									<p className="font-normal text-muted-foreground text-sm">
+								<div className="flex flex-1 flex-col items-start justify-start px-4 py-8">
+									<p className="text-left font-normal text-muted-foreground text-sm">
 										Loading...
 									</p>
 								</div>
 							) : items.length === 0 ? (
-								<div className="flex flex-col items-center justify-center px-4 py-8 text-center">
-									<p className="font-normal text-muted-foreground text-sm">
+								<div className="flex flex-1 flex-col items-start justify-start px-4 py-8">
+									<p className="text-left font-normal text-muted-foreground text-sm">
 										There are no patterns in your carrier bag. Start by saving
 										one from the toolkit.
 									</p>
@@ -278,46 +275,58 @@ export function CarrierBagSidebar({
 			</SidebarContent>
 			<SidebarFooter className="bg-container-background">
 				<div className="flex flex-row items-center gap-2 p-2">
-					<Button
-						variant="outline"
-						size="sm"
-						className="h-8 w-8 border-border bg-accent p-0 text-accent-foreground hover:bg-accent/80"
-						type="button"
-						onClick={showClearConfirmationPane}
-						disabled={items.length === 0}
-						aria-label="Clear all items"
-						title="Clear all items"
-					>
-						<Icon icon={CleaningBucketIcon} size={16} />
-					</Button>
-					<Button
-						variant="outline"
-						size="sm"
-						className="h-8 w-8 border-border bg-accent p-0 text-accent-foreground hover:bg-accent/80"
-						type="button"
-						onClick={handleDownloadJson}
-						disabled={items.length === 0}
-						aria-label="Download list as JSON"
-						title="Download list as JSON"
-					>
-						<Icon icon={Download05Icon} size={16} />
-					</Button>
 					<PDFPreviewModal
 						documentData={documentData}
 						disabled={items.length === 0}
 					>
-						<Button
-							variant="outline"
-							size="sm"
-							className="h-8 w-8 border-border bg-accent p-0 text-accent-foreground hover:bg-accent/80"
+						<button
 							type="button"
+							className="group/pdf flex h-7 items-center gap-2 rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear disabled:cursor-not-allowed disabled:opacity-50"
 							disabled={items.length === 0}
-							aria-label="Download as PDF"
-							title="Download as PDF"
+							aria-label="PDF"
 						>
-							<Icon icon={FileDownloadIcon} size={16} />
-						</Button>
+							<Icon
+								icon={FileDownloadIcon}
+								size={14}
+								className="text-muted-foreground transition-colors group-hover/pdf:text-foreground"
+							/>
+							<span className="hidden font-normal text-muted-foreground text-sm capitalize transition-colors group-hover/pdf:text-foreground md:inline">
+								PDF
+							</span>
+						</button>
 					</PDFPreviewModal>
+					<button
+						type="button"
+						className="group/json flex h-7 items-center gap-2 rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear disabled:cursor-not-allowed disabled:opacity-50"
+						onClick={handleDownloadJson}
+						disabled={items.length === 0}
+						aria-label="Download list as JSON"
+					>
+						<Icon
+							icon={Download05Icon}
+							size={14}
+							className="text-muted-foreground transition-colors group-hover/json:text-foreground"
+						/>
+						<span className="hidden font-normal text-muted-foreground text-sm capitalize transition-colors group-hover/json:text-foreground md:inline">
+							JSON
+						</span>
+					</button>
+					<button
+						type="button"
+						className="group/delete flex h-7 items-center gap-2 rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear disabled:cursor-not-allowed disabled:opacity-50"
+						onClick={showClearConfirmationPane}
+						disabled={items.length === 0}
+						aria-label="Remove all items"
+					>
+						<Icon
+							icon={Delete02Icon}
+							size={14}
+							className="text-muted-foreground transition-colors group-hover/delete:text-foreground"
+						/>
+						<span className="hidden font-normal text-muted-foreground text-sm capitalize transition-colors group-hover/delete:text-foreground md:inline">
+							Remove all
+						</span>
+					</button>
 				</div>
 			</SidebarFooter>
 		</Sidebar>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
 import { OnboardingStoreProvider } from "~/stores/onboarding";
 import "~/styles/globals.css";
@@ -18,7 +19,14 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={cn(sans.variable, signifier.variable)}>
-				<OnboardingStoreProvider>{children}</OnboardingStoreProvider>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<OnboardingStoreProvider>{children}</OnboardingStoreProvider>
+				</ThemeProvider>
 			</body>
 		</html>
 	);

@@ -11,30 +11,25 @@ describe("stale-content-utils", () => {
 			const classes = getStaleItemClasses(false);
 
 			expect(classes).toContain("carrier-bag-item-container");
-			expect(classes).toContain("border-border");
 			expect(classes).toContain("bg-background");
-			expect(classes).not.toContain("border-amber-400");
 			expect(classes).not.toContain("bg-amber-50");
+			expect(classes).not.toContain("dark:bg-amber-950/30");
 		});
 
 		it("should return stale classes when item is stale", () => {
 			const classes = getStaleItemClasses(true);
 
 			expect(classes).toContain("carrier-bag-item-container");
-			expect(classes).toContain("border-amber-400");
 			expect(classes).toContain("bg-amber-50");
-			expect(classes).toContain("dark:border-amber-500");
 			expect(classes).toContain("dark:bg-amber-950/30");
-			expect(classes).not.toContain("border-border");
 			expect(classes).not.toContain("bg-background");
 		});
 
 		it("should default to non-stale when no parameter provided", () => {
 			const classes = getStaleItemClasses();
 
-			expect(classes).toContain("border-border");
 			expect(classes).toContain("bg-background");
-			expect(classes).not.toContain("border-amber-400");
+			expect(classes).not.toContain("bg-amber-50");
 		});
 
 		it("should include common classes regardless of stale state", () => {
@@ -47,7 +42,6 @@ describe("stale-content-utils", () => {
 				"items-center",
 				"gap-3",
 				"rounded-lg",
-				"border",
 				"px-3",
 				"py-2.5",
 				"transition-colors",
@@ -161,8 +155,8 @@ describe("stale-content-utils", () => {
 			const iconClasses = staleIndicatorClasses.icon;
 
 			// Container should have stale styling
-			expect(containerClasses).toContain("border-amber-400");
 			expect(containerClasses).toContain("bg-amber-50");
+			expect(containerClasses).toContain("dark:bg-amber-950/30");
 
 			// Status should be set for screen readers
 			expect(statusText).toBe("Content has been updated in the system");
@@ -179,7 +173,6 @@ describe("stale-content-utils", () => {
 			const statusText = getStaleStatusText(isStale);
 
 			// Container should have normal styling
-			expect(containerClasses).toContain("border-border");
 			expect(containerClasses).toContain("bg-background");
 			expect(containerClasses).not.toContain("amber");
 
@@ -190,7 +183,7 @@ describe("stale-content-utils", () => {
 		it("should handle edge cases gracefully", () => {
 			// Undefined/null values should default to non-stale
 			expect(getStaleItemClasses(undefined as boolean | undefined)).toContain(
-				"border-border",
+				"bg-background",
 			);
 			expect(getStaleStatusText(undefined as boolean | undefined)).toBe("");
 

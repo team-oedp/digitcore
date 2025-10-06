@@ -5,7 +5,6 @@ import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import type { SearchPattern } from "~/app/actions/search";
 import { ClickableBadge } from "~/components/pages/pattern/clickable-badge";
 import {
 	BadgeGroup,
@@ -20,52 +19,71 @@ import {
 	highlightMatches,
 	processDescriptionForDisplay,
 } from "~/lib/search-utils";
-import { cn } from "~/lib/utils";
-import type { PATTERNS_WITH_THEMES_QUERYResult } from "~/sanity/sanity.types";
-
-// Union type that can accept both Sanity query results and search patterns
-type PatternType = PATTERNS_WITH_THEMES_QUERYResult[number] | SearchPattern;
+import type { SearchPattern } from "~/types/search";
 
 type SearchResultItemProps = {
-	pattern: PatternType;
+	pattern: SearchPattern;
 	searchTerm?: string;
 	showPatternIcon?: boolean;
 };
 
 // Shared base layout component
-function SearchResultBase({ children }: { children: React.ReactNode }) {
+function SearchResultBase({
+	children,
+	title,
+	titleElement,
+	showPatternIcon = false,
+	patternIcon,
+}: {
+	children: React.ReactNode;
+	title: string;
+	titleElement?: React.ReactNode;
+	showPatternIcon?: boolean;
+	patternIcon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
+}) {
 	return (
-		<div
-			className={cn(
-				"relative max-h-[280px] min-h-[160px] w-full overflow-hidden border-dashed-brand-t pb-0 lg:min-h-[220px]",
-			)}
-		>
+		<div className="relative max-h-[280px] min-h-[160px] w-full overflow-hidden border-dashed-brand-t pb-0 lg:min-h-[220px]">
 			<div className="flex flex-col py-4">
-				<div className="w-full space-y-0">{children}</div>
+				{/* Header with title */}
+				<div className="mb-4">
+					{titleElement ? (
+						titleElement
+					) : (
+						<div className="flex items-start gap-3">
+							{showPatternIcon && patternIcon && (
+								<div className="h-6 w-6 flex-shrink-0 text-neutral-500">
+									{React.createElement(patternIcon, {
+										className:
+											"h-full w-full fill-icon/40 text-icon/70 opacity-40",
+									})}
+								</div>
+							)}
+							<h3 className="w-full text-left font-light text-lg text-primary leading-tight md:text-xl">
+								{title}
+							</h3>
+						</div>
+					)}
+				</div>
+				{/* Content area with full width */}
+				<div className="w-full space-y-4">{children}</div>
 			</div>
 		</div>
 	);
 }
 
-// Pattern Search Result Component
-function PatternSearchResult({
+// Main Search Result Component
+export function SearchResultItem({
 	pattern,
 	searchTerm = "",
 	showPatternIcon = false,
-}: {
-	pattern: SearchResultItemProps["pattern"];
-	searchTerm?: string;
-	showPatternIcon?: boolean;
-}) {
+}: SearchResultItemProps) {
 	const pathname = usePathname();
+	const isPatternsPage = pathname === "/patterns";
 	const title = pattern.title || "Untitled Pattern";
 	const theme = pattern.theme;
 	const tags = pattern.tags || [];
 	const audiences = pattern.audiences || [];
 	const rawDescription = pattern.description || [];
-
-	// Hide tags and audiences on /patterns page
-	const isPatternsPage = pathname === "/patterns";
 
 	// Get the pattern-specific icon
 	const PatternIcon = getPatternIconWithMapping(pattern.slug || "");
@@ -86,56 +104,49 @@ function PatternSearchResult({
 		searchTerm,
 	);
 
-	return (
-		<SearchResultBase>
-			{/* Title with Pattern Icon and Visit Button */}
-			<div className="mb-4">
-				<div className="flex items-start justify-start gap-3 lg:gap-6">
-					{showPatternIcon && PatternIcon && (
-						<div className="mt-1 flex h-5 w-5 flex-shrink-0 text-neutral-500 lg:mt-2 lg:h-6 lg:w-6">
-							{React.createElement(PatternIcon, {
-								className: "h-full w-full fill-icon/40 text-icon/70 opacity-40",
-							})}
-						</div>
-					)}
-					<div className="inline-flex w-full items-start justify-between gap-6">
-						<Link
-							href={`/pattern/${pattern.slug}`}
-							className="inline-flex flex-1 items-start justify-start gap-3"
-						>
-							<h3
-								className={cn(
-									"line-clamp-2 text-left font-light text-lg text-primary leading-tight md:text-xl",
-									isPatternsPage && "md:text-3xl",
-								)}
-							>
-								{title}
-							</h3>
-						</Link>
-						<Button
-							variant="pattern"
-							size="sm"
-							asChild
-							className="text-xs lg:text-sm"
-						>
-							<Link href={`/pattern/${pattern.slug}`}>Visit pattern</Link>
-						</Button>
+	// Create clickable title element using Next.js Link
+	const titleElement = (
+		<div className="inline-flex w-full items-start justify-between gap-6">
+			<div className="inline-flex flex-1 items-baseline justify-start gap-4">
+				{showPatternIcon && PatternIcon && (
+					<div className="flex h-4 w-4 flex-shrink-0 text-neutral-500">
+						{React.createElement(PatternIcon, {
+							className: "h-full w-full fill-icon/40 text-icon/70 opacity-40",
+						})}
 					</div>
-				</div>
+				)}
+				<Link
+					href={`/pattern/${pattern.slug}`}
+					className="inline-flex items-start gap-3"
+				>
+					<h3 className="line-clamp-2 text-left font-light text-primary text-xl leading-tight md:text-2xl">
+						{title}
+					</h3>
+				</Link>
 			</div>
+			<Button
+				variant="pattern"
+				size="sm"
+				asChild
+				className="text-xs lg:text-sm"
+			>
+				<Link href={`/pattern/${pattern.slug}`}>Visit pattern</Link>
+			</Button>
+		</div>
+	);
 
+	return (
+		<SearchResultBase
+			title={title}
+			titleElement={titleElement}
+			showPatternIcon={showPatternIcon}
+			patternIcon={PatternIcon}
+		>
 			{/* Description with Search Context */}
 			{descriptionResult.text && (
 				<div className="mb-4">
-					<div
-						className={cn(
-							"relative overflow-hidden",
-							descriptionResult.displayType === "search-context"
-								? "line-clamp-3"
-								: "line-clamp-2",
-						)}
-					>
-						<span className="block font-light text-description-muted text-sm md:text-lg dark:text-foreground">
+					<div className="relative line-clamp-3 overflow-hidden">
+						<span className="block font-light text-base text-description-muted md:text-xl dark:text-foreground">
 							{renderHighlightedText(displayDescription, searchTerm)}
 						</span>
 					</div>
@@ -166,95 +177,84 @@ function PatternSearchResult({
 				</div>
 			)}
 
-			{/* Badges Groups */}
-			<BadgeGroupContainer>
-				{/* Theme Badges */}
-				{!isPatternsPage && theme && (
-					<BadgeGroup>
-						<ClickableBadge
-							type="theme"
-							id={theme._id}
-							title={theme.title || undefined}
-						>
-							<Badge
-								variant="theme"
-								icon={<ThemeMiniBadge />}
-								className="cursor-pointer capitalize"
-							>
-								{theme.title}
-							</Badge>
-						</ClickableBadge>
-					</BadgeGroup>
-				)}
-
-				{/* Audience Badges - Hidden on /patterns page */}
-				{!isPatternsPage && audiences.length > 0 && (
-					<BadgeGroup>
-						{audiences.map((audience) => (
+			{/* Badges Groups - hidden on /patterns */}
+			{!isPatternsPage && (
+				<BadgeGroupContainer>
+					{/* Theme Badges */}
+					{theme && (
+						<BadgeGroup>
 							<ClickableBadge
-								key={audience._id}
-								type="audience"
-								id={audience._id}
-								title={audience.title || undefined}
+								type="theme"
+								id={theme._id}
+								title={theme.title || undefined}
 							>
 								<Badge
-									variant="audience"
-									className="cursor-pointer"
-									icon={
-										<Icon
-											icon={ChartRelationshipIcon}
-											className="h-3.5 w-3.5 capitalize"
-										/>
-									}
+									variant="theme"
+									icon={<ThemeMiniBadge />}
+									className="cursor-pointer capitalize"
 								>
-									{audience.title}
+									{theme.title}
 								</Badge>
 							</ClickableBadge>
-						))}
-					</BadgeGroup>
-				)}
+						</BadgeGroup>
+					)}
 
-				{/* Tag Badges - Hidden on /patterns page */}
-				{!isPatternsPage && tags.length > 0 && (
-					<BadgeGroup>
-						{tags.map((tag) => (
-							<ClickableBadge
-								key={tag._id}
-								type="tag"
-								id={tag._id}
-								title={tag.title || undefined}
-							>
-								<Badge
-									variant="tag"
-									className="cursor-pointer"
-									icon={
-										<Icon icon={Tag01Icon} className="h-3.5 w-3.5 capitalize" />
-									}
+					{/* Audience Badges */}
+					{audiences.length > 0 && (
+						<BadgeGroup>
+							{audiences.map((audience) => (
+								<ClickableBadge
+									key={audience._id}
+									type="audience"
+									id={audience._id}
+									title={audience.title || undefined}
 								>
-									{tag.title}
-								</Badge>
-							</ClickableBadge>
-						))}
-					</BadgeGroup>
-				)}
-			</BadgeGroupContainer>
+									<Badge
+										variant="audience"
+										className="cursor-pointer"
+										icon={
+											<Icon
+												icon={ChartRelationshipIcon}
+												className="h-3.5 w-3.5 capitalize"
+											/>
+										}
+									>
+										{audience.title}
+									</Badge>
+								</ClickableBadge>
+							))}
+						</BadgeGroup>
+					)}
+
+					{/* Tag Badges */}
+					{tags.length > 0 && (
+						<BadgeGroup>
+							{tags.map((tag) => (
+								<ClickableBadge
+									key={tag._id}
+									type="tag"
+									id={tag._id}
+									title={tag.title || undefined}
+								>
+									<Badge
+										variant="tag"
+										className="cursor-pointer"
+										icon={
+											<Icon
+												icon={Tag01Icon}
+												className="h-3.5 w-3.5 capitalize"
+											/>
+										}
+									>
+										{tag.title}
+									</Badge>
+								</ClickableBadge>
+							))}
+						</BadgeGroup>
+					)}
+				</BadgeGroupContainer>
+			)}
 		</SearchResultBase>
-	);
-}
-
-// Main component that routes to the appropriate sub-component
-export function SearchResultItem({
-	pattern,
-	searchTerm,
-	showPatternIcon,
-}: SearchResultItemProps) {
-	// Since we only handle patterns with _type: "pattern", we only handle that case
-	return (
-		<PatternSearchResult
-			pattern={pattern}
-			searchTerm={searchTerm}
-			showPatternIcon={showPatternIcon}
-		/>
 	);
 }
 

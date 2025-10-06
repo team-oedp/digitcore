@@ -7,14 +7,23 @@ import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
 type LinkProps = ComponentProps<typeof Link>;
 
 vi.mock("next/link", () => ({
-	default: ({ children, href, ...props }: LinkProps) => (
-		<a
-			href={typeof href === "string" ? href : href?.pathname || ""}
-			{...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
-		>
-			{children}
-		</a>
-	),
+	default: ({ children, href, ...props }: LinkProps) => {
+		const { onClick: origOnClick, ...rest } =
+			(props as React.AnchorHTMLAttributes<HTMLAnchorElement>) ||
+			({} as React.AnchorHTMLAttributes<HTMLAnchorElement>);
+		return (
+			<a
+				href={typeof href === "string" ? href : href?.pathname || ""}
+				{...rest}
+				onClick={(e) => {
+					e.preventDefault();
+					origOnClick?.(e);
+				}}
+			>
+				{children}
+			</a>
+		);
+	},
 }));
 
 describe("CarrierBagItem", () => {
@@ -215,7 +224,8 @@ describe("CarrierBagItem", () => {
 			const container = screen.getByLabelText(
 				"Content has been updated in the system",
 			);
-			expect(container).toHaveClass("border-amber-400");
+			expect(container).toHaveClass("bg-amber-50");
+			expect(container).toHaveClass("dark:bg-amber-950/30");
 		});
 
 		it("shows normal styling when item is not stale", () => {
@@ -225,8 +235,8 @@ describe("CarrierBagItem", () => {
 			const container = screen
 				.getByText("Test Pattern")
 				.closest(".carrier-bag-item-container");
-			expect(container).toHaveClass("border-border", "bg-background");
-			expect(container).not.toHaveClass("border-amber-400");
+			expect(container).toHaveClass("bg-background");
+			expect(container).not.toHaveClass("bg-amber-50");
 		});
 
 		it("shows mobile stale indicator dot when item is stale", () => {

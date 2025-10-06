@@ -62,9 +62,9 @@ const convertQueryResultToPattern = (
 };
 
 type StaleContentResult = {
-	isCheckingStale: boolean;
 	checkForStaleContent: () => Promise<void>;
 	lastChecked: Date | null;
+	// Removed isCheckingStale to keep updates completely in background
 };
 
 export const useStaleContentCheck = (): StaleContentResult => {
@@ -78,7 +78,7 @@ export const useStaleContentCheck = (): StaleContentResult => {
 	} = useCarrierBagStore();
 	const stalePatternIds = useCarrierBagStore((state) => state.stalePatternIds);
 
-	const [isCheckingStale, setIsCheckingStale] = useState(false);
+	// Removed isCheckingStale state to keep all updates in background
 	const [lastChecked, setLastChecked] = useState<Date | null>(null);
 	const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -108,7 +108,7 @@ export const useStaleContentCheck = (): StaleContentResult => {
 			abortControllerRef.current = new AbortController();
 			const { signal } = abortControllerRef.current;
 
-			setIsCheckingStale(true);
+			// Background check - no loading state
 
 			try {
 				const patternIds = items.map((item) => item.pattern._id);
@@ -183,9 +183,7 @@ export const useStaleContentCheck = (): StaleContentResult => {
 					setStalePatternIds([]);
 				}
 			} finally {
-				if (!abortControllerRef.current?.signal.aborted) {
-					setIsCheckingStale(false);
-				}
+				// Background operation complete - no UI update needed
 			}
 		},
 		[items, setStalePatternIds],
@@ -270,7 +268,6 @@ export const useStaleContentCheck = (): StaleContentResult => {
 	}, []);
 
 	return {
-		isCheckingStale,
 		checkForStaleContent,
 		lastChecked,
 	};

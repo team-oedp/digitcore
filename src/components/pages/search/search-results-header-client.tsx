@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { Skeleton } from "~/components/ui/skeleton";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
 
 type SearchResultsHeaderClientProps = {
@@ -49,7 +50,7 @@ export function SearchResultsHeaderClient({
 	if (isLoading) {
 		return (
 			<div className="flex items-center justify-between">
-				<div className="h-6 w-48 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+				<Skeleton className="h-6 w-48" />
 			</div>
 		);
 	}

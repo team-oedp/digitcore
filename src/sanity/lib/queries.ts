@@ -380,6 +380,75 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
   }
 `);
 
+// Enhanced search query WITH preferences boosting
+export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
+  *[_type == "pattern" && defined(slug.current)
+    // Apply audience filter if provided
+    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
+    // Apply theme filter if provided  
+    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)
+    // Apply tags filter if provided
+    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
+  ]
+  // Enhanced search scoring across relevant fields WITH preference boosting
+  | score(
+      // Primary content scoring (highest priority)
+      boost(title match $searchTerm, 15),
+      boost(pt::text(description) match $searchTerm, 12),
+      
+      // Partial/prefix matches (lower scores)
+      boost(title match ($searchTerm + "*"), 8),
+      boost(pt::text(description) match ($searchTerm + "*"), 6),
+      
+      // Boost based on onboarding preferences (organize results by user interests)
+      boost(count((audiences[]._ref)[@ in $prefAudiences]) > 0, 5),
+      boost(theme._ref in $prefThemes, 4),
+      
+      // Basic scoring for any match
+      title match ($searchTerm + "*"),
+      pt::text(description) match ($searchTerm + "*")
+    )
+  // Filter out results with very low relevance scores
+  [_score > 0]
+  // Order by relevance score, then by title
+  | order(_score desc, title asc)
+  {
+    _id,
+    _type,
+    _score,
+    title,
+    description,
+    "slug": slug.current,
+    tags[]->{
+      _id,
+      title
+    },
+    audiences[]->{
+      _id,
+      title
+    },
+    theme->{
+      _id,
+      title,
+      description
+    },
+    solutions[]->{
+      _id,
+      title,
+      description
+    },
+    resources[]->{
+      _id,
+      title,
+      description,
+      solution[]->{
+        _id,
+        title
+      }
+    }
+  }
+`);
+
 // Direct solution search query
 export const SOLUTION_SEARCH_QUERY = defineQuery(`
   *[_type == "solution"]
@@ -541,12 +610,12 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
   *[_type == "pattern" && defined(slug.current)
     // Apply audience filter if provided
     && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
-    // Apply theme filter if provided  
+    // Apply theme filter if provided
     && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)
     // Apply tags filter if provided
     && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)
   ]
-  // Order by title only
+  // Order by title (no scoring needed in filter-only mode)
   | order(title asc)
   {
     _id,

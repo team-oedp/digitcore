@@ -19,6 +19,8 @@ import {
 	searchParamsSchema,
 	serializeSearchParams,
 } from "~/lib/search";
+import { useOnboardingStore } from "~/stores/onboarding";
+import { EnhanceToggle } from "./enhance-toggle";
 
 type FilterOption = {
 	value: string;
@@ -42,6 +44,23 @@ export function SearchInterface({
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
+	// Get onboarding preferences for enhance toggle - use individual selectors to avoid object recreation
+	const selectedAudienceIds = useOnboardingStore(
+		(state) => state.selectedAudienceIds,
+	);
+	const selectedThemeIds = useOnboardingStore(
+		(state) => state.selectedThemeIds,
+	);
+	const hasCompletedOnboarding = useOnboardingStore(
+		(state) => state.hasCompletedOnboarding,
+	);
+
+	const onboardingPreferences = {
+		selectedAudienceIds,
+		selectedThemeIds,
+		hasCompletedOnboarding,
+	};
+
 	logger.debug(
 		"client",
 		"SearchInterface initialized",
@@ -63,6 +82,7 @@ export function SearchInterface({
 					audiences: searchParams?.get("audiences") ?? undefined,
 					themes: searchParams?.get("themes") ?? undefined,
 					tags: searchParams?.get("tags") ?? undefined,
+					enhance: searchParams?.get("enhance") ?? undefined,
 					page: searchParams?.get("page") ?? undefined,
 					limit: searchParams?.get("limit") ?? undefined,
 				}),
@@ -73,6 +93,29 @@ export function SearchInterface({
 			return parseSearchParams({ page: 1, limit: 20 });
 		}
 	}, [searchParams]);
+
+	// Check if user has preferences from onboarding
+	const hasPreferences =
+		onboardingPreferences.hasCompletedOnboarding &&
+		(onboardingPreferences.selectedAudienceIds.length > 0 ||
+			onboardingPreferences.selectedThemeIds.length > 0);
+
+	// Get enhance state from URL, default to true if preferences exist and no URL parameter
+	const enhanceEnabled =
+		currentParams.enhance !== undefined
+			? currentParams.enhance
+			: hasPreferences;
+
+	// Helper functions to get preference labels for hover text
+	const getAudienceLabels = (ids: string[]) =>
+		ids
+			.map((id) => audienceOptions.find((opt) => opt.value === id)?.label)
+			.filter(Boolean) as string[];
+
+	const getThemeLabels = (ids: string[]) =>
+		ids
+			.map((id) => themeOptions.find((opt) => opt.value === id)?.label)
+			.filter(Boolean) as string[];
 
 	// Completely isolated search input state - no URL sync
 	const [searchTerm, setSearchTerm] = useState("");
@@ -185,6 +228,14 @@ export function SearchInterface({
 		[updateSearchParams],
 	);
 
+	// Handle enhance toggle changes
+	const handleEnhanceToggle = useCallback(
+		(enabled: boolean) => {
+			updateSearchParams({ enhance: enabled });
+		},
+		[updateSearchParams],
+	);
+
 	// Handle Enter key for search
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent) => {
@@ -240,8 +291,20 @@ export function SearchInterface({
 				</div>
 			</div>
 
+			{/* Enhance Toggle */}
+			<EnhanceToggle
+				enabled={enhanceEnabled}
+				onToggle={handleEnhanceToggle}
+				audiencePreferences={getAudienceLabels(
+					onboardingPreferences.selectedAudienceIds,
+				)}
+				themePreferences={getThemeLabels(
+					onboardingPreferences.selectedThemeIds,
+				)}
+			/>
+
 			{/* Filter Tools */}
-			<div className="flex w-full max-w-4xl gap-3 p-0.5">
+			<div className="flex w-full max-w-4xl flex-col gap-3 p-0.5 md:flex-row">
 				{/* Audience Multiselect */}
 				<div className="min-w-0 flex-1">
 					<div className="mb-1 text-primary text-xs">Audiences</div>

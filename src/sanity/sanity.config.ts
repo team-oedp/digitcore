@@ -15,6 +15,7 @@ export default defineConfig({
 			structure,
 		}),
 		visionTool(),
+		// @ts-ignore - Dual Sanity setup type conflict, see CLAUDE.md
 		codeInput(),
 	],
 	schema,

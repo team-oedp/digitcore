@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import {
 	getAudienceNavigationUrl,
 	getBadgeNavigationUrl,
@@ -7,6 +7,14 @@ import {
 } from "./badge-navigation";
 
 describe("Badge Navigation Helper Functions", () => {
+	// Silence expected warning/error logs from negative-path cases
+	beforeAll(() => {
+		vi.spyOn(console, "warn").mockImplementation(() => {});
+		vi.spyOn(console, "error").mockImplementation(() => {});
+	});
+	afterAll(() => {
+		vi.restoreAllMocks();
+	});
 	describe("getTagNavigationUrl", () => {
 		it("should generate correct URL for tags with lowercase titles", () => {
 			const url = getTagNavigationUrl("accessibility");

@@ -1,13 +1,15 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
 	type SearchResult,
 	searchPatternsWithParams,
+	searchPatternsWithPreferences,
 } from "~/app/actions/search";
 import { createLogLocation, logger } from "~/lib/logger";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
+import { useOnboardingStore } from "~/stores/onboarding";
 import { SearchResultsSkeleton } from "./search-result-skeleton";
 import { SearchResults } from "./search-results";
 import { SearchResultsHeaderClient } from "./search-results-header-client";
@@ -24,178 +26,224 @@ export function SearchClientWrapper() {
 	const abortControllerRef = useRef<AbortController | null>(null);
 	const lastSearchParamsRef = useRef<string>("");
 
+	// Get onboarding preferences for result boosting - use individual selectors to avoid object recreation
+	const selectedAudienceIds = useOnboardingStore(
+		(state) => state.selectedAudienceIds,
+	);
+	const selectedThemeIds = useOnboardingStore(
+		(state) => state.selectedThemeIds,
+	);
+	const hasCompletedOnboarding = useOnboardingStore(
+		(state) => state.hasCompletedOnboarding,
+	);
+
+	const onboardingPreferences = useMemo(
+		() => ({
+			selectedAudienceIds,
+			selectedThemeIds,
+			hasCompletedOnboarding,
+		}),
+		[selectedAudienceIds, selectedThemeIds, hasCompletedOnboarding],
+	);
+
 	logger.debug("client", "SearchClientWrapper mounted", { searchId }, location);
 
-	useEffect(() => {
-		const performSearch = async () => {
-			// Create a string representation of search params for deduplication
-			const currentSearchString = searchParams?.toString() ?? "";
+	const performSearch = useCallback(async () => {
+		// Create a string representation of search params for deduplication
+		const currentSearchString = searchParams?.toString() ?? "";
 
-			// Prevent duplicate searches for the same parameters
-			if (currentSearchString === lastSearchParamsRef.current) {
-				logger.debug(
-					"client",
-					"Skipping duplicate search",
-					{ searchId, currentSearchString },
-					location,
-				);
-				return;
-			}
+		// Prevent duplicate searches for the same parameters
+		if (currentSearchString === lastSearchParamsRef.current) {
+			logger.debug(
+				"client",
+				"Skipping duplicate search",
+				{ searchId, currentSearchString },
+				location,
+			);
+			return;
+		}
 
-			// Parse parameters to check if we have any search criteria
-			const rawParams = {
-				q: searchParams?.get("q") ?? undefined,
-				audiences: searchParams?.get("audiences") ?? undefined,
-				themes: searchParams?.get("themes") ?? undefined,
-				tags: searchParams?.get("tags") ?? undefined,
-				page: searchParams?.get("page") ?? undefined,
-				limit: searchParams?.get("limit") ?? undefined,
-			};
+		// Parse parameters to check if we have any search criteria
+		const rawParams = {
+			q: searchParams?.get("q") ?? undefined,
+			audiences: searchParams?.get("audiences") ?? undefined,
+			themes: searchParams?.get("themes") ?? undefined,
+			tags: searchParams?.get("tags") ?? undefined,
+			enhance: searchParams?.get("enhance") ?? undefined,
+			page: searchParams?.get("page") ?? undefined,
+			limit: searchParams?.get("limit") ?? undefined,
+		};
 
-			const validatedParams = searchParamsSchema.parse(rawParams);
-			const parsedParams = parseSearchParams(validatedParams);
+		const validatedParams = searchParamsSchema.parse(rawParams);
+		const parsedParams = parseSearchParams(validatedParams);
 
-			// Check if we have any actual search criteria
-			const hasSearchTerm = parsedParams.searchTerm?.trim();
-			const hasFilters =
-				parsedParams.audiences.length > 0 ||
-				parsedParams.themes.length > 0 ||
-				parsedParams.tags.length > 0;
+		// Check if we have any actual search criteria
+		const searchTerm = parsedParams.searchTerm?.trim();
+		const hasValidSearchTerm = searchTerm && searchTerm.length >= 4;
+		const hasFilters =
+			parsedParams.audiences.length > 0 ||
+			parsedParams.themes.length > 0 ||
+			parsedParams.tags.length > 0;
 
-			// If no search criteria, don't search - just show empty state
-			if (!hasSearchTerm && !hasFilters) {
-				logger.debug(
-					"client",
-					"No search criteria - showing empty state",
-					{ searchId },
-					location,
-				);
-				lastSearchParamsRef.current = currentSearchString;
-				setSearchResult(null);
-				setIsLoading(false);
-				return;
-			}
+		logger.debug(
+			"client",
+			"Search criteria validation",
+			{
+				searchId,
+				searchTerm,
+				searchTermLength: searchTerm?.length ?? 0,
+				hasValidSearchTerm,
+				hasFilters,
+				requiresMinimumChars: !hasValidSearchTerm && !hasFilters,
+			},
+			location,
+		);
 
-			// Cancel any ongoing search
-			if (abortControllerRef.current) {
-				abortControllerRef.current.abort();
-				logger.debug(
-					"client",
-					"Aborted previous search",
-					{ searchId },
-					location,
-				);
-			}
-
-			// Create new abort controller for this search
-			abortControllerRef.current = new AbortController();
+		// If no valid search criteria, don't search - just show empty state
+		// Require at least 4 characters for search terms to avoid excessive queries
+		if (!hasValidSearchTerm && !hasFilters) {
+			logger.debug(
+				"client",
+				"No valid search criteria - showing empty state (need 4+ chars or filters)",
+				{ searchId, searchTerm, searchTermLength: searchTerm?.length ?? 0 },
+				location,
+			);
 			lastSearchParamsRef.current = currentSearchString;
+			setSearchResult(null);
+			setIsLoading(false);
+			return;
+		}
+
+		// Cancel any ongoing search
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+			logger.debug("client", "Aborted previous search", { searchId }, location);
+		}
+
+		// Create new abort controller for this search
+		abortControllerRef.current = new AbortController();
+		lastSearchParamsRef.current = currentSearchString;
+
+		logger.debug(
+			"client",
+			"Starting client-side search",
+			{
+				searchId,
+				searchParams: currentSearchString,
+				hasValidSearchTerm,
+				hasFilters,
+			},
+			location,
+		);
+		setIsLoading(true);
+
+		try {
+			logger.debug("client", "Raw URL search params", rawParams, location);
+			logger.debug(
+				"client",
+				"Validated search params",
+				validatedParams,
+				location,
+			);
+			logger.debug("client", "Parsed search params", parsedParams, location);
+
+			// Create URLSearchParams for the server action
+			const urlSearchParams = new URLSearchParams();
+			if (parsedParams.searchTerm) {
+				urlSearchParams.set("q", parsedParams.searchTerm);
+				logger.debug(
+					"client",
+					"Added search term",
+					parsedParams.searchTerm,
+					location,
+				);
+			}
+			if (parsedParams.audiences.length > 0) {
+				urlSearchParams.set("audiences", parsedParams.audiences.join(","));
+				logger.debug(
+					"client",
+					"Added audiences",
+					parsedParams.audiences,
+					location,
+				);
+			}
+			if (parsedParams.themes.length > 0) {
+				urlSearchParams.set("themes", parsedParams.themes.join(","));
+				logger.debug("client", "Added themes", parsedParams.themes, location);
+			}
+			if (parsedParams.tags.length > 0) {
+				urlSearchParams.set("tags", parsedParams.tags.join(","));
+				logger.debug("client", "Added tags", parsedParams.tags, location);
+			}
 
 			logger.debug(
 				"client",
-				"Starting client-side search",
+				"Calling server action with URLSearchParams",
+				Object.fromEntries(urlSearchParams.entries()),
+				location,
+			);
+
+			// Execute search - use preferences if enhance is enabled and preferences exist
+			const startTime = Date.now();
+			const hasPreferences =
+				onboardingPreferences.hasCompletedOnboarding &&
+				(onboardingPreferences.selectedAudienceIds.length > 0 ||
+					onboardingPreferences.selectedThemeIds.length > 0);
+
+			const shouldEnhance = parsedParams.enhance && hasPreferences;
+
+			const result = shouldEnhance
+				? await searchPatternsWithPreferences(urlSearchParams, {
+						selectedAudienceIds: onboardingPreferences.selectedAudienceIds,
+						selectedThemeIds: onboardingPreferences.selectedThemeIds,
+					})
+				: await searchPatternsWithParams(urlSearchParams);
+			const endTime = Date.now();
+
+			logger.info(
+				"client",
+				"Search completed",
 				{
-					searchId,
-					searchParams: currentSearchString,
-					hasSearchTerm: !!hasSearchTerm,
-					hasFilters,
+					success: result.success,
+					resultCount: result.totalCount,
+					executionTime: `${endTime - startTime}ms`,
+					error: result.error,
 				},
 				location,
 			);
-			setIsLoading(true);
 
-			try {
-				logger.debug("client", "Raw URL search params", rawParams, location);
-				logger.debug(
-					"client",
-					"Validated search params",
-					validatedParams,
-					location,
-				);
-				logger.debug("client", "Parsed search params", parsedParams, location);
-
-				// Create URLSearchParams for the server action
-				const urlSearchParams = new URLSearchParams();
-				if (parsedParams.searchTerm) {
-					urlSearchParams.set("q", parsedParams.searchTerm);
-					logger.debug(
-						"client",
-						"Added search term",
-						parsedParams.searchTerm,
-						location,
-					);
-				}
-				if (parsedParams.audiences.length > 0) {
-					urlSearchParams.set("audiences", parsedParams.audiences.join(","));
-					logger.debug(
-						"client",
-						"Added audiences",
-						parsedParams.audiences,
-						location,
-					);
-				}
-				if (parsedParams.themes.length > 0) {
-					urlSearchParams.set("themes", parsedParams.themes.join(","));
-					logger.debug("client", "Added themes", parsedParams.themes, location);
-				}
-				if (parsedParams.tags.length > 0) {
-					urlSearchParams.set("tags", parsedParams.tags.join(","));
-					logger.debug("client", "Added tags", parsedParams.tags, location);
-				}
-
-				logger.debug(
-					"client",
-					"Calling server action with URLSearchParams",
-					Object.fromEntries(urlSearchParams.entries()),
-					location,
-				);
-
-				// Execute search
-				const startTime = Date.now();
-				const result = await searchPatternsWithParams(urlSearchParams);
-				const endTime = Date.now();
-
-				logger.info(
-					"client",
-					"Search completed",
-					{
-						success: result.success,
-						resultCount: result.totalCount,
-						executionTime: `${endTime - startTime}ms`,
-						error: result.error,
-					},
-					location,
-				);
-
-				setSearchResult(result);
-			} catch (error) {
-				// Don't log errors for aborted requests
-				if (error instanceof Error && error.name === "AbortError") {
-					logger.debug("client", "Search was aborted", { searchId }, location);
-					return;
-				}
-
-				logger.error("client", "Client-side search error", error, location);
-				setSearchResult({
-					success: false,
-					error: "Search failed",
-					totalCount: 0,
-					searchParams: parseSearchParams({ page: 1, limit: 20 }),
-				});
-			} finally {
-				setIsLoading(false);
-				abortControllerRef.current = null;
-				logger.debug(
-					"client",
-					"Search loading state set to false",
-					{ searchId },
-					location,
-				);
+			setSearchResult(result);
+		} catch (error) {
+			// Don't log errors for aborted requests
+			if (error instanceof Error && error.name === "AbortError") {
+				logger.debug("client", "Search was aborted", { searchId }, location);
+				return;
 			}
-		};
 
+			logger.error("client", "Client-side search error", error, location);
+			setSearchResult({
+				success: false,
+				error: "Search failed",
+				totalCount: 0,
+				searchParams: parseSearchParams({ page: 1, limit: 20 }),
+			});
+		} finally {
+			setIsLoading(false);
+			abortControllerRef.current = null;
+			logger.debug(
+				"client",
+				"Search loading state set to false",
+				{ searchId },
+				location,
+			);
+		}
+	}, [searchParams, location, searchId, onboardingPreferences]);
+
+	useEffect(() => {
 		performSearch();
-	}, [searchParams, location, searchId]);
+	}, [performSearch]);
+
+	// Note: performSearch is now handled by the main useEffect above
 
 	// Cleanup effect to abort ongoing requests when component unmounts
 	useEffect(() => {
@@ -246,25 +294,28 @@ export function SearchClientWrapper() {
 				<div className="py-12" />
 			) : isLoading ? (
 				<SearchResultsSkeleton count={6} />
-			) : !searchResult?.success ? (
-				<div className="py-12 text-center">
+			) : searchResult && !searchResult.success ? (
+				<div className="py-12 text-left">
 					<p className="mb-2 text-red-600 dark:text-red-400">Search Error</p>
 					<p className="text-base text-muted-foreground">
-						{searchResult?.error}
+						{searchResult.error}
 					</p>
 				</div>
-			) : searchResult.totalCount === 0 ? (
+			) : searchResult && searchResult.totalCount === 0 ? (
 				<div className="py-12 text-left">
 					<p className="mb-2 text-muted-foreground">No results found</p>
 					<p className="text-base text-muted-foreground/70">
 						Try adjusting your search terms or filters
 					</p>
 				</div>
-			) : (
+			) : searchResult ? (
 				<SearchResults
 					patterns={searchResult.data || []}
 					searchTerm={currentSearchTerm}
 				/>
+			) : (
+				// searchResult is null, show blank area (blocked searches)
+				<div className="py-12" />
 			)}
 		</div>
 	);

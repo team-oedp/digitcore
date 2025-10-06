@@ -4,9 +4,10 @@ import type { PortableTextBlock } from "@portabletext/types";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { Badge } from "~/components/ui/badge";
 import type { Solution } from "~/sanity/sanity.types";
+import { ClickableBadge } from "./clickable-badge";
 import { SuggestSolutionButton } from "./suggest-solution-button";
 
-type AudienceDisplay = {
+type AudienceBadge = {
 	_id?: string;
 	_key?: string;
 	_ref?: string;
@@ -43,15 +44,6 @@ export function Solutions({
 				<h2 className="font-light text-[24px] text-primary md:text-[32px]">
 					Solutions
 				</h2>
-				<div className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-100 px-3 py-1 md:h-8 md:w-8 md:px-4 md:py-1.5 dark:bg-neutral-800">
-					<HugeiconsIcon
-						icon={ChartRelationshipIcon}
-						size={16}
-						color="currentColor"
-						strokeWidth={1.5}
-						className="text-neutral-600 md:h-5 md:w-5 dark:text-neutral-300"
-					/>
-				</div>
 			</header>
 
 			<div className="flex flex-col gap-3 md:gap-[13px]">
@@ -73,28 +65,35 @@ export function Solutions({
 							{solution.description && (
 								<CustomPortableText
 									value={solution.description as PortableTextBlock[]}
-									className="prose max-w-none text-xs leading-normal md:text-sm"
+									className="text-body"
 								/>
 							)}
 
 							{solution.audiences && solution.audiences.length > 0 && (
 								<div className="flex flex-wrap gap-1.5 md:gap-2">
-									{solution.audiences.map((audience: AudienceDisplay) => (
-										<Badge
+									{solution.audiences.map((audience: AudienceBadge) => (
+										<ClickableBadge
 											key={audience._id ?? audience._key ?? audience._ref}
-											variant="audience"
-											icon={
-												<HugeiconsIcon
-													icon={ChartRelationshipIcon}
-													size={12}
-													color="currentColor"
-													strokeWidth={1.5}
-													className="md:h-[14px] md:w-[14px]"
-												/>
-											}
+											type="audience"
+											id={audience._id ?? audience._ref ?? ""}
+											title={audience.title ?? undefined}
 										>
-											{audience.title ?? audience._ref}
-										</Badge>
+											<Badge
+												variant="audience"
+												className="cursor-pointer transition-colors duration-200 hover:bg-blue-150"
+												icon={
+													<HugeiconsIcon
+														icon={ChartRelationshipIcon}
+														size={12}
+														color="currentColor"
+														strokeWidth={1.5}
+														className="md:h-[14px] md:w-[14px]"
+													/>
+												}
+											>
+												{audience.title ?? audience._ref}
+											</Badge>
+										</ClickableBadge>
 									))}
 								</div>
 							)}

@@ -106,14 +106,12 @@ export function Resources({ resources }: ResourcesProps) {
 									: ""
 							}`}
 						>
-							<div className="flex flex-col gap-2.5 py-3 pb-6 md:gap-3 md:pb-9">
-								<div className="flex flex-col gap-2">
+							<div className="flex flex-col gap-2.5 pt-6 pb-6 md:gap-3 md:pt-9 md:pb-9">
+								<div className="flex flex-col gap-2.5 md:gap-2">
 									<div className="flex flex-row items-center gap-2">
-										<div className="flex h-7 flex-row items-center gap-2 md:h-8 md:gap-2.5">
-											<h3 className="font-normal text-[16px] text-primary md:text-[18px]">
-												{resource.title}
-											</h3>
-										</div>
+										<h3 className="font-normal text-[16px] text-primary leading-[20px] md:text-[18px] md:leading-[22px]">
+											{resource.title}
+										</h3>
 										{resource.links?.[0]?.href && (
 											<a
 												href={resource.links?.[0]?.href}
@@ -134,60 +132,47 @@ export function Resources({ resources }: ResourcesProps) {
 									{resource.description && (
 										<CustomPortableText
 											value={resource.description as PortableTextBlock[]}
-											className="prose max-w-none text-xs leading-normal md:text-sm"
+											className="text-body"
 										/>
 									)}
 								</div>
-								<div className="flex flex-col items-start gap-2 md:flex-row md:items-center md:gap-2.5">
-									<span className="font-normal text-[#c4c4c8] text-[12px] tracking-[-0.14px] md:text-[14px]">
-										From <span className="uppercase">SOLUTION</span>
-									</span>
-									<HugeiconsIcon
-										icon={ArrowRight02Icon}
-										size={20}
-										color="#c4c4c8"
-										strokeWidth={1.5}
-										className="hidden md:block md:h-6 md:w-6"
-									/>
-									<div className="flex flex-wrap gap-1.5 md:gap-2.5">
-										{Array.isArray(resource.solutions) &&
-										resource.solutions.length > 0
-											? resource.solutions.map((solution, sIdx) => (
-													<SolutionPreview
-														key={solution._id || sIdx}
-														solutionNumber={String(sIdx + 1)}
-														solutionTitle={
-															solution.title || `Solution ${sIdx + 1}`
-														}
-														solutionDescription={
-															ptToPlainText(solution.description) ||
-															"No description available"
-														}
-													>
-														<Badge
-															variant="solution"
-															className="border-green-200 bg-green-100 text-green-800 hover:border-green-300"
-															icon={
-																<HugeiconsIcon
-																	icon={ChartRelationshipIcon}
-																	size={12}
-																	color="currentColor"
-																	strokeWidth={1.5}
-																	className="md:h-[14px] md:w-[14px]"
-																/>
-															}
-														>
-															{solution.title || `Solution ${sIdx + 1}`}
-														</Badge>
-													</SolutionPreview>
-												))
-											: resource.solutionRefs?.map((solution, sIdx) =>
-													isSolutionReference(solution) ? (
+								{((Array.isArray(resource.solutions) &&
+									resource.solutions.length > 0) ||
+									(Array.isArray(resource.solutionRefs) &&
+										resource.solutionRefs.length > 0)) && (
+									<div className="flex flex-col items-start gap-2 md:flex-row md:items-start md:gap-2.5">
+										<div className="flex flex-row items-center gap-2 md:gap-2.5">
+											<span className="whitespace-nowrap font-normal text-[#c4c4c8] text-[12px] tracking-[-0.14px] md:text-[14px]">
+												Related{" "}
+												{(Array.isArray(resource.solutions) &&
+													resource.solutions.length > 1) ||
+												(Array.isArray(resource.solutionRefs) &&
+													resource.solutionRefs.length > 1)
+													? "solutions"
+													: "solution"}
+											</span>
+											<HugeiconsIcon
+												icon={ArrowRight02Icon}
+												size={16}
+												color="#c4c4c8"
+												strokeWidth={1.5}
+												className="hidden md:block md:h-4 md:w-4"
+											/>
+										</div>
+										<div className="flex flex-wrap gap-1.5 md:gap-2.5">
+											{Array.isArray(resource.solutions) &&
+											resource.solutions.length > 0
+												? resource.solutions.map((solution, sIdx) => (
 														<SolutionPreview
-															key={solution._ref || sIdx}
+															key={solution._id || sIdx}
 															solutionNumber={String(sIdx + 1)}
-															solutionTitle={"Linked Solution"}
-															solutionDescription={"No description available"}
+															solutionTitle={
+																solution.title || `Solution ${sIdx + 1}`
+															}
+															solutionDescription={
+																ptToPlainText(solution.description) ||
+																"No description available"
+															}
 														>
 															<Badge
 																variant="solution"
@@ -202,13 +187,39 @@ export function Resources({ resources }: ResourcesProps) {
 																	/>
 																}
 															>
-																{`Solution ${sIdx + 1}`}
+																{solution.title || `Solution ${sIdx + 1}`}
 															</Badge>
 														</SolutionPreview>
-													) : null,
-												)}
+													))
+												: resource.solutionRefs?.map((solution, sIdx) =>
+														isSolutionReference(solution) ? (
+															<SolutionPreview
+																key={solution._ref || sIdx}
+																solutionNumber={String(sIdx + 1)}
+																solutionTitle={"Linked Solution"}
+																solutionDescription={"No description available"}
+															>
+																<Badge
+																	variant="solution"
+																	className="border-green-200 bg-green-100 text-green-800 hover:border-green-300"
+																	icon={
+																		<HugeiconsIcon
+																			icon={ChartRelationshipIcon}
+																			size={12}
+																			color="currentColor"
+																			strokeWidth={1.5}
+																			className="md:h-[14px] md:w-[14px]"
+																		/>
+																	}
+																>
+																	{`Solution ${sIdx + 1}`}
+																</Badge>
+															</SolutionPreview>
+														) : null,
+													)}
+										</div>
 									</div>
-								</div>
+								)}
 							</div>
 							{index < resources.length - 1 && (
 								<div className="absolute right-0 bottom-0 left-0 border-neutral-300 border-b border-dashed" />

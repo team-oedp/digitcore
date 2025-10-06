@@ -464,6 +464,20 @@
 			0 0 1 0;
 	}
 
+	.border-dashed-brand {
+		--dash: 5px;
+		--gap: 3px;
+		border: 1px solid transparent;
+		border-image: repeating-linear-gradient(
+				45deg,
+				var(--muted-foreground) 0,
+				var(--muted-foreground) var(--dash),
+				transparent var(--dash),
+				transparent calc(var(--dash) + var(--gap))
+			)
+			1;
+	}
+
 	.scrollbar-hidden::-webkit-scrollbar {
 		display: none;
 	}
@@ -475,6 +489,17 @@
 	/* Font utilities */
 	.text-body {
 		@apply font-sans text-sm md:text-lg text-neutral-800 prose max-w-none dark:text-foreground;
+	}
+
+	/* Font toggle utilities */
+	.font-sans-body .text-body,
+	.font-sans-body .text-description-muted {
+		@apply font-sans;
+	}
+
+	.font-serif-body .text-body,
+	.font-serif-body .text-description-muted {
+		@apply font-signifier;
 	}
 
 	.text-body-muted {
@@ -511,7 +536,7 @@
 
 	/* for inline links and glossary pill elements */
 	.text-box-trim {
-		@apply inline-flex leading-[0.9] align-middle items-center;
+		@apply inline-flex leading-none align-middle items-center;
 	}
 
 	.pill {

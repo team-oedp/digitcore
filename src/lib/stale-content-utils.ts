@@ -3,10 +3,8 @@ import { cn } from "./utils";
 // Utility for stale content styling with better contrast
 export const getStaleItemClasses = (isStale = false) => {
 	return cn(
-		"carrier-bag-item-container flex items-center gap-3 rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/50 [&:hover_.item-actions]:opacity-100",
-		isStale
-			? "border-amber-400 bg-amber-50 dark:border-amber-500 dark:bg-amber-950/30"
-			: "border-border bg-background",
+		"carrier-bag-item-container flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-muted/50 [&:hover_.item-actions]:opacity-100",
+		isStale ? "bg-amber-50 dark:bg-amber-950/30" : "bg-background",
 	);
 };
 

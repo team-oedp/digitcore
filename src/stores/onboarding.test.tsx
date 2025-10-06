@@ -136,7 +136,7 @@ describe("Onboarding Store", () => {
 			expect(store.getState().shouldShowOnboarding()).toBe(false);
 		});
 
-		it("should return true if skip expired (>24 hours)", () => {
+		it("should return false if skip expired (>24 hours) without reset", () => {
 			store.getState().setSeen(true);
 			// Set skipped time to 25 hours ago
 			const expiredTime = new Date(
@@ -146,8 +146,9 @@ describe("Onboarding Store", () => {
 				hasSkippedOnboarding: true,
 				skippedAt: expiredTime,
 			});
-			expect(store.getState().shouldShowOnboarding()).toBe(true);
-			// Should NOT reset the skip status (no side effects in shouldShowOnboarding)
+			// shouldShowOnboarding does not auto-reset; remains false until reset is performed
+			expect(store.getState().shouldShowOnboarding()).toBe(false);
+			// No side effects from shouldShowOnboarding
 			expect(store.getState().hasSkippedOnboarding).toBe(true);
 			expect(store.getState().skippedAt).toBe(expiredTime);
 		});

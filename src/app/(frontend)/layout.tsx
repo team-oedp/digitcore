@@ -9,13 +9,14 @@ import { GlossaryProvider } from "~/components/global/glossary-provider";
 import { OnboardingRedirect } from "~/components/global/onboarding-redirect";
 import { SiteLayout } from "~/components/global/site-layout";
 import { DisableDraftMode } from "~/components/sanity/disable-draft-mode";
-import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
 import { client } from "~/sanity/lib/client";
 import { FOOTER_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
+import { FontStoreProvider } from "~/stores/font";
+import { OnboardingStoreProvider } from "~/stores/onboarding";
 import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -47,33 +48,32 @@ export default async function Layout({
 	)) as FOOTER_QUERYResult;
 
 	return (
-		<section className={cn(sans.variable, signifier.variable)}>
-			<div className="h-screen text-foreground antialiased [--header-height:calc(--spacing(14))]">
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
-					<TRPCReactProvider>
-						<CarrierBagStoreProvider>
-							<PageContentStoreProvider>
-								<Suspense fallback={null}>
-									<OnboardingRedirect />
-								</Suspense>
-								<GlossaryProvider>
-									<SiteLayout footerData={footerData}>{children}</SiteLayout>
-								</GlossaryProvider>
-							</PageContentStoreProvider>
-						</CarrierBagStoreProvider>
-					</TRPCReactProvider>
-					{isDraftMode && (
-						<>
-							<VisualEditing />
-							<DisableDraftMode />
-						</>
-					)}
-				</ThemeProvider>
+		<section
+			className={cn(sans.variable, signifier.variable, "overflow-x-hidden")}
+		>
+			<div className="h-screen overflow-x-hidden text-foreground antialiased [--header-height:calc(--spacing(14))]">
+				<TRPCReactProvider>
+					<FontStoreProvider>
+						<OnboardingStoreProvider>
+							<CarrierBagStoreProvider>
+								<PageContentStoreProvider>
+									<Suspense fallback={null}>
+										<OnboardingRedirect />
+									</Suspense>
+									<GlossaryProvider>
+										<SiteLayout footerData={footerData}>{children}</SiteLayout>
+									</GlossaryProvider>
+								</PageContentStoreProvider>
+							</CarrierBagStoreProvider>
+						</OnboardingStoreProvider>
+					</FontStoreProvider>
+				</TRPCReactProvider>
+				{isDraftMode && (
+					<>
+						<VisualEditing />
+						<DisableDraftMode />
+					</>
+				)}
 			</div>
 		</section>
 	);

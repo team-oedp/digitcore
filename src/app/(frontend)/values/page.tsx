@@ -38,7 +38,7 @@ export default async function ValuesPage() {
 						className="mt-8 text-body"
 					/>
 				)}
-				<div className="flex flex-col gap-20 pt-20 lg:gap-60 lg:pt-60">
+				<div className="flex flex-col gap-20 pt-20 lg:gap-40 lg:pt-40">
 					{pageData.content?.map((section) => (
 						<section key={section._key} className="flex flex-col gap-5">
 							{section._type === "content" && section.heading && (
@@ -47,7 +47,7 @@ export default async function ValuesPage() {
 							{section._type === "content" && section.body && (
 								<CustomPortableText
 									value={section.body as PortableTextBlock[]}
-									className="text-body"
+									className="text-body [&_p]:mb-1"
 								/>
 							)}
 						</section>

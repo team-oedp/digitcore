@@ -7,6 +7,7 @@ import {
 	CarrierBagItem,
 	type CarrierBagItemData,
 } from "~/components/global/carrier-bag/carrier-bag-item";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
 	MultiSelect,
@@ -187,11 +188,17 @@ export function CarrierBagContent({
 
 	return (
 		<div className="flex h-full min-h-0 w-full flex-col gap-4 overflow-hidden rounded-md bg-sidebar px-4">
-			<div className="sticky top-0 z-10 bg-sidebar pt-6 pb-2">
+			<div className="sticky top-0 z-10 bg-sidebar pt-2 pb-2">
 				<div className="flex items-start justify-between gap-6">
 					<div className="flex-1">
-						<h2 className="text-heading-compact">Carrier Bag</h2>
-						<p className="font-normal text-sm">{`${items.length} saved items`}</p>
+						<h1 className="pb-1 text-page-heading">Carrier Bag</h1>
+						<Badge
+							variant="outline"
+							size="default"
+							className="mt-1 rounded-full"
+						>
+							{`${items.length} saved items`}
+						</Badge>
 					</div>
 					{mobileTrigger && mobileTrigger}
 				</div>
@@ -210,8 +217,8 @@ export function CarrierBagContent({
 						}
 					}}
 				>
-					<SelectTrigger aria-label="Sort by">
-						<SelectValue placeholder="Sort by" />
+					<SelectTrigger aria-label="Sort By">
+						<SelectValue placeholder="Sort By" />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem value="az">Title (A–Z)</SelectItem>
@@ -227,10 +234,10 @@ export function CarrierBagContent({
 						setGroupByTheme(pressed);
 						setManualOrderActive(false);
 					}}
-					aria-label="Group by theme"
+					aria-label="Group by Theme"
 					className="px-3 font-normal"
 				>
-					Group by theme
+					Group by Theme
 				</Toggle>
 
 				{/* Tags multi-select */}
@@ -241,11 +248,11 @@ export function CarrierBagContent({
 						setManualOrderActive(false);
 					}}
 				>
-					<MultiSelectTrigger aria-label="Filter by tags">
-						<MultiSelectValue placeholder="Filter by tags" />
+					<MultiSelectTrigger aria-label="Filter by Tags">
+						<MultiSelectValue placeholder="Filter by Tags" />
 					</MultiSelectTrigger>
 					<MultiSelectContent
-						search={{ placeholder: "Search tags...", emptyMessage: "No tags" }}
+						search={{ placeholder: "Search Tags...", emptyMessage: "No Tags" }}
 					>
 						<MultiSelectGroup heading="Tags">
 							{availableTags.map((t) => (
@@ -265,13 +272,13 @@ export function CarrierBagContent({
 						setManualOrderActive(false);
 					}}
 				>
-					<MultiSelectTrigger aria-label="Filter by audiences">
-						<MultiSelectValue placeholder="Filter by audiences" />
+					<MultiSelectTrigger aria-label="Filter by Audiences">
+						<MultiSelectValue placeholder="Filter by Audiences" />
 					</MultiSelectTrigger>
 					<MultiSelectContent
 						search={{
-							placeholder: "Search audiences...",
-							emptyMessage: "No audiences",
+							placeholder: "Search Audiences...",
+							emptyMessage: "No Audiences",
 						}}
 					>
 						<MultiSelectGroup heading="Audiences">
@@ -286,28 +293,83 @@ export function CarrierBagContent({
 
 				<Button
 					variant="ghost"
-					className="text-muted-foreground hover:text-foreground"
+					className="text-muted-foreground capitalize hover:text-foreground"
 					onClick={clearAll}
 				>
 					Clear all
 				</Button>
 			</div>
 
-			<div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
-				{items.length === 0 ? (
-					<div className="flex flex-col items-start justify-center py-8 text-left">
-						<p className="font-normal text-muted-foreground text-sm">
-							There are no patterns in your carrier bag. Start by saving one
-							from the toolkit.
-						</p>
-					</div>
-				) : processed.groups ? (
-					processed.groups.map(({ title, items: groupItems }) => (
-						<div key={title} className="mt-2">
-							<h4 className="mb-1 font-normal text-muted-foreground text-sm">
-								{title}
-							</h4>
-							{groupItems.map((item) => {
+			<div className="mb-4 flex h-full min-h-0 flex-col gap-2">
+				<div className="flex h-full flex-col gap-2 overflow-y-auto rounded-xl border border-border border-dashed p-2">
+					{items.length === 0 ? (
+						<div className="flex h-full flex-col items-center justify-center px-4 py-8 text-center">
+							<p className="font-normal text-muted-foreground text-sm">
+								There are no patterns in your carrier bag. Start by saving one
+								from the toolkit.
+							</p>
+						</div>
+					) : processed.groups ? (
+						processed.groups.map(({ title, items: groupItems }) => (
+							<div key={title} className="mt-2">
+								<h4 className="mb-1 font-normal text-muted-foreground text-sm">
+									{title}
+								</h4>
+								{groupItems.map((item) => {
+									type RefTheme = { _ref: string };
+									type PopulatedTheme = { title?: string | null };
+									type PatternMaybePopulatedTheme = Pattern & {
+										theme?: RefTheme | PopulatedTheme;
+									};
+
+									const pattern = item.pattern as PatternMaybePopulatedTheme;
+									// Don't show theme as subtitle when grouping by theme (redundant)
+									const themeTitle = undefined;
+
+									const itemData: CarrierBagItemData = {
+										id: pattern._id,
+										title: pattern.title || "Untitled Pattern",
+										slug: getSlugString(pattern),
+										subtitle: themeTitle,
+										isStale: isPatternStale(pattern._id),
+										isUpdating: isPatternUpdating(pattern._id),
+										isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
+									};
+									return (
+										<CarrierBagItem
+											key={pattern._id}
+											item={itemData}
+											onRemove={() => handleRemoveItem(pattern._id)}
+											onVisit={() => handleVisitItem(getSlugString(pattern))}
+										/>
+									);
+								})}
+							</div>
+						))
+					) : (
+						<Reorder.Group
+							axis="y"
+							values={items}
+							onReorder={(newOrder) => {
+								setItems(newOrder);
+								// Activate manual order when items are actually reordered
+								if (!manualOrderActive) {
+									setManualOrderActive(true);
+									// Clear filters when switching to manual order
+									setSelectedTagIds([]);
+									setSelectedAudienceIds([]);
+									setGroupByTheme(false);
+								}
+							}}
+							layoutScroll
+							as="div"
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								gap: "0.5rem",
+							}}
+						>
+							{processed.flat.map((item) => {
 								type RefTheme = { _ref: string };
 								type PopulatedTheme = { title?: string | null };
 								type PatternMaybePopulatedTheme = Pattern & {
@@ -315,7 +377,7 @@ export function CarrierBagContent({
 								};
 
 								const pattern = item.pattern as PatternMaybePopulatedTheme;
-								// Don't show theme as subtitle when grouping by theme (redundant)
+								// Don't show theme as subtitle when not grouping
 								const themeTitle = undefined;
 
 								const itemData: CarrierBagItemData = {
@@ -328,73 +390,24 @@ export function CarrierBagContent({
 									isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
 								};
 								return (
-									<CarrierBagItem
+									<Reorder.Item
+										as="div"
 										key={pattern._id}
-										item={itemData}
-										onRemove={() => handleRemoveItem(pattern._id)}
-										onVisit={() => handleVisitItem(getSlugString(pattern))}
-									/>
+										value={item}
+										style={{ position: "relative" }}
+									>
+										<CarrierBagItem
+											key={pattern._id}
+											item={itemData}
+											onRemove={() => handleRemoveItem(pattern._id)}
+											onVisit={() => handleVisitItem(getSlugString(pattern))}
+										/>
+									</Reorder.Item>
 								);
 							})}
-						</div>
-					))
-				) : (
-					<Reorder.Group
-						axis="y"
-						values={items}
-						onReorder={(newOrder) => {
-							setItems(newOrder);
-							// Activate manual order when items are actually reordered
-							if (!manualOrderActive) {
-								setManualOrderActive(true);
-								// Clear filters when switching to manual order
-								setSelectedTagIds([]);
-								setSelectedAudienceIds([]);
-								setGroupByTheme(false);
-							}
-						}}
-						layoutScroll
-						as="div"
-						style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-					>
-						{processed.flat.map((item) => {
-							type RefTheme = { _ref: string };
-							type PopulatedTheme = { title?: string | null };
-							type PatternMaybePopulatedTheme = Pattern & {
-								theme?: RefTheme | PopulatedTheme;
-							};
-
-							const pattern = item.pattern as PatternMaybePopulatedTheme;
-							// Don't show theme as subtitle when not grouping
-							const themeTitle = undefined;
-
-							const itemData: CarrierBagItemData = {
-								id: pattern._id,
-								title: pattern.title || "Untitled Pattern",
-								slug: getSlugString(pattern),
-								subtitle: themeTitle,
-								isStale: isPatternStale(pattern._id),
-								isUpdating: isPatternUpdating(pattern._id),
-								isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
-							};
-							return (
-								<Reorder.Item
-									as="div"
-									key={pattern._id}
-									value={item}
-									style={{ position: "relative" }}
-								>
-									<CarrierBagItem
-										key={pattern._id}
-										item={itemData}
-										onRemove={() => handleRemoveItem(pattern._id)}
-										onVisit={() => handleVisitItem(getSlugString(pattern))}
-									/>
-								</Reorder.Item>
-							);
-						})}
-					</Reorder.Group>
-				)}
+						</Reorder.Group>
+					)}
+				</div>
 			</div>
 		</div>
 	);

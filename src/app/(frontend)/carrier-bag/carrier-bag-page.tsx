@@ -2,25 +2,22 @@
 
 import {
 	Chatting01Icon,
-	CleaningBucketIcon,
+	Delete02Icon,
 	Download05Icon,
 	FileDownloadIcon,
 	Link05Icon,
 	MoreHorizontalCircle01Icon,
 	Tick02Icon,
 } from "@hugeicons/core-free-icons";
-import type { PortableTextBlock } from "next-sanity";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { BlueskyIcon } from "~/components/icons/logos/bluesky-icon";
 import { InstagramIcon } from "~/components/icons/logos/instagram-icon";
 import { LinkedInIcon } from "~/components/icons/logos/linkedin-icon";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
-import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { CopyButton } from "~/components/shared/buttons/copy-button";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
 import {
 	Popover,
 	PopoverContent,
@@ -54,11 +51,8 @@ const uiData = {
 		{ label: "Generate Link", icon: Link05Icon },
 		{ label: "Share To Socials", icon: Chatting01Icon },
 		{ label: "Download List As JSON", icon: Download05Icon },
-		{ label: "Remove All", icon: CleaningBucketIcon },
+		{ label: "Remove All", icon: Delete02Icon },
 	],
-	context: {
-		text: "Ursula Le Guin's carrier bag theory of fiction suggests that stories are like carrier bags, designed to hold a variety of experiences and ideas. Instead of focusing solely on traditional narratives of conflict and heroism, Le Guin emphasizes the importance of inclusivity and the diverse elements that make up human experience. She argues that fiction should reflect the complexity of life, serving as a container for the multitude of voices and perspectives that shape our understanding of the world.",
-	},
 };
 
 function SidebarContentComponent(props: {
@@ -229,21 +223,7 @@ function SidebarContentComponent(props: {
 								))}
 							</SidebarMenu>
 						</div>
-						<div className="mt-6">
-							<SidebarGroupLabel>Context</SidebarGroupLabel>
-							<Card className="gap-2 py-4 shadow-none">
-								<CardContent className="px-4">
-									{data?.information && data.information.length > 0 ? (
-										<CustomPortableText
-											className="my-0 text-minor"
-											value={data.information as PortableTextBlock[]}
-										/>
-									) : (
-										<p className="text-xs">{uiData.context.text}</p>
-									)}
-								</CardContent>
-							</Card>
-						</div>
+						{/* Context section removed per request */}
 					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarContent>
@@ -409,7 +389,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 				/>
 			</Sidebar>
 
-			{/* Carrier Bag Content with mobile trigger */}
+			{/* Carrier Bag Content with mobile trigger (hidden on desktop) */}
 			<CarrierBagContent
 				mobileTrigger={
 					<div className="md:hidden">

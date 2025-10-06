@@ -3,11 +3,11 @@
  * Converts SVG files to PNG data URIs that can be used in @react-pdf/renderer
  */
 
-export interface SvgToPngOptions {
+export type SvgToPngOptions = {
 	width?: number;
 	height?: number;
 	scale?: number;
-}
+};
 
 /**
  * Converts an SVG file to a PNG data URI

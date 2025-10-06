@@ -17,9 +17,9 @@ const languages = [
 	{ code: "ES", label: "Spanish", disabled: true },
 ];
 
-interface LanguageSelectorProps {
+type LanguageSelectorProps = {
 	className?: string;
-}
+};
 
 export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
 	const [selectedLanguage, setSelectedLanguage] = React.useState(languages[0]);
@@ -31,7 +31,7 @@ export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
 					<button
 						type="button"
 						className={cn(
-							"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:focus-visible:ring-neutral-800",
+							"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear",
 						)}
 					>
 						<span

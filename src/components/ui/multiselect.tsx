@@ -114,12 +114,18 @@ export function MultiSelectTrigger({
 				role={props.role ?? "combobox"}
 				aria-expanded={props["aria-expanded"] ?? open}
 				className={cn(
-					"flex h-auto min-h-7 w-fit items-center justify-between gap-2 overflow-hidden whitespace-nowrap rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-none outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[placeholder]:text-muted-foreground dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:hover:bg-input/50 [&_svg:not([class*='size-'])]:size-3.5 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
+					"group flex h-auto min-h-7 w-fit items-center justify-between gap-2 overflow-hidden whitespace-nowrap rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-none outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[placeholder]:text-muted-foreground dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:hover:bg-input/50 [&_svg:not([class*='size-'])]:size-3.5 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
+					// Improve legibility on hover (both light and dark)
+					"hover:text-foreground",
+					"hover:data-[placeholder]:text-foreground",
+					"hover:[&_span]:text-foreground",
+					"hover:[&_svg]:text-foreground",
+					"hover:[&_svg]:opacity-100",
 					className,
 				)}
 			>
 				{children}
-				<ChevronsUpDownIcon className="size-3.5 shrink-0 opacity-50" />
+				<ChevronsUpDownIcon className="size-3.5 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground group-hover:opacity-100" />
 			</Button>
 		</PopoverTrigger>
 	);

@@ -6,6 +6,7 @@ import {
 	Sun03Icon,
 } from "@hugeicons/core-free-icons";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 import {
 	DropdownMenu,
@@ -15,12 +16,22 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Icon } from "../shared/icon";
 
-interface ModeToggleProps {
+type ModeToggleProps = {
 	className?: string;
-}
+};
 
 export function ModeToggle({ className }: ModeToggleProps = {}) {
 	const { setTheme } = useTheme();
+	const [mounted, setMounted] = useState(false);
+
+	// Prevent hydration mismatch by only rendering after client mount
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	if (!mounted) {
+		return null;
+	}
 
 	return (
 		<div className={className}>
@@ -29,7 +40,7 @@ export function ModeToggle({ className }: ModeToggleProps = {}) {
 					<button
 						type="button"
 						aria-label="Select theme"
-						className="group relative flex h-7 items-center rounded-md px-2 py-0.5 text-muted-foreground outline-none transition-colors duration-150 ease-linear hover:text-foreground focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:focus-visible:ring-neutral-800"
+						className="group relative flex h-7 items-center rounded-md px-2 py-0.5 text-muted-foreground outline-none transition-colors duration-150 ease-linear hover:text-foreground"
 					>
 						{/* Render both icons and rely on CSS so SSR matches client */}
 						<Icon
