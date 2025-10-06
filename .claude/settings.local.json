@@ -12,7 +12,9 @@
       "Read(//Users/henrybabbage/Desktop/**)",
       "Bash(git add:*)",
       "Bash(git rm:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run check:*)"
     ],
     "deny": []
   }
