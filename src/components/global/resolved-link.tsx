@@ -2,8 +2,10 @@ import { File01Icon, Share04Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 
 import { Icon } from "~/components/shared/icon";
+import { cn } from "~/lib/utils";
 import { linkResolver } from "~/sanity/lib/utils";
 import type { Link as LinkType } from "~/sanity/sanity.types";
+import { inlineAnnotationClassName } from "./glossary-pill";
 
 type ResolvedLinkProps = {
 	link: LinkType;
@@ -37,17 +39,15 @@ export default function ResolvedLink({
 				href={resolvedLink}
 				target={shouldOpenInNewTab ? "_blank" : undefined}
 				rel={shouldOpenInNewTab ? "noopener noreferrer" : undefined}
-				className={className}
+				className={cn(inlineAnnotationClassName, className)}
 			>
-				<span className="inline-flex items-center gap-1 rounded-md border border-current px-2.5 pt-0.5 pb-1 align-middle text-sm leading-none no-underline transition-colors hover:border-current/70">
-					{children}
-					<Icon
-						icon={isExternal ? Share04Icon : File01Icon}
-						size={12}
-						strokeWidth={2}
-						className="inline-block flex-shrink-0"
-					/>
-				</span>
+				{children}
+				<Icon
+					icon={isExternal ? Share04Icon : File01Icon}
+					size={12}
+					strokeWidth={2}
+					className="inline-block flex-shrink-0"
+				/>
 			</Link>
 		);
 	}

@@ -17,6 +17,7 @@
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
+	--color-page-background: var(--page-background);
 	--color-container-background: var(--container-background);
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -50,6 +51,9 @@
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-ring: var(--sidebar-ring);
 	--color-icon: var(--icon);
+	--color-footer-background: var(--footer-background);
+	--color-brand: var(--brand);
+	--color-item-background: var(--item-background);
 
 	--text-heading: 2rem; /* 32px */
 	--text-heading--line-height: calc(2.25 / 2); /* 1.125 */
@@ -70,247 +74,71 @@
 	--text-pattern-list-item-title-desktop--line-height: calc(2 / 1.5); /* 1.333 */
 }
 
-@theme {
-	--color-neutral-50: var(--color-neutral-50);
-	--color-neutral-100: var(--color-neutral-100);
-	--color-neutral-200: var(--color-neutral-200);
-	--color-neutral-300: var(--color-neutral-300);
-	--color-neutral-400: var(--color-neutral-400);
-	--color-neutral-500: var(--color-neutral-500);
-	--color-neutral-600: var(--color-neutral-600);
-	--color-neutral-700: var(--color-neutral-700);
-	--color-neutral-800: var(--color-neutral-800);
-	--color-neutral-900: var(--color-neutral-900);
-	--color-neutral-950: var(--color-neutral-950);
-}
-
 :root {
-	--color-neutral-50: oklch(0.9791 0 0); /* #fafafa */
-	--color-neutral-100: oklch(0.9612 0 0); /* #f5f5f5 */
-	--color-neutral-200: oklch(0.8945 0 0); /* #e5e5e5 */
-	--color-neutral-300: oklch(0.7984 0 0); /* #d4d4d4 */
-	--color-neutral-400: oklch(0.6797 0 0); /* #a3a3a3 */
-	--color-neutral-500: oklch(0.5863 0 0); /* #737373 */
-	--color-neutral-600: oklch(0.5068 0 0); /* #525252 */
-	--color-neutral-700: oklch(0.4386 0 0); /* #404040 */
-	--color-neutral-800: oklch(0.3942 0 0); /* #262626 */
-	--color-neutral-900: oklch(0.36 0 0); /* #171717 */
-	--color-neutral-950: oklch(0.2809 0 0); /* #0a0a0a */
-
-	--color-teal-border-dark: oklch(0.85 0.12 180);
-	--color-teal-dark: oklch(0.35 0.15 180);
-	--color-teal-default: oklch(0.95 0.08 180);
-	--color-teal-light: oklch(0.97 0.06 180);
-
-	--color-ochre-border-dark: oklch(0.8 0.12 60);
-	--color-ochre-dark: oklch(0.45 0.15 60);
-	--color-ochre-default: oklch(0.95 0.08 60);
-	--color-ochre-light: oklch(0.96 0.05 60);
-
-	--color-magenta-border-dark: oklch(0.75 0.18 320);
-	--color-magenta-dark: oklch(0.45 0.25 320);
-	--color-magenta-default: oklch(0.85 0.15 320);
-	--color-magenta-light: oklch(0.92 0.1 320);
-
-	--color-fuschia-border-dark: oklch(0.75 0.18 300);
-	--color-fuschia-dark: oklch(0.35 0.15 300);
-	--color-fuschia-default: oklch(0.85 0.15 300);
-	--color-fuschia-light: oklch(0.9 0.1 300);
-
-	--color-cerulean-border-dark: oklch(0.7 0.15 240);
-	--color-cerulean-dark: oklch(0.35 0.15 240);
-	--color-cerulean-default: oklch(0.882 0.0588 253.97);
-	--color-cerulean-light: oklch(0.933 0.032256 258.3685);
-
-	--color-moss-border-dark: oklch(0.75 0.12 120);
-	--color-moss-dark: oklch(0.45 0.12 120);
-	--color-moss-default: oklch(0.75 0.2 120);
-	--color-moss-light: oklch(0.9 0.1 120);
-
-	--color-purple-border-dark: oklch(66.344% 0.17703 299.908);
-	--color-purple-dark: oklch(0.496 0.265 301.924);
-	--color-purple-default: oklch(0.8943 0.0549 293.28);
-	--color-purple-light: oklch(97.7% 0.014 308.299);
-
-	--color-coral-border-dark: oklch(0.7 0.18 25);
-	--color-coral-dark: oklch(0.4 0.15 25);
-	--color-coral-default: oklch(0.8 0.15 25);
-	--color-coral-light: oklch(0.92 0.08 25);
-
-	--color-green-dark: oklch(0.25 0.15 150);
-	--color-green-default: oklch(0.8 0.15 120);
-	--color-green-light: oklch(0.9 0.1 120);
+	--radius: 0.625rem;
 
 	--color-green-brand-dark: oklch(0.5344 0.0889 146.94);
 	--color-green-brand-light: oklch(0.8 0.02 145);
 
-	/* Dark Mode Teal Colors */
-	--color-teal-border-dark--dark: oklch(0.45 0.08 180);
-	--color-teal-dark--dark: oklch(0.25 0.04 180);
-	--color-teal-default--dark: oklch(0.35 0.06 180);
-	--color-teal-light--dark: oklch(0.45 0.08 180);
+	--color-offwhite: oklch(0.9791 0 129.63); /* #f8f8f8 */
 
-	/* Dark Mode Ochre Colors */
-	--color-ochre-border-dark--dark: oklch(0.42 0.12 60);
-	--color-ochre-dark--dark: oklch(0.38 0.09 60);
-	--color-ochre-default--dark: oklch(0.4 0.09 60);
-	--color-ochre-light--dark: oklch(0.6 0.12 60);
-
-	/* Dark Mode Magenta Colors */
-	--color-magenta-border-dark--dark: oklch(0.5 0.1 320);
-	--color-magenta-dark--dark: oklch(0.3 0.06 320);
-	--color-magenta-default--dark: oklch(0.4 0.08 320);
-	--color-magenta-light--dark: oklch(0.7 0.12 320);
-
-	/* Dark Mode Fuschia Colors */
-	--color-fuschia-border-dark--dark: oklch(0.45 0.08 300);
-	--color-fuschia-dark--dark: oklch(0.25 0.04 300);
-	--color-fuschia-default--dark: oklch(0.35 0.06 300);
-	--color-fuschia-light--dark: oklch(0.45 0.08 300);
-
-	/* Dark Mode Cerulean Colors */
-	--color-cerulean-border-dark--dark: oklch(0.42 0.07 240);
-	--color-cerulean-dark--dark: oklch(0.38 0.07 240);
-	--color-cerulean-default--dark: oklch(0.4 0.06 240);
-	--color-cerulean-light--dark: oklch(0.6 0.11 240);
-
-	/* Dark Mode Moss Colors */
-	--color-moss-border-dark--dark: oklch(0.45 0.08 120);
-	--color-moss-dark--dark: oklch(0.25 0.04 120);
-	--color-moss-default--dark: oklch(0.35 0.06 120);
-	--color-moss-light--dark: oklch(0.45 0.08 120);
-
-	/* Dark Mode Purple Colors */
-	--color-purple-border-dark--dark: oklch(0.42 0.07 270);
-	--color-purple-dark--dark: oklch(0.38 0.07 270);
-	--color-purple-default--dark: oklch(0.4 0.06 270);
-	--color-purple-light--dark: oklch(0.6 0.11 270);
-
-	/* Dark Mode Coral Colors */
-	--color-coral-border-dark--dark: oklch(0.45 0.08 25);
-	--color-coral-dark--dark: oklch(0.25 0.04 25);
-	--color-coral-default--dark: oklch(0.35 0.06 25);
-	--color-coral-light--dark: oklch(0.45 0.08 25);
-
-	/* Dark Mode Green Colors */
-	--color-green-dark--dark: oklch(0.25 0.04 150);
-	--color-green-default--dark: oklch(0.35 0.06 120);
-	--color-green-light--dark: oklch(0.45 0.08 120);
-
-	--color-offwhite-light: oklch(0.9791 0 129.63); /* #f8f8f8 */
-	--color-offwhite-default: oklch(0.95 0 0); /* #f2f2f2 */
-
-	--radius: 0.625rem;
-	--background: var(--color-neutral-100);
-	--container-background: var(--color-offwhite-light);
-	--foreground: var(--color-neutral-950);
-	--card: var(--color-neutral-50);
-	--card-foreground: var(--color-neutral-950);
-	--popover: var(--color-neutral-50);
-	--popover-foreground: var(--color-neutral-950);
-	--primary: var(--color-neutral-900);
-	--primary-foreground: var(--color-neutral-50);
-	--secondary: var(--color-neutral-200);
-	/* --secondary: oklch(0.94 0.01 140); */
-	--secondary-foreground: var(--color-neutral-800);
-	--muted: var(--color-neutral-100);
-	--muted-foreground: var(--color-neutral-300);
-	--accent: var(--color-neutral-300);
-	--accent-foreground: var(--color-neutral-600);
+	--page-background: var(--color-neutral-300);
+	--container-background: var(--color-offwhite);
+	--background: oklch(1 0 0);
+	--foreground: oklch(0.145 0 0);
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.145 0 0);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.145 0 0);
+	--primary: oklch(0.205 0 0);
+	--primary-foreground: oklch(0.985 0 0);
+	--secondary: oklch(0.97 0 0);
+	--secondary-foreground: oklch(0.205 0 0);
+	--muted: oklch(0.97 0 0);
+	--muted-foreground: oklch(0.556 0 0);
+	--accent: oklch(0.97 0 0);
+	--accent-foreground: oklch(0.205 0 0);
 	--destructive: oklch(0.577 0.245 27.325);
-	--border: var(--color-neutral-200);
-	--input: var(--color-neutral-200);
-	--ring: var(--color-neutral-300);
+	--border: oklch(0.922 0 0);
+	--input: oklch(0.922 0 0);
+	--ring: oklch(0.708 0 0);
 	--chart-1: oklch(0.646 0.222 41.116);
 	--chart-2: oklch(0.6 0.118 184.704);
 	--chart-3: oklch(0.398 0.07 227.392);
 	--chart-4: oklch(0.828 0.189 84.429);
 	--chart-5: oklch(0.769 0.188 70.08);
-	--sidebar: var(--color-neutral-50);
-	--sidebar-foreground: var(--color-neutral-950);
-	--sidebar-primary: var(--color-neutral-900);
-	--sidebar-primary-foreground: var(--color-neutral-50);
-	--sidebar-accent: var(--color-neutral-100);
-	--sidebar-accent-foreground: var(--color-neutral-900);
-	--sidebar-border: var(--color-neutral-200);
-	--sidebar-ring: var(--color-neutral-300);
+	--sidebar: oklch(0.985 0 0);
+	--sidebar-foreground: oklch(0.145 0 0);
+	--sidebar-primary: oklch(0.205 0 0);
+	--sidebar-primary-foreground: oklch(0.985 0 0);
+	--sidebar-accent: oklch(0.97 0 0);
+	--sidebar-accent-foreground: oklch(0.205 0 0);
+	--sidebar-border: oklch(0.922 0 0);
+	--sidebar-ring: oklch(0.708 0 0);
 	--icon: oklch(0.6902 0.0515 134.87);
 	--brand: var(--color-green-brand-dark);
-
-	--theme-badge-text: var(--color-ochre-dark);
-	--theme-badge-background: var(--color-ochre-light);
-	--theme-badge-border: var(--color-ochre-default);
-	--theme-badge-border-dark: var(--color-ochre-border-dark);
-	--theme-mini-icon-border: oklch(87.674% 0.08581 64.019);
-
-	--tag-badge-text: var(--color-purple-dark);
-	--tag-badge-background: var(--color-purple-light);
-	--tag-badge-border: var(--color-purple-default);
-	--tag-badge-border-dark: var(--color-purple-border-dark);
-
-	--audience-badge-text: var(--color-cerulean-dark);
-	--audience-badge-background: var(--color-cerulean-light);
-	--audience-badge-border: var(--color-cerulean-default);
-	--audience-badge-border-dark: var(--color-cerulean-border-dark);
-
-	--solution-badge-text: var(--color-coral-dark);
-	--solution-badge-background: var(--color-coral-light);
-	--solution-badge-border: var(--color-coral-default);
-	--solution-badge-border-dark: var(--color-coral-border-dark);
-
-	--resource-badge-text: var(--color-fuschia-dark);
-	--resource-badge-background: var(--color-fuschia-light);
-	--resource-badge-border: var(--color-fuschia-default);
-	--resource-badge-border-dark: var(--color-fuschia-border-dark);
-
-	--pattern-badge-text: var(--color-teal-dark);
-	--pattern-badge-background: var(--color-teal-light);
-	--pattern-badge-border: var(--color-teal-default);
-	--pattern-badge-border-dark: var(--color-teal-border-dark);
-
-	--page-badge-text: var(--color-magenta-dark);
-	--page-badge-background: var(--color-magenta-light);
-	--page-badge-border: var(--color-magenta-default);
-	--page-badge-border-dark: var(--color-magenta-border-dark);
-
-	/* Visit Pattern Button */
-	--pattern-button-text: oklch(0.51 0.1218 156.56); /* #027A48 */
-	--pattern-button-background: oklch(0.9788 0.0221 160.24); /* #ECFDF3 */
-	--pattern-button-border: oklch(0.9039 0.1006 157.23); /* #A6F4C5 */
-
-	/* Visit Solution Button */
-	--solution-button-text: oklch(0.3 0.2 300);
-	--solution-button-background: oklch(0.9 0.08 300);
-	--solution-button-border: oklch(0.8 0.12 300);
-
-	/* Visit Resource Button */
-	--resource-button-text: oklch(0.35 0.15 330);
-	--resource-button-background: oklch(0.9 0.1 330);
-	--resource-button-border: oklch(0.8 0.15 330);
-
-	--visit-pattern-bg: oklch(0.92 0.11 157.2);
-	--visit-pattern-border: oklch(0.86 0.14 157.2);
-	--visit-pattern-text: oklch(0.35 0.12 180);
+	--footer-background: var(--color-neutral-200);
+	--item-background: #f2f2f2;
+	--item-background-hover: #e5e5e5;
 }
 
 .dark {
-	/* TODO: check container-background color for dark mode */
-	--container-background: var(--color-neutral-950);
-	--background: var(--color-neutral-950);
-	--foreground: var(--color-neutral-50);
-	--card: var(--color-neutral-900);
-	--card-foreground: var(--color-neutral-50);
-	--popover: var(--color-neutral-900);
-	--popover-foreground: var(--color-neutral-50);
-	--primary: var(--color-neutral-200);
-	--primary-foreground: var(--color-neutral-950);
-	--secondary: oklch(22.1% 0 0);
-	/* --secondary: var(--color-neutral-900); */
-	--secondary-foreground: var(--color-neutral-200);
-	--muted: var(--color-neutral-600);
-	--muted-foreground: var(--color-neutral-300);
-	--accent: var(--color-neutral-800);
-	--accent-foreground: var(--color-neutral-200);
+	--page-background: oklch(20% 0 0);
+	--container-background: var(--color-neutral-800);
+	--background: oklch(0.145 0 0);
+	--foreground: oklch(0.985 0 0);
+	--card: oklch(0.205 0 0);
+	--card-foreground: oklch(0.985 0 0);
+	--popover: oklch(0.205 0 0);
+	--popover-foreground: oklch(0.985 0 0);
+	--primary: oklch(0.922 0 0);
+	--primary-foreground: oklch(0.205 0 0);
+	--secondary: oklch(0.269 0 0);
+	--secondary-foreground: oklch(0.985 0 0);
+	--muted: oklch(0.269 0 0);
+	--muted-foreground: oklch(0.708 0 0);
+	--accent: oklch(0.269 0 0);
+	--accent-foreground: oklch(0.985 0 0);
 	--destructive: oklch(0.704 0.191 22.216);
 	--border: oklch(1 0 0 / 10%);
 	--input: oklch(1 0 0 / 15%);
@@ -320,80 +148,18 @@
 	--chart-3: oklch(0.769 0.188 70.08);
 	--chart-4: oklch(0.627 0.265 303.9);
 	--chart-5: oklch(0.645 0.246 16.439);
-	--sidebar: var(--color-neutral-900);
-	--sidebar-foreground: var(--color-neutral-50);
+	--sidebar: oklch(0.205 0 0);
+	--sidebar-foreground: oklch(0.985 0 0);
 	--sidebar-primary: oklch(0.488 0.243 264.376);
-	--sidebar-primary-foreground: var(--color-neutral-50);
-	--sidebar-accent: var(--color-neutral-600);
-	--sidebar-accent-foreground: var(--color-neutral-50);
-	--sidebar-border: var(--color-neutral-700);
-	--sidebar-ring: var(--color-neutral-500);
-	--icon: oklch(0.6902 0.0515 134.87);
+	--sidebar-primary-foreground: oklch(0.985 0 0);
+	--sidebar-accent: oklch(0.269 0 0);
+	--sidebar-accent-foreground: oklch(0.985 0 0);
+	--sidebar-border: oklch(1 0 0 / 10%);
+	--sidebar-ring: oklch(0.556 0 0);
 	--brand: var(--color-green-brand-light);
-
-	/* Dark mode badge colors */
-	--theme-badge-text: var(--color-ochre-light--dark);
-	--theme-badge-background: oklch(
-		from var(--color-ochre-dark--dark) l c h /
-		0.6
-	);
-	--theme-badge-border: var(--color-ochre-default--dark);
-	--theme-badge-border-dark: var(--color-ochre-border-dark--dark);
-	--theme-mini-icon-border: var(--color-ochre-border-dark--dark);
-
-	--tag-badge-text: var(--color-purple-light--dark);
-	--tag-badge-background: oklch(from var(--color-purple-dark--dark) l c h / 0.6);
-	--tag-badge-border: var(--color-purple-default--dark);
-	--tag-badge-border-dark: var(--color-purple-border-dark--dark);
-
-	--audience-badge-text: var(--color-cerulean-light--dark);
-	--audience-badge-background: oklch(
-		from var(--color-cerulean-dark--dark) l c h /
-		0.6
-	);
-	--audience-badge-border: var(--color-cerulean-default--dark);
-	--audience-badge-border-dark: var(--color-cerulean-border-dark--dark);
-
-	--solution-badge-text: var(--color-coral-dark--dark);
-	--solution-badge-background: var(--color-coral-light--dark);
-	--solution-badge-border: var(--color-coral-default--dark);
-	--solution-badge-border-dark: var(--color-coral-border-dark--dark);
-
-	--resource-badge-text: var(--color-fuschia-dark--dark);
-	--resource-badge-background: var(--color-fuschia-light--dark);
-	--resource-badge-border: var(--color-fuschia-default--dark);
-	--resource-badge-border-dark: var(--color-fuschia-border-dark--dark);
-
-	--pattern-badge-text: var(--color-teal-dark--dark);
-	--pattern-badge-background: var(--color-teal-light--dark);
-	--pattern-badge-border: var(--color-teal-default--dark);
-	--pattern-badge-border-dark: var(--color-teal-border-dark--dark);
-
-	--page-badge-text: var(--color-magenta-dark--dark);
-	--page-badge-background: var(--color-magenta-light--dark);
-	--page-badge-border: var(--color-magenta-default--dark);
-	--page-badge-border-dark: var(--color-magenta-border-dark--dark);
-
-	/* Dark Mode Button Colors */
-
-	/* Pattern Button - Dark Mode */
-	--pattern-button-text--dark: oklch(0.85 0.15 156.56); /* Light green text */
-	--pattern-button-background--dark: oklch(0.2 0.08 156.56); /* Dark green background */
-	--pattern-button-border--dark: oklch(0.4 0.12 157.23); /* Medium green border */
-
-	/* Solution Button - Dark Mode */
-	--solution-button-text--dark: oklch(0.85 0.12 300); /* Light purple text */
-	--solution-button-background--dark: oklch(0.25 0.1 300); /* Dark purple background */
-	--solution-button-border--dark: oklch(0.45 0.15 300); /* Medium purple border */
-
-	/* Resource Button - Dark Mode */
-	--resource-button-text--dark: oklch(0.85 0.1 330); /* Light magenta text */
-	--resource-button-background--dark: oklch(0.25 0.08 330); /* Dark magenta background */
-	--resource-button-border--dark: oklch(0.45 0.12 330); /* Medium magenta border */
-
-	--visit-pattern-bg: oklch(0.15 0.08 157.2);
-	--visit-pattern-border: oklch(0.25 0.1 157.2);
-	--visit-pattern-text: oklch(0.7 0.12 180);
+	--footer-background: var(--color-neutral-900);
+	--item-background: #262626;
+	--item-background-hover: #404040;
 }
 
 @layer base {
@@ -511,7 +277,7 @@
 	}
 
 	.text-minor {
-		@apply text-xs md:text-sm text-neutral-300 prose max-w-none dark:text-neutral-500;
+		@apply text-xs md:text-sm text-neutral-500 prose max-w-none dark:text-neutral-500;
 	}
 
 	.text-subheading {

@@ -55,25 +55,20 @@ export function TagsList({
 
 									<div className="flex flex-wrap gap-2">
 										{tag.patterns.slice(0, 10).map((pattern) => (
-											<Link
-												key={pattern._id}
-												href={`/pattern/${pattern.slug ?? ""}`}
-												className="inline-block w-max whitespace-normal break-words"
-											>
-												<Badge
-													variant="pattern"
-													icon={
-														<Icon
-															icon={FlowConnectionIcon}
-															size={12}
-															color="currentColor"
-															strokeWidth={1.5}
-														/>
-													}
+											<Badge key={pattern._id} variant="pattern" asChild>
+												<Link
+													href={`/pattern/${pattern.slug ?? ""}`}
+													className="inline-block w-max whitespace-normal break-words"
 												>
+													<Icon
+														icon={FlowConnectionIcon}
+														size={12}
+														color="currentColor"
+														strokeWidth={1.5}
+													/>
 													{pattern.title ?? ""}
-												</Badge>
-											</Link>
+												</Link>
+											</Badge>
 										))}
 									</div>
 								</div>

@@ -29,7 +29,7 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 			defaultOpen={false}
 		>
 			<SiteHeader />
-			<div className="flex min-h-0 flex-1 flex-row-reverse gap-2 overflow-hidden bg-secondary pt-16 transition-[gap] md:pt-14 md:[&:has([data-slot=sidebar][data-state=collapsed])]:gap-0 md:[&:has([data-slot=sidebar][data-state=collapsed])]:delay-200 md:[&:has([data-slot=sidebar][data-state=collapsed])]:duration-0">
+			<div className="flex min-h-0 flex-1 flex-row-reverse gap-2 overflow-hidden bg-page-background pt-16 transition-[gap] md:pt-14 md:[&:has([data-slot=sidebar][data-state=collapsed])]:gap-0 md:[&:has([data-slot=sidebar][data-state=collapsed])]:delay-200 md:[&:has([data-slot=sidebar][data-state=collapsed])]:duration-0">
 				<CarrierBagSidebar className="peer" />
 				<SidebarInset className="relative mx-2 mb-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-md md:m-0 md:mb-0">
 					<div
@@ -38,7 +38,7 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 							"flex h-full min-h-0 flex-1 flex-col overflow-x-hidden",
 							isCarrierBagRoute
 								? "overflow-y-hidden"
-								: "overflow-y-auto bg-container-background",
+								: "overflow-y-auto bg-container-background dark:bg-container-background",
 						)}
 					>
 						<div

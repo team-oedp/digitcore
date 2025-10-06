@@ -1,11 +1,9 @@
 import { Mail01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import type { PortableTextBlock } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
 import { GitHubIcon } from "~/components/icons/logos/github-icon";
 import { ZenodoIcon } from "~/components/icons/logos/zenodo-icon";
-import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
 
 type SiteFooterProps = {
@@ -48,7 +46,7 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 	// Future enhancement: Could integrate externalLinks data with dynamic icon rendering
 
 	return (
-		<footer className="mx-3 mt-auto h-[300px] rounded-md bg-secondary md:h-[200px]">
+		<footer className="mx-3 mt-auto h-[300px] rounded-md bg-footer-background md:h-[200px]">
 			<div className="pb-3">
 				<div className="flex h-[300px] flex-col px-4 py-3 md:h-[200px] md:px-8 md:py-6">
 					{/* Mobile Layout - Vertical Stack */}
