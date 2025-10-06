@@ -39,7 +39,7 @@ export default function ResolvedLink({
 				rel={shouldOpenInNewTab ? "noopener noreferrer" : undefined}
 				className={className}
 			>
-				<span className="inline-flex items-center gap-1 rounded-md border border-neutral-300 bg-primary/5 px-2.5 pt-0.5 pb-1 align-middle text-primary text-sm leading-none no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary">
+				<span className="inline-flex items-center gap-1 rounded-md border border-current px-2.5 pt-0.5 pb-1 align-middle text-sm leading-none no-underline transition-colors hover:border-current/70">
 					{children}
 					<Icon
 						icon={isExternal ? Share04Icon : File01Icon}

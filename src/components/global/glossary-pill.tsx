@@ -34,13 +34,13 @@ export function GlossaryPill({
 		<Link
 			href={createGlossaryLink(term.title)}
 			className={cn(
-				"inline-flex items-center gap-1 rounded-md border border-neutral-300 bg-primary/5 px-2.5 pt-0.5 pb-1 align-middle text-primary leading-[0.9] no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary",
+				"inline-flex items-center gap-1 rounded-md border border-current px-2.5 pt-0.5 pb-1 align-middle text-sm leading-none no-underline transition-colors hover:border-current/70",
 				className,
 			)}
 			title={`View definition of "${term.title}"`}
 		>
 			{children}
-			<Icon icon={BookOpen02Icon} className="h-4 w-4" />
+			<Icon icon={BookOpen02Icon} className="h-3 w-3" />
 		</Link>
 	);
 }
