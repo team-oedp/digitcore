@@ -5,32 +5,31 @@ import type * as React from "react";
 import { cn } from "~/lib/utils";
 
 const badgeVariants = cva(
-	"inline-flex w-fit shrink-0 items-center justify-start gap-1 overflow-hidden whitespace-nowrap rounded-md border px-2 font-normal capitalize transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
+	"inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-md px-2 py-0.5 font-normal text-xs transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
 	{
 		variants: {
 			variant: {
 				default:
-					"border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
+					"border border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
 				secondary:
-					"border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
+					"border border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
 				destructive:
-					"border-transparent bg-destructive text-white focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40 [a&]:hover:bg-destructive/90",
+					"border border-transparent bg-destructive text-white focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40 [a&]:hover:bg-destructive/90",
 				outline:
-					"text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
-
-				// Specific badge variants
+					"border text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+				/* DIGITCORE badge styles */
 				audience:
-					"border-[var(--audience-badge-border)] bg-[var(--audience-badge-background)] text-[var(--audience-badge-text)] hover:border-[var(--audience-badge-border-dark)]",
+					"inset-ring inset-ring-blue-700/10 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:inset-ring-blue-500/20 dark:bg-blue-950/30 dark:text-blue-400 dark:hover:bg-blue-950/50",
 				theme:
-					"border-[var(--theme-badge-border)] bg-[var(--theme-badge-background)] text-[var(--theme-badge-text)] hover:border-[var(--theme-badge-border-dark)]",
-				tag: "border-[var(--tag-badge-border)] bg-[var(--tag-badge-background)] text-[var(--tag-badge-text)] hover:border-[var(--tag-badge-border-dark)]",
+					"inset-ring inset-ring-orange-700/10 bg-orange-50 text-orange-700 hover:bg-orange-100 dark:inset-ring-orange-500/20 dark:bg-orange-950/30 dark:text-orange-400 dark:hover:bg-orange-950/50",
+				tag: "inset-ring inset-ring-purple-700/10 bg-purple-50 text-purple-700 hover:bg-purple-100 dark:inset-ring-purple-500/20 dark:bg-purple-950/30 dark:text-purple-400 dark:hover:bg-purple-950/50",
 				resource:
-					"border-[var(--resource-badge-border)] bg-[var(--resource-badge-background)] text-[var(--resource-badge-text)] hover:border-[var(--resource-badge-border-dark)]",
+					"inset-ring inset-ring-pink-700/10 bg-pink-50 text-pink-700 hover:bg-pink-100 dark:inset-ring-pink-500/20 dark:bg-pink-950/30 dark:text-pink-400 dark:hover:bg-pink-950/50",
 				solution:
-					"border-[var(--solution-badge-border)] bg-[var(--solution-badge-background)] text-[var(--solution-badge-text)] hover:border-[var(--solution-badge-border-dark)]",
+					"inset-ring inset-ring-fuchsia-600/20 bg-fuchsia-50 text-fuchsia-800 hover:bg-fuchsia-100 dark:inset-ring-fuchsia-600/20 dark:bg-fuchsia-950/30 dark:text-fuchsia-400 dark:hover:bg-fuchsia-950/50",
 				pattern:
-					"border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] text-[var(--pattern-button-text)] hover:border-[var(--pattern-badge-border-dark)]",
-				page: "border-[var(--page-badge-border)] bg-[var(--page-badge-background)] text-[var(--page-badge-text)] hover:border-[var(--page-badge-border-dark)]",
+					"inset-ring inset-ring-green-600/20 bg-green-50 text-green-700 hover:bg-green-100 dark:inset-ring-green-500/30 dark:bg-green-950/30 dark:text-green-400 dark:hover:bg-green-950/50",
+				page: "inset-ring inset-ring-gray-500/10 bg-gray-50 text-gray-600 hover:bg-gray-100 dark:inset-ring-gray-500/20 dark:bg-gray-950/30 dark:text-gray-400 dark:hover:bg-gray-950/50",
 			},
 			size: {
 				default: "h-6 py-1 text-[12px] md:text-[14px]",
@@ -66,8 +65,14 @@ function Badge({
 			className={cn(badgeVariants({ variant, size }), className)}
 			{...props}
 		>
-			{icon && <span className="flex-shrink-0">{icon}</span>}
-			{children}
+			{asChild ? (
+				children
+			) : (
+				<>
+					{icon && <span className="flex-shrink-0">{icon}</span>}
+					{children}
+				</>
+			)}
 		</Comp>
 	);
 }
