@@ -4,7 +4,6 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { PatternConnections } from "~/components/pages/pattern/pattern-connections";
 import { PatternContentProvider } from "~/components/pages/pattern/pattern-content-provider";
-import type { DereferencedResource } from "~/components/pages/pattern/resources";
 import { Resources } from "~/components/pages/pattern/resources";
 import { Solutions } from "~/components/pages/pattern/solutions";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
@@ -119,15 +118,11 @@ export default async function PatternPage({ params }: PatternPageProps) {
 						/>
 					</div>
 					<Solutions
-						solutions={(pattern.solutions as unknown as Solution[]) || []}
+						solutions={pattern.solutions || []}
 						patternName={pattern.title || ""}
 						patternSlug={slug}
 					/>
-					<Resources
-						resources={
-							(pattern.resources as unknown as DereferencedResource[]) || []
-						}
-					/>
+					<Resources resources={pattern.resources || []} />
 				</div>
 				<div className="h-10 md:h-20" />
 			</PageWrapper>

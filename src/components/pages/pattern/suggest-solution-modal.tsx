@@ -96,8 +96,8 @@ export function SuggestSolutionModal({
 			<DialogContent
 				showCloseButton={!isSuccess}
 				className={cn(
-					"max-h-[90vh] max-w-2xl overflow-y-auto transition-all duration-300",
-					isSuccess ? "border-green-200 bg-green-50" : undefined,
+					"max-h-[90vh] max-w-5xl overflow-y-auto transition-all duration-300",
+					isSuccess ? "border-green-200 bg-green-50" : "border-transparent",
 				)}
 			>
 				{!isSuccess && (
@@ -111,7 +111,7 @@ export function SuggestSolutionModal({
 				)}
 
 				{isSuccess ? (
-					<div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
+					<div className="flex flex-col items-start justify-start gap-4 py-16 text-left">
 						<svg
 							className="size-12 text-green-600"
 							viewBox="0 0 24 24"
@@ -124,24 +124,27 @@ export function SuggestSolutionModal({
 						>
 							<path d="M20 6L9 17l-5-5" />
 						</svg>
-						<p className="font-medium text-foreground text-lg">
+						<p className="font-normal text-foreground text-lg">
 							Pattern submitted successfully!
 						</p>
 					</div>
 				) : (
 					<form onSubmit={handleSubmit} className="space-y-6">
 						<div className="space-y-3">
-							<Label className="block">Pattern</Label>
+							<Label className="block font-normal text-xs">Pattern</Label>
 							<Badge variant="secondary">{patternName}</Badge>
 						</div>
 
 						<div>
-							<Label htmlFor={`${baseId}-newSolutions`} className="pb-2">
+							<Label
+								htmlFor={`${baseId}-newSolutions`}
+								className="mb-2 block font-normal text-xs"
+							>
 								New Solution(s)
 							</Label>
 							<textarea
 								id={`${baseId}-newSolutions`}
-								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-transparent focus-visible:ring-offset-transparent disabled:cursor-not-allowed disabled:opacity-50"
 								placeholder="What new solution(s) would you like to add for this pattern?"
 								value={formData.newSolutions}
 								onChange={(e) =>
@@ -151,12 +154,15 @@ export function SuggestSolutionModal({
 						</div>
 
 						<div>
-							<Label htmlFor={`${baseId}-newResources`} className="pb-2">
+							<Label
+								htmlFor={`${baseId}-newResources`}
+								className="mb-2 block font-normal text-xs"
+							>
 								New Resource(s)
 							</Label>
 							<textarea
 								id={`${baseId}-newResources`}
-								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-transparent focus-visible:ring-offset-transparent disabled:cursor-not-allowed disabled:opacity-50"
 								placeholder="What new resource(s) would you like to add for this pattern? Please reference a solution and provide a URL if applicable."
 								value={formData.newResources}
 								onChange={(e) =>
@@ -166,12 +172,15 @@ export function SuggestSolutionModal({
 						</div>
 
 						<div>
-							<Label htmlFor={`${baseId}-additionalFeedback`} className="pb-2">
+							<Label
+								htmlFor={`${baseId}-additionalFeedback`}
+								className="mb-2 block font-normal text-xs"
+							>
 								Additional Feedback
 							</Label>
 							<textarea
 								id={`${baseId}-additionalFeedback`}
-								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-transparent focus-visible:ring-offset-transparent disabled:cursor-not-allowed disabled:opacity-50"
 								placeholder="Do you have any additional feedback on the Pattern or Toolkit?"
 								value={formData.additionalFeedback}
 								onChange={(e) =>
@@ -181,12 +190,16 @@ export function SuggestSolutionModal({
 						</div>
 
 						<div>
-							<Label htmlFor={`${baseId}-nameAndAffiliation`} className="pb-2">
+							<Label
+								htmlFor={`${baseId}-nameAndAffiliation`}
+								className="mb-2 block font-normal text-xs"
+							>
 								Name and Affiliation
 							</Label>
 							<Input
 								id={`${baseId}-nameAndAffiliation`}
-								placeholder="If you would like to be credited on the website, how would you like your name and affiliation to be listed? (Full name and max 2 affiliations)"
+								className="focus-visible:ring-transparent"
+								placeholder="Would you like your name and affiliation to be listed on the website?"
 								value={formData.nameAndAffiliation}
 								onChange={(e) =>
 									handleInputChange("nameAndAffiliation", e.target.value)
@@ -195,13 +208,17 @@ export function SuggestSolutionModal({
 						</div>
 
 						<div>
-							<Label htmlFor={`${baseId}-email`} className="pb-2">
+							<Label
+								htmlFor={`${baseId}-email`}
+								className="mb-2 block font-normal text-xs"
+							>
 								Email <span className="text-red-500">*</span>
 							</Label>
 							<Input
 								id={`${baseId}-email`}
 								type="email"
-								placeholder="What email can we use to reach out to you if we have further questions? (Enter 'N/A' for anonymous submission)"
+								className="focus-visible:ring-transparent"
+								placeholder="Please supply an email where we can contact you."
 								value={formData.email}
 								onChange={(e) => handleInputChange("email", e.target.value)}
 								required

@@ -1,7 +1,63 @@
 import { render, screen } from "@testing-library/react";
 import type React from "react";
 import { describe, expect, it, vi } from "vitest";
-import type { DereferencedResource } from "./resources";
+import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
+
+type ResourceFromQuery = NonNullable<
+	NonNullable<PATTERN_QUERYResult>["resources"]
+>[number];
+
+type SolutionFromQuery = NonNullable<ResourceFromQuery["solutions"]>[number];
+
+// Helper to create a valid solution mock
+function createMockSolution(id: string, title: string): SolutionFromQuery {
+	return {
+		_id: id,
+		_type: "solution",
+		_createdAt: "2021-01-01T00:00:00Z",
+		_updatedAt: "2021-01-01T00:00:00Z",
+		_rev: "rev1",
+		title,
+		description: undefined,
+		audiences: undefined,
+	};
+}
+
+// Helper to create a valid resource mock
+function createMockResource(
+	id: string,
+	title: string,
+	descriptionText?: string,
+	solutions?: SolutionFromQuery[],
+): ResourceFromQuery {
+	return {
+		_id: id,
+		_type: "resource",
+		_createdAt: "2021-01-01T00:00:00Z",
+		_updatedAt: "2021-01-01T00:00:00Z",
+		_rev: "rev1",
+		title,
+		description: descriptionText
+			? [
+					{
+						_type: "block" as const,
+						_key: "block1",
+						children: [
+							{
+								_type: "span" as const,
+								_key: "span1",
+								text: descriptionText,
+							},
+						],
+						style: "normal" as const,
+						markDefs: null,
+					},
+				]
+			: null,
+		links: null,
+		solutions: solutions || null,
+	};
+}
 
 type HugeiconsIconProps = {
 	icon: { name: string };
@@ -88,28 +144,16 @@ vi.mock("./solution-preview", () => ({
 
 describe("Resources Component", () => {
 	it("should display 'Related solutions' when resource has solution references", () => {
-		const mockResources: DereferencedResource[] = [
-			{
-				_id: "resource-1",
-				title: "Test Resource",
-				description: [
-					{
-						_type: "block",
-						_key: "block1",
-						children: [
-							{
-								_type: "span",
-								_key: "span1",
-								text: "This is a test resource description",
-							},
-						],
-					},
+		const mockResources: ResourceFromQuery[] = [
+			createMockResource(
+				"resource-1",
+				"Test Resource",
+				"This is a test resource description",
+				[
+					createMockSolution("solution-1", "Solution 1"),
+					createMockSolution("solution-2", "Solution 2"),
 				],
-				solutionRefs: [
-					{ _ref: "solution-1", _type: "reference", _key: "key1" },
-					{ _ref: "solution-2", _type: "reference", _key: "key2" },
-				],
-			},
+			),
 		];
 
 		render(<Resources resources={mockResources} />);
@@ -119,29 +163,17 @@ describe("Resources Component", () => {
 	});
 
 	it("should display solution badges when resource has solution references", () => {
-		const mockResources: DereferencedResource[] = [
-			{
-				_id: "resource-1",
-				title: "Test Resource with Solutions",
-				description: [
-					{
-						_type: "block",
-						_key: "block1",
-						children: [
-							{
-								_type: "span",
-								_key: "span1",
-								text: "Resource description",
-							},
-						],
-					},
+		const mockResources: ResourceFromQuery[] = [
+			createMockResource(
+				"resource-1",
+				"Test Resource with Solutions",
+				"Resource description",
+				[
+					createMockSolution("solution-1", "Solution 1"),
+					createMockSolution("solution-2", "Solution 2"),
+					createMockSolution("solution-3", "Solution 3"),
 				],
-				solutionRefs: [
-					{ _ref: "solution-1", _type: "reference", _key: "key1" },
-					{ _ref: "solution-2", _type: "reference", _key: "key2" },
-					{ _ref: "solution-3", _type: "reference", _key: "key3" },
-				],
-			},
+			),
 		];
 
 		render(<Resources resources={mockResources} />);
@@ -161,25 +193,13 @@ describe("Resources Component", () => {
 	});
 
 	it("should not display solution badges when resource has no solution references", () => {
-		const mockResources: DereferencedResource[] = [
-			{
-				_id: "resource-1",
-				title: "Resource without Solutions",
-				description: [
-					{
-						_type: "block",
-						_key: "block1",
-						children: [
-							{
-								_type: "span",
-								_key: "span1",
-								text: "Resource description",
-							},
-						],
-					},
-				],
-				solutionRefs: undefined,
-			},
+		const mockResources: ResourceFromQuery[] = [
+			createMockResource(
+				"resource-1",
+				"Resource without Solutions",
+				"Resource description",
+				undefined,
+			),
 		];
 
 		render(<Resources resources={mockResources} />);
@@ -193,30 +213,15 @@ describe("Resources Component", () => {
 	});
 
 	it("should display multiple resources with their respective solution badges", () => {
-		const mockResources: DereferencedResource[] = [
-			{
-				_id: "resource-1",
-				title: "First Resource",
-				description: null,
-				solutionRefs: [
-					{ _ref: "solution-1", _type: "reference", _key: "key1" },
-				],
-			},
-			{
-				_id: "resource-2",
-				title: "Second Resource",
-				description: null,
-				solutionRefs: [
-					{ _ref: "solution-2", _type: "reference", _key: "key2" },
-					{ _ref: "solution-3", _type: "reference", _key: "key3" },
-				],
-			},
-			{
-				_id: "resource-3",
-				title: "Third Resource",
-				description: null,
-				solutionRefs: undefined,
-			},
+		const mockResources: ResourceFromQuery[] = [
+			createMockResource("resource-1", "First Resource", undefined, [
+				createMockSolution("solution-1", "Solution 1"),
+			]),
+			createMockResource("resource-2", "Second Resource", undefined, [
+				createMockSolution("solution-2", "Solution 1"),
+				createMockSolution("solution-3", "Solution 2"),
+			]),
+			createMockResource("resource-3", "Third Resource", undefined, undefined),
 		];
 
 		render(<Resources resources={mockResources} />);
@@ -248,27 +253,13 @@ describe("Resources Component", () => {
 	});
 
 	it("should display resource title and description correctly", () => {
-		const mockResources: DereferencedResource[] = [
-			{
-				_id: "resource-1",
-				title: "Important Resource",
-				description: [
-					{
-						_type: "block",
-						_key: "block1",
-						children: [
-							{
-								_type: "span",
-								_key: "span1",
-								text: "This resource provides important information",
-							},
-						],
-					},
-				],
-				solutionRefs: [
-					{ _ref: "solution-1", _type: "reference", _key: "key1" },
-				],
-			},
+		const mockResources: ResourceFromQuery[] = [
+			createMockResource(
+				"resource-1",
+				"Important Resource",
+				"This resource provides important information",
+				[createMockSolution("solution-1", "Solution 1")],
+			),
 		];
 
 		render(<Resources resources={mockResources} />);
@@ -284,42 +275,13 @@ describe("Resources Component", () => {
 		);
 	});
 
-	it("should display link icon when resource has links", () => {
-		const mockResources: DereferencedResource[] = [
-			{
-				_id: "resource-1",
-				title: "Resource with Link",
-				description: null,
-				links: [{ href: "https://example.com" }],
-				solutionRefs: [
-					{ _ref: "solution-1", _type: "reference", _key: "key1" },
-				],
-			},
-		];
-
-		render(<Resources resources={mockResources} />);
-
-		// Check that the link is rendered
-		const link = screen.getByRole("link");
-		expect(link).toHaveAttribute("href", "https://example.com");
-		expect(link).toHaveAttribute("target", "_blank");
-		expect(link).toHaveAttribute("rel", "noopener noreferrer");
-
-		// Check that the icon is within the link
-		const icon = link.querySelector('[data-testid="hugeicon"]');
-		expect(icon).toBeInTheDocument();
-	});
+	// Note: Links test removed as resources.links is always null in PATTERN_QUERYResult
 
 	it("should display arrow icon between 'FROM SOLUTION' and badges", () => {
-		const mockResources: DereferencedResource[] = [
-			{
-				_id: "resource-1",
-				title: "Test Resource",
-				description: null,
-				solutionRefs: [
-					{ _ref: "solution-1", _type: "reference", _key: "key1" },
-				],
-			},
+		const mockResources: ResourceFromQuery[] = [
+			createMockResource("resource-1", "Test Resource", undefined, [
+				createMockSolution("solution-1", "Solution 1"),
+			]),
 		];
 
 		render(<Resources resources={mockResources} />);
@@ -331,15 +293,10 @@ describe("Resources Component", () => {
 	});
 
 	it("should display solution badges with ChartRelationshipIcon", () => {
-		const mockResources: DereferencedResource[] = [
-			{
-				_id: "resource-1",
-				title: "Test Resource",
-				description: null,
-				solutionRefs: [
-					{ _ref: "solution-1", _type: "reference", _key: "key1" },
-				],
-			},
+		const mockResources: ResourceFromQuery[] = [
+			createMockResource("resource-1", "Test Resource", undefined, [
+				createMockSolution("solution-1", "Solution 1"),
+			]),
 		];
 
 		render(<Resources resources={mockResources} />);
@@ -349,27 +306,5 @@ describe("Resources Component", () => {
 		expect(badgeIcons.length).toBeGreaterThan(0);
 	});
 
-	it("should properly handle solution references that are not valid", () => {
-		const mockResources: DereferencedResource[] = [
-			{
-				_id: "resource-1",
-				title: "Resource with mixed references",
-				description: null,
-				solutionRefs: [
-					{ _ref: "solution-1", _type: "reference", _key: "key1" },
-					// This should be filtered out by isSolutionReference
-					{ _ref: "invalid", _type: "invalid", _key: "key2" },
-					{ _ref: "solution-2", _type: "reference", _key: "key3" },
-				],
-			},
-		];
-
-		render(<Resources resources={mockResources} />);
-
-		// Only valid solution badges should be displayed
-		const solutionBadges = screen.getAllByTestId("badge-solution");
-		expect(solutionBadges).toHaveLength(2);
-		expect(screen.getByText("Solution 1")).toBeInTheDocument();
-		expect(screen.getByText("Solution 3")).toBeInTheDocument(); // Index 2 becomes Solution 3
-	});
+	// Note: Invalid solution references test removed as solutions are now fully dereferenced in PATTERN_QUERYResult
 });

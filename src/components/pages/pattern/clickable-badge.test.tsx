@@ -66,7 +66,7 @@ describe("ClickableBadge Component", () => {
 					type="tag"
 					id={"tag-123"}
 					title="test"
-					className="custom-class"
+					className="custom-class another-class"
 				>
 					<span>Test</span>
 				</ClickableBadge>,
@@ -74,8 +74,7 @@ describe("ClickableBadge Component", () => {
 
 			const link = screen.getByRole("link");
 			expect(link).toHaveClass("custom-class");
-			expect(link).toHaveClass("inline-flex");
-			expect(link).toHaveClass("transition-all");
+			expect(link).toHaveClass("another-class");
 		});
 	});
 
@@ -152,8 +151,9 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveClass("inline-flex");
-			expect(link).toHaveClass("transition-all");
+			// Empty className should result in empty class attribute
+			expect(link).toHaveAttribute("class", "");
+			expect(screen.getByText("Test")).toBeInTheDocument();
 		});
 
 		it("should render children correctly", () => {

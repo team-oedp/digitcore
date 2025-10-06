@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { type ReactNode, forwardRef } from "react";
 import {
 	getAudienceNavigationUrl,
 	getTagNavigationUrl,
@@ -14,19 +14,18 @@ type ClickableBadgeProps = {
 	id: string;
 	title?: string;
 	className?: string;
+	icon?: ReactNode;
 };
 
 /**
  * Wrapper component that makes pattern page badges clickable
  * Maintains the existing visual design while adding navigation functionality
+ * Forwards refs and merges classNames for use with Radix Slot (asChild)
  */
-export function ClickableBadge({
-	children,
-	type,
-	id,
-	title,
-	className = "",
-}: ClickableBadgeProps) {
+export const ClickableBadge = forwardRef<
+	HTMLAnchorElement,
+	ClickableBadgeProps
+>(({ children, type, id, title, className = "", icon, ...props }, ref) => {
 	// Generate the appropriate URL based on badge type
 	const getNavigationUrl = (): string => {
 		switch (type) {
@@ -45,15 +44,20 @@ export function ClickableBadge({
 
 	return (
 		<Link
+			ref={ref}
 			href={navigationUrl}
-			className={`inline-flex transition-all duration-200 ${className}`}
+			className={className}
 			aria-label={`Navigate to ${type}: ${title || id}`}
 			data-testid={`clickable-badge-${type}`}
 			data-type={type}
 			data-id={id}
 			{...(title && { "data-title": title })}
+			{...props}
 		>
+			{icon && <span className="flex-shrink-0">{icon}</span>}
 			{children}
 		</Link>
 	);
-}
+});
+
+ClickableBadge.displayName = "ClickableBadge";
