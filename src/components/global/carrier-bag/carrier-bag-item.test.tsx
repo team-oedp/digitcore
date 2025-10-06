@@ -235,7 +235,7 @@ describe("CarrierBagItem", () => {
 			const container = screen
 				.getByText("Test Pattern")
 				.closest(".carrier-bag-item-container");
-			expect(container).toHaveClass("bg-background");
+			expect(container).toHaveClass("bg-item-background");
 			expect(container).not.toHaveClass("bg-amber-50");
 		});
 

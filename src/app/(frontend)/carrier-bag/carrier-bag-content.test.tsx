@@ -10,6 +10,9 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
 	disconnect: vi.fn(),
 }));
 
+// Mock scrollIntoView for cmdk library
+Element.prototype.scrollIntoView = vi.fn();
+
 // Mock Next.js navigation
 const mockPush = vi.fn();
 const mockRouter = {

@@ -43,9 +43,9 @@ export function EnhanceToggle({
 	// If user has preferences, show the enhance toggle
 	if (hasPreferences) {
 		return (
-			<HoverCard>
-				<HoverCardTrigger asChild>
-					<div className="flex items-center gap-2">
+			<div className="inline-flex py-2">
+				<HoverCard>
+					<HoverCardTrigger asChild>
 						<Toggle
 							pressed={enabled}
 							onPressedChange={onToggle}
@@ -56,17 +56,21 @@ export function EnhanceToggle({
 							<Sparkles className="h-3 w-3" />
 							<span className="text-xs">Enhance</span>
 						</Toggle>
-					</div>
-				</HoverCardTrigger>
-				<HoverCardContent className="w-80">
-					<div className="space-y-2">
-						<h4 className="font-semibold text-sm">Enhance Results</h4>
-						<p className="text-muted-foreground text-sm">
-							{generateHoverText()}
-						</p>
-					</div>
-				</HoverCardContent>
-			</HoverCard>
+					</HoverCardTrigger>
+					<HoverCardContent
+						className="w-80"
+						align="start"
+						collisionPadding={16}
+					>
+						<div className="space-y-2">
+							<h4 className="font-normal text-sm">Enhance Results</h4>
+							<p className="text-muted-foreground text-sm">
+								{generateHoverText()}
+							</p>
+						</div>
+					</HoverCardContent>
+				</HoverCard>
+			</div>
 		);
 	}
 

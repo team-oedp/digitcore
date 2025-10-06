@@ -11,7 +11,7 @@ export function SearchResultSkeleton({
 	variant?: "minimal" | "typical" | "full";
 }) {
 	return (
-		<div className="relative w-full border-neutral-400 border-t border-dashed pb-9">
+		<div className="relative w-full border-neutral-300 border-t border-dashed pb-9">
 			<div className="flex flex-col py-4">
 				{/* Header with title - exact structure match */}
 				<div className="mb-4">
