@@ -400,10 +400,6 @@ export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
       boost(title match ($searchTerm + "*"), 8),
       boost(pt::text(description) match ($searchTerm + "*"), 6),
       
-      // Boost based on onboarding preferences (organize results by user interests)
-      boost(count((audiences[]._ref)[@ in $prefAudiences]) > 0, 5),
-      boost(theme._ref in $prefThemes, 4),
-      
       // Basic scoring for any match
       title match ($searchTerm + "*"),
       pt::text(description) match ($searchTerm + "*")
@@ -411,7 +407,12 @@ export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
   // Filter out results with very low relevance scores
   [_score > 0]
   // Order by relevance score, then by title
-  | order(_score desc, title asc)
+  | order(
+      count((audiences[]._ref)[@ in $prefAudiences]) desc,
+      (theme._ref in $prefThemes) desc,
+      _score desc,
+      title asc
+    )
   {
     _id,
     _type,
@@ -441,7 +442,7 @@ export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
       _id,
       title,
       description,
-      solution[]->{
+      solutions[]->{
         _id,
         title
       }

@@ -295,6 +295,7 @@ export function SearchInterface({
 			<EnhanceToggle
 				enabled={enhanceEnabled}
 				onToggle={handleEnhanceToggle}
+				hasCompletedOnboarding={onboardingPreferences.hasCompletedOnboarding}
 				audiencePreferences={getAudienceLabels(
 					onboardingPreferences.selectedAudienceIds,
 				)}
