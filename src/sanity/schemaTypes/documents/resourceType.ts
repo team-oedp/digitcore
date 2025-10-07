@@ -1,4 +1,4 @@
-import { WrenchIcon, TextIcon } from "@sanity/icons";
+import { TextIcon, WrenchIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { validateUniqueTitle } from "../../lib/validation";
 
