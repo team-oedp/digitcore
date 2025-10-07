@@ -20,11 +20,11 @@ const buttonVariants = cva(
 					"hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
 				link: "text-muted-foreground hover:text-foreground",
 				pattern:
-					"border border-[var(--pattern-button-border)] bg-[var(--pattern-button-background)] font-medium text-[var(--pattern-button-text)] capitalize hover:opacity-80 dark:border-[var(--pattern-button-border--dark)] dark:bg-[var(--pattern-button-background--dark)] dark:text-[var(--pattern-button-text--dark)]",
+					"border border-green-600/20 bg-green-50 font-medium text-green-700 capitalize hover:bg-green-100 dark:border-green-500/30 dark:bg-green-950/30 dark:text-green-400 dark:hover:bg-green-950/50",
 				solution:
-					"border border-[var(--solution-button-border)] bg-[var(--solution-button-background)] font-medium text-[var(--solution-button-text)] capitalize hover:opacity-80 dark:border-[var(--solution-button-border--dark)] dark:bg-[var(--solution-button-background--dark)] dark:text-[var(--solution-button-text--dark)]",
+					"border border-purple-700/10 bg-purple-50 font-medium text-purple-700 capitalize hover:bg-purple-100 dark:border-purple-500/20 dark:bg-purple-950/30 dark:text-purple-400 dark:hover:bg-purple-950/50",
 				resource:
-					"border border-[var(--resource-button-border)] bg-[var(--resource-button-background)] font-medium text-[var(--resource-button-text)] capitalize hover:opacity-80 dark:border-[var(--resource-button-border--dark)] dark:bg-[var(--resource-button-background--dark)] dark:text-[var(--resource-button-text--dark)]",
+					"border border-pink-700/10 bg-pink-50 font-medium text-pink-700 capitalize hover:bg-pink-100 dark:border-pink-500/20 dark:bg-pink-950/30 dark:text-pink-400 dark:hover:bg-pink-950/50",
 			},
 			size: {
 				default: "h-9 px-4 py-2 has-[>svg]:px-3",

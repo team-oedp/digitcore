@@ -163,10 +163,9 @@ describe("PatternConnections Component", () => {
 				.getByText("Sustainability")
 				.closest('[data-slot="badge"]');
 			expect(badgeContent).toHaveClass("cursor-pointer");
-			// The Badge component uses CSS variables for hover styles
-			expect(badgeContent).toHaveClass(
-				"hover:border-[var(--theme-badge-border-dark)]",
-			);
+			// The Badge component uses Tailwind colors for hover styles (theme uses orange)
+			expect(badgeContent).toHaveClass("hover:bg-orange-100");
+			// Badge uses transition-[color,box-shadow] not transition-colors
 			expect(badgeContent).toHaveClass("transition-[color,box-shadow]");
 		});
 
@@ -178,12 +177,8 @@ describe("PatternConnections Component", () => {
 				.getByText("Developers")
 				.closest('[data-slot="badge"]');
 			expect(badgeContent).toHaveClass("cursor-pointer");
-			// The Badge component uses CSS variables for hover styles
-			expect(badgeContent).toHaveClass(
-				"hover:border-[var(--audience-badge-border-dark)]",
-			);
-			expect(badgeContent).toHaveClass("transition-colors");
-			expect(badgeContent).toHaveClass("hover:bg-blue-150");
+			// The Badge component uses Tailwind colors for hover styles (audience uses blue)
+			expect(badgeContent).toHaveClass("hover:bg-blue-100");
 		});
 
 		it("should have hover styles on tag badges", () => {
@@ -194,12 +189,8 @@ describe("PatternConnections Component", () => {
 				.getByText("accessibility")
 				.closest('[data-slot="badge"]');
 			expect(badgeContent).toHaveClass("cursor-pointer");
-			// The Badge component uses CSS variables for hover styles
-			expect(badgeContent).toHaveClass(
-				"hover:border-[var(--tag-badge-border-dark)]",
-			);
-			expect(badgeContent).toHaveClass("transition-colors");
-			expect(badgeContent).toHaveClass("hover:bg-violet-150");
+			// The Badge component uses Tailwind colors for hover styles (tag uses purple)
+			expect(badgeContent).toHaveClass("hover:bg-purple-100");
 		});
 	});
 

@@ -75,7 +75,7 @@ function SidebarContentComponent(props: {
 	} = props;
 	return (
 		<>
-			<SidebarContent className="flex h-full flex-col">
+			<SidebarContent className="flex h-full flex-col bg-container-background">
 				<SidebarGroup className="flex h-full flex-col">
 					<SidebarGroupContent className="flex flex-col">
 						<div>
@@ -223,11 +223,10 @@ function SidebarContentComponent(props: {
 								))}
 							</SidebarMenu>
 						</div>
-						{/* Context section removed per request */}
 					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarContent>
-			<SidebarFooter className="mt-auto flex flex-col items-start">
+			<SidebarFooter className="mt-auto flex flex-col items-start bg-container-background">
 				<CloseCarrierBagButton />
 			</SidebarFooter>
 		</>
@@ -366,7 +365,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 
 	return (
 		<SidebarProvider
-			className="flex h-full min-h-0 w-full gap-2 bg-secondary"
+			className="flex h-full min-h-0 w-full gap-2 bg-page-background"
 			style={
 				{
 					"--sidebar-width": "24rem",

@@ -22,7 +22,7 @@ export function SuggestSolutionButton({
 				trigger={
 					<button
 						type="button"
-						className="flex w-fit cursor-pointer items-start gap-2 rounded-lg border border-border bg-background px-2 py-1 transition-colors hover:bg-secondary md:gap-2.5 dark:hover:bg-neutral-800"
+						className="flex w-fit cursor-pointer items-start gap-2 rounded-lg border border-border bg-transparent px-2 py-1 transition-colors hover:bg-secondary md:gap-2.5 dark:hover:bg-neutral-800"
 					>
 						<HugeiconsIcon
 							icon={DashboardSquareEditIcon}

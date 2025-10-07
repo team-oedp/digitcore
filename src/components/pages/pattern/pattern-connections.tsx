@@ -4,6 +4,7 @@ import {
 	BadgeGroup,
 	BadgeGroupContainer,
 } from "~/components/shared/badge-group";
+import { ThemeMiniBadge } from "~/components/shared/theme-mini-badge";
 import { Badge } from "~/components/ui/badge";
 import type { Audience, Tag, Theme } from "~/sanity/sanity.types";
 import { ClickableBadge } from "./clickable-badge";
@@ -29,18 +30,16 @@ export function PatternConnections({
 			{/* Theme Row */}
 			{theme && (
 				<BadgeGroup>
-					<ClickableBadge
-						type="theme"
-						id={theme._id}
-						title={theme.title || undefined}
-					>
-						<Badge variant="theme" className="cursor-pointer">
-							<span className="flex h-[16px] items-center justify-center rounded border border-orange-200 px-1 py-0 text-[10px] tracking-[-0.14px] md:h-[18px] md:px-1.5 md:text-[12px]">
-								Theme
-							</span>
+					<Badge variant="theme" className="cursor-pointer" asChild>
+						<ClickableBadge
+							type="theme"
+							id={theme._id}
+							title={theme.title || undefined}
+							icon={<ThemeMiniBadge />}
+						>
 							<span className="text-nowrap">{theme.title}</span>
-						</Badge>
-					</ClickableBadge>
+						</ClickableBadge>
+					</Badge>
 				</BadgeGroup>
 			)}
 
@@ -48,15 +47,16 @@ export function PatternConnections({
 			{audiences && audiences.length > 0 && (
 				<BadgeGroup>
 					{audiences.map((audience) => (
-						<ClickableBadge
+						<Badge
 							key={audience._id}
-							type="audience"
-							id={audience._id}
-							title={audience.title || undefined}
+							variant="audience"
+							className="cursor-pointer"
+							asChild
 						>
-							<Badge
-								variant="audience"
-								className="cursor-pointer transition-colors duration-200 hover:bg-blue-150"
+							<ClickableBadge
+								type="audience"
+								id={audience._id}
+								title={audience.title || undefined}
 								icon={
 									<HugeiconsIcon
 										icon={ChartRelationshipIcon}
@@ -68,8 +68,8 @@ export function PatternConnections({
 								}
 							>
 								<span className="text-nowrap">{audience.title}</span>
-							</Badge>
-						</ClickableBadge>
+							</ClickableBadge>
+						</Badge>
 					))}
 				</BadgeGroup>
 			)}
@@ -78,15 +78,15 @@ export function PatternConnections({
 			{tags && tags.length > 0 && (
 				<BadgeGroup>
 					{tags.map((tag) => (
-						<ClickableBadge
+						<Badge
 							key={tag._id}
-							type="tag"
-							id={tag._id}
-							title={tag.title || undefined}
+							variant="tag"
+							className="cursor-pointer capitalize"
+							asChild
 						>
-							<Badge
-								variant="tag"
-								className="cursor-pointer capitalize transition-colors duration-200 hover:bg-violet-150"
+							<ClickableBadge
+								type="tag"
+								id={tag._id}
 								icon={
 									<HugeiconsIcon
 										icon={Tag01Icon}
@@ -96,10 +96,11 @@ export function PatternConnections({
 										className="md:h-[14px] md:w-[14px]"
 									/>
 								}
+								title={tag.title || undefined}
 							>
 								<span className="text-nowrap">{tag.title}</span>
-							</Badge>
-						</ClickableBadge>
+							</ClickableBadge>
+						</Badge>
 					))}
 				</BadgeGroup>
 			)}

@@ -14,6 +14,9 @@ type GlossaryPillProps = {
 	shouldStyle?: boolean;
 };
 
+export const inlineAnnotationClassName =
+	"inline-flex items-center gap-1 rounded-md border border-foreground bg-transparent px-2.5 pt-0.5 pb-1 align-middle text-sm leading-none text-inherit no-underline transition-colors hover:text-brand hover:border-brand";
+
 /**
  * Component that renders a glossary term as a styled pill or plain text
  * Only first occurrences get styled with icon and link
@@ -33,14 +36,11 @@ export function GlossaryPill({
 	return (
 		<Link
 			href={createGlossaryLink(term.title)}
-			className={cn(
-				"inline-flex items-center gap-1 rounded-md border border-neutral-300 bg-primary/5 px-2.5 pt-0.5 pb-1 align-middle text-primary leading-[0.9] no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary",
-				className,
-			)}
+			className={cn(inlineAnnotationClassName, className)}
 			title={`View definition of "${term.title}"`}
 		>
 			{children}
-			<Icon icon={BookOpen02Icon} className="h-4 w-4" />
+			<Icon icon={BookOpen02Icon} className="h-3 w-3" />
 		</Link>
 	);
 }

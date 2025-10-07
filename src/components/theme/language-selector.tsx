@@ -33,6 +33,7 @@ export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
 						className={cn(
 							"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear",
 						)}
+						suppressHydrationWarning
 					>
 						<span
 							className={cn(

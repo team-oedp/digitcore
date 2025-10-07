@@ -11,6 +11,7 @@ import {
 	BadgeGroupContainer,
 } from "~/components/shared/badge-group";
 import { Icon } from "~/components/shared/icon";
+import { ThemeMiniBadge } from "~/components/shared/theme-mini-badge";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
@@ -19,7 +20,15 @@ import {
 	highlightMatches,
 	processDescriptionForDisplay,
 } from "~/lib/search-utils";
+import { cn } from "~/lib/utils";
 import type { SearchPattern } from "~/types/search";
+
+type BadgeConfig = {
+	type: "theme" | "audience" | "tag";
+	items: Array<{ _id: string; title: string | null }>;
+	variant: "theme" | "audience" | "tag";
+	getIcon: (item: { title: string | null }) => React.ReactNode;
+};
 
 type SearchResultItemProps = {
 	pattern: SearchPattern;
@@ -27,99 +36,73 @@ type SearchResultItemProps = {
 	showPatternIcon?: boolean;
 };
 
-// Shared base layout component
-function SearchResultBase({
-	children,
-	title,
-	titleElement,
-	showPatternIcon = false,
-	patternIcon,
+function PatternIcon({
+	icon,
+	className,
+	isPatternsPage = false,
 }: {
-	children: React.ReactNode;
-	title: string;
-	titleElement?: React.ReactNode;
-	showPatternIcon?: boolean;
-	patternIcon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
+	icon: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
+	className?: string;
+	isPatternsPage?: boolean;
 }) {
 	return (
-		<div className="relative max-h-[280px] min-h-[160px] w-full overflow-hidden border-dashed-brand-t pb-0 lg:min-h-[220px]">
-			<div className="flex flex-col py-4">
-				{/* Header with title */}
-				<div className="mb-4">
-					{titleElement ? (
-						titleElement
-					) : (
-						<div className="flex items-start gap-3">
-							{showPatternIcon && patternIcon && (
-								<div className="h-6 w-6 flex-shrink-0 text-neutral-500">
-									{React.createElement(patternIcon, {
-										className:
-											"h-full w-full fill-icon/40 text-icon/70 opacity-40",
-									})}
-								</div>
-							)}
-							<h3 className="w-full text-left font-light text-lg text-primary leading-tight md:text-xl">
-								{title}
-							</h3>
-						</div>
-					)}
-				</div>
-				{/* Content area with full width */}
+		<div
+			className={cn(
+				"flex-shrink-0 text-neutral-500",
+				isPatternsPage ? "h-5 w-5" : "h-4 w-4",
+				className,
+			)}
+		>
+			{React.createElement(icon, {
+				className: "h-full w-full fill-icon/40 text-icon/70 opacity-40",
+			})}
+		</div>
+	);
+}
+
+function SearchResultBase({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	return (
+		<div className="relative min-h-[220px] w-full border-neutral-300 border-t border-dashed py-4 pb-6">
+			<div className="flex flex-col">
 				<div className="w-full space-y-4">{children}</div>
 			</div>
 		</div>
 	);
 }
 
-// Main Search Result Component
-export function SearchResultItem({
-	pattern,
-	searchTerm = "",
-	showPatternIcon = false,
-}: SearchResultItemProps) {
-	const pathname = usePathname();
-	const isPatternsPage = pathname === "/patterns";
-	const title = pattern.title || "Untitled Pattern";
-	const theme = pattern.theme;
-	const tags = pattern.tags || [];
-	const audiences = pattern.audiences || [];
-	const rawDescription = pattern.description || [];
-
-	// Get the pattern-specific icon
-	const PatternIcon = getPatternIconWithMapping(pattern.slug || "");
-
-	// Process description for display (handles both search context and first sentence)
-	const descriptionResult = processDescriptionForDisplay(
-		rawDescription as PortableTextBlock[],
-		searchTerm,
-		200,
-	);
-
-	const displayDescription = descriptionResult.text;
-
-	// Check where matches occur
-	const matchExplanation = getMatchExplanation(
-		title,
-		rawDescription as PortableTextBlock[],
-		searchTerm,
-	);
-
-	// Create clickable title element using Next.js Link
-	const titleElement = (
+function ResultTitle({
+	title,
+	slug,
+	showPatternIcon,
+	icon,
+	isPatternsPage = false,
+}: {
+	title: string;
+	slug: string;
+	showPatternIcon: boolean;
+	icon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
+	isPatternsPage?: boolean;
+}) {
+	return (
 		<div className="inline-flex w-full items-start justify-between gap-6">
 			<div className="inline-flex flex-1 items-baseline justify-start gap-4">
-				{showPatternIcon && PatternIcon && (
-					<div className="flex h-4 w-4 flex-shrink-0 text-neutral-500">
-						{React.createElement(PatternIcon, {
-							className: "h-full w-full fill-icon/40 text-icon/70 opacity-40",
-						})}
-					</div>
+				{showPatternIcon && icon && (
+					<PatternIcon icon={icon} isPatternsPage={isPatternsPage} />
 				)}
 				<Link
-					href={`/pattern/${pattern.slug}`}
+					href={`/pattern/${slug}`}
 					className="inline-flex items-start gap-3"
 				>
-					<h3 className="line-clamp-2 text-left font-light text-primary text-xl leading-tight md:text-2xl">
+					<h3
+						className={cn(
+							"line-clamp-3 text-left font-light text-primary leading-tight",
+							isPatternsPage ? "text-2xl md:text-3xl" : "text-xl md:text-2xl",
+						)}
+					>
 						{title}
 					</h3>
 				</Link>
@@ -130,128 +113,167 @@ export function SearchResultItem({
 				asChild
 				className="text-xs lg:text-sm"
 			>
-				<Link href={`/pattern/${pattern.slug}`}>Visit pattern</Link>
+				<Link href={`/pattern/${slug}`}>Visit pattern</Link>
 			</Button>
 		</div>
 	);
+}
+
+function ResultDescription({
+	text,
+	searchTerm,
+	matchExplanation,
+	matchCount,
+}: {
+	text: string;
+	searchTerm?: string;
+	matchExplanation: { titleMatch: boolean; descriptionMatch: boolean };
+	matchCount: number;
+}) {
+	if (!text) return null;
+
+	const hasMatches =
+		matchExplanation.titleMatch || matchExplanation.descriptionMatch;
 
 	return (
-		<SearchResultBase
-			title={title}
-			titleElement={titleElement}
-			showPatternIcon={showPatternIcon}
-			patternIcon={PatternIcon}
-		>
-			{/* Description with Search Context */}
-			{descriptionResult.text && (
-				<div className="mb-4">
-					<div className="relative line-clamp-3 overflow-hidden">
-						<span className="block font-light text-base text-description-muted md:text-xl dark:text-foreground">
-							{renderHighlightedText(displayDescription, searchTerm)}
-						</span>
-					</div>
+		<div className="mb-4">
+			<div className="relative line-clamp-3 overflow-hidden">
+				<span className="block font-light text-base text-description-muted md:text-xl dark:text-foreground">
+					{renderHighlightedText(text, searchTerm || "")}
+				</span>
+			</div>
 
-					{/* Match Indicators */}
-					{searchTerm &&
-						(matchExplanation.titleMatch ||
-							matchExplanation.descriptionMatch) && (
-							<div className="mt-2 flex items-center gap-1 text-minor">
-								<span className="text-minor">Match found in</span>
-								{matchExplanation.titleMatch && (
-									<span className="text-minor">Title</span>
-								)}
-								{matchExplanation.titleMatch &&
-									matchExplanation.descriptionMatch && (
-										<span className="text-minor">and</span>
-									)}
-								{matchExplanation.descriptionMatch && (
-									<span className="text-minor">Description</span>
-								)}
-								{descriptionResult.matchCount > 1 && (
-									<span className="text-minor">
-										({descriptionResult.matchCount} matches)
-									</span>
-								)}
-							</div>
-						)}
-				</div>
+			{searchTerm && hasMatches && (
+				<MatchIndicator
+					titleMatch={matchExplanation.titleMatch}
+					descriptionMatch={matchExplanation.descriptionMatch}
+					matchCount={matchCount}
+				/>
 			)}
+		</div>
+	);
+}
 
-			{/* Badges Groups - hidden on /patterns */}
+function MatchIndicator({
+	titleMatch,
+	descriptionMatch,
+	matchCount,
+}: {
+	titleMatch: boolean;
+	descriptionMatch: boolean;
+	matchCount: number;
+}) {
+	const matchParts = [
+		titleMatch && "Title",
+		descriptionMatch && "Description",
+	].filter(Boolean);
+
+	return (
+		<div className="mt-2 flex items-center gap-1 text-minor">
+			<span>Match found in</span>
+			<span>{matchParts.join(" and ")}</span>
+			{matchCount > 1 && <span>({matchCount} matches)</span>}
+		</div>
+	);
+}
+
+function BadgeGroupRenderer({ config }: { config: BadgeConfig }) {
+	if (config.items.length === 0) return null;
+
+	return (
+		<BadgeGroup>
+			{config.items.map((item) => (
+				<Badge
+					key={item._id}
+					variant={config.variant}
+					className="cursor-pointer capitalize"
+					asChild
+				>
+					<ClickableBadge
+						type={config.type}
+						id={item._id}
+						title={item.title || undefined}
+						icon={config.getIcon(item)}
+					>
+						{item.title}
+					</ClickableBadge>
+				</Badge>
+			))}
+		</BadgeGroup>
+	);
+}
+
+export function SearchResultItem({
+	pattern,
+	searchTerm = "",
+	showPatternIcon = false,
+}: SearchResultItemProps) {
+	const pathname = usePathname();
+	const isPatternsPage = pathname === "/patterns";
+	const title = pattern.title || "Untitled Pattern";
+	const rawDescription = pattern.description || [];
+
+	const PatternIconComponent = getPatternIconWithMapping(pattern.slug || "");
+
+	const descriptionResult = processDescriptionForDisplay(
+		rawDescription as PortableTextBlock[],
+		searchTerm,
+		200,
+	);
+
+	const matchExplanation = getMatchExplanation(
+		title,
+		rawDescription as PortableTextBlock[],
+		searchTerm,
+	);
+
+	const badgeConfigs: BadgeConfig[] = [
+		{
+			type: "theme",
+			items: pattern.theme ? [pattern.theme] : [],
+			variant: "theme",
+			getIcon: () => <ThemeMiniBadge />,
+		},
+		{
+			type: "audience",
+			items: pattern.audiences || [],
+			variant: "audience",
+			getIcon: () => (
+				<Icon icon={ChartRelationshipIcon} className="h-3.5 w-3.5 capitalize" />
+			),
+		},
+		{
+			type: "tag",
+			items: pattern.tags || [],
+			variant: "tag",
+			getIcon: () => (
+				<Icon icon={Tag01Icon} className="h-3.5 w-3.5 capitalize" />
+			),
+		},
+	];
+
+	return (
+		<SearchResultBase>
+			<ResultTitle
+				title={title}
+				slug={pattern.slug || ""}
+				showPatternIcon={showPatternIcon}
+				icon={PatternIconComponent}
+				isPatternsPage={isPatternsPage}
+			/>
+
+			<ResultDescription
+				text={descriptionResult.text}
+				searchTerm={searchTerm}
+				matchExplanation={matchExplanation}
+				matchCount={descriptionResult.matchCount}
+			/>
+
 			{!isPatternsPage && (
 				<BadgeGroupContainer>
-					{/* Theme Badges */}
-					{theme && (
-						<BadgeGroup>
-							<ClickableBadge
-								type="theme"
-								id={theme._id}
-								title={theme.title || undefined}
-							>
-								<Badge
-									variant="theme"
-									icon={<ThemeMiniBadge />}
-									className="cursor-pointer capitalize"
-								>
-									{theme.title}
-								</Badge>
-							</ClickableBadge>
-						</BadgeGroup>
-					)}
-
-					{/* Audience Badges */}
-					{audiences.length > 0 && (
-						<BadgeGroup>
-							{audiences.map((audience) => (
-								<ClickableBadge
-									key={audience._id}
-									type="audience"
-									id={audience._id}
-									title={audience.title || undefined}
-								>
-									<Badge
-										variant="audience"
-										className="cursor-pointer"
-										icon={
-											<Icon
-												icon={ChartRelationshipIcon}
-												className="h-3.5 w-3.5 capitalize"
-											/>
-										}
-									>
-										{audience.title}
-									</Badge>
-								</ClickableBadge>
-							))}
-						</BadgeGroup>
-					)}
-
-					{/* Tag Badges */}
-					{tags.length > 0 && (
-						<BadgeGroup>
-							{tags.map((tag) => (
-								<ClickableBadge
-									key={tag._id}
-									type="tag"
-									id={tag._id}
-									title={tag.title || undefined}
-								>
-									<Badge
-										variant="tag"
-										className="cursor-pointer"
-										icon={
-											<Icon
-												icon={Tag01Icon}
-												className="h-3.5 w-3.5 capitalize"
-											/>
-										}
-									>
-										{tag.title}
-									</Badge>
-								</ClickableBadge>
-							))}
-						</BadgeGroup>
-					)}
+					{badgeConfigs.map((config) => (
+						<BadgeGroupRenderer key={config.type} config={config} />
+					))}
 				</BadgeGroupContainer>
 			)}
 		</SearchResultBase>
@@ -260,48 +282,35 @@ export function SearchResultItem({
 
 function renderHighlightedText(text: string, searchTerm: string) {
 	if (!searchTerm.trim()) return text;
+
 	const highlighted = highlightMatches(text, searchTerm);
 	const parts = highlighted.split(
 		/(<mark class="bg-yellow-200 rounded-sm">|<\/mark>)/g,
 	);
-	const result: React.ReactNode[] = [];
-	let inMark = false;
-	let markBuffer = "";
-	let markKey = 0;
-	let textKey = 0;
-	for (const part of parts) {
+
+	let isHighlight = false;
+	let highlightBuffer = "";
+	let keyCounter = 0;
+
+	return parts.reduce<React.ReactNode[]>((acc, part) => {
 		if (part === '<mark class="bg-yellow-200 rounded-sm">') {
-			inMark = true;
-			markBuffer = "";
+			isHighlight = true;
+			highlightBuffer = "";
 		} else if (part === "</mark>") {
-			if (inMark) {
-				result.push(
-					<mark
-						key={`highlight-${markKey++}`}
-						className="rounded-sm bg-yellow-200"
-					>
-						{markBuffer}
+			if (isHighlight && highlightBuffer) {
+				acc.push(
+					<mark key={`h-${keyCounter++}`} className="rounded-sm bg-yellow-200">
+						{highlightBuffer}
 					</mark>,
 				);
-				markBuffer = "";
-				inMark = false;
 			}
-		} else if (inMark) {
-			markBuffer += part;
-		} else {
-			result.push(<span key={`text-${textKey++}`}>{part}</span>);
+			isHighlight = false;
+			highlightBuffer = "";
+		} else if (isHighlight) {
+			highlightBuffer += part;
+		} else if (part) {
+			acc.push(<span key={`t-${keyCounter++}`}>{part}</span>);
 		}
-	}
-	return result;
-}
-
-// Theme Mini Badge Component
-function ThemeMiniBadge() {
-	return (
-		<div className="flex h-[16px] items-center justify-center rounded border border-[var(--theme-mini-icon-border)] px-1 py-0 md:h-[18px] md:px-1.5">
-			<span className="font-normal text-[10px] text-[var(--theme-badge-text)] tracking-tighter md:text-[12px]">
-				Theme
-			</span>
-		</div>
-	);
+		return acc;
+	}, []);
 }

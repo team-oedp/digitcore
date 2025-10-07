@@ -1,3 +1,5 @@
+"use client";
+
 import { Search02Icon } from "@hugeicons/core-free-icons";
 import {
 	ArrowDownIcon,

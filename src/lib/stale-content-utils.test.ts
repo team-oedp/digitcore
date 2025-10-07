@@ -11,7 +11,7 @@ describe("stale-content-utils", () => {
 			const classes = getStaleItemClasses(false);
 
 			expect(classes).toContain("carrier-bag-item-container");
-			expect(classes).toContain("bg-background");
+			expect(classes).toContain("bg-item-background");
 			expect(classes).not.toContain("bg-amber-50");
 			expect(classes).not.toContain("dark:bg-amber-950/30");
 		});
@@ -22,13 +22,13 @@ describe("stale-content-utils", () => {
 			expect(classes).toContain("carrier-bag-item-container");
 			expect(classes).toContain("bg-amber-50");
 			expect(classes).toContain("dark:bg-amber-950/30");
-			expect(classes).not.toContain("bg-background");
+			expect(classes).not.toContain("bg-item-background");
 		});
 
 		it("should default to non-stale when no parameter provided", () => {
 			const classes = getStaleItemClasses();
 
-			expect(classes).toContain("bg-background");
+			expect(classes).toContain("bg-item-background");
 			expect(classes).not.toContain("bg-amber-50");
 		});
 
@@ -45,7 +45,6 @@ describe("stale-content-utils", () => {
 				"px-3",
 				"py-2.5",
 				"transition-colors",
-				"hover:bg-muted/50",
 				"[&:hover_.item-actions]:opacity-100",
 			];
 
@@ -173,7 +172,7 @@ describe("stale-content-utils", () => {
 			const statusText = getStaleStatusText(isStale);
 
 			// Container should have normal styling
-			expect(containerClasses).toContain("bg-background");
+			expect(containerClasses).toContain("bg-item-background");
 			expect(containerClasses).not.toContain("amber");
 
 			// No status text for fresh items
@@ -183,7 +182,7 @@ describe("stale-content-utils", () => {
 		it("should handle edge cases gracefully", () => {
 			// Undefined/null values should default to non-stale
 			expect(getStaleItemClasses(undefined as boolean | undefined)).toContain(
-				"bg-background",
+				"bg-item-background",
 			);
 			expect(getStaleStatusText(undefined as boolean | undefined)).toBe("");
 

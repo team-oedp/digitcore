@@ -11,7 +11,7 @@ import {
 	MultiSelectItem,
 	MultiSelectTrigger,
 	MultiSelectValue,
-} from "~/components/ui/multiselect";
+} from "~/components/ui/multi-select";
 import { createLogLocation, logger } from "~/lib/logger";
 import {
 	type ParsedSearchParams,

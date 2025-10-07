@@ -52,9 +52,10 @@ export function MultiSelect({
 	onValuesChange?: (values: string[]) => void;
 }) {
 	const [open, setOpen] = useState(false);
-	const [selectedValues, setSelectedValues] = useState(
+	const [internalValues, setInternalValues] = useState(
 		new Set<string>(values ?? defaultValues),
 	);
+	const selectedValues = values ? new Set(values) : internalValues;
 	const [items, setItems] = useState<Map<string, ReactNode>>(new Map());
 
 	function toggleValue(value: string) {
@@ -67,7 +68,7 @@ export function MultiSelect({
 			}
 			return newSet;
 		};
-		setSelectedValues(getNewSet);
+		setInternalValues(getNewSet);
 		onValuesChange?.([...getNewSet(selectedValues)]);
 	}
 
@@ -83,7 +84,7 @@ export function MultiSelect({
 			value={{
 				open,
 				setOpen,
-				selectedValues: values ? new Set(values) : selectedValues,
+				selectedValues,
 				toggleValue,
 				items,
 				onItemAdded,
@@ -114,18 +115,12 @@ export function MultiSelectTrigger({
 				role={props.role ?? "combobox"}
 				aria-expanded={props["aria-expanded"] ?? open}
 				className={cn(
-					"group flex h-auto min-h-7 w-fit items-center justify-between gap-2 overflow-hidden whitespace-nowrap rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-none outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[placeholder]:text-muted-foreground dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:hover:bg-input/50 [&_svg:not([class*='size-'])]:size-3.5 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
-					// Improve legibility on hover (both light and dark)
-					"hover:text-foreground",
-					"hover:data-[placeholder]:text-foreground",
-					"hover:[&_span]:text-foreground",
-					"hover:[&_svg]:text-foreground",
-					"hover:[&_svg]:opacity-100",
+					"flex h-auto min-h-9 w-fit items-center justify-between gap-2 overflow-hidden whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-1.5 text-sm shadow-none outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[placeholder]:text-muted-foreground dark:bg-input/30 dark:aria-invalid:ring-destructive/40 dark:hover:bg-input/50 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
 					className,
 				)}
 			>
 				{children}
-				<ChevronsUpDownIcon className="size-3.5 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground group-hover:opacity-100" />
+				<ChevronsUpDownIcon className="size-4 shrink-0 opacity-50" />
 			</Button>
 		</PopoverTrigger>
 	);
@@ -167,10 +162,8 @@ export function MultiSelectValue({
 		let amount = 0;
 		for (let i = items.length - 1; i >= 0; i--) {
 			const child = items[i];
-			if (
-				!child ||
-				containerElement.scrollWidth <= containerElement.clientWidth
-			) {
+			if (!child) continue;
+			if (containerElement.scrollWidth <= containerElement.clientWidth) {
 				break;
 			}
 			amount = items.length - i;
@@ -315,10 +308,9 @@ export function MultiSelectItem({
 	return (
 		<CommandItem
 			{...props}
-			value={value}
-			onSelect={(v) => {
-				toggleValue(v);
-				onSelect?.(v);
+			onSelect={() => {
+				toggleValue(value);
+				onSelect?.(value);
 			}}
 		>
 			<CheckIcon

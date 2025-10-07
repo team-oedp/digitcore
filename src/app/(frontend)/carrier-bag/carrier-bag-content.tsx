@@ -16,7 +16,7 @@ import {
 	MultiSelectItem,
 	MultiSelectTrigger,
 	MultiSelectValue,
-} from "~/components/ui/multiselect";
+} from "~/components/ui/multi-select";
 import {
 	Select,
 	SelectContent,
@@ -187,8 +187,8 @@ export function CarrierBagContent({
 	};
 
 	return (
-		<div className="flex h-full min-h-0 w-full flex-col gap-4 overflow-hidden rounded-md bg-sidebar px-4">
-			<div className="sticky top-0 z-10 bg-sidebar pt-2 pb-2">
+		<div className="flex h-full min-h-0 w-full flex-col gap-4 overflow-hidden rounded-md bg-container-background px-4">
+			<div className="sticky top-0 z-10 pt-2 pb-2">
 				<div className="flex items-start justify-between gap-6">
 					<div className="flex-1">
 						<h1 className="pb-1 text-page-heading">Carrier Bag</h1>
@@ -235,7 +235,7 @@ export function CarrierBagContent({
 						setManualOrderActive(false);
 					}}
 					aria-label="Group by Theme"
-					className="px-3 font-normal"
+					className="h-auto min-h-9 px-3 py-1.5 font-normal"
 				>
 					Group by Theme
 				</Toggle>
@@ -301,7 +301,7 @@ export function CarrierBagContent({
 			</div>
 
 			<div className="mb-4 flex h-full min-h-0 flex-col gap-2">
-				<div className="flex h-full flex-col gap-2 overflow-y-auto rounded-xl border border-border border-dashed p-2">
+				<div className="flex h-full flex-col gap-2 overflow-y-auto rounded-xl border border-border border-dashed bg-container-background p-2">
 					{items.length === 0 ? (
 						<div className="flex h-full flex-col items-center justify-center px-4 py-8 text-center">
 							<p className="font-normal text-muted-foreground text-sm">
@@ -315,35 +315,37 @@ export function CarrierBagContent({
 								<h4 className="mb-1 font-normal text-muted-foreground text-sm">
 									{title}
 								</h4>
-								{groupItems.map((item) => {
-									type RefTheme = { _ref: string };
-									type PopulatedTheme = { title?: string | null };
-									type PatternMaybePopulatedTheme = Pattern & {
-										theme?: RefTheme | PopulatedTheme;
-									};
+								<div className="flex flex-col gap-2">
+									{groupItems.map((item) => {
+										type RefTheme = { _ref: string };
+										type PopulatedTheme = { title?: string | null };
+										type PatternMaybePopulatedTheme = Pattern & {
+											theme?: RefTheme | PopulatedTheme;
+										};
 
-									const pattern = item.pattern as PatternMaybePopulatedTheme;
-									// Don't show theme as subtitle when grouping by theme (redundant)
-									const themeTitle = undefined;
+										const pattern = item.pattern as PatternMaybePopulatedTheme;
+										// Don't show theme as subtitle when grouping by theme (redundant)
+										const themeTitle = undefined;
 
-									const itemData: CarrierBagItemData = {
-										id: pattern._id,
-										title: pattern.title || "Untitled Pattern",
-										slug: getSlugString(pattern),
-										subtitle: themeTitle,
-										isStale: isPatternStale(pattern._id),
-										isUpdating: isPatternUpdating(pattern._id),
-										isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
-									};
-									return (
-										<CarrierBagItem
-											key={pattern._id}
-											item={itemData}
-											onRemove={() => handleRemoveItem(pattern._id)}
-											onVisit={() => handleVisitItem(getSlugString(pattern))}
-										/>
-									);
-								})}
+										const itemData: CarrierBagItemData = {
+											id: pattern._id,
+											title: pattern.title || "Untitled Pattern",
+											slug: getSlugString(pattern),
+											subtitle: themeTitle,
+											isStale: isPatternStale(pattern._id),
+											isUpdating: isPatternUpdating(pattern._id),
+											isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
+										};
+										return (
+											<CarrierBagItem
+												key={pattern._id}
+												item={itemData}
+												onRemove={() => handleRemoveItem(pattern._id)}
+												onVisit={() => handleVisitItem(getSlugString(pattern))}
+											/>
+										);
+									})}
+								</div>
 							</div>
 						))
 					) : (
