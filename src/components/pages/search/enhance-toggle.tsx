@@ -1,7 +1,6 @@
 "use client";
 
 import { Sparkles } from "lucide-react";
-import Link from "next/link";
 import {
 	HoverCard,
 	HoverCardContent,
@@ -12,6 +11,7 @@ import { Toggle } from "~/components/ui/toggle";
 type EnhanceToggleProps = {
 	enabled: boolean;
 	onToggle: (enabled: boolean) => void;
+	hasCompletedOnboarding?: boolean;
 	audiencePreferences?: string[];
 	themePreferences?: string[];
 };
@@ -19,11 +19,13 @@ type EnhanceToggleProps = {
 export function EnhanceToggle({
 	enabled,
 	onToggle,
+	hasCompletedOnboarding = false,
 	audiencePreferences = [],
 	themePreferences = [],
 }: EnhanceToggleProps) {
 	const hasPreferences =
-		audiencePreferences.length > 0 || themePreferences.length > 0;
+		hasCompletedOnboarding &&
+		(audiencePreferences.length > 0 || themePreferences.length > 0);
 
 	const generateHoverText = () => {
 		const parts: string[] = [];
