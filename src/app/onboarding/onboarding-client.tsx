@@ -501,6 +501,7 @@ function Slide1({
 						<Icon
 							icon={SearchList02Icon}
 							size={20}
+							mobileSize={16}
 							className="text-neutral-600 dark:text-neutral-400"
 							strokeWidth={1.5}
 						/>
@@ -523,6 +524,7 @@ function Slide1({
 								<Icon
 									icon={Share02Icon}
 									size={20}
+									mobileSize={14}
 									className="text-neutral-600 dark:text-neutral-400"
 									strokeWidth={1.5}
 								/>
@@ -537,6 +539,7 @@ function Slide1({
 								<Icon
 									icon={Home09Icon}
 									size={20}
+									mobileSize={14}
 									className="text-neutral-600 dark:text-neutral-400"
 									strokeWidth={1.5}
 								/>
