@@ -142,8 +142,8 @@ function ActionButton({
 	asButton?: boolean;
 }) {
 	const baseClass = preserveSize
-		? "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-2 text-left text-foreground text-sm uppercase font-light transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 md:text-lg"
-		: "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 text-left text-foreground text-xs uppercase font-light transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 md:px-3 md:py-2 md:text-lg";
+		? "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-3 py-2 text-left text-foreground text-sm uppercase font-light transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 lg:text-lg"
+		: "relative overflow-hidden inline-flex items-center rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 text-left text-foreground text-xs uppercase font-light transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 lg:px-3 lg:py-2 lg:text-lg";
 
 	// Use Link component when href is provided and we're not forcing button behavior
 	if (href && !asButton) {
@@ -365,19 +365,19 @@ function Slide({
 	const router = useRouter();
 	const setSkipped = useOnboardingStore((s) => s.setSkipped);
 	return (
-		<div className="flex h-full flex-col md:flex-row">
-			<div className="flex w-full flex-col justify-start px-3 py-3 md:w-1/2 md:py-4 md:pr-4 md:pl-4">
+		<div className="flex h-full flex-col lg:flex-row">
+			<div className="flex w-full flex-col justify-start px-3 py-3 pb-6 lg:w-1/2 lg:py-4 lg:pr-4 lg:pb-4 lg:pl-4">
 				<OnboardingBreadcrumb
 					currentSlide={currentSlide}
 					onNavigateSlide={onNavigateSlide}
 					breadcrumbs={breadcrumbs}
 				/>
 				<div className="min-h-0 flex-1">{children}</div>
-				<footer className="hidden pt-4 text-left text-body-muted md:block md:pt-8">
+				<footer className="hidden pt-4 text-left text-body-muted lg:block lg:pt-8">
 					{footerText || "Open Environmental Data Project"}
 				</footer>
 			</div>
-			<div className="relative w-full flex-1 rounded-md bg-icon/20 p-2 md:h-full md:w-1/2 md:flex-none md:pl-2 dark:bg-icon/10">
+			<div className="relative w-full flex-1 rounded-md bg-icon/20 p-2 lg:h-full lg:w-1/2 lg:flex-none lg:pl-2 dark:bg-icon/10">
 				{asset || (
 					<div className="h-full w-full rounded-md bg-icon/60 dark:bg-icon/30" />
 				)}
@@ -428,9 +428,9 @@ function Slide1({
 			.join(" ");
 
 	const asset = (
-		<div className="flex h-full w-full items-center justify-center rounded-md p-2 md:p-8">
+		<div className="flex h-full w-full items-center justify-center rounded-md p-2 lg:p-8">
 			{/* Mobile icons */}
-			<div className="relative md:hidden">
+			<div className="relative lg:hidden">
 				<Icon01
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_130s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={180}
@@ -448,7 +448,7 @@ function Slide1({
 				/>
 			</div>
 			{/* Desktop icons */}
-			<div className="relative hidden md:block">
+			<div className="relative hidden lg:block">
 				<Icon01
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_130s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={440}
@@ -480,7 +480,7 @@ function Slide1({
 			footerText={onboarding?.footerText}
 			onboarding={onboarding}
 		>
-			<div className="space-y-4 md:space-y-8">
+			<div className="space-y-4 lg:space-y-8">
 				{onboarding?.slide1?.title && (
 					<h1 className="text-section-heading">{onboarding.slide1.title}</h1>
 				)}
@@ -488,7 +488,7 @@ function Slide1({
 				{onboarding?.slide1?.body && (
 					<CustomPortableText
 						value={onboarding.slide1.body as PortableTextBlock[]}
-						className="text-body"
+						className="font-light text-body"
 					/>
 				)}
 
@@ -507,7 +507,7 @@ function Slide1({
 					</ActionButton>
 
 					<div>
-						<p className="mb-2 text-body">
+						<p className="mb-2 font-light text-body">
 							{onboarding?.slide1?.secondaryCtaText ||
 								"Or skip orientation, go directly to:"}
 						</p>
@@ -576,9 +576,9 @@ function Slide2({
 	};
 
 	const asset = (
-		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-2 md:p-8">
+		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-2 lg:p-8">
 			{/* Mobile icons */}
-			<div className="relative md:hidden">
+			<div className="relative lg:hidden">
 				<Icon02
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_140s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={180}
@@ -596,7 +596,7 @@ function Slide2({
 				/>
 			</div>
 			{/* Desktop icons */}
-			<div className="relative hidden md:block">
+			<div className="relative hidden lg:block">
 				<Icon02
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_140s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={440}
@@ -636,7 +636,7 @@ function Slide2({
 				{onboarding?.slide2?.body && (
 					<CustomPortableText
 						value={onboarding.slide2.body as PortableTextBlock[]}
-						className="text-body"
+						className="font-light text-body"
 					/>
 				)}
 
@@ -649,7 +649,7 @@ function Slide2({
 								type="button"
 								onClick={() => toggleAudience(opt.value)}
 								className={cn(
-									"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 font-sans text-foreground text-xs uppercase transition-colors md:px-3 md:py-2 md:text-lg",
+									"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors lg:px-3 lg:py-2 lg:text-lg",
 									selectedAudienceIds.includes(opt.value)
 										? "bg-neutral-300 dark:bg-neutral-600"
 										: "bg-primary-foreground hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
@@ -666,40 +666,40 @@ function Slide2({
 					<div className="flex items-center gap-2">
 						{selectedAudienceIds.length === 0 ? (
 							<>
-								<span className="text-subheading">Select your</span>
-								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light font-sans text-foreground text-xs uppercase md:px-3 md:py-2 md:text-base dark:bg-neutral-600">
+								<span className="text-body-large">Select your</span>
+								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light text-foreground text-xs uppercase lg:px-3 lg:py-2 lg:text-lg dark:bg-neutral-600">
 									AUDIENCE TYPE
 									<DashedBorder />
 								</span>
-								<span className="text-subheading">to continue.</span>
+								<span className="text-body-large">to continue.</span>
 							</>
 						) : (
 							<>
-								<span className="text-subheading capitalize">Click</span>
+								<span className="text-body-large capitalize">Click</span>
 								<button
 									type="button"
 									onClick={goToSlide3}
-									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light font-sans text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
+									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 lg:px-3 lg:py-2 lg:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 								>
 									NEXT
 									<DashedBorder />
 								</button>
-								<span className="text-subheading">to continue.</span>
+								<span className="text-body-large">to continue.</span>
 							</>
 						)}
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="text-subheading">Or, go</span>
+						<span className="text-body-large">Or, go</span>
 						<button
 							type="button"
 							onClick={goToSlide1}
-							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light font-sans text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
+							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 lg:px-3 lg:py-2 lg:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 						>
 							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
 						</button>
-						<span className="text-subheading">to the previous step.</span>
+						<span className="text-body-large">to the previous step.</span>
 					</div>
 				</div>
 			</div>
@@ -732,9 +732,9 @@ function Slide3({
 	};
 
 	const asset = (
-		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-2 md:p-8">
+		<div className="flex h-full w-full items-center justify-center rounded-md bg-transparent p-2 lg:p-8">
 			{/* Mobile icons */}
-			<div className="relative md:hidden">
+			<div className="relative lg:hidden">
 				<Icon03
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_135s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={180}
@@ -752,7 +752,7 @@ function Slide3({
 				/>
 			</div>
 			{/* Desktop icons */}
-			<div className="relative hidden md:block">
+			<div className="relative hidden lg:block">
 				<Icon03
 					className="absolute inset-0 max-h-full max-w-full animate-[spin_135s_linear_infinite] fill-icon/10 text-icon/30 dark:fill-icon/5 dark:text-icon/15"
 					width={440}
@@ -784,7 +784,7 @@ function Slide3({
 			footerText={onboarding?.footerText}
 			onboarding={onboarding}
 		>
-			<div className="space-y-4 md:space-y-8">
+			<div className="space-y-4 lg:space-y-8">
 				{onboarding?.slide3?.title && (
 					<h1 className="text-section-heading">{onboarding.slide3.title}</h1>
 				)}
@@ -804,7 +804,7 @@ function Slide3({
 							key={opt.value}
 							onClick={() => toggleTheme(opt.value)}
 							className={cn(
-								"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors md:px-3 md:py-2 md:text-lg",
+								"relative overflow-hidden rounded-lg border-2 border-transparent px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors lg:px-3 lg:py-2 lg:text-lg",
 								selectedThemeIds.includes(opt.value)
 									? "bg-neutral-300 dark:bg-neutral-600"
 									: "bg-primary-foreground hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
@@ -820,18 +820,18 @@ function Slide3({
 					<div className="flex items-center gap-2">
 						{selectedThemeIds.length === 0 ? (
 							<>
-								<span className="text-subheading">Select a</span>
-								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-3 py-2 font-light text-base text-foreground uppercase dark:bg-neutral-600">
-									THEME
+								<span className="text-body-large">Select</span>
+								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light text-foreground text-xs uppercase lg:px-3 lg:py-2 lg:text-lg dark:bg-neutral-600">
+									Themes
 									<DashedBorder />
 								</span>
-								<span className="text-subheading">
-									that interests you to continue.
+								<span className="text-body-large">
+									that interest you to continue.
 								</span>
 							</>
 						) : (
 							<>
-								<span className="text-subheading capitalize">click</span>
+								<span className="text-body-large capitalize">click</span>
 								<Link
 									href="/explore"
 									onClick={() => {
@@ -839,12 +839,12 @@ function Slide3({
 										// User completed the full onboarding
 										// The store will persist this state
 									}}
-									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
+									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 lg:px-3 lg:py-2 lg:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 								>
 									FINISH
 									<DashedBorder />
 								</Link>
-								<span className="text-subheading">
+								<span className="text-body-large">
 									to continue to the toolkit.
 								</span>
 							</>
@@ -852,16 +852,16 @@ function Slide3({
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="text-subheading">Or, go</span>
+						<span className="text-body-large">Or, go</span>
 						<button
 							type="button"
 							onClick={goToSlide2}
-							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 md:px-3 md:py-2 md:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
+							className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 lg:px-3 lg:py-2 lg:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 						>
 							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
 						</button>
-						<span className="text-subheading">to the previous step.</span>
+						<span className="text-body-large">to the previous step.</span>
 					</div>
 				</div>
 			</div>
