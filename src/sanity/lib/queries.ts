@@ -832,12 +832,28 @@ export const PATTERNS_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
+      }
+    },
     content[]{
       _key,
       _type,
       heading,
-      body,
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       // For contentList type
       title,
       items[]{
@@ -995,7 +1011,15 @@ export const FAQS_QUERY = defineQuery(`
         }
       }
     },
-    description[]
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
+      }
+    }
   }
 `);
 
