@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
-import { draftMode } from "next/headers";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { HeadingMorph } from "~/components/shared/heading-morph";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import PatternCombination from "~/components/shared/pattern-combination-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
-import { client } from "~/sanity/lib/client";
+import { sanityFetch } from "~/sanity/lib/client";
 import { GLOSSARY_TERMS_QUERY, HOME_PAGE_QUERY } from "~/sanity/lib/queries";
-import { token } from "~/sanity/lib/token";
 import type { ContentList, Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
@@ -19,22 +17,15 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-	const isDraftMode = (await draftMode()).isEnabled;
 	const [data, glossaryTerms] = await Promise.all([
-		client.fetch(
-			HOME_PAGE_QUERY,
-			{},
-			isDraftMode
-				? { perspective: "previewDrafts", useCdn: false, stega: true, token }
-				: { perspective: "published", useCdn: true },
-		) as Promise<Page | null>,
-		client.fetch(
-			GLOSSARY_TERMS_QUERY,
-			{},
-			isDraftMode
-				? { perspective: "previewDrafts", useCdn: false, stega: true, token }
-				: { perspective: "published", useCdn: true },
-		) as Promise<GlossaryTerm[]>,
+		sanityFetch({
+			query: HOME_PAGE_QUERY,
+			revalidate: 60,
+		}) as Promise<Page | null>,
+		sanityFetch({
+			query: GLOSSARY_TERMS_QUERY,
+			revalidate: 60,
+		}) as Promise<GlossaryTerm[]>,
 	]);
 
 	const contentSections = (data?.content ?? []) as NonNullable<Page["content"]>;

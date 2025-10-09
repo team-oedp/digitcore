@@ -1,22 +1,17 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
-import { draftMode } from "next/headers";
 import { GlossaryList } from "~/components/pages/glossary/glossary-list";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
 import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import { client } from "~/sanity/lib/client";
+import { sanityFetch } from "~/sanity/lib/client";
 import {
 	GLOSSARY_PAGE_QUERY,
 	GLOSSARY_TERMS_QUERY,
 } from "~/sanity/lib/queries";
-import { token } from "~/sanity/lib/token";
-import type {
-	GLOSSARY_PAGE_QUERYResult,
-	GLOSSARY_TERMS_QUERYResult,
-} from "~/sanity/sanity.types";
+import type { GLOSSARY_TERMS_QUERYResult, Page } from "~/sanity/sanity.types";
 import { GlossaryScroll } from "./glossary-scroll";
 
 export const metadata: Metadata = {
@@ -32,32 +27,15 @@ const ALPHABET = Array.from({ length: 26 }, (_, i) =>
 export type TermsByLetter = Partial<Record<string, GLOSSARY_TERMS_QUERYResult>>;
 
 export default async function GlossaryPage() {
-	const isDraftMode = (await draftMode()).isEnabled;
+	const pageData = (await sanityFetch({
+		query: GLOSSARY_PAGE_QUERY,
+		revalidate: 60,
+	})) as Page | null;
 
-	const pageData = (await client.fetch(
-		GLOSSARY_PAGE_QUERY,
-		{},
-		isDraftMode
-			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
-			: { perspective: "published", useCdn: true },
-	)) as GLOSSARY_PAGE_QUERYResult | null;
-
-	// Fetch glossary terms from Sanity
-	const glossaryTerms = (await client.fetch(
-		GLOSSARY_TERMS_QUERY,
-		{},
-		isDraftMode
-			? {
-					perspective: "previewDrafts",
-					useCdn: false,
-					stega: true,
-					token,
-				}
-			: {
-					perspective: "published",
-					useCdn: true,
-				},
-	)) as GLOSSARY_TERMS_QUERYResult | null;
+	const glossaryTerms = (await sanityFetch({
+		query: GLOSSARY_TERMS_QUERY,
+		revalidate: 60,
+	})) as GLOSSARY_TERMS_QUERYResult | null;
 
 	// Group terms by letter and ensure strict alphabetical ordering within each group
 	const termsByLetter =

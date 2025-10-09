@@ -1,18 +1,16 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
-import { draftMode } from "next/headers";
 import { TagsList } from "~/components/pages/tags/tags-list";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
 import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import { client } from "~/sanity/lib/client";
+import { sanityFetch } from "~/sanity/lib/client";
 import {
 	TAGS_PAGE_QUERY,
 	TAGS_WITH_PATTERNS_QUERY,
 } from "~/sanity/lib/queries";
-import { token } from "~/sanity/lib/token";
 import type {
 	Page,
 	TAGS_WITH_PATTERNS_QUERYResult,
@@ -33,32 +31,15 @@ export type TagsByLetter = Partial<
 >;
 
 export default async function Tags() {
-	const isDraftMode = (await draftMode()).isEnabled;
+	const pageData = (await sanityFetch({
+		query: TAGS_PAGE_QUERY,
+		revalidate: 60,
+	})) as Page | null;
 
-	const pageData = (await client.fetch(
-		TAGS_PAGE_QUERY,
-		{},
-		isDraftMode
-			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
-			: { perspective: "published", useCdn: true },
-	)) as Page | null;
-
-	// Fetch tags with patterns from Sanity
-	const tagsData = (await client.fetch(
-		TAGS_WITH_PATTERNS_QUERY,
-		{},
-		isDraftMode
-			? {
-					perspective: "previewDrafts",
-					useCdn: false,
-					stega: true,
-					token,
-				}
-			: {
-					perspective: "published",
-					useCdn: true,
-				},
-	)) as TAGS_WITH_PATTERNS_QUERYResult | null;
+	const tagsData = (await sanityFetch({
+		query: TAGS_WITH_PATTERNS_QUERY,
+		revalidate: 60,
+	})) as TAGS_WITH_PATTERNS_QUERYResult | null;
 
 	// Group tags by letter and ensure strict alphabetical ordering within each group
 	const tagsByLetter =

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
-import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SearchClientWrapper } from "~/components/pages/search/search-client-wrapper";
@@ -10,12 +9,9 @@ import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { Skeleton } from "~/components/ui/skeleton";
-import { client } from "~/sanity/lib/client";
+import { sanityFetch } from "~/sanity/lib/client";
 import { EXPLORE_PAGE_QUERY } from "~/sanity/lib/queries";
-import { token } from "~/sanity/lib/token";
 import type { Page } from "~/sanity/sanity.types";
-
-export const revalidate = 3600;
 
 export const metadata: Metadata = {
 	title: "Search | DIGITCORE",
@@ -27,24 +23,10 @@ export default async function SearchPage({
 }: {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-	const isDraftMode = (await draftMode()).isEnabled;
-
-	// Fetch page data
-	const data = (await client.fetch(
-		EXPLORE_PAGE_QUERY,
-		{},
-		isDraftMode
-			? {
-					perspective: "previewDrafts",
-					useCdn: false,
-					stega: true,
-					token,
-				}
-			: {
-					perspective: "published",
-					useCdn: true,
-				},
-	)) as Page | null;
+	const data = (await sanityFetch({
+		query: EXPLORE_PAGE_QUERY,
+		revalidate: 60,
+	})) as Page | null;
 
 	if (!data) {
 		console.log("No page found, returning 404");

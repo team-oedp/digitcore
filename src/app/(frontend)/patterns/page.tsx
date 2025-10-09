@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
-import { draftMode } from "next/headers";
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { cn } from "~/lib/utils";
-import { client } from "~/sanity/lib/client";
+import { sanityFetch } from "~/sanity/lib/client";
 import {
 	PATTERNS_PAGE_QUERY,
 	PATTERNS_WITH_THEMES_QUERY,
 } from "~/sanity/lib/queries";
-import { token } from "~/sanity/lib/token";
 import type {
 	PATTERNS_WITH_THEMES_QUERYResult,
 	Page,
@@ -30,41 +28,15 @@ export const metadata: Metadata = {
 };
 
 export default async function PatternsPage() {
-	const isDraftMode = (await draftMode()).isEnabled;
+	const pageData = (await sanityFetch({
+		query: PATTERNS_PAGE_QUERY,
+		revalidate: 60,
+	})) as Page | null;
 
-	// Fetch page data from Sanity
-	const pageData = (await client.fetch(
-		PATTERNS_PAGE_QUERY,
-		{},
-		isDraftMode
-			? {
-					perspective: "previewDrafts",
-					useCdn: false,
-					stega: true,
-					token,
-				}
-			: {
-					perspective: "published",
-					useCdn: true,
-				},
-	)) as Page | null;
-
-	// Fetch ALL patterns with their themes
-	const allPatterns: PATTERNS_WITH_THEMES_QUERYResult = await client.fetch(
-		PATTERNS_WITH_THEMES_QUERY,
-		{},
-		isDraftMode
-			? {
-					perspective: "previewDrafts",
-					useCdn: false,
-					stega: true,
-					token,
-				}
-			: {
-					perspective: "published",
-					useCdn: true,
-				},
-	);
+	const allPatterns: PATTERNS_WITH_THEMES_QUERYResult = await sanityFetch({
+		query: PATTERNS_WITH_THEMES_QUERY,
+		revalidate: 60,
+	});
 
 	// Group patterns by theme
 	const themeGroups = new Map<string, ThemeGroup>();
