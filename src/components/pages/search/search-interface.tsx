@@ -19,7 +19,7 @@ import {
 	searchParamsSchema,
 	serializeSearchParams,
 } from "~/lib/search";
-import { useOnboardingStore } from "~/stores/onboarding";
+import { useOrientationStore } from "~/stores/orientation";
 import { EnhanceToggle } from "./enhance-toggle";
 
 type FilterOption = {
@@ -44,21 +44,21 @@ export function SearchInterface({
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	// Get onboarding preferences for enhance toggle - use individual selectors to avoid object recreation
-	const selectedAudienceIds = useOnboardingStore(
+	// Get orientation preferences for enhance toggle - use individual selectors to avoid object recreation
+	const selectedAudienceIds = useOrientationStore(
 		(state) => state.selectedAudienceIds,
 	);
-	const selectedThemeIds = useOnboardingStore(
+	const selectedThemeIds = useOrientationStore(
 		(state) => state.selectedThemeIds,
 	);
-	const hasCompletedOnboarding = useOnboardingStore(
-		(state) => state.hasCompletedOnboarding,
+	const hasCompletedOrientation = useOrientationStore(
+		(state) => state.hasCompletedOrientation,
 	);
 
-	const onboardingPreferences = {
+	const orientationPreferences = {
 		selectedAudienceIds,
 		selectedThemeIds,
-		hasCompletedOnboarding,
+		hasCompletedOrientation,
 	};
 
 	logger.debug(
@@ -94,11 +94,11 @@ export function SearchInterface({
 		}
 	}, [searchParams]);
 
-	// Check if user has preferences from onboarding
+	// Check if user has preferences from orientation
 	const hasPreferences =
-		onboardingPreferences.hasCompletedOnboarding &&
-		(onboardingPreferences.selectedAudienceIds.length > 0 ||
-			onboardingPreferences.selectedThemeIds.length > 0);
+		orientationPreferences.hasCompletedOrientation &&
+		(orientationPreferences.selectedAudienceIds.length > 0 ||
+			orientationPreferences.selectedThemeIds.length > 0);
 
 	// Get enhance state from URL, default to true if preferences exist and no URL parameter
 	const enhanceEnabled =
@@ -295,12 +295,12 @@ export function SearchInterface({
 			<EnhanceToggle
 				enabled={enhanceEnabled}
 				onToggle={handleEnhanceToggle}
-				hasCompletedOnboarding={onboardingPreferences.hasCompletedOnboarding}
+				hasCompletedOnboarding={orientationPreferences.hasCompletedOrientation}
 				audiencePreferences={getAudienceLabels(
-					onboardingPreferences.selectedAudienceIds,
+					orientationPreferences.selectedAudienceIds,
 				)}
 				themePreferences={getThemeLabels(
-					onboardingPreferences.selectedThemeIds,
+					orientationPreferences.selectedThemeIds,
 				)}
 			/>
 

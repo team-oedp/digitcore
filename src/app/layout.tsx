@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { cn } from "~/lib/utils";
-import { OnboardingStoreProvider } from "~/stores/onboarding";
+import { OrientationStoreProvider } from "~/stores/orientation";
 import "~/styles/globals.css";
 import { sans, signifier } from "./(frontend)/fonts";
 
@@ -25,7 +25,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<OnboardingStoreProvider>{children}</OnboardingStoreProvider>
+					<OrientationStoreProvider>{children}</OrientationStoreProvider>
 				</ThemeProvider>
 			</body>
 		</html>

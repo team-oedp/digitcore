@@ -31,7 +31,7 @@ import {
 } from "~/components/ui/breadcrumb";
 import { cn } from "~/lib/utils";
 import type { Onboarding } from "~/sanity/sanity.types";
-import { useOnboardingStore } from "~/stores/onboarding";
+import { useOrientationStore } from "~/stores/orientation";
 
 function getSafePath(path?: string) {
 	try {
@@ -45,7 +45,7 @@ function getSafePath(path?: string) {
 		// Validate that the path is a known route in our application
 		const validRoutes = [
 			"/",
-			"/explore",
+			"/search",
 			"/patterns",
 			"/tags",
 			"/faq",
@@ -80,8 +80,7 @@ function friendlyLabelFromPath(path?: string) {
 		const segments = pathname.split("/").filter(Boolean);
 		if (segments[0] === "pattern" && segments[1]) return "Pattern Page";
 		if (segments[0] === "patterns") return "Patterns Page";
-		if (segments[0] === "search") return "Explore Page";
-		if (segments[0] === "explore") return "Explore Page";
+		if (segments[0] === "search") return "Search Page";
 		if (segments[0] === "tags") return "Tags Page";
 		if (segments[0] === "faq") return "FAQ Page";
 		if (segments[0] === "glossary") return "Glossary Page";
@@ -168,7 +167,7 @@ function ActionButton({
 	);
 }
 
-export function OnboardingClient({
+export function OrientationClient({
 	onboarding,
 	patternTitle,
 	returnToPath,
@@ -200,8 +199,8 @@ export function OnboardingClient({
 
 	// Mark onboarding as seen unless the user arrived via the header override flag
 	const headerOverride = searchParams?.get("via") === "header";
-	const setSeen = useOnboardingStore((s) => s.setSeen);
-	const setSkipped = useOnboardingStore((s) => s.setSkipped);
+	const setSeen = useOrientationStore((s) => s.setSeen);
+	const setSkipped = useOrientationStore((s) => s.setSkipped);
 
 	useEffect(() => {
 		if (!headerOverride) {
@@ -267,7 +266,7 @@ export function OnboardingClient({
 	);
 }
 
-function OnboardingBreadcrumb({
+function OrientationBreadcrumb({
 	currentSlide,
 	onNavigateSlide,
 	breadcrumbs,
@@ -363,11 +362,11 @@ function Slide({
 	onboarding?: Onboarding;
 }) {
 	const router = useRouter();
-	const setSkipped = useOnboardingStore((s) => s.setSkipped);
+	const setSkipped = useOrientationStore((s) => s.setSkipped);
 	return (
 		<div className="flex h-full flex-col lg:flex-row">
 			<div className="flex w-full flex-col justify-start px-3 py-3 pb-6 lg:w-1/2 lg:py-4 lg:pr-4 lg:pb-4 lg:pl-4">
-				<OnboardingBreadcrumb
+				<OrientationBreadcrumb
 					currentSlide={currentSlide}
 					onNavigateSlide={onNavigateSlide}
 					breadcrumbs={breadcrumbs}
@@ -401,7 +400,7 @@ function Slide1({
 	onboarding?: Onboarding;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
 }) {
-	const setSkipped = useOnboardingStore((s) => s.setSkipped);
+	const setSkipped = useOrientationStore((s) => s.setSkipped);
 	const router = useRouter();
 
 	const handleSkip = () => {
@@ -565,8 +564,8 @@ function Slide2({
 	audienceOptions: FilterOption[];
 	onboarding?: Onboarding;
 }) {
-	const selectedAudienceIds = useOnboardingStore((s) => s.selectedAudienceIds);
-	const setSelectedAudiences = useOnboardingStore(
+	const selectedAudienceIds = useOrientationStore((s) => s.selectedAudienceIds);
+	const setSelectedAudiences = useOrientationStore(
 		(s) => s.setSelectedAudiences,
 	);
 
@@ -721,10 +720,10 @@ function Slide3({
 	themeOptions: FilterOption[];
 	onboarding?: Onboarding;
 }) {
-	const selectedThemeIds = useOnboardingStore((s) => s.selectedThemeIds);
-	const selectedAudienceIds = useOnboardingStore((s) => s.selectedAudienceIds);
-	const setSelectedThemes = useOnboardingStore((s) => s.setSelectedThemes);
-	const setCompleted = useOnboardingStore((s) => s.setCompleted);
+	const selectedThemeIds = useOrientationStore((s) => s.selectedThemeIds);
+	const selectedAudienceIds = useOrientationStore((s) => s.selectedAudienceIds);
+	const setSelectedThemes = useOrientationStore((s) => s.setSelectedThemes);
+	const setCompleted = useOrientationStore((s) => s.setCompleted);
 
 	const toggleTheme = (themeId: string) => {
 		setSelectedThemes(
@@ -836,7 +835,7 @@ function Slide3({
 							<>
 								<span className="text-body-large capitalize">click</span>
 								<Link
-									href="/explore"
+									href="/search"
 									onClick={() => {
 										setCompleted(true);
 										// User completed the full onboarding

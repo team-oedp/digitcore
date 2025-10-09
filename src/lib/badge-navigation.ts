@@ -22,7 +22,7 @@ export function getTagNavigationUrl(tagTitle: string): string {
 
 /**
  * Generate URL for audience badge navigation
- * Audiences navigate to the /explore page with the audience filter pre-selected
+ * Audiences navigate to the /search page with the audience filter pre-selected
  */
 export function getAudienceNavigationUrl(audienceId: string): string {
 	// Create URL with audience filter parameter
@@ -30,12 +30,12 @@ export function getAudienceNavigationUrl(audienceId: string): string {
 		audiences: audienceId,
 	});
 
-	return `/explore?${params.toString()}`;
+	return `/search?${params.toString()}`;
 }
 
 /**
  * Generate URL for theme badge navigation
- * Themes navigate to the /explore page with the theme filter pre-selected
+ * Themes navigate to the /search page with the theme filter pre-selected
  */
 export function getThemeNavigationUrl(themeId: string): string {
 	// Create URL with theme filter parameter
@@ -43,7 +43,7 @@ export function getThemeNavigationUrl(themeId: string): string {
 		themes: themeId,
 	});
 
-	return `/explore?${params.toString()}`;
+	return `/search?${params.toString()}`;
 }
 
 /**

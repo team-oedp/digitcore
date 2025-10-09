@@ -28,7 +28,8 @@ export const onboardingType = defineType({
 			name: "skipLabel",
 			title: "Skip label",
 			type: "string",
-			initialValue: "Skip onboarding",
+			initialValue: "Skip orientation",
+			hidden: true,
 		}),
 		defineField({
 			name: "backLabel",
@@ -88,7 +89,7 @@ export const onboardingType = defineType({
 					name: "primaryCtaLabel",
 					title: "Primary CTA label",
 					type: "string",
-					initialValue: "Tell me more about the Digitcore library",
+					initialValue: "Tell me more about the DIGITCORE library",
 				}),
 				defineField({
 					name: "secondaryCtaText",

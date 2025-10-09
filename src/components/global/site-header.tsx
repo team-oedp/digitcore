@@ -98,12 +98,12 @@ export function SiteHeader() {
 									asChild
 									className={cn(
 										"h-auto px-3 py-2 text-link capitalize",
-										pathname === "/onboarding"
+										pathname === "/orientation"
 											? "text-foreground"
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href="/onboarding?via=header">Orientation</Link>
+									<Link href="/orientation?via=header">Orientation</Link>
 								</Button>
 							</motion.li>
 							<li>
@@ -156,12 +156,12 @@ export function SiteHeader() {
 														asChild
 														className={cn(
 															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/explore"
+															pathname === "/search"
 																? "text-foreground"
 																: "text-muted-foreground",
 														)}
 													>
-														<Link href="/explore">Search</Link>
+														<Link href="/search">Search</Link>
 													</Button>
 												</motion.div>
 												<motion.div

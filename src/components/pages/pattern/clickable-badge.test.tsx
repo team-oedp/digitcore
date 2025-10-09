@@ -7,8 +7,8 @@ vi.mock("~/lib/badge-navigation", () => ({
 	getTagNavigationUrl: vi.fn(
 		(title: string) => `/tags#letter-${title?.[0]?.toUpperCase() || ""}`,
 	),
-	getAudienceNavigationUrl: vi.fn((id: string) => `/explore?audiences=${id}`),
-	getThemeNavigationUrl: vi.fn((id: string) => `/explore?themes=${id}`),
+	getAudienceNavigationUrl: vi.fn((id: string) => `/search?audiences=${id}`),
+	getThemeNavigationUrl: vi.fn((id: string) => `/search?themes=${id}`),
 }));
 
 // Mock Next.js Link component
@@ -87,7 +87,7 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("href", "/explore?audiences=audience-456");
+			expect(link).toHaveAttribute("href", "/search?audiences=audience-456");
 			expect(link).toHaveAttribute(
 				"aria-label",
 				"Navigate to audience: Developers",
@@ -119,7 +119,7 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("href", "/explore?themes=theme-789");
+			expect(link).toHaveAttribute("href", "/search?themes=theme-789");
 			expect(link).toHaveAttribute(
 				"aria-label",
 				"Navigate to theme: Sustainability",

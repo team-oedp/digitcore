@@ -9,7 +9,7 @@ import {
 } from "~/app/actions/search";
 import { createLogLocation, logger } from "~/lib/logger";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
-import { useOnboardingStore } from "~/stores/onboarding";
+import { useOrientationStore } from "~/stores/orientation";
 import { SearchResultsSkeleton } from "./search-result-skeleton";
 import { SearchResults } from "./search-results";
 import { SearchResultsHeaderClient } from "./search-results-header-client";
@@ -26,24 +26,24 @@ export function SearchClientWrapper() {
 	const abortControllerRef = useRef<AbortController | null>(null);
 	const lastSearchParamsRef = useRef<string>("");
 
-	// Get onboarding preferences for result boosting - use individual selectors to avoid object recreation
-	const selectedAudienceIds = useOnboardingStore(
+	// Get orientation preferences for result boosting - use individual selectors to avoid object recreation
+	const selectedAudienceIds = useOrientationStore(
 		(state) => state.selectedAudienceIds,
 	);
-	const selectedThemeIds = useOnboardingStore(
+	const selectedThemeIds = useOrientationStore(
 		(state) => state.selectedThemeIds,
 	);
-	const hasCompletedOnboarding = useOnboardingStore(
-		(state) => state.hasCompletedOnboarding,
+	const hasCompletedOrientation = useOrientationStore(
+		(state) => state.hasCompletedOrientation,
 	);
 
-	const onboardingPreferences = useMemo(
+	const orientationPreferences = useMemo(
 		() => ({
 			selectedAudienceIds,
 			selectedThemeIds,
-			hasCompletedOnboarding,
+			hasCompletedOrientation,
 		}),
-		[selectedAudienceIds, selectedThemeIds, hasCompletedOnboarding],
+		[selectedAudienceIds, selectedThemeIds, hasCompletedOrientation],
 	);
 
 	logger.debug("client", "SearchClientWrapper mounted", { searchId }, location);
@@ -186,16 +186,16 @@ export function SearchClientWrapper() {
 			// Execute search - use preferences if enhance is enabled and preferences exist
 			const startTime = Date.now();
 			const hasPreferences =
-				onboardingPreferences.hasCompletedOnboarding &&
-				(onboardingPreferences.selectedAudienceIds.length > 0 ||
-					onboardingPreferences.selectedThemeIds.length > 0);
+				orientationPreferences.hasCompletedOrientation &&
+				(orientationPreferences.selectedAudienceIds.length > 0 ||
+					orientationPreferences.selectedThemeIds.length > 0);
 
 			const shouldEnhance = parsedParams.enhance && hasPreferences;
 
 			const result = shouldEnhance
 				? await searchPatternsWithPreferences(urlSearchParams, {
-						selectedAudienceIds: onboardingPreferences.selectedAudienceIds,
-						selectedThemeIds: onboardingPreferences.selectedThemeIds,
+						selectedAudienceIds: orientationPreferences.selectedAudienceIds,
+						selectedThemeIds: orientationPreferences.selectedThemeIds,
 					})
 				: await searchPatternsWithParams(urlSearchParams);
 			const endTime = Date.now();
@@ -237,7 +237,7 @@ export function SearchClientWrapper() {
 				location,
 			);
 		}
-	}, [searchParams, location, searchId, onboardingPreferences]);
+	}, [searchParams, location, searchId, orientationPreferences]);
 
 	useEffect(() => {
 		performSearch();

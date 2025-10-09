@@ -6,7 +6,7 @@ import { client } from "~/sanity/lib/client";
 import { ONBOARDING_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
 import type { Onboarding } from "~/sanity/sanity.types";
-import { OnboardingClient } from "./onboarding-client";
+import { OrientationClient } from "./orientation-client";
 
 export const metadata: Metadata = {
 	title: "Onboarding | DIGITCORE Toolkit",
@@ -67,7 +67,7 @@ export default async function OnboardingPage({
 
 	return (
 		<Suspense fallback={null}>
-			<OnboardingClient
+			<OrientationClient
 				onboarding={onboarding ?? undefined}
 				patternTitle={patternTitle}
 				returnToPath={returnToPath}

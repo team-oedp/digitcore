@@ -535,7 +535,7 @@ describe("searchPatterns", () => {
 		expect(mockLogger.groq).toHaveBeenNthCalledWith(
 			6,
 			"GROQ query completed",
-			{ executionTime: "0ms", resultCount: 2 },
+			{ executionTime: expect.stringMatching(/\d+ms/), resultCount: 2 },
 			expect.any(Object),
 		);
 

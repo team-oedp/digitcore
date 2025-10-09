@@ -118,12 +118,12 @@ export function ErrorHeader() {
 														asChild
 														className={cn(
 															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/explore"
+															pathname === "/search"
 																? "text-foreground"
 																: "text-muted-foreground",
 														)}
 													>
-														<Link href="/explore">Search</Link>
+														<Link href="/search">Search</Link>
 													</Button>
 												</motion.div>
 												<motion.div

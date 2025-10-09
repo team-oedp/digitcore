@@ -20,7 +20,7 @@ describe("Onboarding with Zustand", () => {
 	});
 
 	it("redirects first-time visitor to /onboarding", () => {
-		cy.visit("/explore", { failOnStatusCode: false, timeout: 60000 });
+		cy.visit("/search", { failOnStatusCode: false, timeout: 60000 });
 		cy.location("pathname", { timeout: 30000 }).should("eq", "/onboarding");
 	});
 
@@ -41,8 +41,8 @@ describe("Onboarding with Zustand", () => {
 		cy.window().then((win) => {
 			win.localStorage.setItem("onboarding-state", JSON.stringify(storeState));
 		});
-		cy.visit("/explore", { timeout: 60000 });
-		cy.location("pathname", { timeout: 30000 }).should("eq", "/explore");
+		cy.visit("/search", { timeout: 60000 });
+		cy.location("pathname", { timeout: 30000 }).should("eq", "/search");
 	});
 
 	it("passes through when onboarding is skipped (within 24 hours)", () => {
@@ -86,7 +86,7 @@ describe("Onboarding with Zustand", () => {
 		cy.window().then((win) => {
 			win.localStorage.setItem("onboarding-state", JSON.stringify(storeState));
 		});
-		cy.visit("/explore", { failOnStatusCode: false, timeout: 60000 });
+		cy.visit("/search", { failOnStatusCode: false, timeout: 60000 });
 		cy.location("pathname", { timeout: 30000 }).should("eq", "/onboarding");
 	});
 
