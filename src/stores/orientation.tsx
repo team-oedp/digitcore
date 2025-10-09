@@ -1,17 +1,17 @@
 "use client";
 
-import { createContext, useCallback, useContext, useRef } from "react";
+import { createContext, useContext, useRef } from "react";
 import { createStore, useStore } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-type OnboardingState = {
+type OrientationState = {
 	// Hydration state
 	hasHydrated: boolean;
 
 	// Redirect control states
-	hasSeenOnboarding: boolean;
-	hasCompletedOnboarding: boolean;
-	hasSkippedOnboarding: boolean;
+	hasSeenOrientation: boolean;
+	hasCompletedOrientation: boolean;
+	hasSkippedOrientation: boolean;
 	skippedAt?: string;
 	completedAt?: string;
 
@@ -26,7 +26,7 @@ type OnboardingState = {
 	setSkipped: (skipped: boolean) => void;
 	setSelectedAudiences: (ids: string[]) => void;
 	setSelectedThemes: (ids: string[]) => void;
-	shouldShowOnboarding: () => boolean;
+	shouldShowOrientation: () => boolean;
 	checkAndResetExpiredSkip: () => boolean;
 	canSkipExpire: () => boolean;
 	reset: () => void;
@@ -35,17 +35,17 @@ type OnboardingState = {
 // Skip expiry duration in milliseconds (24 hours)
 const SKIP_EXPIRY_MS = 24 * 60 * 60 * 1000;
 
-export const createOnboardingStore = () =>
-	createStore<OnboardingState>()(
+export const createOrientationStore = () =>
+	createStore<OrientationState>()(
 		persist(
 			(set, get) => ({
 				// Hydration state
 				hasHydrated: false,
 
 				// Redirect control states
-				hasSeenOnboarding: false,
-				hasCompletedOnboarding: false,
-				hasSkippedOnboarding: false,
+				hasSeenOrientation: false,
+				hasCompletedOrientation: false,
+				hasSkippedOrientation: false,
 				skippedAt: undefined,
 				completedAt: undefined,
 
@@ -54,19 +54,19 @@ export const createOnboardingStore = () =>
 				selectedThemeIds: [],
 
 				setHasHydrated: (hydrated: boolean) => set({ hasHydrated: hydrated }),
-				setSeen: (seen: boolean) => set({ hasSeenOnboarding: seen }),
+				setSeen: (seen: boolean) => set({ hasSeenOrientation: seen }),
 
 				setCompleted: (completed: boolean) =>
 					set({
-						hasCompletedOnboarding: completed,
-						hasSkippedOnboarding: false, // Clear skip status when completed
+						hasCompletedOrientation: completed,
+						hasSkippedOrientation: false, // Clear skip status when completed
 						completedAt: completed ? new Date().toISOString() : undefined,
 						skippedAt: undefined,
 					}),
 
 				setSkipped: (skipped: boolean) =>
 					set({
-						hasSkippedOnboarding: skipped,
+						hasSkippedOrientation: skipped,
 						skippedAt: skipped ? new Date().toISOString() : undefined,
 					}),
 
@@ -77,7 +77,7 @@ export const createOnboardingStore = () =>
 
 				checkAndResetExpiredSkip: () => {
 					const state = get();
-					if (!state.hasSkippedOnboarding || !state.skippedAt) {
+					if (!state.hasSkippedOrientation || !state.skippedAt) {
 						return false;
 					}
 
@@ -87,32 +87,32 @@ export const createOnboardingStore = () =>
 
 					if (hasExpired) {
 						// Reset skip status if expired
-						set({ hasSkippedOnboarding: false, skippedAt: undefined });
+						set({ hasSkippedOrientation: false, skippedAt: undefined });
 						return true;
 					}
 					return false;
 				},
 
-				shouldShowOnboarding: () => {
+				shouldShowOrientation: () => {
 					const state = get();
 
 					// Never show if completed
-					if (state.hasCompletedOnboarding) {
+					if (state.hasCompletedOrientation) {
 						return false;
 					}
 
 					// Never show if currently skipped (and not expired)
-					if (state.hasSkippedOnboarding && state.skippedAt) {
+					if (state.hasSkippedOrientation && state.skippedAt) {
 						const skippedTime = new Date(state.skippedAt).getTime();
 						const now = Date.now();
 						const hasExpired = now - skippedTime > SKIP_EXPIRY_MS;
 						if (!hasExpired) {
-							return false; // Skip is still valid, don't show onboarding
+							return false; // Skip is still valid, don't show orientation
 						}
 					}
 
 					// Show if never seen
-					if (!state.hasSeenOnboarding) {
+					if (!state.hasSeenOrientation) {
 						return true;
 					}
 
@@ -122,7 +122,7 @@ export const createOnboardingStore = () =>
 
 				canSkipExpire: () => {
 					const state = get();
-					if (!state.hasSkippedOnboarding || !state.skippedAt) {
+					if (!state.hasSkippedOrientation || !state.skippedAt) {
 						return false;
 					}
 					const skippedTime = new Date(state.skippedAt).getTime();
@@ -134,9 +134,9 @@ export const createOnboardingStore = () =>
 					const currentHydrationState = get().hasHydrated;
 					set({
 						hasHydrated: currentHydrationState, // Preserve hydration state
-						hasSeenOnboarding: false,
-						hasCompletedOnboarding: false,
-						hasSkippedOnboarding: false,
+						hasSeenOrientation: false,
+						hasCompletedOrientation: false,
+						hasSkippedOrientation: false,
 						selectedAudienceIds: [],
 						selectedThemeIds: [],
 						completedAt: undefined,
@@ -145,14 +145,14 @@ export const createOnboardingStore = () =>
 				},
 			}),
 			{
-				name: "onboarding-state",
+				name: "orientation-state",
 				storage: createJSONStorage(() => localStorage),
 				partialize: (state) => ({
 					// Don't persist hydration state
 					// Persist redirect control states
-					hasSeenOnboarding: state.hasSeenOnboarding,
-					hasCompletedOnboarding: state.hasCompletedOnboarding,
-					hasSkippedOnboarding: state.hasSkippedOnboarding,
+					hasSeenOrientation: state.hasSeenOrientation,
+					hasCompletedOrientation: state.hasCompletedOrientation,
+					hasSkippedOrientation: state.hasSkippedOrientation,
 					skippedAt: state.skippedAt,
 					completedAt: state.completedAt,
 					// Persist user preferences
@@ -171,44 +171,44 @@ export const createOnboardingStore = () =>
 		),
 	);
 
-const OnboardingStoreContext = createContext<ReturnType<
-	typeof createOnboardingStore
+const OrientationStoreContext = createContext<ReturnType<
+	typeof createOrientationStore
 > | null>(null);
 
-export const OnboardingStoreProvider = ({
+export const OrientationStoreProvider = ({
 	children,
 }: {
 	children: React.ReactNode;
 }) => {
-	const storeRef = useRef<ReturnType<typeof createOnboardingStore> | undefined>(
-		undefined,
-	);
+	const storeRef = useRef<
+		ReturnType<typeof createOrientationStore> | undefined
+	>(undefined);
 	if (!storeRef.current) {
-		storeRef.current = createOnboardingStore();
+		storeRef.current = createOrientationStore();
 	}
 
 	return (
-		<OnboardingStoreContext.Provider value={storeRef.current}>
+		<OrientationStoreContext.Provider value={storeRef.current}>
 			{children}
-		</OnboardingStoreContext.Provider>
+		</OrientationStoreContext.Provider>
 	);
 };
 
 // Stable identity selector to avoid infinite loops
-const identitySelector = (state: OnboardingState) => state;
+const identitySelector = (state: OrientationState) => state;
 
-export const useOnboardingStore = <T = OnboardingState>(
-	selector?: (state: OnboardingState) => T,
+export const useOrientationStore = <T = OrientationState>(
+	selector?: (state: OrientationState) => T,
 ) => {
-	const store = useContext(OnboardingStoreContext);
+	const store = useContext(OrientationStoreContext);
 	if (!store) {
 		throw new Error(
-			"useOnboardingStore must be used within OnboardingStoreProvider",
+			"useOrientationStore must be used within OrientationStoreProvider",
 		);
 	}
 
 	// Use stable identity selector when no selector provided
 	const stableSelector =
-		selector || (identitySelector as (state: OnboardingState) => T);
+		selector || (identitySelector as (state: OrientationState) => T);
 	return useStore(store, stableSelector);
 };

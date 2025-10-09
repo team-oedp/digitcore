@@ -2,23 +2,23 @@ import { act, renderHook } from "@testing-library/react";
 import type React from "react";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
-	OnboardingStoreProvider,
-	createOnboardingStore,
-	useOnboardingStore,
-} from "./onboarding";
+	OrientationStoreProvider,
+	createOrientationStore,
+	useOrientationStore,
+} from "./orientation";
 
-describe("Onboarding Store", () => {
-	let store: ReturnType<typeof createOnboardingStore>;
+describe("Orientation Store", () => {
+	let store: ReturnType<typeof createOrientationStore>;
 
 	beforeEach(() => {
 		// Create a fresh store for each test
-		store = createOnboardingStore();
+		store = createOrientationStore();
 		// Clear the store state
 		store.setState({
 			hasHydrated: false,
-			hasSeenOnboarding: false,
-			hasCompletedOnboarding: false,
-			hasSkippedOnboarding: false,
+			hasSeenOrientation: false,
+			hasCompletedOrientation: false,
+			hasSkippedOrientation: false,
 			selectedAudienceIds: [],
 			selectedThemeIds: [],
 			completedAt: undefined,
@@ -30,9 +30,9 @@ describe("Onboarding Store", () => {
 		it("should have correct initial values", () => {
 			const state = store.getState();
 			expect(state.hasHydrated).toBe(false);
-			expect(state.hasSeenOnboarding).toBe(false);
-			expect(state.hasCompletedOnboarding).toBe(false);
-			expect(state.hasSkippedOnboarding).toBe(false);
+			expect(state.hasSeenOrientation).toBe(false);
+			expect(state.hasCompletedOrientation).toBe(false);
+			expect(state.hasSkippedOrientation).toBe(false);
 			expect(state.selectedAudienceIds).toEqual([]);
 			expect(state.selectedThemeIds).toEqual([]);
 			expect(state.completedAt).toBeUndefined();
@@ -55,12 +55,12 @@ describe("Onboarding Store", () => {
 	});
 
 	describe("setSeen", () => {
-		it("should set hasSeenOnboarding", () => {
+		it("should set hasSeenOrientation", () => {
 			store.getState().setSeen(true);
-			expect(store.getState().hasSeenOnboarding).toBe(true);
+			expect(store.getState().hasSeenOrientation).toBe(true);
 
 			store.getState().setSeen(false);
-			expect(store.getState().hasSeenOnboarding).toBe(false);
+			expect(store.getState().hasSeenOrientation).toBe(false);
 		});
 	});
 
@@ -71,8 +71,8 @@ describe("Onboarding Store", () => {
 			const after = Date.now();
 
 			const state = store.getState();
-			expect(state.hasCompletedOnboarding).toBe(true);
-			expect(state.hasSkippedOnboarding).toBe(false); // Should clear skip
+			expect(state.hasCompletedOrientation).toBe(true);
+			expect(state.hasSkippedOrientation).toBe(false); // Should clear skip
 			expect(state.completedAt).toBeDefined();
 			expect(state.skippedAt).toBeUndefined(); // Should clear skip timestamp
 
@@ -88,7 +88,7 @@ describe("Onboarding Store", () => {
 			store.getState().setCompleted(false);
 
 			const state = store.getState();
-			expect(state.hasCompletedOnboarding).toBe(false);
+			expect(state.hasCompletedOrientation).toBe(false);
 			expect(state.completedAt).toBeUndefined();
 		});
 	});
@@ -100,7 +100,7 @@ describe("Onboarding Store", () => {
 			const after = Date.now();
 
 			const state = store.getState();
-			expect(state.hasSkippedOnboarding).toBe(true);
+			expect(state.hasSkippedOrientation).toBe(true);
 			expect(state.skippedAt).toBeDefined();
 
 			if (state.skippedAt) {
@@ -115,25 +115,25 @@ describe("Onboarding Store", () => {
 			store.getState().setSkipped(false);
 
 			const state = store.getState();
-			expect(state.hasSkippedOnboarding).toBe(false);
+			expect(state.hasSkippedOrientation).toBe(false);
 			expect(state.skippedAt).toBeUndefined();
 		});
 	});
 
-	describe("shouldShowOnboarding", () => {
+	describe("shouldShowOrientation", () => {
 		it("should return false if completed", () => {
 			store.getState().setCompleted(true);
-			expect(store.getState().shouldShowOnboarding()).toBe(false);
+			expect(store.getState().shouldShowOrientation()).toBe(false);
 		});
 
 		it("should return true if never seen", () => {
-			expect(store.getState().shouldShowOnboarding()).toBe(true);
+			expect(store.getState().shouldShowOrientation()).toBe(true);
 		});
 
 		it("should return false if skipped recently", () => {
 			store.getState().setSeen(true);
 			store.getState().setSkipped(true);
-			expect(store.getState().shouldShowOnboarding()).toBe(false);
+			expect(store.getState().shouldShowOrientation()).toBe(false);
 		});
 
 		it("should return false if skip expired (>24 hours) without reset", () => {
@@ -143,19 +143,19 @@ describe("Onboarding Store", () => {
 				Date.now() - 25 * 60 * 60 * 1000,
 			).toISOString();
 			store.setState({
-				hasSkippedOnboarding: true,
+				hasSkippedOrientation: true,
 				skippedAt: expiredTime,
 			});
-			// shouldShowOnboarding does not auto-reset; remains false until reset is performed
-			expect(store.getState().shouldShowOnboarding()).toBe(false);
-			// No side effects from shouldShowOnboarding
-			expect(store.getState().hasSkippedOnboarding).toBe(true);
+			// shouldShowOrientation does not auto-reset; remains false until reset is performed
+			expect(store.getState().shouldShowOrientation()).toBe(false);
+			// No side effects from shouldShowOrientation
+			expect(store.getState().hasSkippedOrientation).toBe(true);
 			expect(store.getState().skippedAt).toBe(expiredTime);
 		});
 
 		it("should return false if seen but not skipped or completed", () => {
 			store.getState().setSeen(true);
-			expect(store.getState().shouldShowOnboarding()).toBe(false);
+			expect(store.getState().shouldShowOrientation()).toBe(false);
 		});
 	});
 
@@ -175,7 +175,7 @@ describe("Onboarding Store", () => {
 				Date.now() - 25 * 60 * 60 * 1000,
 			).toISOString();
 			store.setState({
-				hasSkippedOnboarding: true,
+				hasSkippedOrientation: true,
 				skippedAt: expiredTime,
 			});
 			expect(store.getState().canSkipExpire()).toBe(true);
@@ -198,19 +198,19 @@ describe("Onboarding Store", () => {
 				Date.now() - 25 * 60 * 60 * 1000,
 			).toISOString();
 			store.setState({
-				hasSkippedOnboarding: true,
+				hasSkippedOrientation: true,
 				skippedAt: expiredTime,
 			});
 
 			// Should return true and reset the skip status
 			expect(store.getState().checkAndResetExpiredSkip()).toBe(true);
-			expect(store.getState().hasSkippedOnboarding).toBe(false);
+			expect(store.getState().hasSkippedOrientation).toBe(false);
 			expect(store.getState().skippedAt).toBeUndefined();
 		});
 
 		it("should return false if skippedAt is missing", () => {
 			store.setState({
-				hasSkippedOnboarding: true,
+				hasSkippedOrientation: true,
 				skippedAt: undefined,
 			});
 			expect(store.getState().checkAndResetExpiredSkip()).toBe(false);
@@ -246,9 +246,9 @@ describe("Onboarding Store", () => {
 			// Check all values are reset but hydration is preserved
 			const state = store.getState();
 			expect(state.hasHydrated).toBe(true); // Should preserve hydration state
-			expect(state.hasSeenOnboarding).toBe(false);
-			expect(state.hasCompletedOnboarding).toBe(false);
-			expect(state.hasSkippedOnboarding).toBe(false);
+			expect(state.hasSeenOrientation).toBe(false);
+			expect(state.hasCompletedOrientation).toBe(false);
+			expect(state.hasSkippedOrientation).toBe(false);
 			expect(state.selectedAudienceIds).toEqual([]);
 			expect(state.selectedThemeIds).toEqual([]);
 			expect(state.completedAt).toBeUndefined();
@@ -256,34 +256,34 @@ describe("Onboarding Store", () => {
 		});
 	});
 
-	describe("useOnboardingStore hook", () => {
+	describe("useOrientationStore hook", () => {
 		it("should work with provider and selector", () => {
 			const wrapper = ({ children }: { children: React.ReactNode }) => (
-				<OnboardingStoreProvider>{children}</OnboardingStoreProvider>
+				<OrientationStoreProvider>{children}</OrientationStoreProvider>
 			);
 
 			const { result } = renderHook(
 				() => ({
-					hasSeenOnboarding: useOnboardingStore((s) => s.hasSeenOnboarding),
-					setSeen: useOnboardingStore((s) => s.setSeen),
+					hasSeenOrientation: useOrientationStore((s) => s.hasSeenOrientation),
+					setSeen: useOrientationStore((s) => s.setSeen),
 				}),
 				{ wrapper },
 			);
 
-			expect(result.current.hasSeenOnboarding).toBe(false);
+			expect(result.current.hasSeenOrientation).toBe(false);
 
 			act(() => {
 				result.current.setSeen(true);
 			});
 
-			expect(result.current.hasSeenOnboarding).toBe(true);
+			expect(result.current.hasSeenOrientation).toBe(true);
 		});
 
 		it("should throw error when used outside provider", () => {
 			expect(() => {
-				renderHook(() => useOnboardingStore());
+				renderHook(() => useOrientationStore());
 			}).toThrow(
-				"useOnboardingStore must be used within OnboardingStoreProvider",
+				"useOrientationStore must be used within OrientationStoreProvider",
 			);
 		});
 	});

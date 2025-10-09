@@ -18,11 +18,11 @@ import type { Page } from "~/sanity/sanity.types";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-	title: "Explore | DIGITCORE",
-	description: "Explore patterns, tags, themes, and audiences.",
+	title: "Search | DIGITCORE",
+	description: "Search patterns, tags, themes, and audiences.",
 };
 
-export default async function ExplorePage({
+export default async function SearchPage({
 	searchParams,
 }: {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

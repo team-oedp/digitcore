@@ -234,12 +234,12 @@ export function CommandMenu() {
 	const getCurrentPageTitle = () => {
 		if (pathname === "/") return "Home";
 		if (pathname === "/faq") return "FAQ";
-		if (pathname === "/explore") return "Explore";
+		if (pathname === "/search") return "Search";
 		if (pathname === "/patterns") return "Patterns";
 		if (pathname === "/tags") return "Tags";
 		if (pathname === "/values") return "Values";
 		if (pathname === "/glossary") return "Glossary";
-		if (pathname === "/onboarding") return "Onboarding";
+		if (pathname === "/orientation") return "Orientation";
 		if (pathname === "/carrier-bag") return "Carrier Bag";
 		if (pathname?.startsWith("/pattern/")) return "Pattern";
 		return pathname?.split("/").pop()?.replace(/-/g, " ") || "Unknown";

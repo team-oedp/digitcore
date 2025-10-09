@@ -20,7 +20,7 @@ import { cn } from "~/lib/utils";
 const navItems = [
 	{ href: "/onboarding?via=header", label: "Orientation", isIndented: false },
 	{ label: "Explore", isIndented: false, isSection: true },
-	{ href: "/explore", label: "Search", isIndented: true },
+	{ href: "/search", label: "Search", isIndented: true },
 	{ href: "/patterns", label: "Patterns", isIndented: true },
 	{ href: "/tags", label: "Tags", isIndented: true },
 	{ href: "/values", label: "Values", isIndented: true },

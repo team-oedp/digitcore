@@ -6,7 +6,7 @@ import { draftMode } from "next/headers";
 import { Suspense } from "react";
 import { sans, signifier } from "~/app/(frontend)/fonts";
 import { GlossaryProvider } from "~/components/global/glossary-provider";
-import { OnboardingRedirect } from "~/components/global/onboarding-redirect";
+import { OrientationRedirect } from "~/components/global/orientation-redirect";
 import { SiteLayout } from "~/components/global/site-layout";
 import { DisableDraftMode } from "~/components/sanity/disable-draft-mode";
 import { cn } from "~/lib/utils";
@@ -16,7 +16,7 @@ import { token } from "~/sanity/lib/token";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { FontStoreProvider } from "~/stores/font";
-import { OnboardingStoreProvider } from "~/stores/onboarding";
+import { OrientationStoreProvider } from "~/stores/orientation";
 import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -54,18 +54,18 @@ export default async function Layout({
 			<div className="h-screen overflow-x-hidden text-foreground antialiased [--header-height:calc(--spacing(14))]">
 				<TRPCReactProvider>
 					<FontStoreProvider>
-						<OnboardingStoreProvider>
+						<OrientationStoreProvider>
 							<CarrierBagStoreProvider>
 								<PageContentStoreProvider>
 									<Suspense fallback={null}>
-										<OnboardingRedirect />
+										<OrientationRedirect />
 									</Suspense>
 									<GlossaryProvider>
 										<SiteLayout footerData={footerData}>{children}</SiteLayout>
 									</GlossaryProvider>
 								</PageContentStoreProvider>
 							</CarrierBagStoreProvider>
-						</OnboardingStoreProvider>
+						</OrientationStoreProvider>
 					</FontStoreProvider>
 				</TRPCReactProvider>
 				{isDraftMode && (
