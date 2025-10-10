@@ -31,15 +31,16 @@ export type TagsByLetter = Partial<
 >;
 
 export default async function Tags() {
-	const pageData = (await sanityFetch({
-		query: TAGS_PAGE_QUERY,
-		revalidate: 60,
-	})) as Page | null;
-
-	const tagsData = (await sanityFetch({
-		query: TAGS_WITH_PATTERNS_QUERY,
-		revalidate: 60,
-	})) as TAGS_WITH_PATTERNS_QUERYResult | null;
+	const [pageData, tagsData] = await Promise.all([
+		sanityFetch({
+			query: TAGS_PAGE_QUERY,
+			revalidate: 60,
+		}) as Promise<Page | null>,
+		sanityFetch({
+			query: TAGS_WITH_PATTERNS_QUERY,
+			revalidate: 60,
+		}) as Promise<TAGS_WITH_PATTERNS_QUERYResult | null>,
+	]);
 
 	// Group tags by letter and ensure strict alphabetical ordering within each group
 	const tagsByLetter =
