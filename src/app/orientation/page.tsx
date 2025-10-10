@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { draftMode } from "next/headers";
 import { Suspense } from "react";
 import { fetchFilterOptions } from "~/app/actions/filter-options";
-import { client } from "~/sanity/lib/client";
+import { sanityFetch } from "~/sanity/lib/client";
 import { ONBOARDING_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
-import { token } from "~/sanity/lib/token";
 import type { Onboarding } from "~/sanity/sanity.types";
 import { OrientationClient } from "./orientation-client";
 
@@ -19,23 +17,11 @@ export default async function OnboardingPage({
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
 	const params = await searchParams;
-	const isDraftMode = (await draftMode()).isEnabled;
 	const [onboarding, filters] = await Promise.all([
-		client.fetch(
-			ONBOARDING_QUERY,
-			{},
-			isDraftMode
-				? {
-						perspective: "previewDrafts",
-						useCdn: false,
-						stega: true,
-						token,
-					}
-				: {
-						perspective: "published",
-						useCdn: true,
-					},
-		) as Promise<Onboarding | null>,
+		sanityFetch({
+			query: ONBOARDING_QUERY,
+			revalidate: 60,
+		}) as Promise<Onboarding | null>,
 		fetchFilterOptions(),
 	]);
 
@@ -44,21 +30,11 @@ export default async function OnboardingPage({
 	let patternTitle: string | undefined;
 	if (patternSlug) {
 		try {
-			const pattern = await client.fetch(
-				PATTERN_QUERY,
-				{ slug: patternSlug },
-				isDraftMode
-					? {
-							perspective: "previewDrafts",
-							useCdn: false,
-							stega: true,
-							token,
-						}
-					: {
-							perspective: "published",
-							useCdn: true,
-						},
-			);
+			const pattern = await sanityFetch({
+				query: PATTERN_QUERY,
+				params: { slug: patternSlug },
+				revalidate: 60,
+			});
 			patternTitle = pattern?.title || undefined;
 		} catch {}
 	}

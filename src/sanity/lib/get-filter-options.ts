@@ -38,7 +38,7 @@ async function fetchFilterOptionsFromSanityInternal(
 const getFilterOptionsCached = cache(
 	async () => fetchFilterOptionsFromSanityInternal(false),
 	["filter-options"],
-	{ revalidate: 3600, tags: ["filter-options"] },
+	{ revalidate: 60, tags: ["filter-options"] },
 );
 
 export async function getFilterOptions(): Promise<FilterOptions> {
