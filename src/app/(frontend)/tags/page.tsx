@@ -12,7 +12,10 @@ import {
 	TAGS_PAGE_QUERY,
 	TAGS_WITH_PATTERNS_QUERY,
 } from "~/sanity/lib/queries";
-import type { TAGS_WITH_PATTERNS_QUERYResult } from "~/sanity/sanity.types";
+import type {
+	TAGS_PAGE_QUERYResult,
+	TAGS_WITH_PATTERNS_QUERYResult,
+} from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "Tags | DIGITCORE",
@@ -29,15 +32,16 @@ export type TagsByLetter = Partial<
 >;
 
 export default async function Tags() {
-	const pageData = await sanityFetch({
-		query: TAGS_PAGE_QUERY,
-		revalidate: 60,
-	});
-
-	const tagsData = await sanityFetch({
-		query: TAGS_WITH_PATTERNS_QUERY,
-		revalidate: 60,
-	});
+	const [pageData, tagsData] = await Promise.all([
+		sanityFetch({
+			query: TAGS_PAGE_QUERY,
+			revalidate: 60,
+		}) as Promise<TAGS_PAGE_QUERYResult | null>,
+		sanityFetch({
+			query: TAGS_WITH_PATTERNS_QUERY,
+			revalidate: 60,
+		}) as Promise<TAGS_WITH_PATTERNS_QUERYResult | null>,
+	]);
 
 	// Group tags by letter and ensure strict alphabetical ordering within each group
 	const tagsByLetter =
