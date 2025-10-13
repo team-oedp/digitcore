@@ -596,7 +596,7 @@ export function CommandMenu() {
 					<div className="text-muted-foreground text-sm">
 						You are on the {currentPage.toLowerCase()} page
 					</div>
-					<div className="flex items-center gap-4">
+					<div className="hidden lg:flex lg:items-center lg:gap-4">
 						<div className="flex items-center gap-2">
 							<div className="flex items-center gap-1.5">
 								<div className="rounded bg-neutral-200 p-1 text-neutral-500 dark:bg-neutral-800">
