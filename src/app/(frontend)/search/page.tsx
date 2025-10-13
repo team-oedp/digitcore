@@ -11,7 +11,6 @@ import { PageWrapper } from "~/components/shared/page-wrapper";
 import { Skeleton } from "~/components/ui/skeleton";
 import { sanityFetch } from "~/sanity/lib/client";
 import { EXPLORE_PAGE_QUERY } from "~/sanity/lib/queries";
-import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "Search | DIGITCORE",
@@ -23,23 +22,22 @@ export default async function SearchPage({
 }: {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-	const data = (await sanityFetch({
+	const pageData = await sanityFetch({
 		query: EXPLORE_PAGE_QUERY,
 		revalidate: 60,
-	})) as Page | null;
+	});
 
-	if (!data) {
-		console.log("No page found, returning 404");
+	if (!pageData) {
 		return notFound();
 	}
 
 	return (
 		<PageWrapper>
 			<div className="flex flex-col gap-10 pb-44">
-				{data.title && <PageHeading title={data.title} />}
-				{data.description && (
+				{pageData.title && <PageHeading title={pageData.title} />}
+				{pageData.description && (
 					<CustomPortableText
-						value={data.description as PortableTextBlock[]}
+						value={pageData.description as PortableTextBlock[]}
 						className="mt-8 text-body"
 					/>
 				)}

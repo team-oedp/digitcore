@@ -126,7 +126,6 @@ export default async function Home() {
 										<CustomPortableText
 											value={group.content.body as PortableTextBlock[]}
 											className="text-body"
-											glossaryTerms={glossaryTerms}
 										/>
 									)}
 								</>
@@ -156,7 +155,6 @@ export default async function Home() {
 														<CustomPortableText
 															value={item.description as PortableTextBlock[]}
 															className="mt-3 text-body"
-															glossaryTerms={glossaryTerms}
 														/>
 													)}
 												</div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
+import { notFound } from "next/navigation";
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
@@ -10,10 +11,7 @@ import {
 	PATTERNS_PAGE_QUERY,
 	PATTERNS_WITH_THEMES_QUERY,
 } from "~/sanity/lib/queries";
-import type {
-	PATTERNS_WITH_THEMES_QUERYResult,
-	Page,
-} from "~/sanity/sanity.types";
+import type { PATTERNS_WITH_THEMES_QUERYResult } from "~/sanity/sanity.types";
 
 type PatternWithTheme = PATTERNS_WITH_THEMES_QUERYResult[0];
 
@@ -28,10 +26,10 @@ export const metadata: Metadata = {
 };
 
 export default async function PatternsPage() {
-	const pageData = (await sanityFetch({
+	const pageData = await sanityFetch({
 		query: PATTERNS_PAGE_QUERY,
 		revalidate: 60,
-	})) as Page | null;
+	});
 
 	const allPatterns: PATTERNS_WITH_THEMES_QUERYResult = await sanityFetch({
 		query: PATTERNS_WITH_THEMES_QUERY,
@@ -56,7 +54,9 @@ export default async function PatternsPage() {
 		}
 	}
 
-	if (!pageData) return null;
+	if (!pageData) {
+		return notFound();
+	}
 
 	return (
 		<PageWrapper>

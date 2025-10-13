@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
+import { notFound } from "next/navigation";
 import { TagsList } from "~/components/pages/tags/tags-list";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
@@ -11,10 +12,7 @@ import {
 	TAGS_PAGE_QUERY,
 	TAGS_WITH_PATTERNS_QUERY,
 } from "~/sanity/lib/queries";
-import type {
-	Page,
-	TAGS_WITH_PATTERNS_QUERYResult,
-} from "~/sanity/sanity.types";
+import type { TAGS_WITH_PATTERNS_QUERYResult } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "Tags | DIGITCORE",
@@ -31,15 +29,15 @@ export type TagsByLetter = Partial<
 >;
 
 export default async function Tags() {
-	const pageData = (await sanityFetch({
+	const pageData = await sanityFetch({
 		query: TAGS_PAGE_QUERY,
 		revalidate: 60,
-	})) as Page | null;
+	});
 
-	const tagsData = (await sanityFetch({
+	const tagsData = await sanityFetch({
 		query: TAGS_WITH_PATTERNS_QUERY,
 		revalidate: 60,
-	})) as TAGS_WITH_PATTERNS_QUERYResult | null;
+	});
 
 	// Group tags by letter and ensure strict alphabetical ordering within each group
 	const tagsByLetter =
@@ -54,7 +52,9 @@ export default async function Tags() {
 			return acc;
 		}, {}) ?? {};
 
-	if (!pageData) return null;
+	if (!pageData) {
+		return notFound();
+	}
 
 	return (
 		<div className="relative">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
+import { notFound } from "next/navigation";
 import { GlossaryList } from "~/components/pages/glossary/glossary-list";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
@@ -11,7 +12,7 @@ import {
 	GLOSSARY_PAGE_QUERY,
 	GLOSSARY_TERMS_QUERY,
 } from "~/sanity/lib/queries";
-import type { GLOSSARY_TERMS_QUERYResult, Page } from "~/sanity/sanity.types";
+import type { GLOSSARY_TERMS_QUERYResult } from "~/sanity/sanity.types";
 import { GlossaryScroll } from "./glossary-scroll";
 
 export const metadata: Metadata = {
@@ -27,15 +28,15 @@ const ALPHABET = Array.from({ length: 26 }, (_, i) =>
 export type TermsByLetter = Partial<Record<string, GLOSSARY_TERMS_QUERYResult>>;
 
 export default async function GlossaryPage() {
-	const pageData = (await sanityFetch({
+	const pageData = await sanityFetch({
 		query: GLOSSARY_PAGE_QUERY,
 		revalidate: 60,
-	})) as Page | null;
+	});
 
-	const glossaryTerms = (await sanityFetch({
+	const glossaryTerms = await sanityFetch({
 		query: GLOSSARY_TERMS_QUERY,
 		revalidate: 60,
-	})) as GLOSSARY_TERMS_QUERYResult | null;
+	});
 
 	// Group terms by letter and ensure strict alphabetical ordering within each group
 	const termsByLetter =
@@ -50,7 +51,9 @@ export default async function GlossaryPage() {
 			return acc;
 		}, {}) ?? {};
 
-	if (!pageData) return null;
+	if (!pageData) {
+		return notFound();
+	}
 
 	return (
 		<div className="relative">

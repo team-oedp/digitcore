@@ -9,7 +9,7 @@ export default function NotFound() {
 	return (
 		<div className="flex h-screen w-full flex-col overflow-hidden">
 			<ErrorHeader />
-			<div className="flex flex-1 gap-2 overflow-hidden bg-secondary pt-16 md:pt-14">
+			<div className="flex flex-1 gap-2 overflow-hidden bg-page-background pt-16 md:pt-14">
 				<div className="m-2 flex min-h-0 flex-1 flex-col overflow-y-auto rounded-md bg-container-background">
 					<div className="3xl:max-w-6xl max-w-4xl px-5 pt-0 pb-5 2xl:max-w-5xl">
 						<PageHeading title="404" />

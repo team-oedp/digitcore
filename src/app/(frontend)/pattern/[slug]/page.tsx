@@ -10,14 +10,7 @@ import { PageWrapper } from "~/components/shared/page-wrapper";
 import { PatternHeading } from "~/components/shared/pattern-heading";
 import { sanityFetch } from "~/sanity/lib/client";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
-import type {
-	Audience,
-	PATTERN_QUERYResult,
-	Pattern,
-	Slug,
-	Tag,
-	Theme,
-} from "~/sanity/sanity.types";
+import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
 
 export type PatternPageProps = {
 	params: Promise<{ slug: string }>;
@@ -53,58 +46,44 @@ export async function generateMetadata({
 export default async function PatternPage({ params }: PatternPageProps) {
 	const { slug } = await params;
 
-	const pattern = (await sanityFetch({
+	const pattern: PATTERN_QUERYResult = await sanityFetch({
 		query: PATTERN_QUERY,
 		params: { slug },
 		tags: [`pattern:${slug}`, "solution", "resource", "audience", "tag"],
-	})) as PATTERN_QUERYResult;
+	});
 
 	if (!pattern) {
-		console.log("No pattern found, returning 404");
 		return notFound();
 	}
-
-	const themeFromPattern: Theme | undefined = (() => {
-		const candidate = pattern as unknown as Partial<{
-			theme: Theme;
-			themes: Theme[];
-		}>;
-		if (Array.isArray(candidate.themes) && candidate.themes.length > 0) {
-			return candidate.themes[0];
-		}
-		return candidate.theme;
-	})();
 
 	return (
 		<PatternContentProvider pattern={pattern}>
 			<PageWrapper className="flex flex-col gap-5 pb-20 md:pb-40">
 				<PatternHeading
-					title={pattern.title || ""}
-					slug={
-						typeof pattern.slug === "string"
-							? pattern.slug
-							: (pattern.slug as Slug | null)?.current || ""
-					}
-					pattern={pattern as unknown as Pattern}
+					title={pattern.title}
+					slug={pattern.slug}
+					pattern={pattern}
 				/>
 				<div className="space-y-8 md:space-y-12">
 					<div>
-						<CustomPortableText
-							value={pattern.description as PortableTextBlock[]}
-							className="text-body"
-						/>
+						{pattern.description && (
+							<CustomPortableText
+								value={pattern.description as PortableTextBlock[]}
+								className="text-body"
+							/>
+						)}
 						<PatternConnections
-							tags={(pattern.tags as Tag[]) || undefined}
-							audiences={(pattern.audiences as Audience[]) || undefined}
-							theme={themeFromPattern}
+							tags={pattern.tags ?? undefined}
+							audiences={pattern.audiences ?? undefined}
+							theme={pattern.theme ?? undefined}
 						/>
 					</div>
 					<Solutions
-						solutions={pattern.solutions || []}
-						patternName={pattern.title || ""}
+						solutions={pattern.solutions}
+						patternName={pattern.title ?? ""}
 						patternSlug={slug}
 					/>
-					<Resources resources={pattern.resources || []} />
+					<Resources resources={pattern.resources ?? []} />
 				</div>
 				<div className="h-10 md:h-20" />
 			</PageWrapper>
