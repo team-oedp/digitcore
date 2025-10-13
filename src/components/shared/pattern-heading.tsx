@@ -4,7 +4,7 @@ import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import { useEffect, useId, useState } from "react";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import { cn } from "~/lib/utils";
-import type { Pattern } from "~/sanity/sanity.types";
+import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { Icon } from "./icon";
 
@@ -52,9 +52,9 @@ function SaveToCarrierBagButton({
 }
 
 type PatternHeadingProps = {
-	title?: string;
-	slug?: string;
-	pattern?: Pattern;
+	title: string | null;
+	slug: string | null;
+	pattern?: NonNullable<PATTERN_QUERYResult>;
 };
 
 export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {

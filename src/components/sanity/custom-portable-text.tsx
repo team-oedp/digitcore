@@ -25,12 +25,10 @@ export function CustomPortableText({
 	className,
 	value,
 	as: Component = "div",
-	glossaryTerms,
 }: {
 	className?: string;
 	value: PortableTextBlock[];
 	as?: React.ElementType;
-	glossaryTerms?: GlossaryTerm[]; // kept for backward-compat; no longer used for auto-detection
 }) {
 	// Glossary terms are now editor-annotated; no auto-detection during render.
 

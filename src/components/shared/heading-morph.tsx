@@ -118,7 +118,6 @@ export function HeadingMorph({
 			}
 		}
 		// Run once after mount/scroll container detection
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [scrollContainer]);
 
 	// Use scroll hook with the appropriate container
