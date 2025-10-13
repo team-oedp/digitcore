@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
+import { notFound } from "next/navigation";
 import { TagsList } from "~/components/pages/tags/tags-list";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
@@ -12,7 +13,7 @@ import {
 	TAGS_WITH_PATTERNS_QUERY,
 } from "~/sanity/lib/queries";
 import type {
-	Page,
+	TAGS_PAGE_QUERYResult,
 	TAGS_WITH_PATTERNS_QUERYResult,
 } from "~/sanity/sanity.types";
 
@@ -35,7 +36,7 @@ export default async function Tags() {
 		sanityFetch({
 			query: TAGS_PAGE_QUERY,
 			revalidate: 60,
-		}) as Promise<Page | null>,
+		}) as Promise<TAGS_PAGE_QUERYResult | null>,
 		sanityFetch({
 			query: TAGS_WITH_PATTERNS_QUERY,
 			revalidate: 60,
@@ -55,7 +56,9 @@ export default async function Tags() {
 			return acc;
 		}, {}) ?? {};
 
-	if (!pageData) return null;
+	if (!pageData) {
+		return notFound();
+	}
 
 	return (
 		<div className="relative">

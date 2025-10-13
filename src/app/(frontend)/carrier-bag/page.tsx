@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { sanityFetch } from "~/sanity/lib/client";
 import { CARRIER_BAG_QUERY } from "~/sanity/lib/queries";
-import type { CarrierBag as CarrierBagDocument } from "~/sanity/sanity.types";
 import { CarrierBagPage } from "./carrier-bag-page";
 
 export const metadata: Metadata = {
@@ -11,10 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default async function CarrierBag() {
-	const data = (await sanityFetch({
+	const data = await sanityFetch({
 		query: CARRIER_BAG_QUERY,
 		revalidate: 60,
-	})) as CarrierBagDocument | null;
+	});
 
 	return <CarrierBagPage data={data ?? undefined} />;
 }

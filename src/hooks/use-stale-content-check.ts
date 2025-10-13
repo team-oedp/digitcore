@@ -2,12 +2,13 @@
 
 import { defineQuery } from "next-sanity";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { PatternForCarrierBag } from "~/components/global/carrier-bag/carrier-bag-item";
 import { client } from "~/sanity/lib/client";
 import {
 	PATTERNS_STALENESS_CHECK_QUERY,
 	type PatternStalenessResult,
 } from "~/sanity/lib/queries";
-import type { PATTERN_QUERYResult, Pattern } from "~/sanity/sanity.types";
+import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 
 // Constants
@@ -24,6 +25,7 @@ const PATTERN_BY_ID_QUERY = defineQuery(`
     _rev,
     title,
     description,
+    "descriptionPlainText": pt::text(description),
     "slug": slug.current,
     tags[]->{...},
     audiences[]->{...},
@@ -52,13 +54,15 @@ const PATTERN_BY_ID_QUERY = defineQuery(`
   }
 `);
 
-// Helper function to convert query result to Pattern type
-// The carrier bag already works with populated patterns, so we'll use the query result as-is
-// with a type assertion since the structures are compatible for our use case
+// Helper function to convert query result to PatternForCarrierBag type
+// The query result structure matches PatternForCarrierBag
 const convertQueryResultToPattern = (
 	queryResult: PATTERN_QUERYResult,
-): Pattern => {
-	return queryResult as unknown as Pattern;
+): PatternForCarrierBag => {
+	if (!queryResult) {
+		throw new Error("Query result is null");
+	}
+	return queryResult as PatternForCarrierBag;
 };
 
 type StaleContentResult = {

@@ -13,52 +13,50 @@ import {
 	SOLUTION_SEARCH_QUERY,
 	TAG_SEARCH_QUERY,
 } from "~/sanity/lib/queries";
+import type { Resource, Solution, Tag } from "~/sanity/sanity.types";
 import type { SearchPattern } from "~/types/search";
 
-// Base content type for all search results
-export type SearchBaseContent = {
-	_id: string;
-	_type: string;
+/**
+ * Direct solution search result
+ * Extends Sanity's Solution type with search-specific fields (_score and patterns)
+ */
+export type SearchSolution = Pick<
+	Solution,
+	"_id" | "_type" | "title" | "description" | "audiences"
+> & {
 	_score?: number;
-	title: string | null;
-	description?: Array<unknown> | null;
-};
-
-// Direct solution search result
-export type SearchSolution = SearchBaseContent & {
-	_type: "solution";
-	audiences?: Array<{
-		_id: string;
-		title?: string;
-	}> | null;
 	patterns?: Array<{
 		_id: string;
-		title?: string;
+		title: string | null;
 		slug: string;
 	}> | null;
 };
 
-// Direct resource search result
-export type SearchResource = SearchBaseContent & {
-	_type: "resource";
-	links?: Array<unknown> | null;
-	solutions?: Array<{
-		_id: string;
-		title?: string;
-	}> | null;
+/**
+ * Direct resource search result
+ * Extends Sanity's Resource type with search-specific fields (_score and patterns)
+ */
+export type SearchResource = Pick<
+	Resource,
+	"_id" | "_type" | "title" | "description" | "solutions" | "mainLink"
+> & {
+	_score?: number;
 	patterns?: Array<{
 		_id: string;
-		title?: string;
+		title: string | null;
 		slug: string;
 	}> | null;
 };
 
-// Direct tag search result
-export type SearchTag = SearchBaseContent & {
-	_type: "tag";
+/**
+ * Direct tag search result
+ * Extends Sanity's Tag type with search-specific fields (_score and patterns)
+ */
+export type SearchTag = Pick<Tag, "_id" | "_type" | "title"> & {
+	_score?: number;
 	patterns?: Array<{
 		_id: string;
-		title?: string;
+		title: string | null;
 		slug: string;
 	}> | null;
 };

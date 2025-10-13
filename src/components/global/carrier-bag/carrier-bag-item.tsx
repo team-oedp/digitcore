@@ -15,13 +15,20 @@ import {
 	getStaleStatusText,
 } from "~/lib/stale-content-utils";
 import { cn } from "~/lib/utils";
-import type { Pattern } from "~/sanity/sanity.types";
+import type {
+	PATTERNS_BY_SLUGS_QUERYResult,
+	PATTERN_QUERYResult,
+} from "~/sanity/sanity.types";
+
+export type PatternForCarrierBag =
+	| NonNullable<PATTERN_QUERYResult>
+	| PATTERNS_BY_SLUGS_QUERYResult[number];
 
 export type CarrierBagItem = {
-	pattern: Pattern;
+	pattern: PatternForCarrierBag;
 	dateAdded: string;
 	notes?: string;
-	contentVersion?: string; // Store pattern._updatedAt when added
+	contentVersion?: string;
 };
 
 export type CarrierBagItemData = {
@@ -53,7 +60,11 @@ export function CarrierBagItem({
 
 	return (
 		<div
-			className={cn(getStaleItemClasses(item.isStale))}
+			className={cn(
+				getStaleItemClasses(item.isStale),
+				showUpdateAnimation &&
+					"animate-pulse rounded-md border-2 border-yellow-500/60 shadow-sm shadow-yellow-500/20",
+			)}
 			aria-label={getStaleStatusText(item.isStale)}
 		>
 			{/* Drag handle */}
@@ -65,11 +76,7 @@ export function CarrierBagItem({
 			{item.slug ? (
 				<Link
 					href={`/pattern/${item.slug}`}
-					className={cn(
-						"relative flex min-w-0 flex-1 cursor-pointer items-start gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-						showUpdateAnimation &&
-							"animate-pulse border-2 border-yellow-500/60 shadow-sm shadow-yellow-500/20",
-					)}
+					className="relative flex min-w-0 flex-1 cursor-pointer items-start gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 					onClick={(e) => e.stopPropagation()}
 					onPointerDown={(e) => e.stopPropagation()}
 				>
@@ -94,13 +101,7 @@ export function CarrierBagItem({
 					</div>
 				</Link>
 			) : (
-				<div
-					className={cn(
-						"relative flex min-w-0 flex-1 items-start gap-3 rounded-md",
-						showUpdateAnimation &&
-							"animate-pulse border-2 border-yellow-500/60 shadow-sm shadow-yellow-500/20",
-					)}
-				>
+				<div className="relative flex min-w-0 flex-1 items-start gap-3 rounded-md">
 					<div className="mt-0.5 flex-shrink-0">
 						{PatternIcon ? (
 							<div className="h-4 w-4 flex-shrink-0 opacity-40">

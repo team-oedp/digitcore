@@ -12,9 +12,8 @@ import {
 	HashIcon,
 	LightbulbIcon,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import type {
 	SearchResource,
@@ -42,82 +41,11 @@ import { cn } from "~/lib/utils";
 import type { SearchPattern } from "~/types/search";
 import { Icon } from "../shared/icon";
 
-type CommandMenuItemProps = {
-	shortcut?: string;
-	icon: React.ReactNode;
-	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	onAction: () => void;
-	children?: React.ReactNode;
-	className?: string;
-	searchValue?: string;
-} & React.ComponentProps<typeof CommandItem>;
-
-function _CommandMenuItem({
-	children,
-	icon,
-	shortcut,
-	className,
-	setIsOpen,
-	onAction,
-	searchValue,
-	...props
-}: CommandMenuItemProps) {
-	const itemRef = useRef<HTMLDivElement | null>(null);
-
-	function setItemRef(node: HTMLDivElement | null) {
-		itemRef.current = node;
-	}
-
-	useEffect(() => {
-		if (!shortcut) return;
-
-		function handleKeyDown(e: KeyboardEvent) {
-			if (e.key === shortcut && (e.metaKey || e.ctrlKey)) {
-				e.preventDefault();
-				setIsOpen(false);
-				onAction();
-			}
-		}
-
-		document.addEventListener("keydown", handleKeyDown);
-
-		return () => document.removeEventListener("keydown", handleKeyDown);
-	}, [setIsOpen, onAction, shortcut]);
-
-	return (
-		<CommandItem
-			{...props}
-			ref={setItemRef}
-			className={cn("cursor-pointer", className)}
-		>
-			<div className="flex items-center gap-2">
-				<div className="opacity-70">{icon}</div>
-				{children}
-			</div>
-			{shortcut && (
-				<div className="ml-auto flex gap-1">
-					<div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-200 font-semibold text-neutral-600 text-xs uppercase dark:bg-neutral-800 dark:text-neutral-400">
-						<CommandIcon size={12} />
-					</div>
-					<div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-200 font-semibold text-neutral-600 text-xs uppercase dark:bg-neutral-800 dark:text-neutral-400">
-						{shortcut}
-					</div>
-				</div>
-			)}
-		</CommandItem>
-	);
-}
-
 export function CommandMenu() {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const router = useRouter();
 	const pathname = usePathname();
-
-	const { resolvedTheme: theme } = useTheme();
-	const _patternSlug = pathname?.startsWith("/pattern/")
-		? pathname.split("/").pop()
-		: null;
 
 	// Comprehensive search using enhanced server-side search action
 	const [query, setQuery] = useState("");
@@ -128,7 +56,6 @@ export function CommandMenu() {
 		tags: SearchTag[];
 	}>({ patterns: [], solutions: [], resources: [], tags: [] });
 	const [globalLoading, setGlobalLoading] = useState(false);
-	const [_error, setError] = useState<string | null>(null);
 	const [debouncedQuery] = useDebounce(query, 300);
 
 	// Enhanced search effect using comprehensive search
@@ -141,7 +68,6 @@ export function CommandMenu() {
 					resources: [],
 					tags: [],
 				});
-				setError(null);
 				return;
 			}
 
@@ -151,7 +77,6 @@ export function CommandMenu() {
 			}
 
 			setGlobalLoading(true);
-			setError(null);
 			try {
 				// Use direct search function for command modal
 				const result = await searchContentForCommandModal(
@@ -161,7 +86,6 @@ export function CommandMenu() {
 				if (result.success && result.data) {
 					setSearchResults(result.data);
 				} else {
-					setError(result.error || "Search failed");
 					setSearchResults({
 						patterns: [],
 						solutions: [],
@@ -170,7 +94,6 @@ export function CommandMenu() {
 					});
 				}
 			} catch (_err) {
-				setError("Search failed");
 				setSearchResults({
 					patterns: [],
 					solutions: [],
@@ -201,12 +124,6 @@ export function CommandMenu() {
 	};
 
 	const isLoading = globalLoading || pageLoading;
-	const _hasResults =
-		searchResults.patterns.length > 0 ||
-		searchResults.solutions.length > 0 ||
-		searchResults.resources.length > 0 ||
-		searchResults.tags.length > 0 ||
-		pageResults.length > 0;
 
 	// Reset search state when modal opens/closes
 	useEffect(() => {
@@ -219,17 +136,9 @@ export function CommandMenu() {
 				resources: [],
 				tags: [],
 			});
-			setError(null);
 			clearPageSearch();
 		}
 	}, [isOpen, clearPageSearch]);
-
-	const _clearSearch = useCallback(() => {
-		setQuery("");
-		setSearchResults({ patterns: [], solutions: [], resources: [], tags: [] });
-		setError(null);
-		clearPageSearch();
-	}, [clearPageSearch]);
 
 	const getCurrentPageTitle = () => {
 		if (pathname === "/") return "Home";
@@ -249,7 +158,7 @@ export function CommandMenu() {
 
 	// Helper function to get compact search context for command modal
 	const getCompactMatchContext = (
-		title: string | null,
+		title: string | null | undefined,
 		description: Array<unknown> | null | undefined,
 		searchTerm: string,
 	): {
@@ -687,7 +596,7 @@ export function CommandMenu() {
 					<div className="text-muted-foreground text-sm">
 						You are on the {currentPage.toLowerCase()} page
 					</div>
-					<div className="flex items-center gap-4">
+					<div className="hidden lg:flex lg:items-center lg:gap-4">
 						<div className="flex items-center gap-2">
 							<div className="flex items-center gap-1.5">
 								<div className="rounded bg-neutral-200 p-1 text-neutral-500 dark:bg-neutral-800">

@@ -108,7 +108,7 @@ export function CarrierBagSidebarModal() {
 											item={itemData}
 											onRemove={() => handleRemoveItem(item.pattern._id)}
 											onVisit={() =>
-												handleVisitItem(item.pattern.slug?.current)
+												handleVisitItem(item.pattern.slug ?? undefined)
 											}
 										/>
 									);

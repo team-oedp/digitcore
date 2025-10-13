@@ -10,10 +10,8 @@ import { OrientationRedirect } from "~/components/global/orientation-redirect";
 import { SiteLayout } from "~/components/global/site-layout";
 import { DisableDraftMode } from "~/components/sanity/disable-draft-mode";
 import { cn } from "~/lib/utils";
-import { client } from "~/sanity/lib/client";
+import { sanityFetch } from "~/sanity/lib/client";
 import { FOOTER_QUERY } from "~/sanity/lib/queries";
-import { token } from "~/sanity/lib/token";
-import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { FontStoreProvider } from "~/stores/font";
 import { OrientationStoreProvider } from "~/stores/orientation";
@@ -30,22 +28,10 @@ export default async function Layout({
 }: Readonly<{ children: React.ReactNode }>) {
 	const isDraftMode = (await draftMode()).isEnabled;
 
-	// Fetch footer data
-	const footerData = (await client.fetch(
-		FOOTER_QUERY,
-		{},
-		isDraftMode
-			? {
-					perspective: "previewDrafts",
-					useCdn: false,
-					stega: true,
-					token,
-				}
-			: {
-					perspective: "published",
-					useCdn: true,
-				},
-	)) as FOOTER_QUERYResult;
+	const footerData = await sanityFetch({
+		query: FOOTER_QUERY,
+		revalidate: 60,
+	});
 
 	return (
 		<section

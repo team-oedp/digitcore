@@ -6,11 +6,11 @@ import {
 	within,
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { PatternForCarrierBag } from "~/components/global/carrier-bag/carrier-bag-item";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
 import { SiteHeader } from "~/components/global/site-header";
 import { PatternHeading } from "~/components/shared/pattern-heading";
 import { SidebarProvider } from "~/components/ui/sidebar";
-import type { Pattern } from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { FontStoreProvider } from "~/stores/font";
 
@@ -109,14 +109,21 @@ function TestWrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe("Carrier Bag Sidebar", () => {
-	const mockPattern: Pattern = {
+	const mockPattern: PatternForCarrierBag = {
 		_id: "test-pattern-1",
 		_type: "pattern",
 		_createdAt: "2023-01-01T00:00:00Z",
 		_updatedAt: "2023-01-01T00:00:00Z",
 		_rev: "1",
 		title: "Test Pattern",
-		slug: { _type: "slug", current: "test-pattern" },
+		slug: "test-pattern",
+		description: null,
+		descriptionPlainText: "",
+		tags: null,
+		audiences: null,
+		theme: null,
+		solutions: null,
+		resources: null,
 	};
 
 	beforeEach(() => {

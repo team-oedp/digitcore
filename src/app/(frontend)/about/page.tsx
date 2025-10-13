@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
+import { notFound } from "next/navigation";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
 import { sanityFetch } from "~/sanity/lib/client";
 import { ABOUT_PAGE_QUERY } from "~/sanity/lib/queries";
-import type { Page } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "About | DIGITCORE",
@@ -15,12 +15,14 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-	const data = (await sanityFetch({
+	const data = await sanityFetch({
 		query: ABOUT_PAGE_QUERY,
 		revalidate: 60,
-	})) as Page | null;
+	});
 
-	if (!data) return null;
+	if (!data) {
+		return notFound();
+	}
 
 	return (
 		<PageWrapper>

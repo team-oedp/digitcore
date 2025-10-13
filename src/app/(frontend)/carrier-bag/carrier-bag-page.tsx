@@ -41,7 +41,10 @@ import {
 } from "~/hooks/use-pattern-content";
 import { client } from "~/sanity/lib/client";
 import { PATTERNS_BY_SLUGS_QUERY } from "~/sanity/lib/queries";
-import type { CarrierBag, Pattern } from "~/sanity/sanity.types";
+import type {
+	CARRIER_BAG_QUERYResult,
+	PATTERNS_BY_SLUGS_QUERYResult,
+} from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { CarrierBagContent } from "./carrier-bag-content";
 
@@ -56,7 +59,7 @@ const uiData = {
 };
 
 function SidebarContentComponent(props: {
-	data?: CarrierBag;
+	data?: CARRIER_BAG_QUERYResult;
 	documentData: CarrierBagDocumentData;
 	itemsCount: number;
 	shareOpen: boolean;
@@ -258,24 +261,17 @@ function CloseCarrierBagButton() {
 	);
 }
 
-export function CarrierBagPage({ data }: { data?: CarrierBag }) {
+export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 	const items = useCarrierBagStore((state) => state.items);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const addPattern = useCarrierBagStore((state) => state.addPattern);
 	const documentData = useCarrierBagDocument(items);
-	const _router = useRouter();
 
 	const [shareOpen, setShareOpen] = useState(false);
 	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
 	const bagSlugs = useMemo(() => {
-		return items
-			.map((i) =>
-				typeof i.pattern.slug === "string"
-					? i.pattern.slug
-					: i.pattern.slug?.current,
-			)
-			.filter(Boolean) as string[];
+		return items.map((i) => i.pattern.slug).filter(Boolean) as string[];
 	}, [items]);
 
 	const shareUrl = useMemo(() => {
@@ -302,12 +298,20 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 		if (slugs.length === 0) return;
 		(async () => {
 			try {
-				const patterns = await client.fetch(PATTERNS_BY_SLUGS_QUERY, { slugs });
+				const patterns = await client.fetch<PATTERNS_BY_SLUGS_QUERYResult>(
+					PATTERNS_BY_SLUGS_QUERY,
+					{ slugs },
+				);
+				// Preserve incoming slug order when adding
+				const patternsBySlug = new Map(patterns.map((p) => [p.slug ?? "", p]));
+				const ordered = slugs
+					.map((slug) => patternsBySlug.get(slug))
+					.filter(Boolean) as PATTERNS_BY_SLUGS_QUERYResult;
 				if (mode === "replace") {
 					clearBag();
 				}
-				for (const p of patterns) {
-					addPattern(p as unknown as Pattern);
+				for (const p of ordered) {
+					addPattern(p);
 				}
 				const cleanUrl = `${window.location.origin}/carrier-bag`;
 				window.history.replaceState({}, "", cleanUrl);
@@ -324,10 +328,7 @@ export function CarrierBagPage({ data }: { data?: CarrierBag }) {
 			patterns: items.map((i) => ({
 				id: i.pattern._id,
 				title: i.pattern.title,
-				slug:
-					typeof i.pattern.slug === "string"
-						? i.pattern.slug
-						: i.pattern.slug?.current,
+				slug: i.pattern.slug,
 				notes: i.notes,
 				dateAdded: i.dateAdded,
 			})),
