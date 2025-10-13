@@ -6,7 +6,10 @@
 
 import type { PortableTextBlock } from "@portabletext/types";
 import { useEffect } from "react";
-import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
+import type {
+	CarrierBagItem,
+	PatternForCarrierBag,
+} from "~/components/global/carrier-bag/carrier-bag-item";
 import type {
 	Audience,
 	PATTERN_QUERYResult,
@@ -104,12 +107,12 @@ export type PatternContentData = {
 /**
  * Hook to process pattern data into a consistent structure for rendering
  */
-export type PopulatedPattern = Pattern & {
-	tags?: TagEntity[];
-	audiences?: AudienceEntity[];
-	themes?: ThemeEntity[];
-	solutions?: SolutionEntity[];
-	resources?: ResourceEntity[];
+export type PopulatedPattern = PatternForCarrierBag & {
+	tags?: TagEntity[] | null;
+	audiences?: AudienceEntity[] | null;
+	theme?: ThemeEntity | null;
+	solutions?: SolutionEntity[] | null;
+	resources?: ResourceEntity[] | null;
 };
 
 export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
@@ -230,8 +233,7 @@ export const usePatternContent = (
 		description: portableTextToString(
 			pattern.description as PortableTextBlock[],
 		),
-		slug:
-			typeof pattern.slug === "string" ? pattern.slug : pattern.slug?.current,
+		slug: pattern.slug ?? undefined,
 	};
 
 	// Process connections
@@ -259,14 +261,20 @@ export const usePatternContent = (
 		});
 	}
 
-	if (pattern.themes && pattern.themes.length > 0) {
+	if (pattern.theme) {
 		connections.push({
 			type: "themes",
-			title: "Themes",
-			items: (pattern.themes as ThemeEntity[]).map((theme) => ({
-				id: theme._id ?? theme._key ?? theme._ref ?? "",
-				title: theme?.title || theme?._ref || "Unknown Theme",
-			})),
+			title: "Theme",
+			items: [
+				{
+					id:
+						pattern.theme._id ??
+						(pattern.theme as SanityReference)._key ??
+						(pattern.theme as SanityReference)._ref ??
+						"",
+					title: pattern.theme.title || "Unknown Theme",
+				},
+			],
 		});
 	}
 
