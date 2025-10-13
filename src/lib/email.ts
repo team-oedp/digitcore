@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Resend } from "resend";
 import { EmailTemplate } from "~/components/email-template";
 import { env } from "~/env";
