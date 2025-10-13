@@ -4,8 +4,10 @@ import { Reorder } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
-	CarrierBagItem,
+	type CarrierBagItem,
+	CarrierBagItem as CarrierBagItemComponent,
 	type CarrierBagItemData,
+	type PatternForCarrierBag,
 } from "~/components/global/carrier-bag/carrier-bag-item";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -25,7 +27,6 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import { Toggle } from "~/components/ui/toggle";
-import type { Pattern } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 
 // Stable helpers and narrow types for dereferenced or reference values
@@ -34,29 +35,50 @@ type WithId = { _id: string };
 type WithTitle = { title?: string | null };
 type RefOrDoc = Reference | (WithId & Partial<WithTitle>);
 
-function getId(x?: RefOrDoc): string | undefined {
+function getId(x?: RefOrDoc | null): string | undefined {
 	if (!x) return undefined;
 	return "_id" in x ? x._id : x._ref;
 }
 
-function getTitle(x?: RefOrDoc): string | undefined {
+function getTitle(x?: RefOrDoc | null): string | undefined {
 	if (!x) return undefined;
 	return "title" in x && x.title ? x.title : undefined;
 }
 
-type SlugStringOrObject = string | { current?: string };
+type SlugStringOrObject = string | { current?: string } | null;
 type PatternWithFlexibleSlug = { slug?: SlugStringOrObject };
-type PatternWithFlexibleRefs = Pattern & {
-	tags?: RefOrDoc[];
-	audiences?: RefOrDoc[];
-	theme?: RefOrDoc;
-	themes?: RefOrDoc[];
+type PatternWithFlexibleRefs = PatternForCarrierBag & {
+	tags?: RefOrDoc[] | null;
+	audiences?: RefOrDoc[] | null;
+	theme?: RefOrDoc | null;
+	themes?: RefOrDoc[] | null;
 } & PatternWithFlexibleSlug;
 
 function getSlugString(p: PatternWithFlexibleSlug): string | undefined {
 	const s = p.slug;
 	if (!s) return undefined;
 	return typeof s === "string" ? s : s.current;
+}
+
+function extractUniqueFilterOptions(
+	items: CarrierBagItem[],
+	getOptions: (pattern: PatternWithFlexibleRefs) => RefOrDoc[],
+): Array<{ id: string; title: string }> {
+	const map = new Map<string, { id: string; title: string }>();
+
+	for (const item of items) {
+		const pattern = item.pattern as PatternWithFlexibleRefs;
+		const options = getOptions(pattern) ?? [];
+
+		for (const option of options) {
+			const id = getId(option);
+			const title = getTitle(option);
+			if (!id || !title) continue;
+			if (!map.has(id)) map.set(id, { id, title });
+		}
+	}
+
+	return [...map.values()].sort((a, b) => a.title.localeCompare(b.title));
 }
 
 export function CarrierBagContent({
@@ -84,35 +106,15 @@ export function CarrierBagContent({
 	// When the user drags, we switch to manual order (ignore sort/filter/group)
 	const [manualOrderActive, setManualOrderActive] = useState<boolean>(false);
 
-	const availableTags = useMemo(() => {
-		const map = new Map<string, { id: string; title: string }>();
-		for (const item of items) {
-			const pattern = item.pattern as PatternWithFlexibleRefs;
-			const tags: RefOrDoc[] = pattern.tags ?? [];
-			for (const tag of tags) {
-				const id = getId(tag);
-				const title = getTitle(tag);
-				if (!id || !title) continue;
-				if (!map.has(id)) map.set(id, { id, title });
-			}
-		}
-		return [...map.values()].sort((a, b) => a.title.localeCompare(b.title));
-	}, [items]);
+	const availableTags = useMemo(
+		() => extractUniqueFilterOptions(items, (p) => p.tags ?? []),
+		[items],
+	);
 
-	const availableAudiences = useMemo(() => {
-		const map = new Map<string, { id: string; title: string }>();
-		for (const item of items) {
-			const pattern = item.pattern as PatternWithFlexibleRefs;
-			const audiences: RefOrDoc[] = pattern.audiences ?? [];
-			for (const audience of audiences) {
-				const id = getId(audience);
-				const title = getTitle(audience);
-				if (!id || !title) continue;
-				if (!map.has(id)) map.set(id, { id, title });
-			}
-		}
-		return [...map.values()].sort((a, b) => a.title.localeCompare(b.title));
-	}, [items]);
+	const availableAudiences = useMemo(
+		() => extractUniqueFilterOptions(items, (p) => p.audiences ?? []),
+		[items],
+	);
 
 	// Derived list after filtering and sorting
 	const processed = useMemo(() => {
@@ -319,8 +321,8 @@ export function CarrierBagContent({
 									{groupItems.map((item) => {
 										type RefTheme = { _ref: string };
 										type PopulatedTheme = { title?: string | null };
-										type PatternMaybePopulatedTheme = Pattern & {
-											theme?: RefTheme | PopulatedTheme;
+										type PatternMaybePopulatedTheme = PatternForCarrierBag & {
+											theme?: RefTheme | PopulatedTheme | null;
 										};
 
 										const pattern = item.pattern as PatternMaybePopulatedTheme;
@@ -337,7 +339,7 @@ export function CarrierBagContent({
 											isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
 										};
 										return (
-											<CarrierBagItem
+											<CarrierBagItemComponent
 												key={pattern._id}
 												item={itemData}
 												onRemove={() => handleRemoveItem(pattern._id)}
@@ -374,8 +376,8 @@ export function CarrierBagContent({
 							{processed.flat.map((item) => {
 								type RefTheme = { _ref: string };
 								type PopulatedTheme = { title?: string | null };
-								type PatternMaybePopulatedTheme = Pattern & {
-									theme?: RefTheme | PopulatedTheme;
+								type PatternMaybePopulatedTheme = PatternForCarrierBag & {
+									theme?: RefTheme | PopulatedTheme | null;
 								};
 
 								const pattern = item.pattern as PatternMaybePopulatedTheme;
@@ -398,7 +400,7 @@ export function CarrierBagContent({
 										value={item}
 										style={{ position: "relative" }}
 									>
-										<CarrierBagItem
+										<CarrierBagItemComponent
 											key={pattern._id}
 											item={itemData}
 											onRemove={() => handleRemoveItem(pattern._id)}

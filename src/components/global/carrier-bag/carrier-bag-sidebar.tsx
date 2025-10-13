@@ -85,10 +85,7 @@ export function CarrierBagSidebar({
 			patterns: items.map((i) => ({
 				id: i.pattern._id,
 				title: i.pattern.title,
-				slug:
-					typeof i.pattern.slug === "string"
-						? i.pattern.slug
-						: i.pattern.slug?.current,
+				slug: i.pattern.slug ?? undefined,
 				notes: i.notes,
 				dateAdded: i.dateAdded,
 			})),
@@ -239,14 +236,10 @@ export function CarrierBagSidebar({
 									}}
 								>
 									{items.map((item) => {
-										const slug =
-											typeof item.pattern.slug === "string"
-												? item.pattern.slug
-												: item.pattern.slug?.current;
 										const itemData: CarrierBagItemData = {
 											id: item.pattern._id,
 											title: item.pattern.title || "Untitled Pattern",
-											slug: slug,
+											slug: item.pattern.slug ?? undefined,
 											isStale: isPatternStale(item.pattern._id),
 											isUpdating: isPatternUpdating(item.pattern._id),
 											isRecentlyUpdated: isPatternRecentlyUpdated(

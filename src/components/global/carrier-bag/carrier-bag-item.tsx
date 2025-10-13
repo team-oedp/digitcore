@@ -15,13 +15,20 @@ import {
 	getStaleStatusText,
 } from "~/lib/stale-content-utils";
 import { cn } from "~/lib/utils";
-import type { Pattern } from "~/sanity/sanity.types";
+import type {
+	PATTERNS_BY_SLUGS_QUERYResult,
+	PATTERN_QUERYResult,
+} from "~/sanity/sanity.types";
+
+export type PatternForCarrierBag =
+	| NonNullable<PATTERN_QUERYResult>
+	| PATTERNS_BY_SLUGS_QUERYResult[number];
 
 export type CarrierBagItem = {
-	pattern: Pattern;
+	pattern: PatternForCarrierBag;
 	dateAdded: string;
 	notes?: string;
-	contentVersion?: string; // Store pattern._updatedAt when added
+	contentVersion?: string;
 };
 
 export type CarrierBagItemData = {

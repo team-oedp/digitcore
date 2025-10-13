@@ -3,8 +3,10 @@
 import { createContext, useContext, useRef } from "react";
 import { createStore, useStore } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
-import type { Pattern } from "~/sanity/sanity.types";
+import type {
+	CarrierBagItem,
+	PatternForCarrierBag,
+} from "~/components/global/carrier-bag/carrier-bag-item";
 
 type CarrierBagState = {
 	items: CarrierBagItem[];
@@ -18,9 +20,12 @@ type CarrierBagState = {
 	hasUnseenUpdates: boolean;
 	lastUpdateTime: number | null;
 	showClearConfirmation: boolean;
-	addPattern: (pattern: Pattern, notes?: string) => void;
+	addPattern: (pattern: PatternForCarrierBag, notes?: string) => void;
 	removePattern: (patternId: string) => void;
-	updatePattern: (patternId: string, updatedPattern: Pattern) => void;
+	updatePattern: (
+		patternId: string,
+		updatedPattern: PatternForCarrierBag,
+	) => void;
 	updateNotes: (patternId: string, notes: string) => void;
 	clearBag: () => void;
 	setItems: (items: CarrierBagItem[]) => void;
@@ -64,7 +69,7 @@ export const createCarrierBagStore = () =>
 				lastUpdateTime: null,
 				showClearConfirmation: false,
 
-				addPattern: (pattern: Pattern, notes?: string) => {
+				addPattern: (pattern: PatternForCarrierBag, notes?: string) => {
 					const { items } = get();
 
 					if (items.some((item) => item.pattern._id === pattern._id)) {
@@ -88,7 +93,10 @@ export const createCarrierBagStore = () =>
 					});
 				},
 
-				updatePattern: (patternId: string, updatedPattern: Pattern) => {
+				updatePattern: (
+					patternId: string,
+					updatedPattern: PatternForCarrierBag,
+				) => {
 					const { items, markPatternUpdated } = get();
 					set({
 						items: items.map((item) =>

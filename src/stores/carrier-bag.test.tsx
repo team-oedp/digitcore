@@ -1,8 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Pattern } from "~/sanity/sanity.types";
+import type { PatternForCarrierBag } from "~/components/global/carrier-bag/carrier-bag-item";
 import {
 	CarrierBagStoreProvider,
 	createCarrierBagStore,
@@ -32,34 +31,38 @@ Object.defineProperty(window, "localStorage", {
 });
 
 // Sample pattern data
-const mockPattern1: Pattern = {
+const mockPattern1: PatternForCarrierBag = {
 	_id: "pattern-1",
 	_type: "pattern",
 	_createdAt: "2024-01-01T00:00:00Z",
 	_updatedAt: "2024-01-01T00:00:00Z",
 	_rev: "1",
 	title: "Test Pattern 1",
-	slug: { current: "test-pattern-1", _type: "slug" },
-	description: [],
-	audiences: [],
-	tags: [],
-	solutions: [],
-	resources: [],
+	slug: "test-pattern-1",
+	description: null,
+	descriptionPlainText: "",
+	tags: null,
+	audiences: null,
+	theme: null,
+	solutions: null,
+	resources: null,
 };
 
-const mockPattern2: Pattern = {
+const mockPattern2: PatternForCarrierBag = {
 	_id: "pattern-2",
 	_type: "pattern",
 	_createdAt: "2024-01-01T00:00:00Z",
 	_updatedAt: "2024-01-01T00:00:00Z",
 	_rev: "1",
 	title: "Test Pattern 2",
-	slug: { current: "test-pattern-2", _type: "slug" },
-	description: [],
-	audiences: [],
-	tags: [],
-	solutions: [],
-	resources: [],
+	slug: "test-pattern-2",
+	description: null,
+	descriptionPlainText: "",
+	tags: null,
+	audiences: null,
+	theme: null,
+	solutions: null,
+	resources: null,
 };
 
 // Test wrapper component
@@ -490,7 +493,7 @@ describe("CarrierBagStore", () => {
 
 			act(() => {
 				for (let i = 0; i < 10; i++) {
-					const pattern: Pattern = {
+					const pattern: PatternForCarrierBag = {
 						...mockPattern1,
 						_id: `pattern-${i}`,
 						title: `Pattern ${i}`,
@@ -506,7 +509,7 @@ describe("CarrierBagStore", () => {
 			const store = createCarrierBagStore();
 			const { addPattern } = store.getState();
 
-			const patterns: Pattern[] = [];
+			const patterns: PatternForCarrierBag[] = [];
 			for (let i = 0; i < 5; i++) {
 				patterns.push({
 					...mockPattern1,
