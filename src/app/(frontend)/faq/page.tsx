@@ -8,7 +8,7 @@ import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { sanityFetch } from "~/sanity/lib/client";
 import { FAQS_QUERY, FAQ_PAGE_QUERY } from "~/sanity/lib/queries";
-import { groupFaqsByCategory } from "~/utils/faq-helpers";
+import { groupFaqsByCategory } from "~/app/(frontend)/faq/faq-helpers";
 
 export const metadata: Metadata = {
 	title: "FAQ | DIGITCORE",

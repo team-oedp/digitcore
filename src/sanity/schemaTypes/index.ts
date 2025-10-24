@@ -1,7 +1,7 @@
 import type { SchemaTypeDefinition } from "sanity";
 
 import { audienceType } from "./documents/audienceType";
-import { faqCategoryType } from "./documents/faqCategory";
+import { faqCategoryType } from "./documents/faqCategoryType";
 import { faqType } from "./documents/faqType";
 import { glossaryType } from "./documents/glossaryType";
 import { iconType } from "./documents/iconType";

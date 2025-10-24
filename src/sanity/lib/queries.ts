@@ -1003,12 +1003,6 @@ export const FAQS_QUERY = defineQuery(`
       title,
       description[]{
         ...,
-        markDefs[]{
-          ...,
-          "page": page->slug.current,
-          "pattern": pattern->slug.current,
-          "glossary": glossary->{_id, title}
-        }
       }
     },
     description[]{
