@@ -1,14 +1,16 @@
 import {
 	BasketIcon,
 	CogIcon,
+	FeedbackIcon,
 	PresentationIcon,
 	SparklesIcon,
 	StackCompactIcon,
 } from "@sanity/icons";
+import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 import type { StructureResolver } from "sanity/structure";
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
-export const structure: StructureResolver = (S) =>
+export const structure: StructureResolver = (S, context) =>
 	S.list()
 		.title("Content")
 		.items([
@@ -22,7 +24,14 @@ export const structure: StructureResolver = (S) =>
 			S.divider(),
 			S.documentTypeListItem("page").title("Pages"),
 			S.documentTypeListItem("glossary").title("Glossary"),
-			S.documentTypeListItem("faq").title("FAQ"),
+			orderableDocumentListDeskItem({
+				type: "faq",
+				title: "FAQ (Orderable)",
+				icon: FeedbackIcon,
+				S,
+				context,
+			}),
+			S.documentTypeListItem("faqCategory").title("FAQ Categories (Optional)"),
 			S.documentTypeListItem("suggestion").title("Suggestions"),
 			S.listItem()
 				.title("Carrier Bag")
@@ -55,6 +64,7 @@ export const structure: StructureResolver = (S) =>
 						"page",
 						"glossary",
 						"faq",
+						"faqCategory",
 						"carrierBag",
 						"onboarding",
 						"siteSettings",

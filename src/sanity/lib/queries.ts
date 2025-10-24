@@ -995,7 +995,7 @@ export const FAQ_PAGE_QUERY = defineQuery(`
 `);
 
 export const FAQS_QUERY = defineQuery(`
-  *[_type == "faq"] | order(category->title asc, _createdAt asc) {
+  *[_type == "faq"]|order(orderRank) {
     _id,
     title,
     category->{

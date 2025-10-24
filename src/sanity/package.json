@@ -11,9 +11,12 @@
 		"deploy": "sanity deploy",
 		"deploy-graphql": "sanity graphql deploy"
 	},
-	"keywords": ["sanity"],
+	"keywords": [
+		"sanity"
+	],
 	"dependencies": {
 		"@sanity/code-input": "^6.0.0",
+		"@sanity/orderable-document-list": "^1.4.0",
 		"@sanity/vision": "^4.11.0",
 		"@types/dompurify": "^3.2.0",
 		"dompurify": "^3.2.6",
