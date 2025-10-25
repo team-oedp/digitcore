@@ -1,4 +1,8 @@
 import { FeedbackIcon } from "@sanity/icons";
+import {
+	orderRankField,
+	orderRankOrdering,
+} from "@sanity/orderable-document-list";
 import { defineField, defineType } from "sanity";
 
 export const faqType = defineType({
@@ -6,7 +10,9 @@ export const faqType = defineType({
 	title: "FAQ",
 	type: "document",
 	icon: FeedbackIcon,
+	orderings: [orderRankOrdering],
 	fields: [
+		orderRankField({ type: "category" }),
 		defineField({
 			name: "title",
 			type: "string",
@@ -16,7 +22,8 @@ export const faqType = defineType({
 			title: "Category",
 			type: "reference",
 			to: [{ type: "faqCategory" }],
-			description: "Group FAQs by category for better organization",
+			description:
+				"This field is optional. Group FAQs by category for better organization on the FAQ page.",
 		}),
 		defineField({
 			name: "description",

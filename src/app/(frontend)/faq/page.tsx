@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { notFound } from "next/navigation";
+import { groupFaqsByCategory } from "~/app/(frontend)/faq/faq-helpers";
 import { FAQCategorySection } from "~/components/pages/faq/faq-category-section";
 import { UncategorizedFAQSection } from "~/components/pages/faq/uncategorized-faq-section";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
@@ -8,7 +9,6 @@ import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { sanityFetch } from "~/sanity/lib/client";
 import { FAQS_QUERY, FAQ_PAGE_QUERY } from "~/sanity/lib/queries";
-import { groupFaqsByCategory } from "~/utils/faq-helpers";
 
 export const metadata: Metadata = {
 	title: "FAQ | DIGITCORE",

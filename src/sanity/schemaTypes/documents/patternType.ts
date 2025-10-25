@@ -89,22 +89,22 @@ export const patternType = defineType({
 			to: [{ type: "icon" }],
 			description: "Upload an icon asset to represent this pattern",
 		}),
-		defineField({
-			name: "svgIcon",
-			title: "SVG Icon",
-			group: "icon",
-			type: "code",
-			description:
-				"Paste the full <svg>...</svg> code here. Use currentColor for fill/stroke.",
-			options: {
-				language: "xml",
-				languageAlternatives: [
-					{ title: "Javascript", value: "javascript" },
-					{ title: "XML", value: "xml" },
-				],
-				withFilename: true,
-			},
-		}),
+		// defineField({
+		// 	name: "svgIcon",
+		// 	title: "SVG Icon",
+		// 	group: "icon",
+		// 	type: "code",
+		// 	description:
+		// 		"Paste the full <svg>...</svg> code here. Use currentColor for fill/stroke.",
+		// 	options: {
+		// 		language: "xml",
+		// 		languageAlternatives: [
+		// 			{ title: "Javascript", value: "javascript" },
+		// 			{ title: "XML", value: "xml" },
+		// 		],
+		// 		withFilename: true,
+		// 	},
+		// }),
 		defineField({
 			name: "tags",
 			type: "array",
