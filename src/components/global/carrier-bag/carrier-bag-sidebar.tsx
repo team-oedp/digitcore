@@ -25,7 +25,6 @@ import {
 	useSidebar,
 } from "~/components/ui/sidebar";
 import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
-import { useStaleContentCheck } from "~/hooks/use-stale-content-check";
 import { cn } from "~/lib/utils";
 import type { CARRIER_BAG_QUERYResult } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
@@ -65,7 +64,6 @@ export function CarrierBagSidebar({
 		(state) => state.hideClearConfirmationPane,
 	);
 	const documentData = useCarrierBagDocument(items);
-	const { lastChecked } = useStaleContentCheck();
 	const { setOpen: setSidebarOpen, setOpenMobile, isMobile } = useSidebar();
 
 	// Sync Zustand store state to Sidebar component state
