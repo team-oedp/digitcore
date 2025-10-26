@@ -1,14 +1,15 @@
 "use client";
 
-import { Backpack03Icon } from "@hugeicons/core-free-icons";
+import { Backpack03Icon, MoveLeftIcon, MoveRightIcon } from "@hugeicons/core-free-icons";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
+import { useExploreMenuStore } from "~/stores/explore-menu";
 import { Icon } from "../shared/icon";
 import { FontToggle } from "../theme/font-toggle";
 import { LanguageSelector } from "../theme/language-selector";
@@ -28,7 +29,8 @@ export function SiteHeader() {
 		(state) => state.clearExpiredUpdates,
 	);
 
-	const [isExploreOpen, setIsExploreOpen] = useState(false);
+	const isExploreOpen = useExploreMenuStore((state) => state.isOpen);
+	const setIsExploreOpen = useExploreMenuStore((state) => state.setOpen);
 
 	// Close explore menu when clicking outside
 	useEffect(() => {
@@ -46,7 +48,7 @@ export function SiteHeader() {
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, [isExploreOpen]);
+	}, [isExploreOpen, setIsExploreOpen]);
 
 	// TODO: implement toggle of carrier bag sidebar into a modal
 	const _handleModalModeToggle = () => {
@@ -125,9 +127,13 @@ export function SiteHeader() {
 									<Button
 										variant="link"
 										onClick={() => setIsExploreOpen(!isExploreOpen)}
-										className="relative z-10 flex h-auto items-center gap-1 px-3 py-2 text-link text-muted-foreground capitalize"
+										className="relative z-10 flex h-auto items-center gap-1.5 px-3 py-2 text-link text-muted-foreground capitalize"
 									>
 										Explore
+										<Icon
+											icon={isExploreOpen ? MoveLeftIcon : MoveRightIcon}
+											size={12}
+										/>
 									</Button>
 									<AnimatePresence mode="wait">
 										{isExploreOpen && (
@@ -141,121 +147,66 @@ export function SiteHeader() {
 													ease: [0.4, 0, 0.2, 1],
 												}}
 											>
-												<motion.div
-													initial={{ opacity: 0, filter: "blur(4px)" }}
-													animate={{ opacity: 1, filter: "blur(0px)" }}
-													exit={{ opacity: 0, filter: "blur(4px)" }}
-													transition={{
-														duration: 0.3,
-														ease: [0.4, 0, 0.2, 1],
-														delay: 0.03,
-													}}
+												<Button
+													variant="link"
+													asChild
+													className={cn(
+														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
+														pathname === "/search"
+															? "text-foreground"
+															: "text-muted-foreground",
+													)}
 												>
-													<Button
-														variant="link"
-														asChild
-														className={cn(
-															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/search"
-																? "text-foreground"
-																: "text-muted-foreground",
-														)}
-													>
-														<Link href="/search">Search</Link>
-													</Button>
-												</motion.div>
-												<motion.div
-													initial={{ opacity: 0, filter: "blur(4px)" }}
-													animate={{ opacity: 1, filter: "blur(0px)" }}
-													exit={{ opacity: 0, filter: "blur(4px)" }}
-													transition={{
-														duration: 0.3,
-														ease: [0.4, 0, 0.2, 1],
-														delay: 0.06,
-													}}
+													<Link href="/search">Search</Link>
+												</Button>
+												<Button
+													variant="link"
+													asChild
+													className={cn(
+														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
+														pathname === "/patterns"
+															? "text-foreground"
+															: "text-muted-foreground",
+													)}
 												>
-													<Button
-														variant="link"
-														asChild
-														className={cn(
-															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/patterns"
-																? "text-foreground"
-																: "text-muted-foreground",
-														)}
-													>
-														<Link href="/patterns">Patterns</Link>
-													</Button>
-												</motion.div>
-												<motion.div
-													initial={{ opacity: 0, filter: "blur(4px)" }}
-													animate={{ opacity: 1, filter: "blur(0px)" }}
-													exit={{ opacity: 0, filter: "blur(4px)" }}
-													transition={{
-														duration: 0.3,
-														ease: [0.4, 0, 0.2, 1],
-														delay: 0.09,
-													}}
+													<Link href="/patterns">Patterns</Link>
+												</Button>
+												<Button
+													variant="link"
+													asChild
+													className={cn(
+														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
+														pathname === "/tags"
+															? "text-foreground"
+															: "text-muted-foreground",
+													)}
 												>
-													<Button
-														variant="link"
-														asChild
-														className={cn(
-															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/tags"
-																? "text-foreground"
-																: "text-muted-foreground",
-														)}
-													>
-														<Link href="/tags">Tags</Link>
-													</Button>
-												</motion.div>
-												<motion.div
-													initial={{ opacity: 0, filter: "blur(4px)" }}
-													animate={{ opacity: 1, filter: "blur(0px)" }}
-													exit={{ opacity: 0, filter: "blur(4px)" }}
-													transition={{
-														duration: 0.3,
-														ease: [0.4, 0, 0.2, 1],
-														delay: 0.12,
-													}}
+													<Link href="/tags">Tags</Link>
+												</Button>
+												<Button
+													variant="link"
+													asChild
+													className={cn(
+														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
+														pathname === "/values"
+															? "text-foreground"
+															: "text-muted-foreground",
+													)}
 												>
-													<Button
-														variant="link"
-														asChild
-														className={cn(
-															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/values"
-																? "text-foreground"
-																: "text-muted-foreground",
-														)}
-													>
-														<Link href="/values">Values</Link>
-													</Button>
-												</motion.div>
-												<motion.div
-													initial={{ opacity: 0, filter: "blur(4px)" }}
-													animate={{ opacity: 1, filter: "blur(0px)" }}
-													exit={{ opacity: 0, filter: "blur(4px)" }}
-													transition={{
-														duration: 0.3,
-														ease: [0.4, 0, 0.2, 1],
-														delay: 0.15,
-													}}
+													<Link href="/values">Values</Link>
+												</Button>
+												<Button
+													variant="link"
+													asChild
+													className={cn(
+														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
+														pathname === "/themes"
+															? "text-foreground"
+															: "text-muted-foreground",
+													)}
 												>
-													<Button
-														variant="link"
-														asChild
-														className={cn(
-															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/themes"
-																? "text-foreground"
-																: "text-muted-foreground",
-														)}
-													>
-														<Link href="/themes">Themes</Link>
-													</Button>
-												</motion.div>
+													<Link href="/themes">Themes</Link>
+												</Button>
 											</motion.div>
 										)}
 									</AnimatePresence>
