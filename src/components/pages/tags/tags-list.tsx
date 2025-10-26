@@ -1,9 +1,8 @@
 "use client";
 
-import { FlowConnectionIcon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
-import { Icon } from "~/components/shared/icon";
 import { Badge } from "~/components/ui/badge";
+import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import type { TAGS_WITH_PATTERNS_QUERYResult } from "~/sanity/sanity.types";
 
 // Type definitions using Sanity's auto-generated query result types
@@ -41,7 +40,7 @@ export function TagsList({
 
 							{tags.map((tag) => (
 								<div key={tag._id} className="mb-12 space-y-4">
-									<div className="inline-block w-fit rounded-md bg-neutral-100 px-2 py-1 dark:bg-neutral-800">
+									<div className="inline-block w-fit rounded-md bg-neutral-200 px-2 py-1 dark:bg-neutral-700/50">
 										<h3 className="text-neutral-800 text-subheading dark:text-neutral-200">
 											{tag.title ?? ""}
 										</h3>
@@ -54,22 +53,22 @@ export function TagsList({
 									</p>
 
 									<div className="flex flex-wrap gap-2">
-										{tag.patterns.slice(0, 10).map((pattern) => (
-											<Badge key={pattern._id} variant="pattern" asChild>
-												<Link
-													href={`/pattern/${pattern.slug ?? ""}`}
-													className="inline-block w-max whitespace-normal break-words"
-												>
-													<Icon
-														icon={FlowConnectionIcon}
-														size={12}
-														color="currentColor"
-														strokeWidth={1.5}
-													/>
-													{pattern.title ?? ""}
-												</Link>
-											</Badge>
-										))}
+										{tag.patterns.slice(0, 10).map((pattern) => {
+											const PatternIconComponent = getPatternIconWithMapping(
+												pattern.slug ?? "",
+											);
+											return (
+												<Badge key={pattern._id} variant="pattern" asChild>
+													<Link
+														href={`/pattern/${pattern.slug ?? ""}`}
+														className="inline-block w-max whitespace-normal break-words"
+													>
+														<PatternIconComponent className="h-3 w-3 flex-shrink-0 fill-icon/40 text-icon/70 opacity-40" />
+														{pattern.title ?? ""}
+													</Link>
+												</Badge>
+											);
+										})}
 									</div>
 								</div>
 							))}
