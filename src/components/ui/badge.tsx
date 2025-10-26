@@ -28,7 +28,7 @@ const badgeVariants = cva(
 				solution:
 					"inset-ring inset-ring-fuchsia-600/20 bg-fuchsia-50 text-fuchsia-800 hover:bg-fuchsia-100 dark:inset-ring-fuchsia-600/20 dark:bg-fuchsia-950/30 dark:text-fuchsia-400 dark:hover:bg-fuchsia-950/50",
 				pattern:
-					"inset-ring inset-ring-green-600/20 bg-green-50 text-green-700 hover:bg-green-100 dark:inset-ring-green-500/30 dark:bg-green-950/30 dark:text-green-400 dark:hover:bg-green-950/50",
+					"inset-ring inset-ring-neutral-600/20 bg-neutral-50 text-neutral-700 hover:bg-neutral-100 dark:inset-ring-neutral-500/30 dark:bg-neutral-950/30 dark:text-neutral-400 dark:hover:bg-neutral-950/50",
 				page: "inset-ring inset-ring-gray-500/10 bg-gray-50 text-gray-600 hover:bg-gray-100 dark:inset-ring-gray-500/20 dark:bg-gray-950/30 dark:text-gray-400 dark:hover:bg-gray-950/50",
 			},
 			size: {
