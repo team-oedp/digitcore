@@ -739,6 +739,7 @@ export const CARRIER_BAG_QUERY = defineQuery(`
     _rev,
     title,
     information,
+    emptyStateMessage,
   }
 `);
 

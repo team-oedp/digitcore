@@ -11,7 +11,11 @@ import { SiteLayout } from "~/components/global/site-layout";
 import { DisableDraftMode } from "~/components/sanity/disable-draft-mode";
 import { cn } from "~/lib/utils";
 import { sanityFetch } from "~/sanity/lib/client";
-import { FOOTER_QUERY, HEADER_QUERY } from "~/sanity/lib/queries";
+import {
+	CARRIER_BAG_QUERY,
+	FOOTER_QUERY,
+	HEADER_QUERY,
+} from "~/sanity/lib/queries";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { ExploreMenuStoreProvider } from "~/stores/explore-menu";
 import { FontStoreProvider } from "~/stores/font";
@@ -29,13 +33,17 @@ export default async function Layout({
 }: Readonly<{ children: React.ReactNode }>) {
 	const isDraftMode = (await draftMode()).isEnabled;
 
-	const [headerData, footerData] = await Promise.all([
+	const [headerData, footerData, carrierBagData] = await Promise.all([
 		sanityFetch({
 			query: HEADER_QUERY,
 			revalidate: 60,
 		}),
 		sanityFetch({
 			query: FOOTER_QUERY,
+			revalidate: 60,
+		}),
+		sanityFetch({
+			query: CARRIER_BAG_QUERY,
 			revalidate: 60,
 		}),
 	]);
@@ -58,6 +66,7 @@ export default async function Layout({
 											<SiteLayout
 												headerData={headerData}
 												footerData={footerData}
+												carrierBagData={carrierBagData}
 											>
 												{children}
 											</SiteLayout>

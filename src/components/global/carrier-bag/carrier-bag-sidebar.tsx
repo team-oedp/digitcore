@@ -27,13 +27,19 @@ import {
 import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
 import { useStaleContentCheck } from "~/hooks/use-stale-content-check";
 import { cn } from "~/lib/utils";
+import type { CARRIER_BAG_QUERYResult } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
 
+type CarrierBagSidebarProps = React.ComponentProps<typeof Sidebar> & {
+	carrierBagData?: CARRIER_BAG_QUERYResult;
+};
+
 export function CarrierBagSidebar({
 	className,
+	carrierBagData,
 	...props
-}: React.ComponentProps<typeof Sidebar>) {
+}: CarrierBagSidebarProps) {
 	const isHydrated = useCarrierBagStore((state) => state.isHydrated);
 	const isOpen = useCarrierBagStore((state) => state.isOpen);
 	const setOpen = useCarrierBagStore((state) => state.setOpen);
@@ -217,8 +223,8 @@ export function CarrierBagSidebar({
 							) : items.length === 0 ? (
 								<div className="flex flex-1 flex-col items-start justify-start px-4 py-8">
 									<p className="text-left font-normal text-muted-foreground text-sm">
-										There are no patterns in your carrier bag. Start by saving
-										one from the toolkit.
+										{carrierBagData?.emptyStateMessage ||
+											"There are no patterns in your carrier bag. Start by saving one from the toolkit."}
 									</p>
 								</div>
 							) : (

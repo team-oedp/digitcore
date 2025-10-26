@@ -526,6 +526,7 @@ export type CarrierBag = {
     _type: 'block'
     _key: string
   }>
+  emptyStateMessage?: string
 }
 
 export type Faq = {
@@ -2935,7 +2936,7 @@ export type TAGS_PAGE_QUERYResult = {
   > | null
 } | null
 // Variable: CARRIER_BAG_QUERY
-// Query: *[_type == 'carrierBag'][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    information,  }
+// Query: *[_type == 'carrierBag'][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    information,    emptyStateMessage,  }
 export type CARRIER_BAG_QUERYResult = {
   _id: string
   _type: 'carrierBag'
@@ -2987,6 +2988,7 @@ export type CARRIER_BAG_QUERYResult = {
     _type: 'block'
     _key: string
   }> | null
+  emptyStateMessage: string | null
 } | null
 // Variable: PATTERNS_BY_SLUGS_QUERY
 // Query: *[_type == "pattern" && defined(slug.current) && slug.current in $slugs]{    ...,    _id,    _type,    title,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "slug": slug.current,    tags[]->,    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      _type,      title,      description,      audiences[]->{ _id, title }    },    resources[]->{      _id,      _type,      title,      description,      links,      solutions[]->{ _id, title }    }  }
@@ -4457,7 +4459,7 @@ declare module '@sanity/client' {
     "\n  *[_type == 'onboarding'][0]{\n    _id,\n    _type,\n    title,\n    description,\n    skipLabel,\n    backLabel,\n    footerText,\n    breadcrumbs,\n    slide1{\n      title,\n      body,\n      primaryCtaLabel,\n      secondaryCtaText\n    },\n    slide2{\n      title,\n      body\n    },\n    slide3{\n      title,\n      body\n    }\n  }\n": ONBOARDING_QUERYResult
     '\n  *[_type == "tag"] | order(title asc) {\n    _id,\n    title,\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current\n    }\n  }[count(patterns) > 0]\n': TAGS_WITH_PATTERNS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'tags\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': TAGS_PAGE_QUERYResult
-    "\n  *[_type == 'carrierBag'][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    information,\n  }\n": CARRIER_BAG_QUERYResult
+    "\n  *[_type == 'carrierBag'][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    information,\n    emptyStateMessage,\n  }\n": CARRIER_BAG_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs]{\n    ...,\n    _id,\n    _type,\n    title,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      _type,\n      title,\n      description,\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      title,\n      description,\n      links,\n      solutions[]->{ _id, title }\n    }\n  }\n': PATTERNS_BY_SLUGS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'values\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': VALUES_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'patterns\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': PATTERNS_PAGE_QUERYResult
