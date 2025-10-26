@@ -48,23 +48,19 @@ export function SearchResultsHeaderClient({
 	}
 
 	if (isLoading) {
-		return (
-			<div className="flex items-center justify-between">
-				<Skeleton className="h-6 w-48" />
-			</div>
-		);
+		return <Skeleton className="h-6 w-48" />;
 	}
 
 	return (
-		<div className="flex items-center justify-between">
-			<div className="flex items-center gap-2">
-				<span className="text-muted-foreground">
-					{resultCount} {resultCount === 1 ? "result" : "results"}
+		<div className="flex items-center gap-1">
+			<span className="text-base text-muted-foreground text-prose">
+				{resultCount} {resultCount === 1 ? "result" : "results"}
+			</span>
+			{searchQuery && (
+				<span className="text-base text-muted-foreground text-prose">
+					for "{searchQuery}"
 				</span>
-				{searchQuery && (
-					<span className="text-muted-foreground/80">for "{searchQuery}"</span>
-				)}
-			</div>
+			)}
 		</div>
 	);
 }

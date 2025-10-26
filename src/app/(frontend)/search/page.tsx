@@ -46,7 +46,9 @@ export default async function SearchPage({
 						<SearchInterfaceServer />
 					</Suspense>
 					<Suspense fallback={<Skeleton className="h-32 w-full" />}>
-						<SearchClientWrapper />
+						<SearchClientWrapper
+							emptyStateMessage={pageData.emptyStateMessage ?? undefined}
+						/>
 					</Suspense>
 				</div>
 			</div>

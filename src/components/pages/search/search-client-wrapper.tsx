@@ -14,7 +14,13 @@ import { SearchResultsSkeleton } from "./search-result-skeleton";
 import { SearchResults } from "./search-results";
 import { SearchResultsHeaderClient } from "./search-results-header-client";
 
-export function SearchClientWrapper() {
+type SearchClientWrapperProps = {
+	emptyStateMessage?: string;
+};
+
+export function SearchClientWrapper({
+	emptyStateMessage,
+}: SearchClientWrapperProps) {
 	const location = createLogLocation(
 		"search-client-wrapper.tsx",
 		"SearchClientWrapper",
@@ -296,17 +302,24 @@ export function SearchClientWrapper() {
 				<SearchResultsSkeleton count={6} />
 			) : searchResult && !searchResult.success ? (
 				<div className="py-12 text-left">
-					<p className="mb-2 text-red-600 dark:text-red-400">Search Error</p>
-					<p className="text-base text-muted-foreground">
+					<p className="mb-2 text-base text-prose text-red-800 dark:text-red-200">
+						Search Error
+					</p>
+					<p className="text-base text-muted-foreground text-prose">
 						{searchResult.error}
 					</p>
 				</div>
 			) : searchResult && searchResult.totalCount === 0 ? (
 				<div className="py-12 text-left">
-					<p className="mb-2 text-muted-foreground">No results found</p>
-					<p className="text-base text-muted-foreground/70">
-						Try adjusting your search terms or filters
-					</p>
+					{emptyStateMessage ? (
+						<p className="text-base text-muted-foreground text-prose">
+							{emptyStateMessage}
+						</p>
+					) : (
+						<p className="text-base text-muted-foreground text-prose">
+							No results found. Try adjusting your search terms or filters
+						</p>
+					)}
 				</div>
 			) : searchResult ? (
 				<SearchResults

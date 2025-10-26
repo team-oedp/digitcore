@@ -41,6 +41,12 @@ export const pageType = defineType({
 				}),
 			],
 		}),
+		defineField({
+			name: "emptyStateMessage",
+			title: "Empty State Message",
+			type: "text",
+			description: "Message to display when there is no data showing.",
+		}),
 	],
 	preview: {
 		select: {
