@@ -12,6 +12,7 @@ import { SiteHeader } from "~/components/global/site-header";
 import { PatternHeading } from "~/components/shared/pattern-heading";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
+import { ExploreMenuStoreProvider } from "~/stores/explore-menu";
 import { FontStoreProvider } from "~/stores/font";
 
 // Mock the pattern icons utility
@@ -102,7 +103,9 @@ function TestWrapper({ children }: { children: React.ReactNode }) {
 	return (
 		<FontStoreProvider>
 			<CarrierBagStoreProvider>
-				<SidebarProvider defaultOpen={false}>{children}</SidebarProvider>
+				<ExploreMenuStoreProvider>
+					<SidebarProvider defaultOpen={false}>{children}</SidebarProvider>
+				</ExploreMenuStoreProvider>
 			</CarrierBagStoreProvider>
 		</FontStoreProvider>
 	);
