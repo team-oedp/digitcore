@@ -71,7 +71,8 @@ export default async function PatternsPage() {
 				{!allPatterns || allPatterns.length === 0 ? (
 					<div className="p-8">
 						<p className="text-body">
-							No patterns found in database. Please check again later.
+							{pageData.emptyStateMessage ||
+								"No patterns found in database. Please check again later."}
 						</p>
 					</div>
 				) : (

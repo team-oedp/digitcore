@@ -3348,6 +3348,7 @@ export type PATTERNS_PAGE_QUERYResult = {
     _type: 'block'
     _key: string
   }> | null
+  emptyStateMessage: string | null
   content: Array<
     | {
         _key: string

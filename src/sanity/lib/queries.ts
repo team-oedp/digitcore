@@ -848,6 +848,7 @@ export const PATTERNS_PAGE_QUERY = defineQuery(`
         "glossary": glossary->{_id, title}
       }
     },
+    emptyStateMessage,
     content[]{
       _key,
       _type,
