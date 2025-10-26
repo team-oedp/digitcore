@@ -11,9 +11,51 @@ import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-s
 import { SiteHeader } from "~/components/global/site-header";
 import { PatternHeading } from "~/components/shared/pattern-heading";
 import { SidebarProvider } from "~/components/ui/sidebar";
+import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { ExploreMenuStoreProvider } from "~/stores/explore-menu";
 import { FontStoreProvider } from "~/stores/font";
+
+const mockHeaderData: HEADER_QUERYResult = {
+	_id: "test-header",
+	_type: "header",
+	_createdAt: "2024-01-01T00:00:00Z",
+	_updatedAt: "2024-01-01T00:00:00Z",
+	_rev: "test-rev",
+	title: "Test Header",
+	internalLinks: [
+		{
+			_key: "orientation",
+			label: "Orientation",
+			page: {
+				_id: "orientation-page",
+				_type: "page",
+				title: "Orientation",
+				slug: "orientation",
+			},
+		},
+		{
+			_key: "about",
+			label: "About",
+			page: {
+				_id: "about-page",
+				_type: "page",
+				title: "About",
+				slug: "about",
+			},
+		},
+		{
+			_key: "search",
+			label: "Search",
+			page: {
+				_id: "search-page",
+				_type: "page",
+				title: "Search",
+				slug: "search",
+			},
+		},
+	],
+};
 
 // Mock the pattern icons utility
 vi.mock("~/utils/pattern-icons", () => ({
@@ -266,7 +308,7 @@ describe("Carrier Bag Sidebar", () => {
 		it("should close sidebar when close button is clicked", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader />
+					<SiteHeader headerData={mockHeaderData} />
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
@@ -318,7 +360,7 @@ describe("Carrier Bag Sidebar", () => {
 		it("should close sidebar when header toggle button is clicked", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader />
+					<SiteHeader headerData={mockHeaderData} />
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
@@ -363,7 +405,7 @@ describe("Carrier Bag Sidebar", () => {
 		it("should allow sidebar to reopen after being closed", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader />
+					<SiteHeader headerData={mockHeaderData} />
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"

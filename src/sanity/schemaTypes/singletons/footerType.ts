@@ -101,6 +101,7 @@ export const footerType = defineType({
 			title: "Internal links",
 			type: "array",
 			group: "internalLinks",
+			validation: (Rule) => Rule.max(4),
 			of: [
 				{
 					type: "object",

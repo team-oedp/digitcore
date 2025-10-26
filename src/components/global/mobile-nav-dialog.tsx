@@ -16,24 +16,18 @@ import {
 } from "~/components/ui/sheet";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { cn } from "~/lib/utils";
-
-const navItems = [
-	{ href: "/onboarding?via=header", label: "Orientation", isIndented: false },
-	{ label: "Explore", isIndented: false, isSection: true },
-	{ href: "/search", label: "Search", isIndented: true },
-	{ href: "/patterns", label: "Patterns", isIndented: true },
-	{ href: "/tags", label: "Tags", isIndented: true },
-	{ href: "/values", label: "Values", isIndented: true },
-	{ href: "/themes", label: "Themes", isIndented: true },
-	{ href: "/about", label: "About", isIndented: false },
-];
+import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
 
 const languages = [
 	{ code: "EN", label: "English" },
 	{ code: "ES", label: "Spanish" },
 ];
 
-export function MobileNavDialog() {
+type MobileNavDialogProps = {
+	headerData: HEADER_QUERYResult;
+};
+
+export function MobileNavDialog({ headerData }: MobileNavDialogProps) {
 	const [open, setOpen] = useState(false);
 	const [selectedLanguage, setSelectedLanguage] = useState("EN");
 	const [mounted, setMounted] = useState(false);
@@ -44,6 +38,19 @@ export function MobileNavDialog() {
 	useEffect(() => {
 		setMounted(true);
 	}, []);
+
+	// Filter navigation links based on page slug
+	// "orientation" and "about" go in main menu, everything else in explore menu
+	const mainMenuLinks =
+		headerData?.internalLinks?.filter(
+			(link) =>
+				link.page?.slug === "orientation" || link.page?.slug === "about",
+		) ?? [];
+	const exploreMenuLinks =
+		headerData?.internalLinks?.filter(
+			(link) =>
+				link.page?.slug !== "orientation" && link.page?.slug !== "about",
+		) ?? [];
 
 	return (
 		<Sheet open={open} onOpenChange={setOpen}>
@@ -72,35 +79,49 @@ export function MobileNavDialog() {
 
 				<nav className="flex-1 overflow-y-auto px-4 py-6">
 					<ul className="space-y-1">
-						{navItems.map((item) => (
-							<li key={item.href ?? `section-${item.label}`}>
-								{item.href ? (
-									<Button
-										variant="ghost"
-										asChild
-										className={cn(
-											"w-full justify-start font-normal text-base hover:bg-transparent",
-											item.isIndented ? "pr-1.5 pl-8" : "px-1.5",
-											pathname === item.href
-												? "text-foreground"
-												: "text-muted-foreground hover:text-foreground",
-										)}
-										onClick={() => setOpen(false)}
-									>
-										<Link href={item.href}>{item.label}</Link>
-									</Button>
-								) : (
-									<div
-										className={cn(
-											"px-1.5 font-normal text-base text-muted-foreground",
-											item.isIndented ? "pr-1.5 pl-8" : "px-1.5",
-										)}
-									>
-										{item.label}
-									</div>
-								)}
+						{mainMenuLinks.map((link) => (
+							<li key={link._key}>
+								<Button
+									variant="ghost"
+									asChild
+									className={cn(
+										"w-full justify-start px-1.5 font-normal text-base hover:bg-transparent",
+										pathname === `/${link.page?.slug}`
+											? "text-foreground"
+											: "text-muted-foreground hover:text-foreground",
+									)}
+									onClick={() => setOpen(false)}
+								>
+									<Link href={`/${link.page?.slug}`}>{link.label}</Link>
+								</Button>
 							</li>
 						))}
+						{exploreMenuLinks.length > 0 && (
+							<>
+								<li>
+									<div className="px-1.5 font-normal text-base text-muted-foreground">
+										Explore
+									</div>
+								</li>
+								{exploreMenuLinks.map((link) => (
+									<li key={link._key}>
+										<Button
+											variant="ghost"
+											asChild
+											className={cn(
+												"w-full justify-start pr-1.5 pl-8 font-normal text-base hover:bg-transparent",
+												pathname === `/${link.page?.slug}`
+													? "text-foreground"
+													: "text-muted-foreground hover:text-foreground",
+											)}
+											onClick={() => setOpen(false)}
+										>
+											<Link href={`/${link.page?.slug}`}>{link.label}</Link>
+										</Button>
+									</li>
+								))}
+							</>
+						)}
 					</ul>
 				</nav>
 

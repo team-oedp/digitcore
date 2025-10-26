@@ -12,6 +12,7 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { useExploreMenuStore } from "~/stores/explore-menu";
 import { Icon } from "../shared/icon";
@@ -21,7 +22,11 @@ import { ModeToggle } from "../theme/mode-toggle";
 import { CommandMenu } from "./command-menu";
 import { MobileNavDialog } from "./mobile-nav-dialog";
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+	headerData: HEADER_QUERYResult;
+};
+
+export function SiteHeader({ headerData }: SiteHeaderProps) {
 	const isModalMode = useCarrierBagStore((state) => state.isModalMode);
 	const toggleModalMode = useCarrierBagStore((state) => state.toggleModalMode);
 	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
@@ -35,6 +40,19 @@ export function SiteHeader() {
 
 	const isExploreOpen = useExploreMenuStore((state) => state.isOpen);
 	const setIsExploreOpen = useExploreMenuStore((state) => state.setOpen);
+
+	// Filter navigation links based on page slug
+	// "orientation" and "about" go in main menu, everything else in explore menu
+	const mainMenuLinks =
+		headerData?.internalLinks?.filter(
+			(link) =>
+				link.page?.slug === "orientation" || link.page?.slug === "about",
+		) ?? [];
+	const exploreMenuLinks =
+		headerData?.internalLinks?.filter(
+			(link) =>
+				link.page?.slug !== "orientation" && link.page?.slug !== "about",
+		) ?? [];
 
 	// Close explore menu when clicking outside
 	useEffect(() => {
@@ -95,127 +113,75 @@ export function SiteHeader() {
 
 					<nav className="hidden md:flex">
 						<ul className="flex items-center gap-3.5 text-sm">
-							<motion.li
-								layout
-								transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-							>
-								<Button
-									variant="link"
-									asChild
-									className={cn(
-										"h-auto px-3 py-2 text-link capitalize",
-										pathname === "/orientation"
-											? "text-foreground"
-											: "text-muted-foreground",
-									)}
+							{mainMenuLinks.map((link) => (
+								<motion.li
+									key={link._key}
+									layout
+									transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
 								>
-									<Link href="/orientation?via=header">Orientation</Link>
-								</Button>
-							</motion.li>
-							<li>
-								<Button
-									variant="link"
-									asChild
-									className={cn(
-										"h-auto px-3 py-2 text-link capitalize",
-										pathname === "/about"
-											? "text-foreground"
-											: "text-muted-foreground",
-									)}
-								>
-									<Link href="/about">About</Link>
-								</Button>
-							</li>
-							<li className="relative" data-explore-menu>
-								<div className="flex items-center gap-3.5">
 									<Button
 										variant="link"
-										onClick={() => setIsExploreOpen(!isExploreOpen)}
-										className="relative z-10 flex h-auto items-center gap-1.5 px-3 py-2 text-link text-muted-foreground capitalize"
-									>
-										Explore
-										<Icon
-											icon={isExploreOpen ? MoveLeftIcon : MoveRightIcon}
-											size={12}
-										/>
-									</Button>
-									<AnimatePresence mode="wait">
-										{isExploreOpen && (
-											<motion.div
-												className="flex items-center gap-3.5"
-												initial={{ opacity: 0 }}
-												animate={{ opacity: 1 }}
-												exit={{ opacity: 0 }}
-												transition={{
-													duration: 0.3,
-													ease: [0.4, 0, 0.2, 1],
-												}}
-											>
-												<Button
-													variant="link"
-													asChild
-													className={cn(
-														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-														pathname === "/search"
-															? "text-foreground"
-															: "text-muted-foreground",
-													)}
-												>
-													<Link href="/search">Search</Link>
-												</Button>
-												<Button
-													variant="link"
-													asChild
-													className={cn(
-														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-														pathname === "/patterns"
-															? "text-foreground"
-															: "text-muted-foreground",
-													)}
-												>
-													<Link href="/patterns">Patterns</Link>
-												</Button>
-												<Button
-													variant="link"
-													asChild
-													className={cn(
-														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-														pathname === "/tags"
-															? "text-foreground"
-															: "text-muted-foreground",
-													)}
-												>
-													<Link href="/tags">Tags</Link>
-												</Button>
-												<Button
-													variant="link"
-													asChild
-													className={cn(
-														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-														pathname === "/values"
-															? "text-foreground"
-															: "text-muted-foreground",
-													)}
-												>
-													<Link href="/values">Values</Link>
-												</Button>
-												<Button
-													variant="link"
-													asChild
-													className={cn(
-														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-														pathname === "/themes"
-															? "text-foreground"
-															: "text-muted-foreground",
-													)}
-												>
-													<Link href="/themes">Themes</Link>
-												</Button>
-											</motion.div>
+										asChild
+										className={cn(
+											"h-auto px-3 py-2 text-link capitalize",
+											pathname === `/${link.page?.slug}`
+												? "text-foreground"
+												: "text-muted-foreground",
 										)}
-									</AnimatePresence>
-								</div>
-							</li>
+									>
+										<Link href={`/${link.page?.slug}`}>{link.label}</Link>
+									</Button>
+								</motion.li>
+							))}
+							{exploreMenuLinks.length > 0 && (
+								<li className="relative" data-explore-menu>
+									<div className="flex items-center gap-3.5">
+										<Button
+											variant="link"
+											onClick={() => setIsExploreOpen(!isExploreOpen)}
+											className="relative z-10 flex h-auto items-center gap-1.5 px-3 py-2 text-link text-muted-foreground capitalize"
+										>
+											Explore
+											<Icon
+												icon={isExploreOpen ? MoveLeftIcon : MoveRightIcon}
+												size={12}
+											/>
+										</Button>
+										<AnimatePresence mode="wait">
+											{isExploreOpen && (
+												<motion.div
+													className="flex items-center gap-3.5"
+													initial={{ opacity: 0 }}
+													animate={{ opacity: 1 }}
+													exit={{ opacity: 0 }}
+													transition={{
+														duration: 0.3,
+														ease: [0.4, 0, 0.2, 1],
+													}}
+												>
+													{exploreMenuLinks.map((link) => (
+														<Button
+															key={link._key}
+															variant="link"
+															asChild
+															className={cn(
+																"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
+																pathname === `/${link.page?.slug}`
+																	? "text-foreground"
+																	: "text-muted-foreground",
+															)}
+														>
+															<Link href={`/${link.page?.slug}`}>
+																{link.label}
+															</Link>
+														</Button>
+													))}
+												</motion.div>
+											)}
+										</AnimatePresence>
+									</div>
+								</li>
+							)}
 						</ul>
 					</nav>
 				</div>
@@ -264,7 +230,7 @@ export function SiteHeader() {
 						)}
 					/>
 				</button>
-				<MobileNavDialog />
+				<MobileNavDialog headerData={headerData} />
 			</nav>
 		</header>
 	);

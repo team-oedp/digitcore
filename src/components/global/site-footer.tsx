@@ -69,22 +69,16 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 						{internalLinks.length > 0 && (
 							<nav aria-label="Internal navigation links">
 								<ul className="space-y-1">
-									{[...internalLinks]
-										.sort((a, b) => {
-											if (a.label === "Acknowledgements") return 1;
-											if (b.label === "Acknowledgements") return -1;
-											return 0;
-										})
-										.map((link) => (
-											<li key={link._key}>
-												<Link
-													href={`/${link.page?.slug || "#"}`}
-													className="text-link text-sm leading-normal focus:outline-none"
-												>
-													{link.label}
-												</Link>
-											</li>
-										))}
+									{internalLinks.map((link) => (
+										<li key={link._key}>
+											<Link
+												href={`/${link.page?.slug || "#"}`}
+												className="text-link text-sm leading-normal focus:outline-none"
+											>
+												{link.label}
+											</Link>
+										</li>
+									))}
 								</ul>
 							</nav>
 						)}
@@ -275,22 +269,16 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 									aria-label="Internal navigation links"
 								>
 									<ul className="space-y-1">
-										{[...internalLinks]
-											.sort((a, b) => {
-												if (a.label === "Acknowledgements") return 1;
-												if (b.label === "Acknowledgements") return -1;
-												return 0;
-											})
-											.map((link) => (
-												<li key={link._key}>
-													<Link
-														href={`/${link.page?.slug || "#"}`}
-														className="text-link text-sm focus:outline-none"
-													>
-														{link.label}
-													</Link>
-												</li>
-											))}
+										{internalLinks.map((link) => (
+											<li key={link._key}>
+												<Link
+													href={`/${link.page?.slug || "#"}`}
+													className="text-link text-sm focus:outline-none"
+												>
+													{link.label}
+												</Link>
+											</li>
+										))}
 									</ul>
 								</nav>
 							)}

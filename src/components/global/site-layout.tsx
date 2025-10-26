@@ -6,15 +6,23 @@ import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-s
 import { SiteHeader } from "~/components/global/site-header";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { cn } from "~/lib/utils";
-import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
+import type {
+	FOOTER_QUERYResult,
+	HEADER_QUERYResult,
+} from "~/sanity/sanity.types";
 import { SiteFooter } from "./site-footer";
 
 type SiteLayoutProps = {
 	children: React.ReactNode;
+	headerData: HEADER_QUERYResult;
 	footerData: FOOTER_QUERYResult;
 };
 
-export function SiteLayout({ children, footerData }: SiteLayoutProps) {
+export function SiteLayout({
+	children,
+	headerData,
+	footerData,
+}: SiteLayoutProps) {
 	const pathname = usePathname();
 	const isCarrierBagRoute = pathname === "/carrier-bag";
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -28,7 +36,7 @@ export function SiteLayout({ children, footerData }: SiteLayoutProps) {
 			}
 			defaultOpen={false}
 		>
-			<SiteHeader />
+			<SiteHeader headerData={headerData} />
 			<div className="flex min-h-0 flex-1 flex-row-reverse gap-2 overflow-hidden bg-page-background pt-16 transition-[gap] md:pt-14 md:[&:has([data-slot=sidebar][data-state=collapsed])]:gap-0 md:[&:has([data-slot=sidebar][data-state=collapsed])]:delay-200 md:[&:has([data-slot=sidebar][data-state=collapsed])]:duration-0">
 				<CarrierBagSidebar className="peer" />
 				<SidebarInset className="relative mx-2 mb-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-md md:m-0 md:mb-0">
