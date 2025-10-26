@@ -42,6 +42,10 @@ export const structure: StructureResolver = (S, context) =>
 				.child(S.document().schemaType("onboarding").documentId("onboarding"))
 				.icon(PresentationIcon),
 			S.listItem()
+				.title("Header")
+				.child(S.document().schemaType("header").documentId("header"))
+				.icon(StackCompactIcon),
+			S.listItem()
 				.title("Footer")
 				.child(S.document().schemaType("footer").documentId("footer"))
 				.icon(StackCompactIcon),
@@ -69,6 +73,7 @@ export const structure: StructureResolver = (S, context) =>
 						"onboarding",
 						"siteSettings",
 						"footer",
+						"header",
 						"icon",
 						"suggestion",
 					].includes(item.getId() ?? ""),

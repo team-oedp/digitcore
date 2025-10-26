@@ -13,6 +13,69 @@
  */
 
 // Source: schema.json
+export type Header = {
+  _id: string
+  _type: 'header'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  information?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
+    listItem?: 'bullet'
+    markDefs?: Array<
+      | {
+          glossary?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'glossary'
+          }
+          _type: 'glossaryTerm'
+          _key: string
+        }
+      | {
+          linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }
+    >
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+  internalLinks?: Array<{
+    label?: string
+    page?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'page'
+    }
+    _key: string
+  }>
+}
+
 export type Footer = {
   _id: string
   _type: 'footer'
@@ -471,6 +534,7 @@ export type Faq = {
   _createdAt: string
   _updatedAt: string
   _rev: string
+  orderRank?: string
   title?: string
   category?: {
     _ref: string
@@ -939,7 +1003,6 @@ export type Pattern = {
     _weak?: boolean
     [internalGroqTypeReferenceTo]?: 'icon'
   }
-  svgIcon?: Code
   tags?: Array<{
     _ref: string
     _type: 'reference'
@@ -1023,14 +1086,6 @@ export type Icon = {
     crop?: SanityImageCrop
     _type: 'image'
   }
-}
-
-export type Code = {
-  _type: 'code'
-  language?: string
-  filename?: string
-  code?: string
-  highlightedLines?: Array<number>
 }
 
 export type SanityImagePaletteSwatch = {
@@ -1152,6 +1207,7 @@ export type SanityAssetSourceData = {
 }
 
 export type AllSanitySchemaTypes =
+  | Header
   | Footer
   | SiteSettings
   | Onboarding
@@ -1172,7 +1228,6 @@ export type AllSanitySchemaTypes =
   | Pattern
   | Theme
   | Icon
-  | Code
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -1948,9 +2003,9 @@ export type PAGE_BY_SLUG_QUERYResult = {
     _key: string
   }> | null
 } | null
-// Variable: EXPLORE_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'explore'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },  }
-export type EXPLORE_PAGE_QUERYResult = {
+// Variable: SEARCH_PAGE_QUERY
+// Query: *[_type == 'page' && slug.current == 'search'][0]{    _id,    _type,    title,    "slug": slug.current,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },  }
+export type SEARCH_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
   title: string | null
@@ -2983,7 +3038,6 @@ export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
     _weak?: boolean
     [internalGroqTypeReferenceTo]?: 'icon'
   }
-  svgIcon?: Code
   tags: Array<{
     _id: string
     _type: 'tag'
@@ -3908,7 +3962,7 @@ export type FAQ_PAGE_QUERYResult = {
   > | null
 } | null
 // Variable: FAQS_QUERY
-// Query: *[_type == "faq"] | order(category->title asc, _createdAt asc) {    _id,    title,    category->{      _id,      title,      description[]{        ...,      }    },    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    }  }
+// Query: *[_type == "faq"]|order(orderRank) {    _id,    title,    category->{      _id,      title,      description[]{        ...,      }    },    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    }  }
 export type FAQS_QUERYResult = Array<{
   _id: string
   title: string | null
@@ -4299,6 +4353,26 @@ export type FOOTER_QUERYResult = {
   }> | null
   licenseLink: Link | null
 } | null
+// Variable: HEADER_QUERY
+// Query: *[_type == 'header'][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    internalLinks[]{      _key,      label,      page->{        _id,        _type,        title,        "slug": slug.current      }    },  }
+export type HEADER_QUERYResult = {
+  _id: string
+  _type: 'header'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string | null
+  internalLinks: Array<{
+    _key: string
+    label: string | null
+    page: {
+      _id: string
+      _type: 'page'
+      title: string | null
+      slug: string | null
+    } | null
+  }> | null
+} | null
 // Variable: PATTERNS_STALENESS_CHECK_QUERY
 // Query: *[_type == "pattern" && _id in $patternIds]{    _id,    _updatedAt  }
 export type PATTERNS_STALENESS_CHECK_QUERYResult = Array<{
@@ -4370,7 +4444,7 @@ declare module '@sanity/client' {
     '*[_type == $type && defined(slug.current)]{\n    "slug": slug.current\n  }': SLUGS_BY_TYPE_QUERYResult
     '*[_type == "page" && defined(slug.current)]{\n    "slug": slug.current\n  }': PAGES_SLUGS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n  }': PAGE_BY_SLUG_QUERYResult
-    '\n  *[_type == \'page\' && slug.current == \'explore\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n  }': EXPLORE_PAGE_QUERYResult
+    '\n  *[_type == \'page\' && slug.current == \'search\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n  }': SEARCH_PAGE_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current)][]{\n    _id,\n    _type,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    },\n  }': PATTERNS_WITH_THEMES_QUERYResult
     '\n  *[_type == "theme" && defined(_id)] | order(title asc) {\n    _id,\n    title,\n    description,\n    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id)] {\n      _id,\n      _type,\n      title,\n      description,\n      "slug": slug.current,\n      tags[]->,\n      audiences[]->{\n        _id,\n        title\n      },\n      theme->{\n        _id,\n        title,\n        description\n      },\n      solutions[]->,\n      resources[]->{\n        ...,\n        solutions[]->{...},\n      },\n    }\n  }[count(patterns) > 0]\n': PATTERNS_GROUPED_BY_THEME_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current)\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Enhanced search scoring across relevant fields\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_QUERYResult
@@ -4390,11 +4464,12 @@ declare module '@sanity/client' {
     '\n  *[_type == \'page\' && slug.current == \'about\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': ABOUT_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'/\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    // Full content blocks, including contentList sections\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    },\n    // Convenience projections for specific content lists by title\n    "audiences": content[_type == \'contentList\' && title == \'Audiences\'][0].items[]{\n      _key,\n      title,\n      description\n    },\n    "values": content[_type == \'contentList\' && title == \'Values\'][0].items[]{\n      _key,\n      title,\n      description\n    }\n  }\n': HOME_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'faq\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': FAQ_PAGE_QUERYResult
-    '\n  *[_type == "faq"] | order(category->title asc, _createdAt asc) {\n    _id,\n    title,\n    category->{\n      _id,\n      title,\n      description[]{\n        ...,\n      }\n    },\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    }\n  }\n': FAQS_QUERYResult
+    '\n  *[_type == "faq"]|order(orderRank) {\n    _id,\n    title,\n    category->{\n      _id,\n      title,\n      description[]{\n        ...,\n      }\n    },\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    }\n  }\n': FAQS_QUERYResult
     '\n  *[_type == "icon"] | order(title asc) {\n    _id,\n    _type,\n    title,\n    svg\n  }\n': ICONS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'acknowledgements\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': ACKNOWLEDGEMENTS_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'themes\'][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': THEMES_PAGE_QUERYResult
     '\n  *[_type == \'footer\'][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    externalLinks[]{\n      _key,\n      label,\n      url\n    },\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n    licenseLink\n  }\n': FOOTER_QUERYResult
+    '\n  *[_type == \'header\'][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n  }\n': HEADER_QUERYResult
     '\n  *[_type == "pattern" && _id in $patternIds]{\n    _id,\n    _updatedAt\n  }\n': PATTERNS_STALENESS_CHECK_QUERYResult
     '\n  *[_type == "audience"] | order(title asc) {\n    _id,\n    title,\n    "value": _id,\n    "label": title\n  }\n': AUDIENCES_QUERYResult
     '\n  *[_type == "theme"] | order(title asc) {\n    _id,\n    title,\n    "value": _id,\n    "label": title\n  }\n': THEMES_QUERYResult

@@ -232,8 +232,8 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
     },
   }`);
 
-export const EXPLORE_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'explore'][0]{
+export const SEARCH_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'search'][0]{
     _id,
     _type,
     title,
@@ -1128,6 +1128,27 @@ export const FOOTER_QUERY = defineQuery(`
       }
     },
     licenseLink
+  }
+`);
+
+export const HEADER_QUERY = defineQuery(`
+  *[_type == 'header'][0]{
+    _id,
+    _type,
+    _createdAt,
+    _updatedAt,
+    _rev,
+    title,
+    internalLinks[]{
+      _key,
+      label,
+      page->{
+        _id,
+        _type,
+        title,
+        "slug": slug.current
+      }
+    },
   }
 `);
 

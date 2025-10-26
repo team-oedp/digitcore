@@ -10,7 +10,7 @@ import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { Skeleton } from "~/components/ui/skeleton";
 import { sanityFetch } from "~/sanity/lib/client";
-import { EXPLORE_PAGE_QUERY } from "~/sanity/lib/queries";
+import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
 
 export const metadata: Metadata = {
 	title: "Search | DIGITCORE",
@@ -23,7 +23,7 @@ export default async function SearchPage({
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
 	const pageData = await sanityFetch({
-		query: EXPLORE_PAGE_QUERY,
+		query: SEARCH_PAGE_QUERY,
 		revalidate: 60,
 	});
 
