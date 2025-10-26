@@ -13,6 +13,7 @@ import { cn } from "~/lib/utils";
 import { sanityFetch } from "~/sanity/lib/client";
 import { FOOTER_QUERY } from "~/sanity/lib/queries";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
+import { ExploreMenuStoreProvider } from "~/stores/explore-menu";
 import { FontStoreProvider } from "~/stores/font";
 import { OrientationStoreProvider } from "~/stores/orientation";
 import { PageContentStoreProvider } from "~/stores/page-content";
@@ -43,12 +44,16 @@ export default async function Layout({
 						<OrientationStoreProvider>
 							<CarrierBagStoreProvider>
 								<PageContentStoreProvider>
-									<Suspense fallback={null}>
-										<OrientationRedirect />
-									</Suspense>
-									<GlossaryProvider>
-										<SiteLayout footerData={footerData}>{children}</SiteLayout>
-									</GlossaryProvider>
+									<ExploreMenuStoreProvider>
+										<Suspense fallback={null}>
+											<OrientationRedirect />
+										</Suspense>
+										<GlossaryProvider>
+											<SiteLayout footerData={footerData}>
+												{children}
+											</SiteLayout>
+										</GlossaryProvider>
+									</ExploreMenuStoreProvider>
 								</PageContentStoreProvider>
 							</CarrierBagStoreProvider>
 						</OrientationStoreProvider>

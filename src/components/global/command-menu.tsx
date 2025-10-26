@@ -5,7 +5,6 @@ import {
 	ArrowDownIcon,
 	ArrowUpIcon,
 	AsteriskIcon,
-	CommandIcon,
 	CornerDownLeftIcon,
 	FileTextIcon,
 	FolderIcon,
@@ -632,9 +631,6 @@ function CommandMenuIcon({ isOpen }: { isOpen: boolean }) {
 			)}
 		>
 			<Icon icon={Search02Icon} size={14} />
-			<span className="hidden lg:flex lg:items-center lg:gap-0.5">
-				<CommandIcon size={14} /> K
-			</span>
 		</span>
 	);
 }
