@@ -166,19 +166,19 @@ export function CarrierBagSidebar({
 			<SidebarContent className="flex-1 bg-container-background">
 				<SidebarGroup className="flex h-full min-h-0 flex-col">
 					{showClearConfirmation ? (
-						<div className="flex flex-col items-center justify-center gap-4 p-6 text-center">
-							<div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
+						<div className="flex h-full flex-col items-start justify-start gap-4 px-3 pt-12 pb-3 text-left">
+							<div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/50">
 								<Icon
 									icon={AlertCircleIcon}
 									size={24}
-									className="text-red-600 dark:text-red-400"
+									className="text-red-800 dark:text-red-200"
 								/>
 							</div>
 							<div className="space-y-2">
 								<h3 className="font-normal text-foreground text-lg">
 									Remove all items?
 								</h3>
-								<p className="text-muted-foreground text-sm leading-relaxed">
+								<p className="text-muted-foreground text-prose text-sm">
 									This will remove all {items.length} pattern
 									{items.length !== 1 ? "s" : ""} from your carrier bag. This
 									action cannot be undone.
@@ -186,7 +186,7 @@ export function CarrierBagSidebar({
 							</div>
 							<div className="flex w-full gap-3 pt-2">
 								<Button
-									variant="outline"
+									variant="default"
 									size="sm"
 									onClick={hideClearConfirmationPane}
 									className="flex-1"
@@ -202,7 +202,7 @@ export function CarrierBagSidebar({
 									}}
 									className="flex-1"
 								>
-									Remove all
+									Remove All
 								</Button>
 							</div>
 						</div>
