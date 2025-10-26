@@ -9,7 +9,9 @@ const config = {
 	experimental: {
 		viewTransition: true,
 		browserDebugInfoInTerminal: true,
+		turbopackFileSystemCacheForDev: true,
 	},
+	reactCompiler: true,
 	logging: {
 		fetches: {
 			fullUrl: true,
