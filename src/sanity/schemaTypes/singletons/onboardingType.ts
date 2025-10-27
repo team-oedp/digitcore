@@ -1,5 +1,6 @@
 import { PresentationIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
+import { isUniqueOtherThanLanguage } from "../../lib/validation";
 
 export const onboardingType = defineType({
 	name: "onboarding",
@@ -7,6 +8,13 @@ export const onboardingType = defineType({
 	type: "document",
 	icon: PresentationIcon,
 	fields: [
+		defineField({
+			// should match 'languageField' plugin configuration setting in sanity.config.ts, if customized
+			name: "language",
+			type: "string",
+			readOnly: true,
+			hidden: true,
+		}),
 		defineField({
 			name: "title",
 			type: "string",
@@ -17,6 +25,7 @@ export const onboardingType = defineType({
 			type: "slug",
 			options: {
 				source: "title",
+				isUnique: isUniqueOtherThanLanguage,
 			},
 		}),
 		defineField({
