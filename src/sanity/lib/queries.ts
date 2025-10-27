@@ -172,6 +172,7 @@ export const GLOSSARY_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
+    emptyStateMessage,
     description[]{
       ...,
       markDefs[]{
@@ -221,6 +222,7 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
+    emptyStateMessage,
     description[]{
       ...,
       markDefs[]{
@@ -238,6 +240,7 @@ export const SEARCH_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
+    emptyStateMessage,
     description[]{
       ...,
       markDefs[]{
@@ -699,6 +702,7 @@ export const TAGS_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
+    emptyStateMessage,
     description[]{
       ...,
       markDefs[]{
@@ -739,6 +743,7 @@ export const CARRIER_BAG_QUERY = defineQuery(`
     _rev,
     title,
     information,
+    emptyStateMessage,
   }
 `);
 
@@ -793,6 +798,7 @@ export const VALUES_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
+    emptyStateMessage,
     description[]{
       ...,
       markDefs[]{
@@ -832,6 +838,7 @@ export const PATTERNS_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
+    emptyStateMessage,
     description[]{
       ...,
       markDefs[]{
@@ -871,6 +878,7 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
+    emptyStateMessage,
     description[]{
       ...,
       markDefs[]{
@@ -910,6 +918,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
+    emptyStateMessage,
     description[]{
       ...,
       markDefs[]{
@@ -961,6 +970,7 @@ export const FAQ_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
+    emptyStateMessage,
     description[]{
       ...,
       markDefs[]{
@@ -1032,6 +1042,7 @@ export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
+    emptyStateMessage,
     description[]{
       ...,
       markDefs[]{
@@ -1071,6 +1082,7 @@ export const THEMES_PAGE_QUERY = defineQuery(`
     _type,
     title,
     "slug": slug.current,
+    emptyStateMessage,
     description[]{
       ...,
       markDefs[]{

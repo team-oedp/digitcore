@@ -83,8 +83,10 @@ function extractUniqueFilterOptions(
 
 export function CarrierBagContent({
 	mobileTrigger,
+	emptyStateMessage,
 }: {
 	mobileTrigger?: React.ReactNode;
+	emptyStateMessage?: string | null;
 }) {
 	const items = useCarrierBagStore((state) => state.items);
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
@@ -239,7 +241,7 @@ export function CarrierBagContent({
 					aria-label="Group by Theme"
 					className="h-auto min-h-9 px-3 py-1.5 font-normal"
 				>
-					Group by Theme
+					{groupByTheme ? "Grouped by Theme" : "Group by Theme"}
 				</Toggle>
 
 				{/* Tags multi-select */}
@@ -305,16 +307,16 @@ export function CarrierBagContent({
 			<div className="mb-4 flex h-full min-h-0 flex-col gap-2">
 				<div className="flex h-full flex-col gap-2 overflow-y-auto rounded-xl border border-border border-dashed bg-container-background p-2">
 					{items.length === 0 ? (
-						<div className="flex h-full flex-col items-center justify-center px-4 py-8 text-center">
+						<div className="flex h-full flex-col items-start justify-start px-4 py-8 text-left">
 							<p className="font-normal text-muted-foreground text-sm">
-								There are no patterns in your carrier bag. Start by saving one
-								from the toolkit.
+								{emptyStateMessage ||
+									"There are no patterns in your carrier bag. Start by saving one from the toolkit."}
 							</p>
 						</div>
 					) : processed.groups ? (
 						processed.groups.map(({ title, items: groupItems }) => (
 							<div key={title} className="mt-2">
-								<h4 className="mb-1 font-normal text-muted-foreground text-sm">
+								<h4 className="mb-1 pl-2 font-normal text-muted-foreground text-sm">
 									{title}
 								</h4>
 								<div className="flex flex-col gap-2">

@@ -9,12 +9,14 @@ import {
 	MoreHorizontalCircle01Icon,
 	Tick02Icon,
 } from "@hugeicons/core-free-icons";
+import type { PortableTextBlock } from "next-sanity";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { BlueskyIcon } from "~/components/icons/logos/bluesky-icon";
 import { InstagramIcon } from "~/components/icons/logos/instagram-icon";
 import { LinkedInIcon } from "~/components/icons/logos/linkedin-icon";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { CopyButton } from "~/components/shared/buttons/copy-button";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
@@ -28,6 +30,7 @@ import {
 	SidebarContent,
 	SidebarFooter,
 	SidebarGroup,
+	SidebarGroupAction,
 	SidebarGroupContent,
 	SidebarGroupLabel,
 	SidebarMenu,
@@ -78,8 +81,8 @@ function SidebarContentComponent(props: {
 	} = props;
 	return (
 		<>
-			<SidebarContent className="flex h-full flex-col bg-container-background">
-				<SidebarGroup className="flex h-full flex-col">
+			<SidebarContent className="flex h-full flex-col justify-start gap-4 bg-container-background">
+				<SidebarGroup className="flex flex-col">
 					<SidebarGroupContent className="flex flex-col">
 						<div>
 							<SidebarGroupLabel>Utilities</SidebarGroupLabel>
@@ -228,6 +231,20 @@ function SidebarContentComponent(props: {
 						</div>
 					</SidebarGroupContent>
 				</SidebarGroup>
+				{data?.information && (
+					<SidebarGroup>
+						<SidebarGroupLabel>Application</SidebarGroupLabel>
+						<SidebarGroupAction>
+							<span className="sr-only">About</span>
+						</SidebarGroupAction>
+						<SidebarGroupContent>
+							<CustomPortableText
+								value={data.information as PortableTextBlock[]}
+								className="px-1 text-muted-foreground"
+							/>
+						</SidebarGroupContent>
+					</SidebarGroup>
+				)}
 			</SidebarContent>
 			<SidebarFooter className="mt-auto flex flex-col items-start bg-container-background">
 				<CloseCarrierBagButton />
@@ -297,6 +314,7 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 			.filter(Boolean);
 		if (slugs.length === 0) return;
 		(async () => {
+			const cleanUrl = `${window.location.origin}/carrier-bag`;
 			try {
 				const patterns = await client.fetch<PATTERNS_BY_SLUGS_QUERYResult>(
 					PATTERNS_BY_SLUGS_QUERY,
@@ -313,10 +331,10 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 				for (const p of ordered) {
 					addPattern(p);
 				}
-				const cleanUrl = `${window.location.origin}/carrier-bag`;
 				window.history.replaceState({}, "", cleanUrl);
-			} catch (_err) {
-				// TODO: catch errors
+			} catch (error) {
+				console.error("Failed to load carrier bag from URL", error);
+				window.history.replaceState({}, "", cleanUrl);
 			}
 		})();
 	}, [addPattern, clearBag]);
@@ -433,6 +451,7 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 						</Popover>
 					</div>
 				}
+				emptyStateMessage={data?.emptyStateMessage}
 			/>
 		</SidebarProvider>
 	);

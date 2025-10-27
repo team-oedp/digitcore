@@ -293,7 +293,7 @@
 	}
 
 	.text-heading-compact {
-		@apply text-left font-normal text-lg text-primary uppercase leading-tight md:text-xl;
+		@apply text-left font-normal text-lg text-neutral-800 dark:text-foreground uppercase leading-tight md:text-xl;
 	}
 
 	.accordion-heading {

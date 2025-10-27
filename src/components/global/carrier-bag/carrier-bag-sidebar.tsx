@@ -25,15 +25,20 @@ import {
 	useSidebar,
 } from "~/components/ui/sidebar";
 import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
-import { useStaleContentCheck } from "~/hooks/use-stale-content-check";
 import { cn } from "~/lib/utils";
+import type { CARRIER_BAG_QUERYResult } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
 
+type CarrierBagSidebarProps = React.ComponentProps<typeof Sidebar> & {
+	carrierBagData?: CARRIER_BAG_QUERYResult;
+};
+
 export function CarrierBagSidebar({
 	className,
+	carrierBagData,
 	...props
-}: React.ComponentProps<typeof Sidebar>) {
+}: CarrierBagSidebarProps) {
 	const isHydrated = useCarrierBagStore((state) => state.isHydrated);
 	const isOpen = useCarrierBagStore((state) => state.isOpen);
 	const setOpen = useCarrierBagStore((state) => state.setOpen);
@@ -59,7 +64,6 @@ export function CarrierBagSidebar({
 		(state) => state.hideClearConfirmationPane,
 	);
 	const documentData = useCarrierBagDocument(items);
-	const { lastChecked } = useStaleContentCheck();
 	const { setOpen: setSidebarOpen, setOpenMobile, isMobile } = useSidebar();
 
 	// Sync Zustand store state to Sidebar component state
@@ -166,19 +170,19 @@ export function CarrierBagSidebar({
 			<SidebarContent className="flex-1 bg-container-background">
 				<SidebarGroup className="flex h-full min-h-0 flex-col">
 					{showClearConfirmation ? (
-						<div className="flex flex-col items-center justify-center gap-4 p-6 text-center">
-							<div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20">
+						<div className="flex h-full flex-col items-start justify-start gap-4 px-3 pt-12 pb-3 text-left">
+							<div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/50">
 								<Icon
 									icon={AlertCircleIcon}
 									size={24}
-									className="text-red-600 dark:text-red-400"
+									className="text-red-800 dark:text-red-200"
 								/>
 							</div>
 							<div className="space-y-2">
 								<h3 className="font-normal text-foreground text-lg">
 									Remove all items?
 								</h3>
-								<p className="text-muted-foreground text-sm leading-relaxed">
+								<p className="text-muted-foreground text-prose text-sm">
 									This will remove all {items.length} pattern
 									{items.length !== 1 ? "s" : ""} from your carrier bag. This
 									action cannot be undone.
@@ -186,7 +190,7 @@ export function CarrierBagSidebar({
 							</div>
 							<div className="flex w-full gap-3 pt-2">
 								<Button
-									variant="outline"
+									variant="default"
 									size="sm"
 									onClick={hideClearConfirmationPane}
 									className="flex-1"
@@ -202,7 +206,7 @@ export function CarrierBagSidebar({
 									}}
 									className="flex-1"
 								>
-									Remove all
+									Remove All
 								</Button>
 							</div>
 						</div>
@@ -217,8 +221,8 @@ export function CarrierBagSidebar({
 							) : items.length === 0 ? (
 								<div className="flex flex-1 flex-col items-start justify-start px-4 py-8">
 									<p className="text-left font-normal text-muted-foreground text-sm">
-										There are no patterns in your carrier bag. Start by saving
-										one from the toolkit.
+										{carrierBagData?.emptyStateMessage ||
+											"There are no patterns in your carrier bag. Start by saving one from the toolkit."}
 									</p>
 								</div>
 							) : (

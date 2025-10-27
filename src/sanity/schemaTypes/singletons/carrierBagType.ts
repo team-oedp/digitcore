@@ -15,6 +15,12 @@ export const carrierBagType = defineType({
 			name: "information",
 			type: "blockContent",
 		}),
+		defineField({
+			name: "emptyStateMessage",
+			type: "text",
+			title: "Empty State Message",
+			description: "Message displayed when the carrier bag is empty",
+		}),
 	],
 	preview: {
 		select: {

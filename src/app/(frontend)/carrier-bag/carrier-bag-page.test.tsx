@@ -56,13 +56,6 @@ vi.mock("~/components/pdf/pdf-preview-modal", () => ({
 	),
 }));
 
-// Mock stale content check
-vi.mock("~/hooks/use-stale-content-check", () => ({
-	useStaleContentCheck: () => ({
-		lastChecked: null,
-	}),
-}));
-
 // Mock use-mobile hook
 vi.mock("~/hooks/use-mobile", () => ({
 	useIsMobile: () => false,
