@@ -12,6 +12,7 @@
 		"cypress:open": "cross-env NODE_ENV=test SKIP_ENV_VALIDATION=1 cypress open",
 		"cypress:run": "cross-env NODE_ENV=test SKIP_ENV_VALIDATION=1 cypress run",
 		"convert-svgs": "node scripts/convert-svgs.js",
+		"convert-shape-icons": "node scripts/convert-shape-icons.js",
 		"dev": "next dev",
 		"dev:all": "concurrently \"npm run dev\" \"npm run studio:dev\"",
 		"e2e": "start-server-and-test dev http://localhost:3000 \"cross-env NODE_ENV=test SKIP_ENV_VALIDATION=1 cypress run --e2e\"",
