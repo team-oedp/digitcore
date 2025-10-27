@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getLanguage } from "~/lib/get-language";
 import { sanityFetch } from "~/sanity/lib/client";
 import { CARRIER_BAG_QUERY } from "~/sanity/lib/queries";
 import { CarrierBagPage } from "./carrier-bag-page";
@@ -10,8 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default async function CarrierBag() {
+	const language = await getLanguage();
 	const data = await sanityFetch({
 		query: CARRIER_BAG_QUERY,
+		params: { language },
 		revalidate: 60,
 	});
 

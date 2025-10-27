@@ -7,6 +7,7 @@ import { UncategorizedFAQSection } from "~/components/pages/faq/uncategorized-fa
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { getLanguage } from "~/lib/get-language";
 import { sanityFetch } from "~/sanity/lib/client";
 import { FAQS_QUERY, FAQ_PAGE_QUERY } from "~/sanity/lib/queries";
 
@@ -17,15 +18,20 @@ export const metadata: Metadata = {
 };
 
 export default async function FAQPage() {
-	const pageData = await sanityFetch({
-		query: FAQ_PAGE_QUERY,
-		revalidate: 60,
-	});
-
-	const faqs = await sanityFetch({
-		query: FAQS_QUERY,
-		revalidate: 60,
-	});
+	const language = await getLanguage();
+	
+	const [pageData, faqs] = await Promise.all([
+		sanityFetch({
+			query: FAQ_PAGE_QUERY,
+			params: { language },
+			revalidate: 60,
+		}),
+		sanityFetch({
+			query: FAQS_QUERY,
+			params: { language },
+			revalidate: 60,
+		}),
+	]);
 
 	const { uncategorized, grouped } = faqs
 		? groupFaqsByCategory(faqs)

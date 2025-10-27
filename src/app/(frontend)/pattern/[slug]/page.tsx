@@ -8,6 +8,7 @@ import { Solutions } from "~/components/pages/pattern/solutions";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { PatternHeading } from "~/components/shared/pattern-heading";
+import { getLanguage } from "~/lib/get-language";
 import { sanityFetch } from "~/sanity/lib/client";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
 import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
@@ -21,8 +22,10 @@ export type PatternPageProps = {
  * Learn more: https://nextjs.org/docs/app/api-reference/functions/generate-static-params
  */
 export async function generateStaticParams() {
+	const language = await getLanguage();
 	const data = await sanityFetch({
 		query: PATTERN_PAGES_SLUGS_QUERY,
+		params: { language },
 		revalidate: 60,
 	});
 	return data;
@@ -45,10 +48,11 @@ export async function generateMetadata({
 
 export default async function PatternPage({ params }: PatternPageProps) {
 	const { slug } = await params;
+	const language = await getLanguage();
 
 	const pattern: PATTERN_QUERYResult = await sanityFetch({
 		query: PATTERN_QUERY,
-		params: { slug },
+		params: { slug, language },
 		tags: [`pattern:${slug}`, "solution", "resource", "audience", "tag"],
 	});
 

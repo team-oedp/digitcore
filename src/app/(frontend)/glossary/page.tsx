@@ -7,6 +7,7 @@ import { CurrentLetterIndicator } from "~/components/shared/current-letter-indic
 import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { getLanguage } from "~/lib/get-language";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
 	GLOSSARY_PAGE_QUERY,
@@ -28,15 +29,20 @@ const ALPHABET = Array.from({ length: 26 }, (_, i) =>
 export type TermsByLetter = Partial<Record<string, GLOSSARY_TERMS_QUERYResult>>;
 
 export default async function GlossaryPage() {
-	const pageData = await sanityFetch({
-		query: GLOSSARY_PAGE_QUERY,
-		revalidate: 60,
-	});
-
-	const glossaryTerms = await sanityFetch({
-		query: GLOSSARY_TERMS_QUERY,
-		revalidate: 60,
-	});
+	const language = await getLanguage();
+	
+	const [pageData, glossaryTerms] = await Promise.all([
+		sanityFetch({
+			query: GLOSSARY_PAGE_QUERY,
+			params: { language },
+			revalidate: 60,
+		}),
+		sanityFetch({
+			query: GLOSSARY_TERMS_QUERY,
+			params: { language },
+			revalidate: 60,
+		}),
+	]);
 
 	// Group terms by letter and ensure strict alphabetical ordering within each group
 	const termsByLetter =

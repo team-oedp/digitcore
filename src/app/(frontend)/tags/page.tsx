@@ -7,6 +7,7 @@ import { CurrentLetterIndicator } from "~/components/shared/current-letter-indic
 import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { getLanguage } from "~/lib/get-language";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
 	TAGS_PAGE_QUERY,
@@ -32,13 +33,17 @@ export type TagsByLetter = Partial<
 >;
 
 export default async function Tags() {
+	const language = await getLanguage();
+
 	const [pageData, tagsData] = await Promise.all([
 		sanityFetch({
 			query: TAGS_PAGE_QUERY,
+			params: { language },
 			revalidate: 60,
 		}) as Promise<TAGS_PAGE_QUERYResult | null>,
 		sanityFetch({
 			query: TAGS_WITH_PATTERNS_QUERY,
+			params: { language },
 			revalidate: 60,
 		}) as Promise<TAGS_WITH_PATTERNS_QUERYResult | null>,
 	]);

@@ -5,6 +5,7 @@ import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
+import { getLanguage } from "~/lib/get-language";
 import { sanityFetch } from "~/sanity/lib/client";
 import { ACKNOWLEDGEMENTS_PAGE_QUERY } from "~/sanity/lib/queries";
 
@@ -15,8 +16,10 @@ export const metadata: Metadata = {
 };
 
 export default async function AcknowledgementsPage() {
+	const language = await getLanguage();
 	const data = await sanityFetch({
 		query: ACKNOWLEDGEMENTS_PAGE_QUERY,
+		params: { language },
 		revalidate: 60,
 	});
 

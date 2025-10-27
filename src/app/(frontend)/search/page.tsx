@@ -9,6 +9,7 @@ import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { Skeleton } from "~/components/ui/skeleton";
+import { getLanguage } from "~/lib/get-language";
 import { sanityFetch } from "~/sanity/lib/client";
 import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
 
@@ -22,8 +23,10 @@ export default async function SearchPage({
 }: {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+	const language = await getLanguage();
 	const pageData = await sanityFetch({
 		query: SEARCH_PAGE_QUERY,
+		params: { language },
 		revalidate: 60,
 	});
 

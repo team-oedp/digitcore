@@ -5,6 +5,7 @@ import { SearchResultItem } from "~/components/pages/search/search-result-item";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { getLanguage } from "~/lib/get-language";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
 	PATTERNS_PAGE_QUERY,
@@ -25,15 +26,20 @@ export const metadata: Metadata = {
 };
 
 export default async function PatternsPage() {
-	const pageData = await sanityFetch({
-		query: PATTERNS_PAGE_QUERY,
-		revalidate: 60,
-	});
+	const language = await getLanguage();
 
-	const allPatterns: PATTERNS_WITH_THEMES_QUERYResult = await sanityFetch({
-		query: PATTERNS_WITH_THEMES_QUERY,
-		revalidate: 60,
-	});
+	const [pageData, allPatterns] = await Promise.all([
+		sanityFetch({
+			query: PATTERNS_PAGE_QUERY,
+			params: { language },
+			revalidate: 60,
+		}),
+		sanityFetch({
+			query: PATTERNS_WITH_THEMES_QUERY,
+			params: { language },
+			revalidate: 60,
+		}) as Promise<PATTERNS_WITH_THEMES_QUERYResult>,
+	]);
 
 	// Group patterns by theme
 	const themeGroups = new Map<string, ThemeGroup>();

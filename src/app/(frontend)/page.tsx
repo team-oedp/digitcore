@@ -5,6 +5,7 @@ import { HeadingMorph } from "~/components/shared/heading-morph";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import PatternCombination from "~/components/shared/pattern-combination-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
+import { getLanguage } from "~/lib/get-language";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
 import { sanityFetch } from "~/sanity/lib/client";
 import { GLOSSARY_TERMS_QUERY, HOME_PAGE_QUERY } from "~/sanity/lib/queries";
@@ -17,16 +18,24 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
+	const language = await getLanguage();
+
 	const [data, glossaryTerms] = await Promise.all([
 		sanityFetch({
 			query: HOME_PAGE_QUERY,
+			params: { language },
 			revalidate: 60,
 		}) as Promise<Page | null>,
 		sanityFetch({
 			query: GLOSSARY_TERMS_QUERY,
+			params: { language },
 			revalidate: 60,
 		}) as Promise<GlossaryTerm[]>,
 	]);
+
+	if (!data) {
+		return <div>No content available for language: {language}</div>;
+	}
 
 	const contentSections = (data?.content ?? []) as NonNullable<Page["content"]>;
 
