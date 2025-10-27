@@ -26,11 +26,6 @@ export const pageType = defineType({
 			type: "blockContent",
 		}),
 		defineField({
-			name: "emptyStateMessage",
-			title: "Empty State Message",
-			type: "text",
-		}),
-		defineField({
 			name: "content",
 			title: "Content",
 			type: "array",
