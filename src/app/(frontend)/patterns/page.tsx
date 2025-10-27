@@ -5,7 +5,6 @@ import { SearchResultItem } from "~/components/pages/search/search-result-item";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import { cn } from "~/lib/utils";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
 	PATTERNS_PAGE_QUERY,
@@ -71,13 +70,17 @@ export default async function PatternsPage() {
 				{!allPatterns || allPatterns.length === 0 ? (
 					<div className="p-8">
 						<p className="text-body">
-							No patterns found in database. Please check again later.
+							{pageData.emptyStateMessage ||
+								"No patterns found in database. Please check again later."}
 						</p>
 					</div>
 				) : (
 					Array.from(themeGroups.values()).map(({ theme, patterns }) => (
-						<div key={theme._id}>
-							<div className="flex flex-col gap-5 pt-12 pb-12 md:pt-36">
+						<div
+							key={theme._id}
+							className="mt-8 overflow-hidden rounded-lg border border-neutral-300 border-dashed bg-muted p-8 md:p-6"
+						>
+							<div className="flex flex-col gap-5">
 								<div className="flex flex-col gap-1">
 									<p className="text-neutral-400 text-xxs uppercase">Theme</p>
 									<h2 className="text-section-heading">{theme.title}</h2>
@@ -88,14 +91,9 @@ export default async function PatternsPage() {
 								/>
 							</div>
 
-							<div className="space-y-0 pt-12">
+							<div className="space-y-0 pt-8">
 								{patterns.map((pattern, index) => (
-									<div
-										key={pattern._id}
-										className={cn(
-											index === patterns.length - 1 && "border-dashed-brand-b",
-										)}
-									>
+									<div key={pattern._id}>
 										<SearchResultItem
 											showPatternIcon={true}
 											pattern={pattern}
