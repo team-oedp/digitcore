@@ -2,7 +2,7 @@
 
 import { Globe02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import * as React from "react";
+import { useRouter } from "next/navigation";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -10,11 +10,12 @@ import {
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { cn } from "~/lib/utils";
+import type { Language } from "~/stores/language";
+import { useLanguageStore } from "~/stores/language";
 
-// Restrict available languages to English and a disabled Spanish option
-const languages = [
-	{ code: "EN", label: "English", disabled: false },
-	{ code: "ES", label: "Spanish", disabled: true },
+const languages: Array<{ code: Language; label: string }> = [
+	{ code: "en", label: "English" },
+	{ code: "es", label: "Spanish" },
 ];
 
 type LanguageSelectorProps = {
@@ -22,7 +23,15 @@ type LanguageSelectorProps = {
 };
 
 export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
-	const [selectedLanguage, setSelectedLanguage] = React.useState(languages[0]);
+	const router = useRouter();
+	const language = useLanguageStore((state) => state.language);
+	const setLanguage = useLanguageStore((state) => state.setLanguage);
+
+	const handleLanguageChange = (lang: Language) => {
+		setLanguage(lang);
+		document.cookie = `language=${lang}; path=/; max-age=31536000`;
+		router.refresh();
+	};
 
 	return (
 		<div className={className}>
@@ -52,34 +61,31 @@ export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
 					</button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end" className="min-w-32">
-					{languages.map((language) => (
+					{languages.map((lang) => (
 						<DropdownMenuItem
-							key={language.code}
-							disabled={language.disabled}
-							onClick={() => {
-								if (!language.disabled) setSelectedLanguage(language);
-							}}
+							key={lang.code}
+							onClick={() => handleLanguageChange(lang.code)}
 							className="flex items-center gap-3"
 						>
 							<span
 								className={cn(
 									"min-w-[24px] font-medium text-xs",
-									selectedLanguage?.code === language.code
+									language === lang.code
 										? "text-foreground"
 										: "text-muted-foreground",
 								)}
 							>
-								{language.code}
+								{lang.code.toUpperCase()}
 							</span>
 							<span
 								className={cn(
 									"text-sm",
-									selectedLanguage?.code === language.code
+									language === lang.code
 										? "font-medium text-foreground"
 										: "text-muted-foreground",
 								)}
 							>
-								{language.label}
+								{lang.label}
 							</span>
 						</DropdownMenuItem>
 					))}

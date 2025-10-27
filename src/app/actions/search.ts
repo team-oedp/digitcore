@@ -1,6 +1,7 @@
 "use server";
 
 import { createLogLocation, logger } from "~/lib/logger";
+import { getLanguage } from "~/lib/get-language";
 import type { ParsedSearchParams } from "~/lib/search";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
 import { client } from "~/sanity/lib/client";
@@ -129,8 +130,11 @@ export async function searchPatterns(
 			? prefParams.prefThemes.split(",").filter(Boolean)
 			: [];
 
+		const language = await getLanguage();
+
 		// Prepare GROQ query parameters - always provide all parameters (empty arrays if no values)
 		const queryParams: Record<string, unknown> = {
+			language,
 			audiences: parsedParams.audiences || [],
 			themes: parsedParams.themes || [],
 			tags: parsedParams.tags || [],
@@ -428,11 +432,12 @@ export async function searchContentForCommandModal(
 
 		// Escape search term for GROQ
 		const escapedSearchTerm = searchTerm.trim().replace(/["\\]/g, "\\$&");
-		const queryParams = { searchTerm: escapedSearchTerm };
+		const language = await getLanguage();
+		const queryParams = { searchTerm: escapedSearchTerm, language };
 
 		logger.search(
 			"Executing direct GROQ queries",
-			{ escapedSearchTerm },
+			{ escapedSearchTerm, language },
 			location,
 		);
 

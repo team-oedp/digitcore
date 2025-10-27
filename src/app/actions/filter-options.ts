@@ -1,6 +1,7 @@
 "use server";
 
 import { createLogLocation, logger } from "~/lib/logger";
+import { getLanguage } from "~/lib/get-language";
 import { client } from "~/sanity/lib/client";
 import { FILTER_OPTIONS_QUERY } from "~/sanity/lib/queries";
 
@@ -42,8 +43,9 @@ export async function fetchFilterOptions(): Promise<FilterOptionsResult> {
 			location,
 		);
 
+		const language = await getLanguage();
 		const startTime = Date.now();
-		const response = await client.fetch(FILTER_OPTIONS_QUERY);
+		const response = await client.fetch(FILTER_OPTIONS_QUERY, { language });
 		const endTime = Date.now();
 
 		// Extract data from Sanity client response
