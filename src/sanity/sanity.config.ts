@@ -4,7 +4,7 @@ import {
 	documentInternationalization,
 } from "@sanity/document-internationalization";
 import { visionTool } from "@sanity/vision";
-import { defineConfig } from "sanity";
+import { type ConfigContext, type Template, defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { dataset, projectId } from "./env";
 import { schema } from "./schemaTypes/index";
@@ -64,4 +64,6 @@ export default defineConfig({
 			return prev;
 		},
 	},
+	templates: (prev: Template[], context: ConfigContext): Template[] =>
+		prev.filter((template) => !["pattern", "page"].includes(template.id)),
 });
