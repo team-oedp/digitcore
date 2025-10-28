@@ -9,8 +9,10 @@ import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Button } from "~/components/ui/button";
+import type { Language } from "~/i18n/config";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
 import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
@@ -24,13 +26,11 @@ import { MobileNavDialog } from "./mobile-nav-dialog";
 
 type SiteHeaderProps = {
 	headerData: HEADER_QUERYResult;
+	language: Language;
 };
 
-export function SiteHeader({ headerData }: SiteHeaderProps) {
-	const isModalMode = useCarrierBagStore((state) => state.isModalMode);
-	const toggleModalMode = useCarrierBagStore((state) => state.toggleModalMode);
+export function SiteHeader({ headerData, language }: SiteHeaderProps) {
 	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
-	const setOpen = useCarrierBagStore((state) => state.setOpen);
 	const hasUnseenUpdates = useCarrierBagStore(
 		(state) => state.hasUnseenUpdates,
 	);
@@ -43,16 +43,32 @@ export function SiteHeader({ headerData }: SiteHeaderProps) {
 
 	// Filter navigation links based on page slug
 	// "orientation" and "about" go in main menu, everything else in explore menu
-	const mainMenuLinks =
-		headerData?.internalLinks?.filter(
-			(link) =>
-				link.page?.slug === "orientation" || link.page?.slug === "about",
-		) ?? [];
-	const exploreMenuLinks =
-		headerData?.internalLinks?.filter(
-			(link) =>
-				link.page?.slug !== "orientation" && link.page?.slug !== "about",
-		) ?? [];
+	const headerLinks = (headerData?.internalLinks ?? []).flatMap((link) => {
+		if (!link) return [];
+		const label = link.label?.trim();
+		const slug = link.page?.slug?.trim();
+
+		if (!label || !slug || !link.page) {
+			return [];
+		}
+
+		return [
+			{
+				...link,
+				label,
+				page: {
+					...link.page,
+					slug,
+				},
+			},
+		];
+	});
+	const mainMenuLinks = headerLinks.filter(
+		(link) => link.page.slug === "orientation" || link.page.slug === "about",
+	);
+	const exploreMenuLinks = headerLinks.filter(
+		(link) => link.page.slug !== "orientation" && link.page.slug !== "about",
+	);
 
 	// Close explore menu when clicking outside
 	useEffect(() => {
@@ -72,17 +88,12 @@ export function SiteHeader({ headerData }: SiteHeaderProps) {
 		};
 	}, [isExploreOpen, setIsExploreOpen]);
 
-	// TODO: implement toggle of carrier bag sidebar into a modal
-	const _handleModalModeToggle = () => {
-		toggleModalMode();
-		// When switching to modal mode, ensure the modal is open
-		if (!isModalMode) {
-			setOpen(true);
-		}
-	};
-
 	const pathname = usePathname();
-	const isOnCarrierBagRoute = pathname === "/carrier-bag";
+	const { normalizedPath } = useMemo(
+		() => parseLocalePath(pathname),
+		[pathname],
+	);
+	const isOnCarrierBagRoute = normalizedPath === "/carrier-bag";
 
 	// Check for expired updates every 30 seconds
 	useEffect(() => {
@@ -98,7 +109,7 @@ export function SiteHeader({ headerData }: SiteHeaderProps) {
 			<nav className="flex w-full items-center justify-between gap-3.5 px-5 py-1.5">
 				<div className="flex w-full items-center gap-6">
 					<Link
-						href="/"
+						href={buildLocaleHref(language, "/")}
 						aria-label="Digitcore Home"
 						className="flex h-6 w-6 flex-shrink-0 items-center justify-center"
 					>
@@ -113,26 +124,32 @@ export function SiteHeader({ headerData }: SiteHeaderProps) {
 
 					<nav className="hidden md:flex">
 						<ul className="flex items-center gap-3.5 text-sm">
-							{mainMenuLinks.map((link) => (
-								<motion.li
-									key={link._key}
-									layout
-									transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-								>
-									<Button
-										variant="link"
-										asChild
-										className={cn(
-											"h-auto px-3 py-2 text-link capitalize",
-											pathname === `/${link.page?.slug}`
-												? "text-foreground"
-												: "text-muted-foreground",
-										)}
+							{mainMenuLinks.map((link) => {
+								const slug = link.page?.slug;
+								if (!slug) return null;
+								const href = `/${slug}`;
+								const isActive = normalizedPath === href;
+								const localizedHref = buildLocaleHref(language, href);
+
+								return (
+									<motion.li
+										key={link._key}
+										layout
+										transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
 									>
-										<Link href={`/${link.page?.slug}`}>{link.label}</Link>
-									</Button>
-								</motion.li>
-							))}
+										<Button
+											variant="link"
+											asChild
+											className={cn(
+												"h-auto px-3 py-2 text-link capitalize",
+												isActive ? "text-foreground" : "text-muted-foreground",
+											)}
+										>
+											<Link href={localizedHref}>{link.label}</Link>
+										</Button>
+									</motion.li>
+								);
+							})}
 							{exploreMenuLinks.length > 0 && (
 								<li className="relative" data-explore-menu>
 									<div className="flex items-center gap-3.5">
@@ -159,23 +176,30 @@ export function SiteHeader({ headerData }: SiteHeaderProps) {
 														ease: [0.4, 0, 0.2, 1],
 													}}
 												>
-													{exploreMenuLinks.map((link) => (
-														<Button
-															key={link._key}
-															variant="link"
-															asChild
-															className={cn(
-																"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-																pathname === `/${link.page?.slug}`
-																	? "text-foreground"
-																	: "text-muted-foreground",
-															)}
-														>
-															<Link href={`/${link.page?.slug}`}>
-																{link.label}
-															</Link>
-														</Button>
-													))}
+													{exploreMenuLinks.map((link) => {
+														const slug = link.page?.slug;
+														if (!slug) return null;
+														const href = `/${slug}`;
+														const isActive = normalizedPath === href;
+
+														return (
+															<Button
+																key={link._key}
+																variant="link"
+																asChild
+																className={cn(
+																	"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
+																	isActive
+																		? "text-foreground"
+																		: "text-muted-foreground",
+																)}
+															>
+																<Link href={buildLocaleHref(language, href)}>
+																	{link.label}
+																</Link>
+															</Button>
+														);
+													})}
 												</motion.div>
 											)}
 										</AnimatePresence>
@@ -230,7 +254,7 @@ export function SiteHeader({ headerData }: SiteHeaderProps) {
 						)}
 					/>
 				</button>
-				<MobileNavDialog headerData={headerData} />
+				<MobileNavDialog headerData={headerData} language={language} />
 			</nav>
 		</header>
 	);

@@ -5,40 +5,46 @@ import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
-import { getLanguage } from "~/lib/get-language";
+import type { Language } from "~/i18n/config";
 import { sanityFetch } from "~/sanity/lib/client";
-import { VALUES_PAGE_QUERY } from "~/sanity/lib/queries";
+import { ACKNOWLEDGEMENTS_PAGE_QUERY } from "~/sanity/lib/queries";
 
 export const metadata: Metadata = {
-	title: "Values | DIGITCORE",
+	title: "Acknowledgements | DIGITCORE",
 	description:
-		"Open infrastructure and environmental research values and principles.",
+		"Acknowledgements and credits for the DIGITCORE project and its contributors.",
 };
 
-export default async function ValuesPage() {
-	const language = await getLanguage();
-	const pageData = await sanityFetch({
-		query: VALUES_PAGE_QUERY,
+type AcknowledgementsPageProps = {
+	params: { language: Language };
+};
+
+export default async function AcknowledgementsPage({
+	params,
+}: AcknowledgementsPageProps) {
+	const { language } = params;
+	const data = await sanityFetch({
+		query: ACKNOWLEDGEMENTS_PAGE_QUERY,
 		params: { language },
 		revalidate: 60,
 	});
 
-	if (!pageData) {
+	if (!data) {
 		return notFound();
 	}
 
 	return (
 		<PageWrapper>
 			<div className="flex flex-col pb-44">
-				{pageData.title && <PageHeading title={pageData.title} />}
-				{pageData.description && (
+				{data.title && <PageHeading title={data.title} />}
+				{data.description && (
 					<CustomPortableText
-						value={pageData.description as PortableTextBlock[]}
+						value={data.description as PortableTextBlock[]}
 						className="mt-8 text-body"
 					/>
 				)}
-				<div className="flex flex-col gap-20 pt-20 lg:gap-40 lg:pt-40">
-					{pageData.content?.map((section) => (
+				<div className="flex flex-col gap-8 pt-20 lg:pt-60">
+					{data.content?.map((section) => (
 						<section key={section._key} className="flex flex-col gap-5">
 							{section._type === "content" && section.heading && (
 								<SectionHeading heading={section.heading} />
@@ -46,7 +52,7 @@ export default async function ValuesPage() {
 							{section._type === "content" && section.body && (
 								<CustomPortableText
 									value={section.body as PortableTextBlock[]}
-									className="text-body [&_p]:mb-1"
+									className="prose"
 								/>
 							)}
 						</section>

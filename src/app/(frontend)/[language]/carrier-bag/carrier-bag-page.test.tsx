@@ -97,6 +97,7 @@ function makePattern(id: string, slug: string, title?: string): MockPattern {
 		_rev: "1",
 		title: title ?? `Pattern ${id}`,
 		slug,
+		language: "en",
 		description: null,
 		descriptionPlainText: "",
 		tags: null,

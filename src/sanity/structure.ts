@@ -1,19 +1,19 @@
 import {
-	BasketIcon,
-	DesktopIcon,
-	BookIcon,
-	CogIcon,
-	TagIcon,
-	UserIcon,
-	DocumentTextIcon,
-	BulbOutlineIcon,
-	WrenchIcon,
 	AsteriskIcon,
+	BasketIcon,
+	BookIcon,
+	BulbOutlineIcon,
+	CogIcon,
+	DesktopIcon,
+	DocumentTextIcon,
 	FeedbackIcon,
 	PresentationIcon,
 	SparklesIcon,
 	StackCompactIcon,
+	TagIcon,
 	TranslateIcon,
+	UserIcon,
+	WrenchIcon,
 } from "@sanity/icons";
 import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 import type { StructureResolver } from "sanity/structure";
@@ -211,8 +211,8 @@ export const structure: StructureResolver = (S, context) =>
 											.params({ language: language.id }),
 									),
 							),
-							),
-					),
+						),
+				),
 			S.listItem()
 				.title("Glossary")
 				.id("glossary")

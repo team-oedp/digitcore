@@ -30,6 +30,7 @@ describe("PageHeading Carrier Bag Functionality", () => {
 		_rev: "1",
 		title: "Test Pattern",
 		slug: "test-pattern",
+		language: "en",
 		description: null,
 		descriptionPlainText: "",
 		tags: null,

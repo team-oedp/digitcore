@@ -205,18 +205,8 @@ export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
 				) || [],
 		};
 
-		console.log("Setting searchable content in store:", searchableContent);
-		console.log("Content breakdown:", {
-			patterns: searchableContent.patterns.length,
-			solutions: searchableContent.solutions?.length || 0,
-			resources: searchableContent.resources?.length || 0,
-			tags: searchableContent.tags?.length || 0,
-			audiences: searchableContent.audiences?.length || 0,
-		});
-
 		// Set the pattern slug for GROQ searches
 		const patternSlug = typeof pattern.slug === "string" ? pattern.slug : null;
-		console.log("Setting pattern slug:", patternSlug);
 
 		setContent(searchableContent);
 		setPatternSlug(patternSlug);

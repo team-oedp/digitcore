@@ -43,6 +43,7 @@ const createMockPattern = (
 	_rev: "rev1",
 	title: "Test Pattern",
 	slug: "test-pattern",
+	language: "en",
 	// biome-ignore lint/suspicious/noExplicitAny: Mocking complex PortableText type requires any
 	description: createMockPortableText("Test pattern description") as any,
 	descriptionPlainText: "Test pattern description",

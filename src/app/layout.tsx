@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "~/components/theme/theme-provider";
+import type { Language } from "~/i18n/config";
+import { i18n } from "~/i18n/config";
 import { cn } from "~/lib/utils";
 import { OrientationStoreProvider } from "~/stores/orientation";
 import "~/styles/globals.css";
@@ -11,13 +13,20 @@ export const metadata: Metadata = {
 	icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export async function generateStaticParams() {
+	return i18n.languages.map((language) => ({ lang: language.id }));
+}
+
+export default async function RootLayout({
 	children,
+	params,
 }: {
 	children: React.ReactNode;
+	params: Promise<{ lang: Language }>;
 }) {
+	const { lang } = await params;
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang={lang} suppressHydrationWarning>
 			<body className={cn(sans.variable, signifier.variable)}>
 				<ThemeProvider
 					attribute="class"

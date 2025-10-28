@@ -5,7 +5,7 @@ import { HeadingMorph } from "~/components/shared/heading-morph";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import PatternCombination from "~/components/shared/pattern-combination-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
-import { getLanguage } from "~/lib/get-language";
+import type { Language } from "~/i18n/config";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
 import { sanityFetch } from "~/sanity/lib/client";
 import { GLOSSARY_TERMS_QUERY, HOME_PAGE_QUERY } from "~/sanity/lib/queries";
@@ -17,8 +17,12 @@ export const metadata: Metadata = {
 		"DIGITCORE outlines challenges, problems, and phenomena experienced or observed by community organizations, researchers, and open source technologists working on collaborative environmental research. This toolkit is designed to help you make decisions about tools, modes of interaction, research design, and process.",
 };
 
-export default async function Home() {
-	const language = await getLanguage();
+type HomePageProps = {
+	params: { language: Language };
+};
+
+export default async function Home({ params }: HomePageProps) {
+	const { language } = params;
 
 	const [data, glossaryTerms] = await Promise.all([
 		sanityFetch({

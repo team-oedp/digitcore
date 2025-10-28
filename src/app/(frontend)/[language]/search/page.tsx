@@ -9,7 +9,7 @@ import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { Skeleton } from "~/components/ui/skeleton";
-import { getLanguage } from "~/lib/get-language";
+import type { Language } from "~/i18n/config";
 import { sanityFetch } from "~/sanity/lib/client";
 import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
 
@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 	description: "Search patterns, tags, themes, and audiences.",
 };
 
-export default async function SearchPage({
-	searchParams,
-}: {
-	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-	const language = await getLanguage();
+type SearchPageProps = {
+	params: { language: Language };
+};
+
+export default async function SearchPage({ params }: SearchPageProps) {
+	const { language } = params;
 	const pageData = await sanityFetch({
 		query: SEARCH_PAGE_QUERY,
 		params: { language },
@@ -46,10 +46,11 @@ export default async function SearchPage({
 				)}
 				<div className="flex flex-col gap-8">
 					<Suspense fallback={<SearchInterfaceSkeleton />}>
-						<SearchInterfaceServer />
+						<SearchInterfaceServer language={language} />
 					</Suspense>
 					<Suspense fallback={<Skeleton className="h-32 w-full" />}>
 						<SearchClientWrapper
+							language={language}
 							emptyStateMessage={pageData.emptyStateMessage ?? undefined}
 						/>
 					</Suspense>

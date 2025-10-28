@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { parseLocalePath } from "~/lib/locale-path";
 import { useOrientationStore } from "~/stores/orientation";
 
 /**
@@ -31,6 +32,7 @@ export function OrientationRedirect() {
 	);
 
 	useEffect(() => {
+		const { language, normalizedPath } = parseLocalePath(pathname);
 		// Wait for hydration before checking
 		if (!hasHydrated) return;
 
@@ -38,15 +40,15 @@ export function OrientationRedirect() {
 		if (redirected.current) return;
 
 		// Skip if we're already on the orientation page
-		if (pathname === "/orientation") {
+		if (normalizedPath === "/orientation") {
 			return;
 		}
 
 		// Skip for API routes, static assets, and studio
 		if (
-			pathname?.startsWith("/api/") ||
-			pathname?.startsWith("/_next/") ||
-			pathname?.startsWith("/studio")
+			normalizedPath?.startsWith("/api/") ||
+			normalizedPath?.startsWith("/_next/") ||
+			normalizedPath?.startsWith("/studio")
 		) {
 			return;
 		}
@@ -58,7 +60,7 @@ export function OrientationRedirect() {
 				hasCompletedOrientation,
 				hasSkippedOrientation,
 				shouldShow: shouldShowOrientation(),
-				pathname,
+				normalizedPath,
 			});
 		}
 
@@ -77,11 +79,11 @@ export function OrientationRedirect() {
 			redirected.current = true;
 
 			// Build redirect URL with return path and pattern info
-			const url = new URL("/orientation", window.location.origin);
+			const url = new URL(`/${language}/orientation`, window.location.origin);
 
 			// Preserve pattern slug if navigating to a pattern page
-			if (pathname?.startsWith("/pattern/")) {
-				const segments = pathname.split("/");
+			if (normalizedPath?.startsWith("/pattern/")) {
+				const segments = normalizedPath.split("/");
 				const slug = segments[2];
 				if (slug) {
 					url.searchParams.set("pattern", slug);
@@ -90,7 +92,7 @@ export function OrientationRedirect() {
 
 			// For home page, don't add returnTo parameter to avoid %2F encoding
 			// Only add returnTo for non-home pages
-			if (pathname !== "/") {
+			if (normalizedPath !== "/") {
 				const fullPath =
 					pathname +
 					(searchParams?.toString() ? `?${searchParams.toString()}` : "");

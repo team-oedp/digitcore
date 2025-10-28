@@ -5,7 +5,7 @@ import { SearchResultItem } from "~/components/pages/search/search-result-item";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import { getLanguage } from "~/lib/get-language";
+import type { Language } from "~/i18n/config";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
 	PATTERNS_PAGE_QUERY,
@@ -25,8 +25,12 @@ export const metadata: Metadata = {
 	description: "Open environmental research patterns and themes.",
 };
 
-export default async function PatternsPage() {
-	const language = await getLanguage();
+type PatternsPageProps = {
+	params: { language: Language };
+};
+
+export default async function PatternsPage({ params }: PatternsPageProps) {
+	const { language } = params;
 
 	const [pageData, allPatterns] = await Promise.all([
 		sanityFetch({

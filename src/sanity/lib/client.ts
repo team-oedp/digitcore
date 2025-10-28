@@ -27,19 +27,3 @@ export async function sanityFetch<const QueryString extends string>({
 		},
 	});
 }
-
-export async function getLanguageForQueries(): Promise<"en" | "es"> {
-	try {
-		const { cookies } = await import("next/headers");
-		const cookieStore = await cookies();
-		const languageCookie = cookieStore.get("language");
-		
-		if (languageCookie?.value === "es" || languageCookie?.value === "en") {
-			return languageCookie.value;
-		}
-	} catch {
-		// If cookies() is not available (e.g., in some contexts), fallback to "en"
-	}
-	
-	return "en";
-}

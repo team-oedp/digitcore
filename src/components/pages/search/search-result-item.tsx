@@ -14,6 +14,7 @@ import { Icon } from "~/components/shared/icon";
 import { ThemeMiniBadge } from "~/components/shared/theme-mini-badge";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { parseLocalePath } from "~/lib/locale-path";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	getMatchExplanation,
@@ -209,7 +210,8 @@ export function SearchResultItem({
 	showPatternIcon = false,
 }: SearchResultItemProps) {
 	const pathname = usePathname();
-	const isPatternsPage = pathname === "/patterns";
+	const { normalizedPath } = parseLocalePath(pathname);
+	const isPatternsPage = normalizedPath === "/patterns";
 	const title = pattern.title || "Untitled Pattern";
 	const rawDescription = pattern.description || [];
 

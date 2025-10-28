@@ -1,60 +1,60 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { notFound } from "next/navigation";
-import { TagsList } from "~/components/pages/tags/tags-list";
+import { GlossaryList } from "~/components/pages/glossary/glossary-list";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
 import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import { getLanguage } from "~/lib/get-language";
+import type { Language } from "~/i18n/config";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
-	TAGS_PAGE_QUERY,
-	TAGS_WITH_PATTERNS_QUERY,
+	GLOSSARY_PAGE_QUERY,
+	GLOSSARY_TERMS_QUERY,
 } from "~/sanity/lib/queries";
-import type {
-	TAGS_PAGE_QUERYResult,
-	TAGS_WITH_PATTERNS_QUERYResult,
-} from "~/sanity/sanity.types";
+import type { GLOSSARY_TERMS_QUERYResult } from "~/sanity/sanity.types";
+import { GlossaryScroll } from "./glossary-scroll";
 
 export const metadata: Metadata = {
-	title: "Tags | DIGITCORE",
+	title: "Glossary | DIGITCORE",
 	description:
-		"Explore tags to discover new pathways through the toolkit's patterns.",
+		"Searchable reference for key terms and concepts used in the toolkit.",
 };
 
 const ALPHABET = Array.from({ length: 26 }, (_, i) =>
 	String.fromCharCode(65 + i),
 );
 
-export type TagsByLetter = Partial<
-	Record<string, TAGS_WITH_PATTERNS_QUERYResult>
->;
+export type TermsByLetter = Partial<Record<string, GLOSSARY_TERMS_QUERYResult>>;
 
-export default async function Tags() {
-	const language = await getLanguage();
+type GlossaryPageProps = {
+	params: { language: Language };
+};
 
-	const [pageData, tagsData] = await Promise.all([
+export default async function GlossaryPage({ params }: GlossaryPageProps) {
+	const { language } = params;
+
+	const [pageData, glossaryTerms] = await Promise.all([
 		sanityFetch({
-			query: TAGS_PAGE_QUERY,
+			query: GLOSSARY_PAGE_QUERY,
 			params: { language },
 			revalidate: 60,
-		}) as Promise<TAGS_PAGE_QUERYResult | null>,
+		}),
 		sanityFetch({
-			query: TAGS_WITH_PATTERNS_QUERY,
+			query: GLOSSARY_TERMS_QUERY,
 			params: { language },
 			revalidate: 60,
-		}) as Promise<TAGS_WITH_PATTERNS_QUERYResult | null>,
+		}),
 	]);
 
-	// Group tags by letter and ensure strict alphabetical ordering within each group
-	const tagsByLetter =
-		tagsData?.reduce<TagsByLetter>((acc, tag) => {
-			const title = tag.title ?? "";
+	// Group terms by letter and ensure strict alphabetical ordering within each group
+	const termsByLetter =
+		glossaryTerms?.reduce<TermsByLetter>((acc, term) => {
+			const title = term.title ?? "";
 			const letter = title.charAt(0).toUpperCase();
 			const group = acc[letter] ?? [];
-			group.push(tag);
+			group.push(term);
 			// Sort the group alphabetically by title to ensure strict ordering
 			group.sort((a, b) => (a.title ?? "").localeCompare(b.title ?? ""));
 			acc[letter] = group;
@@ -67,6 +67,7 @@ export default async function Tags() {
 
 	return (
 		<div className="relative">
+			<GlossaryScroll />
 			<PageWrapper className="flex flex-col gap-0 md:flex-row md:gap-20">
 				{/* Sticky nav and section indicator */}
 				<div className="sticky top-5 z-10 hidden h-full self-start md:block">
@@ -74,14 +75,14 @@ export default async function Tags() {
 						{/* Anchor used as the intersection threshold for current-letter detection */}
 						<div id="letter-anchor" />
 						<CurrentLetterIndicator
-							availableLetters={Object.keys(tagsByLetter)}
-							contentId="tags-content"
+							availableLetters={Object.keys(termsByLetter)}
+							contentId="glossary-content"
 							// implicit anchorId defaults to 'letter-anchor'
 						/>
 						<div className="lg:pl-2">
 							<LetterNavigation
-								itemsByLetter={tagsByLetter}
-								contentId="tags-content"
+								itemsByLetter={termsByLetter}
+								contentId="glossary-content"
 							/>
 						</div>
 					</div>
@@ -97,7 +98,7 @@ export default async function Tags() {
 						/>
 					)}
 					<div className="pt-14 lg:pt-14">
-						<TagsList tagsByLetter={tagsByLetter} alphabet={ALPHABET} />
+						<GlossaryList termsByLetter={termsByLetter} alphabet={ALPHABET} />
 					</div>
 				</div>
 			</PageWrapper>

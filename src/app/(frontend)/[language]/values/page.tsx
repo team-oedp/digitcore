@@ -5,40 +5,44 @@ import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
-import { getLanguage } from "~/lib/get-language";
+import type { Language } from "~/i18n/config";
 import { sanityFetch } from "~/sanity/lib/client";
-import { ABOUT_PAGE_QUERY } from "~/sanity/lib/queries";
+import { VALUES_PAGE_QUERY } from "~/sanity/lib/queries";
 
 export const metadata: Metadata = {
-	title: "About | DIGITCORE",
+	title: "Values | DIGITCORE",
 	description:
-		"Learn about DIGITCORE and our mission for open infrastructure and environmental research.",
+		"Open infrastructure and environmental research values and principles.",
 };
 
-export default async function AboutPage() {
-	const language = await getLanguage();
-	const data = await sanityFetch({
-		query: ABOUT_PAGE_QUERY,
+type ValuesPageProps = {
+	params: { language: Language };
+};
+
+export default async function ValuesPage({ params }: ValuesPageProps) {
+	const { language } = params;
+	const pageData = await sanityFetch({
+		query: VALUES_PAGE_QUERY,
 		params: { language },
 		revalidate: 60,
 	});
 
-	if (!data) {
+	if (!pageData) {
 		return notFound();
 	}
 
 	return (
 		<PageWrapper>
 			<div className="flex flex-col pb-44">
-				{data.title && <PageHeading title={data.title} />}
-				{data.description && (
+				{pageData.title && <PageHeading title={pageData.title} />}
+				{pageData.description && (
 					<CustomPortableText
-						value={data.description as PortableTextBlock[]}
+						value={pageData.description as PortableTextBlock[]}
 						className="mt-8 text-body"
 					/>
 				)}
 				<div className="flex flex-col gap-20 pt-20 lg:gap-40 lg:pt-40">
-					{data.content?.map((section) => (
+					{pageData.content?.map((section) => (
 						<section key={section._key} className="flex flex-col gap-5">
 							{section._type === "content" && section.heading && (
 								<SectionHeading heading={section.heading} />
@@ -46,7 +50,7 @@ export default async function AboutPage() {
 							{section._type === "content" && section.body && (
 								<CustomPortableText
 									value={section.body as PortableTextBlock[]}
-									className="text-body"
+									className="text-body [&_p]:mb-1"
 								/>
 							)}
 						</section>

@@ -29,6 +29,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
+import { parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
 import type { Onboarding } from "~/sanity/sanity.types";
 import { useOrientationStore } from "~/stores/orientation";
@@ -75,9 +76,10 @@ function friendlyLabelFromPath(path?: string) {
 		const pathname = isAbsolute
 			? new URL(safe).pathname
 			: (safe.split("#")[0] || "/").split("?")[0] || "/";
+		const { normalizedPath } = parseLocalePath(pathname);
 
-		if (pathname === "/") return "DIGITCORE Home Page";
-		const segments = pathname.split("/").filter(Boolean);
+		if (normalizedPath === "/") return "DIGITCORE Home Page";
+		const segments = normalizedPath.split("/").filter(Boolean);
 		if (segments[0] === "pattern" && segments[1]) return "Pattern Page";
 		if (segments[0] === "patterns") return "Patterns Page";
 		if (segments[0] === "search") return "Search Page";

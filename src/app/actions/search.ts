@@ -1,7 +1,7 @@
 "use server";
 
+import { type Language, i18n } from "~/i18n/config";
 import { createLogLocation, logger } from "~/lib/logger";
-import { getLanguage } from "~/lib/get-language";
 import type { ParsedSearchParams } from "~/lib/search";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
 import { client } from "~/sanity/lib/client";
@@ -90,6 +90,7 @@ export type ComprehensiveSearchResult = {
  */
 export async function searchPatterns(
 	formData: FormData,
+	language: Language,
 ): Promise<SearchResult> {
 	const location = createLogLocation("search.ts", "searchPatterns");
 
@@ -129,8 +130,6 @@ export async function searchPatterns(
 		const prefThemes = prefParams.prefThemes
 			? prefParams.prefThemes.split(",").filter(Boolean)
 			: [];
-
-		const language = await getLanguage();
 
 		// Prepare GROQ query parameters - always provide all parameters (empty arrays if no values)
 		const queryParams: Record<string, unknown> = {
@@ -318,6 +317,7 @@ export async function searchPatterns(
  */
 export async function searchPatternsWithParams(
 	searchParams: URLSearchParams,
+	language: Language,
 ): Promise<SearchResult> {
 	const location = createLogLocation("search.ts", "searchPatternsWithParams");
 
@@ -336,7 +336,7 @@ export async function searchPatternsWithParams(
 		}
 
 		logger.search("Delegating to searchPatterns", undefined, location);
-		return await searchPatterns(formData);
+		return await searchPatterns(formData, language);
 	} catch (error) {
 		logger.searchError("searchPatternsWithParams failed", error, location);
 
@@ -352,12 +352,14 @@ export async function searchPatternsWithParams(
 /**
  * Search function that accepts onboarding preferences for result boosting
  */
+
 export async function searchPatternsWithPreferences(
 	searchParams: URLSearchParams,
 	preferences: {
 		selectedAudienceIds: string[];
 		selectedThemeIds: string[];
 	},
+	language: Language,
 ): Promise<SearchResult> {
 	const location = createLogLocation(
 		"search.ts",
@@ -397,7 +399,7 @@ export async function searchPatternsWithPreferences(
 			undefined,
 			location,
 		);
-		return await searchPatterns(formData);
+		return await searchPatterns(formData, language);
 	} catch (error) {
 		logger.searchError("searchPatternsWithPreferences failed", error, location);
 
@@ -415,6 +417,7 @@ export async function searchPatternsWithPreferences(
  */
 export async function searchContentForCommandModal(
 	searchTerm: string,
+	language: Language,
 ): Promise<ComprehensiveSearchResult> {
 	const location = createLogLocation("search.ts", "searchAllContent");
 
@@ -432,7 +435,6 @@ export async function searchContentForCommandModal(
 
 		// Escape search term for GROQ
 		const escapedSearchTerm = searchTerm.trim().replace(/["\\]/g, "\\$&");
-		const language = await getLanguage();
 		const queryParams = { searchTerm: escapedSearchTerm, language };
 
 		logger.search(
@@ -528,8 +530,9 @@ export async function searchContentForCommandModal(
  */
 export async function searchAllContent(
 	searchParams: URLSearchParams,
+	language: Language,
 ): Promise<ComprehensiveSearchResult> {
 	// Delegate to the direct search function by extracting the search term
 	const searchTerm = searchParams.get("q")?.trim() || "";
-	return await searchContentForCommandModal(searchTerm);
+	return await searchContentForCommandModal(searchTerm, language);
 }

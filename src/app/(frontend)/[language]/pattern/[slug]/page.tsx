@@ -8,13 +8,18 @@ import { Solutions } from "~/components/pages/pattern/solutions";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { PatternHeading } from "~/components/shared/pattern-heading";
-import { getLanguage } from "~/lib/get-language";
+import { i18n } from "~/i18n/config";
+import type { Language } from "~/i18n/config";
+import { type RouteSlug, normalizeSlug } from "~/lib/slug-utils";
 import { sanityFetch } from "~/sanity/lib/client";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
-import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
+import type {
+	PATTERN_PAGES_SLUGS_QUERYResult,
+	PATTERN_QUERYResult,
+} from "~/sanity/sanity.types";
 
-export type PatternPageProps = {
-	params: Promise<{ slug: string }>;
+type PatternPageProps = {
+	params: { language: Language; slug?: RouteSlug };
 };
 
 /**
@@ -22,24 +27,43 @@ export type PatternPageProps = {
  * Learn more: https://nextjs.org/docs/app/api-reference/functions/generate-static-params
  */
 export async function generateStaticParams() {
-	const language = await getLanguage();
-	const data = await sanityFetch({
-		query: PATTERN_PAGES_SLUGS_QUERY,
-		params: { language },
-		revalidate: 60,
-	});
-	return data;
+	const patternParams = await Promise.all(
+		i18n.languages.map(async ({ id }) => {
+			const patterns = (await sanityFetch({
+				query: PATTERN_PAGES_SLUGS_QUERY,
+				params: { language: id },
+				revalidate: 60,
+			})) as PATTERN_PAGES_SLUGS_QUERYResult | null;
+
+			return (patterns ?? []).flatMap((pattern) =>
+				pattern.slug
+					? [
+							{
+								language: id,
+								slug: pattern.slug,
+							},
+						]
+					: [],
+			);
+		}),
+	);
+
+	return patternParams.flat();
 }
 
 export async function generateMetadata({
 	params,
 }: PatternPageProps): Promise<Metadata> {
-	const { slug } = await params;
+	const slug = normalizeSlug(params.slug);
 	const readable = slug
-		.replace(/-/g, " ")
-		.split(" ")
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-		.join(" ");
+		? slug
+				.replace(/-/g, " ")
+				.split(" ")
+				.map(
+					(word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+				)
+				.join(" ")
+		: "Pattern";
 	return {
 		title: `${readable} | Pattern | DIGITCORE`,
 		description: `${readable}.`,
@@ -47,14 +71,18 @@ export async function generateMetadata({
 }
 
 export default async function PatternPage({ params }: PatternPageProps) {
-	const { slug } = await params;
-	const language = await getLanguage();
+	const { language } = params;
+	const slug = normalizeSlug(params.slug);
 
-	const pattern: PATTERN_QUERYResult = await sanityFetch({
+	if (!slug) {
+		return notFound();
+	}
+
+	const pattern = (await sanityFetch({
 		query: PATTERN_QUERY,
 		params: { slug, language },
 		tags: [`pattern:${slug}`, "solution", "resource", "audience", "tag"],
-	});
+	})) as PATTERN_QUERYResult | null;
 
 	if (!pattern) {
 		return notFound();

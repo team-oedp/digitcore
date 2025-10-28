@@ -1,15 +1,14 @@
-import "~/styles/globals.css";
-
 import type { Metadata } from "next";
 import { VisualEditing } from "next-sanity/visual-editing";
 import { draftMode } from "next/headers";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { sans, signifier } from "~/app/(frontend)/fonts";
 import { GlossaryProvider } from "~/components/global/glossary-provider";
 import { OrientationRedirect } from "~/components/global/orientation-redirect";
 import { SiteLayout } from "~/components/global/site-layout";
 import { DisableDraftMode } from "~/components/sanity/disable-draft-mode";
-import { getLanguage } from "~/lib/get-language";
+import { type Language, i18n, supportedLanguageIds } from "~/i18n/config";
 import { cn } from "~/lib/utils";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
@@ -20,7 +19,6 @@ import {
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { ExploreMenuStoreProvider } from "~/stores/explore-menu";
 import { FontStoreProvider } from "~/stores/font";
-import { LanguageStoreProvider } from "~/stores/language";
 import { OrientationStoreProvider } from "~/stores/orientation";
 import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
@@ -32,9 +30,20 @@ export const metadata: Metadata = {
 
 export default async function Layout({
 	children,
-}: Readonly<{ children: React.ReactNode }>) {
+	params,
+}: Readonly<{
+	children: React.ReactNode;
+	params: { language: string };
+}>) {
+	const languageParam = params.language;
+
+	if (!supportedLanguageIds.has(languageParam as Language)) {
+		notFound();
+	}
+
+	const language = languageParam as Language;
+
 	const isDraftMode = (await draftMode()).isEnabled;
-	const language = await getLanguage();
 
 	const [headerData, footerData, carrierBagData] = await Promise.all([
 		sanityFetch({
@@ -61,28 +70,27 @@ export default async function Layout({
 			<div className="h-screen overflow-x-hidden text-foreground antialiased [--header-height:calc(--spacing(14))]">
 				<TRPCReactProvider>
 					<FontStoreProvider>
-						<LanguageStoreProvider>
-							<OrientationStoreProvider>
-								<CarrierBagStoreProvider>
-									<PageContentStoreProvider>
-										<ExploreMenuStoreProvider>
-											<Suspense fallback={null}>
-												<OrientationRedirect />
-											</Suspense>
-											<GlossaryProvider>
-												<SiteLayout
-													headerData={headerData}
-													footerData={footerData}
-													carrierBagData={carrierBagData}
-												>
-													{children}
-												</SiteLayout>
-											</GlossaryProvider>
-										</ExploreMenuStoreProvider>
-									</PageContentStoreProvider>
-								</CarrierBagStoreProvider>
-							</OrientationStoreProvider>
-						</LanguageStoreProvider>
+						<OrientationStoreProvider>
+							<CarrierBagStoreProvider>
+								<PageContentStoreProvider>
+									<ExploreMenuStoreProvider>
+										<Suspense fallback={null}>
+											<OrientationRedirect />
+										</Suspense>
+										<GlossaryProvider>
+											<SiteLayout
+												language={language}
+												headerData={headerData}
+												footerData={footerData}
+												carrierBagData={carrierBagData}
+											>
+												{children}
+											</SiteLayout>
+										</GlossaryProvider>
+									</ExploreMenuStoreProvider>
+								</PageContentStoreProvider>
+							</CarrierBagStoreProvider>
+						</OrientationStoreProvider>
 					</FontStoreProvider>
 				</TRPCReactProvider>
 				{isDraftMode && (
@@ -94,4 +102,8 @@ export default async function Layout({
 			</div>
 		</section>
 	);
+}
+
+export function generateStaticParams() {
+	return i18n.languages.map((language) => ({ language: language.id }));
 }

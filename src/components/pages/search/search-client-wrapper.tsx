@@ -7,6 +7,7 @@ import {
 	searchPatternsWithParams,
 	searchPatternsWithPreferences,
 } from "~/app/actions/search";
+import type { Language } from "~/i18n/config";
 import { createLogLocation, logger } from "~/lib/logger";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
 import { useOrientationStore } from "~/stores/orientation";
@@ -16,10 +17,12 @@ import { SearchResultsHeaderClient } from "./search-results-header-client";
 
 type SearchClientWrapperProps = {
 	emptyStateMessage?: string;
+	language: Language;
 };
 
 export function SearchClientWrapper({
 	emptyStateMessage,
+	language,
 }: SearchClientWrapperProps) {
 	const location = createLogLocation(
 		"search-client-wrapper.tsx",
@@ -199,11 +202,15 @@ export function SearchClientWrapper({
 			const shouldEnhance = parsedParams.enhance && hasPreferences;
 
 			const result = shouldEnhance
-				? await searchPatternsWithPreferences(urlSearchParams, {
-						selectedAudienceIds: orientationPreferences.selectedAudienceIds,
-						selectedThemeIds: orientationPreferences.selectedThemeIds,
-					})
-				: await searchPatternsWithParams(urlSearchParams);
+				? await searchPatternsWithPreferences(
+						urlSearchParams,
+						{
+							selectedAudienceIds: orientationPreferences.selectedAudienceIds,
+							selectedThemeIds: orientationPreferences.selectedThemeIds,
+						},
+						language,
+					)
+				: await searchPatternsWithParams(urlSearchParams, language);
 			const endTime = Date.now();
 
 			logger.info(
@@ -243,7 +250,7 @@ export function SearchClientWrapper({
 				location,
 			);
 		}
-	}, [searchParams, location, searchId, orientationPreferences]);
+	}, [searchParams, location, searchId, orientationPreferences, language]);
 
 	useEffect(() => {
 		performSearch();

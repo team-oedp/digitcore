@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { fetchFilterOptions } from "~/app/actions/filter-options";
+import { i18n } from "~/i18n/config";
 import { sanityFetch } from "~/sanity/lib/client";
 import { ONBOARDING_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
 import type { Onboarding } from "~/sanity/sanity.types";
@@ -22,7 +23,7 @@ export default async function OnboardingPage({
 			query: ONBOARDING_QUERY,
 			revalidate: 60,
 		}) as Promise<Onboarding | null>,
-		fetchFilterOptions(),
+		fetchFilterOptions(i18n.base),
 	]);
 
 	// Resolve pattern title if a pattern slug was provided
