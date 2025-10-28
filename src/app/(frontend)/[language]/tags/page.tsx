@@ -7,7 +7,6 @@ import { CurrentLetterIndicator } from "~/components/shared/current-letter-indic
 import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import type { Language } from "~/i18n/config";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
 	TAGS_PAGE_QUERY,
@@ -17,6 +16,7 @@ import type {
 	TAGS_PAGE_QUERYResult,
 	TAGS_WITH_PATTERNS_QUERYResult,
 } from "~/sanity/sanity.types";
+import type { Language } from "~/i18n/config";
 
 export const metadata: Metadata = {
 	title: "Tags | DIGITCORE",
@@ -32,12 +32,9 @@ export type TagsByLetter = Partial<
 	Record<string, TAGS_WITH_PATTERNS_QUERYResult>
 >;
 
-type TagsPageProps = {
-	params: { language: Language };
-};
-
-export default async function Tags({ params }: TagsPageProps) {
-	const { language } = params;
+export default async function Page(props: PageProps<"/[language]/tags">) {
+	const { language: languageParam } = await props.params;
+	const language = languageParam as Language;
 
 	const [pageData, tagsData] = await Promise.all([
 		sanityFetch({

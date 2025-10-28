@@ -7,7 +7,6 @@ import { CurrentLetterIndicator } from "~/components/shared/current-letter-indic
 import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import type { Language } from "~/i18n/config";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
 	GLOSSARY_PAGE_QUERY,
@@ -15,6 +14,7 @@ import {
 } from "~/sanity/lib/queries";
 import type { GLOSSARY_TERMS_QUERYResult } from "~/sanity/sanity.types";
 import { GlossaryScroll } from "./glossary-scroll";
+import type { Language } from "~/i18n/config";
 
 export const metadata: Metadata = {
 	title: "Glossary | DIGITCORE",
@@ -28,12 +28,9 @@ const ALPHABET = Array.from({ length: 26 }, (_, i) =>
 
 export type TermsByLetter = Partial<Record<string, GLOSSARY_TERMS_QUERYResult>>;
 
-type GlossaryPageProps = {
-	params: { language: Language };
-};
-
-export default async function GlossaryPage({ params }: GlossaryPageProps) {
-	const { language } = params;
+export default async function Page(props: PageProps<"/[language]/glossary">) {
+	const { language: languageParam } = await props.params;
+	const language = languageParam as Language;
 
 	const [pageData, glossaryTerms] = await Promise.all([
 		sanityFetch({

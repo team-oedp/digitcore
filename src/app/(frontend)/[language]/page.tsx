@@ -5,11 +5,10 @@ import { HeadingMorph } from "~/components/shared/heading-morph";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import PatternCombination from "~/components/shared/pattern-combination-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
-import type { Language } from "~/i18n/config";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
 import { sanityFetch } from "~/sanity/lib/client";
 import { GLOSSARY_TERMS_QUERY, HOME_PAGE_QUERY } from "~/sanity/lib/queries";
-import type { ContentList, Page } from "~/sanity/sanity.types";
+import type { ContentList, Page as PageType } from "~/sanity/sanity.types";
 
 export const metadata: Metadata = {
 	title: "Home | DIGITCORE",
@@ -17,19 +16,15 @@ export const metadata: Metadata = {
 		"DIGITCORE outlines challenges, problems, and phenomena experienced or observed by community organizations, researchers, and open source technologists working on collaborative environmental research. This toolkit is designed to help you make decisions about tools, modes of interaction, research design, and process.",
 };
 
-type HomePageProps = {
-	params: { language: Language };
-};
-
-export default async function Home({ params }: HomePageProps) {
-	const { language } = params;
-
+export default async function Page(props: PageProps<"/[language]">) {
+	const { language } = await props.params;
+	console.log("home page props", props);
 	const [data, glossaryTerms] = await Promise.all([
 		sanityFetch({
 			query: HOME_PAGE_QUERY,
 			params: { language },
 			revalidate: 60,
-		}) as Promise<Page | null>,
+		}) as Promise<PageType | null>,
 		sanityFetch({
 			query: GLOSSARY_TERMS_QUERY,
 			params: { language },
@@ -41,7 +36,9 @@ export default async function Home({ params }: HomePageProps) {
 		return <div>No content available for language: {language}</div>;
 	}
 
-	const contentSections = (data?.content ?? []) as NonNullable<Page["content"]>;
+	const contentSections = (data?.content ?? []) as NonNullable<
+		PageType["content"]
+	>;
 
 	function isContentListSection(
 		section: unknown,

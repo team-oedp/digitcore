@@ -9,21 +9,18 @@ import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { Skeleton } from "~/components/ui/skeleton";
-import type { Language } from "~/i18n/config";
 import { sanityFetch } from "~/sanity/lib/client";
 import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
+import type { Language } from "~/i18n/config";
 
 export const metadata: Metadata = {
 	title: "Search | DIGITCORE",
 	description: "Search patterns, tags, themes, and audiences.",
 };
 
-type SearchPageProps = {
-	params: { language: Language };
-};
-
-export default async function SearchPage({ params }: SearchPageProps) {
-	const { language } = params;
+export default async function Page(props: PageProps<"/[language]/search">) {
+	const { language: languageParam } = await props.params;
+	const language = languageParam as Language;
 	const pageData = await sanityFetch({
 		query: SEARCH_PAGE_QUERY,
 		params: { language },

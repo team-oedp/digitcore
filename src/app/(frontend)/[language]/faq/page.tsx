@@ -7,9 +7,9 @@ import { UncategorizedFAQSection } from "~/components/pages/faq/uncategorized-fa
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
-import type { Language } from "~/i18n/config";
 import { sanityFetch } from "~/sanity/lib/client";
 import { FAQS_QUERY, FAQ_PAGE_QUERY } from "~/sanity/lib/queries";
+import type { Language } from "~/i18n/config";
 
 export const metadata: Metadata = {
 	title: "FAQ | DIGITCORE",
@@ -17,12 +17,9 @@ export const metadata: Metadata = {
 		"Frequently asked questions about the DIGITCORE Toolkit for Collaborative Environmental Research.",
 };
 
-type FAQPageProps = {
-	params: { language: Language };
-};
-
-export default async function FAQPage({ params }: FAQPageProps) {
-	const { language } = params;
+export default async function Page(props: PageProps<"/[language]/faq">) {
+	const { language: languageParam } = await props.params;
+	const language = languageParam as Language;
 
 	const [pageData, faqs] = await Promise.all([
 		sanityFetch({

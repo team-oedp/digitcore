@@ -8,8 +8,8 @@ import { Solutions } from "~/components/pages/pattern/solutions";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { PatternHeading } from "~/components/shared/pattern-heading";
-import { i18n } from "~/i18n/config";
 import type { Language } from "~/i18n/config";
+import { i18n } from "~/i18n/config";
 import { type RouteSlug, normalizeSlug } from "~/lib/slug-utils";
 import { sanityFetch } from "~/sanity/lib/client";
 import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
@@ -18,9 +18,7 @@ import type {
 	PATTERN_QUERYResult,
 } from "~/sanity/sanity.types";
 
-type PatternPageProps = {
-	params: { language: Language; slug?: RouteSlug };
-};
+type PatternPageProps = PageProps<"/[language]/pattern/[slug]">;
 
 /**
  * Generate the static params for the page.
@@ -51,12 +49,13 @@ export async function generateStaticParams() {
 	return patternParams.flat();
 }
 
-export async function generateMetadata({
-	params,
-}: PatternPageProps): Promise<Metadata> {
-	const slug = normalizeSlug(params.slug);
-	const readable = slug
-		? slug
+export async function generateMetadata(
+	props: PatternPageProps,
+): Promise<Metadata> {
+	const { slug } = await props.params;
+	const normalizedSlug = normalizeSlug(slug as RouteSlug);
+	const readable = normalizedSlug
+		? normalizedSlug
 				.replace(/-/g, " ")
 				.split(" ")
 				.map(
@@ -70,18 +69,25 @@ export async function generateMetadata({
 	};
 }
 
-export default async function PatternPage({ params }: PatternPageProps) {
-	const { language } = params;
-	const slug = normalizeSlug(params.slug);
+export default async function Page(props: PatternPageProps) {
+	const { language: languageParam, slug } = await props.params;
+	const language = languageParam as Language;
+	const normalizedSlug = normalizeSlug(slug as RouteSlug);
 
-	if (!slug) {
+	if (!normalizedSlug) {
 		return notFound();
 	}
 
 	const pattern = (await sanityFetch({
 		query: PATTERN_QUERY,
-		params: { slug, language },
-		tags: [`pattern:${slug}`, "solution", "resource", "audience", "tag"],
+		params: { slug: normalizedSlug, language },
+		tags: [
+			`pattern:${normalizedSlug}`,
+			"solution",
+			"resource",
+			"audience",
+			"tag",
+		],
 	})) as PATTERN_QUERYResult | null;
 
 	if (!pattern) {
@@ -113,7 +119,7 @@ export default async function PatternPage({ params }: PatternPageProps) {
 					<Solutions
 						solutions={pattern.solutions}
 						patternName={pattern.title ?? ""}
-						patternSlug={slug}
+						patternSlug={normalizedSlug}
 					/>
 					<Resources resources={pattern.resources ?? []} />
 				</div>

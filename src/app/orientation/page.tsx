@@ -12,12 +12,8 @@ export const metadata: Metadata = {
 	description: "Onboarding to the DIGITCORE Toolkit.",
 };
 
-export default async function OnboardingPage({
-	searchParams,
-}: {
-	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-	const params = await searchParams;
+export default async function Page(props: PageProps<"/orientation">) {
+	const params = await props.searchParams;
 	const [onboarding, filters] = await Promise.all([
 		sanityFetch({
 			query: ONBOARDING_QUERY,

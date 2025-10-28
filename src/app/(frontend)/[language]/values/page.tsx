@@ -5,9 +5,9 @@ import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
-import type { Language } from "~/i18n/config";
 import { sanityFetch } from "~/sanity/lib/client";
 import { VALUES_PAGE_QUERY } from "~/sanity/lib/queries";
+import type { Language } from "~/i18n/config";
 
 export const metadata: Metadata = {
 	title: "Values | DIGITCORE",
@@ -15,12 +15,9 @@ export const metadata: Metadata = {
 		"Open infrastructure and environmental research values and principles.",
 };
 
-type ValuesPageProps = {
-	params: { language: Language };
-};
-
-export default async function ValuesPage({ params }: ValuesPageProps) {
-	const { language } = params;
+export default async function Page(props: PageProps<"/[language]/values">) {
+	const { language: languageParam } = await props.params;
+	const language = languageParam as Language;
 	const pageData = await sanityFetch({
 		query: VALUES_PAGE_QUERY,
 		params: { language },
