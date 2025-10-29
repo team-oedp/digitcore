@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function Page(props: PageProps<"/[language]">) {
 	const { language } = await props.params;
-	console.log("home page props", props);
+  
 	const [data, glossaryTerms] = await Promise.all([
 		sanityFetch({
 			query: HOME_PAGE_QUERY,
