@@ -2,8 +2,11 @@
 
 import { ArrowTurnBackwardIcon, Home09Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
 import { Icon } from "~/components/shared/icon";
 import { PageHeading } from "~/components/shared/page-heading";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { Button } from "~/components/ui/button";
 
 export default function ErrorPage({
@@ -11,6 +14,10 @@ export default function ErrorPage({
 }: {
 	reset: () => void;
 }) {
+	const pathname = usePathname();
+	const { language } = useMemo(() => parseLocalePath(pathname), [pathname]);
+	const homeHref = buildLocaleHref(language, "/");
+
 	return (
 		<div className="3xl:max-w-6xl max-w-4xl px-5 pt-0 pb-5 2xl:max-w-5xl">
 			<div className="flex h-screen flex-col">
@@ -41,7 +48,7 @@ export default function ErrorPage({
 							asChild
 							className="rounded-md border-border bg-card px-3 py-2 text-neutral-500 text-sm uppercase hover:bg-secondary"
 						>
-							<Link href="/" className="flex items-center gap-3">
+							<Link href={homeHref} className="flex items-center gap-3">
 								Go to homepage
 								<Icon icon={Home09Icon} size={14} />
 							</Link>

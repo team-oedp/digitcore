@@ -1,11 +1,20 @@
+"use client";
+
 import { Home09Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
 import { ErrorHeader } from "~/components/global/error-header";
 import { Icon } from "~/components/shared/icon";
 import { PageHeading } from "~/components/shared/page-heading";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { Button } from "~/components/ui/button";
 
 export default function NotFound() {
+	const pathname = usePathname();
+	const { language } = useMemo(() => parseLocalePath(pathname), [pathname]);
+	const homeHref = buildLocaleHref(language, "/");
+
 	return (
 		<div className="flex h-screen w-full flex-col overflow-hidden">
 			<ErrorHeader />
@@ -30,7 +39,7 @@ export default function NotFound() {
 								asChild
 								className="rounded-md border-border bg-card px-3 py-2 text-neutral-500 text-sm uppercase hover:bg-secondary"
 							>
-								<Link href="/" className="flex items-center gap-3">
+								<Link href={homeHref} className="flex items-center gap-3">
 									Go to DIGITCORE homepage
 									<Icon icon={Home09Icon} size={14} />
 								</Link>

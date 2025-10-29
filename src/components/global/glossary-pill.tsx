@@ -2,8 +2,11 @@
 
 import { BookOpen02Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
 import { createGlossaryLink } from "~/lib/glossary-utils";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
 import { Icon } from "../shared/icon";
 
@@ -27,15 +30,20 @@ export function GlossaryPill({
 	className,
 	shouldStyle = true,
 }: GlossaryPillProps) {
+	const pathname = usePathname();
+	const { language } = useMemo(() => parseLocalePath(pathname), [pathname]);
+
 	// If this is not the first occurrence, render as plain text
 	if (!shouldStyle) {
 		return <>{children}</>;
 	}
 
 	// First occurrence gets icon and link
+	const glossaryHref = buildLocaleHref(language, createGlossaryLink(term.title));
+
 	return (
 		<Link
-			href={createGlossaryLink(term.title)}
+			href={glossaryHref}
 			className={cn(inlineAnnotationClassName, className)}
 			title={`View definition of "${term.title}"`}
 		>
