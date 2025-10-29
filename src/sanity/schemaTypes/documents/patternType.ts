@@ -1,7 +1,7 @@
 import { DocumentTextIcon, TextIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
 import {
-	isUniqueOtherThanLanguage,
+	// isUniqueOtherThanLanguage,
 	validateUniqueTitle,
 } from "../../lib/validation";
 
@@ -34,7 +34,7 @@ export const patternType = defineType({
 			type: "slug",
 			options: {
 				source: "title",
-				isUnique: isUniqueOtherThanLanguage,
+				// isUnique: isUniqueOtherThanLanguage,
 			},
 			group: "content",
 		}),

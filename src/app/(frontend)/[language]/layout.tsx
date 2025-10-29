@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
-import { VisualEditing } from "next-sanity/visual-editing";
-import { draftMode } from "next/headers";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { sans, signifier } from "~/app/(frontend)/fonts";
 import { GlossaryProvider } from "~/components/global/glossary-provider";
 import { OrientationRedirect } from "~/components/global/orientation-redirect";
 import { SiteLayout } from "~/components/global/site-layout";
-import { DisableDraftMode } from "~/components/sanity/disable-draft-mode";
-import { type Language, i18n, supportedLanguageIds } from "~/i18n/config";
+import { type Language, i18n } from "~/i18n/config";
 import { cn } from "~/lib/utils";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
@@ -22,28 +18,23 @@ import { FontStoreProvider } from "~/stores/font";
 import { OrientationStoreProvider } from "~/stores/orientation";
 import { PageContentStoreProvider } from "~/stores/page-content";
 import { TRPCReactProvider } from "~/trpc/react";
-
 export const metadata: Metadata = {
 	title: "DIGITCORE",
 	description: "Digital Toolkit for Collaborative Environmental Research",
 };
+
+export function generateStaticParams() {
+	return i18n.languages.map((language) => ({ language: language.id }));
+}
 
 export default async function Layout({
 	children,
 	params,
 }: Readonly<{
 	children: React.ReactNode;
-	params: { language: string };
+	params: Promise<{ language: Language }>;
 }>) {
-	const languageParam = params.language;
-
-	if (!supportedLanguageIds.has(languageParam as Language)) {
-		notFound();
-	}
-
-	const language = languageParam as Language;
-
-	const isDraftMode = (await draftMode()).isEnabled;
+	const { language } = await params;
 
 	const [headerData, footerData, carrierBagData] = await Promise.all([
 		sanityFetch({
@@ -93,17 +84,7 @@ export default async function Layout({
 						</OrientationStoreProvider>
 					</FontStoreProvider>
 				</TRPCReactProvider>
-				{isDraftMode && (
-					<>
-						<VisualEditing />
-						<DisableDraftMode />
-					</>
-				)}
 			</div>
 		</section>
 	);
-}
-
-export function generateStaticParams() {
-	return i18n.languages.map((language) => ({ language: language.id }));
 }

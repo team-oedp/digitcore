@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export async function generateStaticParams() {
-	return i18n.languages.map((language) => ({ lang: language.id }));
+	return i18n.languages.map((language) => ({ language: language.id }));
 }
 
 export default async function RootLayout({
@@ -22,11 +22,12 @@ export default async function RootLayout({
 	params,
 }: {
 	children: React.ReactNode;
-	params: Promise<{ lang: Language }>;
+	params: Promise<{ language: Language }>;
 }) {
-	const { lang } = await params;
+	const { language } = await params;
+	console.log("language", language);
 	return (
-		<html lang={lang} suppressHydrationWarning>
+		<html lang={language} suppressHydrationWarning>
 			<body className={cn(sans.variable, signifier.variable)}>
 				<ThemeProvider
 					attribute="class"

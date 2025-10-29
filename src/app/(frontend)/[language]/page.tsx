@@ -18,7 +18,8 @@ export const metadata: Metadata = {
 
 export default async function Page(props: PageProps<"/[language]">) {
 	const { language } = await props.params;
-  
+  console.log('language', language)
+
 	const [data, glossaryTerms] = await Promise.all([
 		sanityFetch({
 			query: HOME_PAGE_QUERY,
@@ -31,6 +32,8 @@ export default async function Page(props: PageProps<"/[language]">) {
 			revalidate: 60,
 		}) as Promise<GlossaryTerm[]>,
 	]);
+
+  console.log('home-page-data', data)
 
 	if (!data) {
 		return <div>No content available for language: {language}</div>;
