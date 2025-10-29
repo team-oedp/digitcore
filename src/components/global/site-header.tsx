@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { Button } from "~/components/ui/button";
 import type { Language } from "~/i18n/config";
 import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
@@ -111,7 +111,7 @@ export function SiteHeader({ headerData, language }: SiteHeaderProps) {
 					<Link
 						href={buildLocaleHref(language, "/")}
 						aria-label="Digitcore Home"
-						className="flex h-6 w-6 flex-shrink-0 items-center justify-center"
+						className="flex h-6 w-6 shrink-0 items-center justify-center"
 					>
 						<Image
 							src="/pattern-logo.svg"
@@ -209,9 +209,13 @@ export function SiteHeader({ headerData, language }: SiteHeaderProps) {
 						</ul>
 					</nav>
 				</div>
-				<LanguageSelector className="hidden md:block" />
+				<Suspense fallback={<div className="h-6 w-6" />}>
+					<LanguageSelector className="hidden md:block" />
+				</Suspense>
 				<FontToggle className="hidden md:block" />
-				<ModeToggle className="hidden md:block" />
+				<Suspense fallback={<div className="h-6 w-6" />}>
+					<ModeToggle className="hidden md:block" />
+				</Suspense>
 				<CommandMenu />
 				<button
 					type="button"
@@ -254,7 +258,9 @@ export function SiteHeader({ headerData, language }: SiteHeaderProps) {
 						)}
 					/>
 				</button>
-				<MobileNavDialog headerData={headerData} language={language} />
+				<Suspense fallback={<div className="h-6 w-6" />}>
+					<MobileNavDialog headerData={headerData} language={language} />
+				</Suspense>
 			</nav>
 		</header>
 	);
