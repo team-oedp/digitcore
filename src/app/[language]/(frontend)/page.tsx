@@ -12,9 +12,9 @@ import {
 } from "~/lib/metadata";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
-    GLOSSARY_TERMS_QUERY,
-    HOME_PAGE_QUERY,
-    SITE_SETTINGS_QUERY,
+	GLOSSARY_TERMS_QUERY,
+	HOME_PAGE_QUERY,
+	SITE_SETTINGS_QUERY,
 } from "~/sanity/lib/queries";
 import type { ContentList, Page as PageType } from "~/sanity/sanity.types";
 import type { LanguagePageProps } from "~/types/page-props";
