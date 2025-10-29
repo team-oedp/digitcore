@@ -12,7 +12,7 @@ import {
 	LightbulbIcon,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
 import type {
 	SearchResource,
@@ -29,6 +29,7 @@ import {
 	CommandList,
 } from "~/components/ui/command";
 import { usePageContentSearch } from "~/hooks/use-page-content-search";
+import { parseLocalePath } from "~/lib/locale-path";
 import {
 	type PortableTextBlock,
 	extractTextFromPortableText,
@@ -45,6 +46,10 @@ export function CommandMenu() {
 
 	const router = useRouter();
 	const pathname = usePathname();
+	const { language, normalizedPath } = useMemo(
+		() => parseLocalePath(pathname),
+		[pathname],
+	);
 
 	// Comprehensive search using enhanced server-side search action
 	const [query, setQuery] = useState("");
@@ -80,6 +85,7 @@ export function CommandMenu() {
 				// Use direct search function for command modal
 				const result = await searchContentForCommandModal(
 					debouncedQuery.trim(),
+					language,
 				);
 
 				if (result.success && result.data) {
@@ -104,7 +110,7 @@ export function CommandMenu() {
 			}
 		};
 		performSearch();
-	}, [debouncedQuery, isOpen]);
+	}, [debouncedQuery, isOpen, language]);
 
 	// Page content search (only enabled on pattern pages)
 	const {
@@ -140,17 +146,17 @@ export function CommandMenu() {
 	}, [isOpen, clearPageSearch]);
 
 	const getCurrentPageTitle = () => {
-		if (pathname === "/") return "Home";
-		if (pathname === "/faq") return "FAQ";
-		if (pathname === "/search") return "Search";
-		if (pathname === "/patterns") return "Patterns";
-		if (pathname === "/tags") return "Tags";
-		if (pathname === "/values") return "Values";
-		if (pathname === "/glossary") return "Glossary";
-		if (pathname === "/orientation") return "Orientation";
-		if (pathname === "/carrier-bag") return "Carrier Bag";
-		if (pathname?.startsWith("/pattern/")) return "Pattern";
-		return pathname?.split("/").pop()?.replace(/-/g, " ") || "Unknown";
+		if (normalizedPath === "/") return "Home";
+		if (normalizedPath === "/faq") return "FAQ";
+		if (normalizedPath === "/search") return "Search";
+		if (normalizedPath === "/patterns") return "Patterns";
+		if (normalizedPath === "/tags") return "Tags";
+		if (normalizedPath === "/values") return "Values";
+		if (normalizedPath === "/glossary") return "Glossary";
+		if (normalizedPath === "/orientation") return "Orientation";
+		if (normalizedPath === "/carrier-bag") return "Carrier Bag";
+		if (normalizedPath.startsWith("/pattern/")) return "Pattern";
+		return normalizedPath.split("/").pop()?.replace(/-/g, " ") || "Unknown";
 	};
 
 	const currentPage = getCurrentPageTitle();
@@ -349,7 +355,9 @@ export function CommandMenu() {
 													value={result.title || ""}
 													onSelect={() => {
 														if (result.slug)
-															router.push(`/pattern/${result.slug}`);
+															router.push(
+																`/${language}/pattern/${result.slug}`,
+															);
 														setIsOpen(false);
 													}}
 													className="cursor-pointer px-3 py-2"
@@ -410,7 +418,7 @@ export function CommandMenu() {
 															const firstPattern = sol.patterns[0];
 															if (firstPattern?.slug) {
 																router.push(
-																	`/pattern/${firstPattern.slug}#${sol._id}`,
+																	`/${language}/pattern/${firstPattern.slug}#${sol._id}`,
 																);
 															}
 														}
@@ -481,7 +489,7 @@ export function CommandMenu() {
 															const firstPattern = res.patterns[0];
 															if (firstPattern?.slug) {
 																router.push(
-																	`/pattern/${firstPattern.slug}#${res._id}`,
+																	`/${language}/pattern/${firstPattern.slug}#${res._id}`,
 																);
 															}
 														}
@@ -551,10 +559,12 @@ export function CommandMenu() {
 														if (tag.patterns && tag.patterns.length > 0) {
 															const firstPattern = tag.patterns[0];
 															if (firstPattern?.slug) {
-																router.push(`/pattern/${firstPattern.slug}`);
+																router.push(
+																	`/${language}/pattern/${firstPattern.slug}`,
+																);
 															}
 														} else {
-															router.push(`/tags#${tag._id}`);
+															router.push(`/${language}/tags#${tag._id}`);
 														}
 														setIsOpen(false);
 													}}

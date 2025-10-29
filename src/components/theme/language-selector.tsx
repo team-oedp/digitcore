@@ -2,27 +2,46 @@
 
 import { Globe02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import * as React from "react";
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { type Language, i18n } from "~/i18n/config";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
-
-// Restrict available languages to English and a disabled Spanish option
-const languages = [
-	{ code: "EN", label: "English", disabled: false },
-	{ code: "ES", label: "Spanish", disabled: true },
-];
 
 type LanguageSelectorProps = {
 	className?: string;
 };
 
+type LanguageOption = {
+	code: Language;
+	label: string;
+};
+
+const LANGUAGE_OPTIONS: LanguageOption[] = i18n.languages.map((language) => ({
+	code: language.id,
+	label: language.title,
+}));
+
 export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
-	const [selectedLanguage, setSelectedLanguage] = React.useState(languages[0]);
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+
+	const { language: currentLanguage, normalizedPath } = useMemo(
+		() => parseLocalePath(pathname),
+		[pathname],
+	);
+
+	const searchSuffix = useMemo(() => {
+		const query = searchParams?.toString() ?? "";
+		return query ? `?${query}` : "";
+	}, [searchParams]);
 
 	return (
 		<div className={className}>
@@ -52,37 +71,53 @@ export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
 					</button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end" className="min-w-32">
-					{languages.map((language) => (
-						<DropdownMenuItem
-							key={language.code}
-							disabled={language.disabled}
-							onClick={() => {
-								if (!language.disabled) setSelectedLanguage(language);
-							}}
-							className="flex items-center gap-3"
-						>
-							<span
-								className={cn(
-									"min-w-[24px] font-medium text-xs",
-									selectedLanguage?.code === language.code
-										? "text-foreground"
-										: "text-muted-foreground",
-								)}
+					{LANGUAGE_OPTIONS.map((languageOption) => {
+						const isActive = languageOption.code === currentLanguage;
+						const href = buildLocaleHref(
+							languageOption.code,
+							`${normalizedPath}${searchSuffix}`,
+						);
+
+						return (
+							<DropdownMenuItem
+								key={languageOption.code}
+								asChild
+								className="p-0"
 							>
-								{language.code}
-							</span>
-							<span
-								className={cn(
-									"text-sm",
-									selectedLanguage?.code === language.code
-										? "font-medium text-foreground"
-										: "text-muted-foreground",
-								)}
-							>
-								{language.label}
-							</span>
-						</DropdownMenuItem>
-					))}
+								<Link
+									href={href}
+									className={cn(
+										"flex w-full items-center gap-3 px-3 py-2 text-sm outline-none transition-colors",
+										isActive
+											? "font-medium text-foreground"
+											: "text-muted-foreground hover:text-foreground",
+									)}
+									aria-label={`Switch to ${languageOption.label}`}
+									prefetch={true}
+								>
+									<span
+										className={cn(
+											"min-w-[24px] font-medium text-xs",
+											isActive ? "text-foreground" : "text-muted-foreground",
+										)}
+									>
+										{languageOption.code.toUpperCase()}
+									</span>
+									<span
+										className={cn(
+											"text-sm",
+											isActive
+												? "font-medium text-foreground"
+												: "text-muted-foreground",
+										)}
+									>
+										{languageOption.label}
+									</span>
+									<span className="sr-only">{languageOption.label}</span>
+								</Link>
+							</DropdownMenuItem>
+						);
+					})}
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</div>

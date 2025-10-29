@@ -1,5 +1,6 @@
 import { unstable_cache as cache } from "next/cache";
 import { draftMode } from "next/headers";
+import type { Language } from "~/i18n/config";
 import { client } from "~/sanity/lib/client";
 import { FILTER_OPTIONS_QUERY } from "~/sanity/lib/queries";
 import { token } from "~/sanity/lib/token";
@@ -13,10 +14,11 @@ export type FilterOptions = {
 
 async function fetchFilterOptionsFromSanityInternal(
 	isDraft: boolean,
+	language: Language,
 ): Promise<FilterOptions> {
 	const response = await client.fetch(
 		FILTER_OPTIONS_QUERY,
-		{},
+		{ language },
 		isDraft
 			? { perspective: "previewDrafts", useCdn: false, stega: true, token }
 			: { perspective: "published", useCdn: true },
@@ -36,13 +38,16 @@ async function fetchFilterOptionsFromSanityInternal(
 
 // Cached getter for published mode (shared across RSCs)
 const getFilterOptionsCached = cache(
-	async () => fetchFilterOptionsFromSanityInternal(false),
+	async (language: Language) =>
+		fetchFilterOptionsFromSanityInternal(false, language),
 	["filter-options"],
 	{ revalidate: 60, tags: ["filter-options"] },
 );
 
-export async function getFilterOptions(): Promise<FilterOptions> {
+export async function getFilterOptions(
+	language: Language,
+): Promise<FilterOptions> {
 	const isDraft = (await draftMode()).isEnabled;
-	if (isDraft) return fetchFilterOptionsFromSanityInternal(true);
-	return getFilterOptionsCached();
+	if (isDraft) return fetchFilterOptionsFromSanityInternal(true, language);
+	return getFilterOptionsCached(language);
 }

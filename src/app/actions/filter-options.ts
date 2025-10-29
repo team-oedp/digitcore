@@ -1,3 +1,6 @@
+"use server";
+
+import { type Language, i18n } from "~/i18n/config";
 import { createLogLocation, logger } from "~/lib/logger";
 import { client } from "~/sanity/lib/client";
 import { FILTER_OPTIONS_QUERY } from "~/sanity/lib/filter-options";
@@ -30,21 +33,20 @@ export type FilterOptionsResult = {
 /**
  * Server action to fetch filter options from Sanity
  */
-export async function fetchFilterOptions(): Promise<FilterOptionsResult> {
-	// Use logger methods (tests mock the module's exports directly)
-	const searchInfo = logger.searchInfo;
-	const groq = logger.groq;
-	const searchError = logger.searchError;
-
+export async function fetchFilterOptions(
+    language: Language = i18n.base,
+): Promise<FilterOptionsResult> {
+    // Use logger methods (tests mock the module's exports directly)
+    const searchInfo = logger.searchInfo;
+    const groq = logger.groq;
+    const searchError = logger.searchError;
 	const location = createLogLocation("filter-options.ts", "fetchFilterOptions");
 
 	try {
 		searchInfo("Fetching filter options from Sanity", undefined, location);
 
-		const startTime = Date.now();
-		const response = await client.fetch(
-			FILTER_OPTIONS_QUERY as unknown as string,
-		);
+        const startTime = Date.now();
+        const response = await client.fetch(FILTER_OPTIONS_QUERY, { language });
 		const endTime = Date.now();
 
 		// Temporary debug to understand test environment behavior

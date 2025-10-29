@@ -65,7 +65,7 @@ vi.mock("~/sanity/lib/client", () => {
 });
 
 // Mock the filter options query from the correct module
-vi.mock("~/sanity/lib/filter-options", () => ({
+vi.mock("~/sanity/lib/queries", () => ({
 	FILTER_OPTIONS_QUERY: "FILTER_OPTIONS_QUERY_STRING",
 }));
 
@@ -129,7 +129,10 @@ describe("fetchFilterOptions", () => {
 		});
 		expect(result.error).toBeUndefined();
 
-		expect(mockFetch).toHaveBeenCalledWith(expect.any(String));
+		expect(mockFetch).toHaveBeenCalledWith(
+			expect.any(String),
+			expect.objectContaining({ language: expect.any(String) }),
+		);
 
 		expect(mockSearchInfo).toHaveBeenCalledWith(
 			"Fetching filter options from Sanity",

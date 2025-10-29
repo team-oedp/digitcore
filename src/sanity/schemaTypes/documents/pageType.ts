@@ -1,5 +1,6 @@
 import { DesktopIcon, StringIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
+// import { isUniqueOtherThanLanguage } from "../../lib/validation";
 
 export const pageType = defineType({
 	name: "page",
@@ -7,6 +8,13 @@ export const pageType = defineType({
 	type: "document",
 	icon: DesktopIcon,
 	fields: [
+		defineField({
+			// should match 'languageField' plugin configuration setting in sanity.config.ts, if customized
+			name: "language",
+			type: "string",
+			readOnly: true,
+			hidden: true,
+		}),
 		defineField({
 			name: "title",
 			title: "Title",
@@ -18,6 +26,7 @@ export const pageType = defineType({
 			type: "slug",
 			options: {
 				source: "title",
+				// isUnique: isUniqueOtherThanLanguage,
 			},
 		}),
 		defineField({

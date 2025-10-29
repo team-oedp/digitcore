@@ -13,10 +13,11 @@ export const SITE_SETTINGS_QUERY = defineQuery(`*[_type == "siteSettings"][0]{
 }`);
 
 export const PATTERNS_QUERY =
-	defineQuery(`*[_type == "pattern" && defined(slug.current)][]{
+	defineQuery(`*[_type == "pattern" && defined(slug.current) && language == $language][]{
     _id,
     _type,
     title,
+    language,
     description[]{
       ...,
       markDefs[]{
@@ -43,13 +44,14 @@ export const PATTERNS_QUERY =
   }`);
 
 export const PATTERN_QUERY =
-	defineQuery(`*[_type == "pattern" && slug.current == $slug][0]{
+	defineQuery(`*[_type == "pattern" && slug.current == $slug && language == $language][0]{
     _id,
     _type,
     _createdAt,
     _updatedAt,
     _rev,
     title,
+    language,
     description[]{
       ...,
       markDefs[]{
@@ -104,13 +106,13 @@ export const PATTERN_QUERY =
   }`);
 
 export const PATTERN_PAGES_SLUGS_QUERY =
-	defineQuery(`*[_type == "pattern" && defined(slug.current)]{
+	defineQuery(`*[_type == "pattern" && defined(slug.current) && language == $language]{
     "slug": slug.current
   }`);
 
 // Separate queries to avoid nested reference issues
 export const PATTERN_BASE_QUERY =
-	defineQuery(`*[_type == "pattern" && slug.current == $slug][0]{
+	defineQuery(`*[_type == "pattern" && slug.current == $slug && language == $language][0]{
     _id,
     _type,
     _createdAt,
@@ -118,6 +120,7 @@ export const PATTERN_BASE_QUERY =
     _rev,
     title,
     description,
+    language,
     "descriptionPlainText": pt::text(description),
     "slug": slug.current,
     "tagIds": tags[]._ref,
@@ -128,13 +131,14 @@ export const PATTERN_BASE_QUERY =
   }`);
 
 export const SOLUTIONS_BY_IDS_QUERY =
-	defineQuery(`*[_type == "solution" && _id in $ids]{
+	defineQuery(`*[_type == "solution" && _id in $ids && language == $language]{
     _id,
     _type,
     _createdAt,
     _updatedAt,
     _rev,
     title,
+    language,
     description[]{
       ...,
       markDefs[]{
@@ -152,13 +156,14 @@ export const SOLUTIONS_BY_IDS_QUERY =
   }`);
 
 export const RESOURCES_BY_IDS_QUERY =
-	defineQuery(`*[_type == "resource" && _id in $ids]{
+	defineQuery(`*[_type == "resource" && _id in $ids && language == $language]{
     _id,
     _type,
     _createdAt,
     _updatedAt,
     _rev,
     title,
+    language,
     description[]{
       ...,
       markDefs[]{
@@ -172,17 +177,20 @@ export const RESOURCES_BY_IDS_QUERY =
     "solutionIds": solutions[]._ref
   }`);
 
-export const TAGS_BY_IDS_QUERY = defineQuery(`*[_type == "tag" && _id in $ids]{
-    _id,
-    _type,
-    title
-  }`);
-
-export const GLOSSARY_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'glossary'][0]{
+export const TAGS_BY_IDS_QUERY =
+	defineQuery(`*[_type == "tag" && _id in $ids && language == $language]{
     _id,
     _type,
     title,
+    language
+  }`);
+
+export const GLOSSARY_PAGE_QUERY = defineQuery(`
+  *[_type == 'page' && slug.current == 'glossary' && language == $language][0]{
+    _id,
+    _type,
+    title,
+    language,
     "slug": slug.current,
     emptyStateMessage,
     description[]{
@@ -197,42 +205,46 @@ export const GLOSSARY_PAGE_QUERY = defineQuery(`
   }`);
 
 export const GLOSSARY_TERMS_QUERY = defineQuery(`
-  *[_type == "glossary"] | order(title asc) {
+  *[_type == "glossary" && language == $language] | order(title asc) {
     _id,
     title,
+    language,
     description
   }`);
 
 export const AUDIENCES_BY_IDS_QUERY =
-	defineQuery(`*[_type == "audience" && _id in $ids]{
+	defineQuery(`*[_type == "audience" && _id in $ids && language == $language]{
     _id,
     _type,
     title,
+    language,
     description
   }`);
 
 export const THEME_BY_ID_QUERY =
-	defineQuery(`*[_type == "theme" && _id == $id][0]{
+	defineQuery(`*[_type == "theme" && _id == $id && language == $language][0]{
     _id,
     _type,
-    title
+    title,
+    language
   }`);
 
 export const SLUGS_BY_TYPE_QUERY =
-	defineQuery(`*[_type == $type && defined(slug.current)]{
+	defineQuery(`*[_type == $type && defined(slug.current) && language == $language]{
     "slug": slug.current
   }`);
 
 export const PAGES_SLUGS_QUERY =
-	defineQuery(`*[_type == "page" && defined(slug.current)]{
+	defineQuery(`*[_type == "page" && defined(slug.current) && language == $language]{
     "slug": slug.current
   }`);
 
 export const PAGE_BY_SLUG_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == $slug][0]{
+  *[_type == 'page' && slug.current == $slug && language == $language][0]{
     _id,
     _type,
     title,
+    language,
     "slug": slug.current,
     emptyStateMessage,
     description[]{
@@ -247,10 +259,11 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
   }`);
 
 export const SEARCH_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'search'][0]{
+  *[_type == 'page' && slug.current == 'search' && language == $language][0]{
     _id,
     _type,
     title,
+    language,
     "slug": slug.current,
     emptyStateMessage,
     description[]{
@@ -265,10 +278,11 @@ export const SEARCH_PAGE_QUERY = defineQuery(`
   }`);
 
 export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
-  *[_type == "pattern" && defined(slug.current)][]{
+  *[_type == "pattern" && defined(slug.current) && language == $language][]{
     _id,
     _type,
     title,
+    language,
     description,
     "slug": slug.current,
     tags[]->{
@@ -301,14 +315,16 @@ export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
   }`);
 
 export const PATTERNS_GROUPED_BY_THEME_QUERY = defineQuery(`
-  *[_type == "theme" && defined(_id)] | order(title asc) {
+  *[_type == "theme" && defined(_id) && language == $language] | order(title asc) {
     _id,
     title,
+    language,
     description,
-    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id)] {
+    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id) && language == $language] {
       _id,
       _type,
       title,
+      language,
       description,
       "slug": slug.current,
       tags[]->,
@@ -332,7 +348,7 @@ export const PATTERNS_GROUPED_BY_THEME_QUERY = defineQuery(`
 
 // Enhanced search query with comprehensive content type support
 export const PATTERN_SEARCH_QUERY = defineQuery(`
-  *[_type == "pattern" && defined(slug.current)
+  *[_type == "pattern" && defined(slug.current) && language == $language
     // Apply audience filter if provided
     && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
     // Apply theme filter if provided  
@@ -363,6 +379,7 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
     _type,
     _score,
     title,
+    language,
     description,
     "slug": slug.current,
     tags[]->{
@@ -397,7 +414,7 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
 
 // Enhanced search query WITH preferences boosting
 export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
-  *[_type == "pattern" && defined(slug.current)
+  *[_type == "pattern" && defined(slug.current) && language == $language
     // Apply audience filter if provided
     && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
     // Apply theme filter if provided  
@@ -433,6 +450,7 @@ export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
     _type,
     _score,
     title,
+    language,
     description,
     "slug": slug.current,
     tags[]->{
@@ -467,7 +485,7 @@ export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
 
 // Direct solution search query
 export const SOLUTION_SEARCH_QUERY = defineQuery(`
-  *[_type == "solution"]
+  *[_type == "solution" && language == $language]
   | score(
       // Exact matches get highest scores
       boost(title match $searchTerm, 12),
@@ -488,13 +506,14 @@ export const SOLUTION_SEARCH_QUERY = defineQuery(`
     _type,
     _score,
     title,
+    language,
     description,
     audiences[]->{
       _id,
       title
     },
     // Find parent patterns for navigation
-    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{
+    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{
       _id,
       title,
       "slug": slug.current
@@ -504,7 +523,7 @@ export const SOLUTION_SEARCH_QUERY = defineQuery(`
 
 // Direct resource search query
 export const RESOURCE_SEARCH_QUERY = defineQuery(`
-  *[_type == "resource"]
+  *[_type == "resource" && language == $language]
   | score(
       // Exact matches get highest scores
       boost(title match $searchTerm, 12),
@@ -525,6 +544,7 @@ export const RESOURCE_SEARCH_QUERY = defineQuery(`
     _type,
     _score,
     title,
+    language,
     description,
     links,
     solutions[]->{
@@ -532,7 +552,7 @@ export const RESOURCE_SEARCH_QUERY = defineQuery(`
       title
     },
     // Find parent patterns for navigation
-    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{
+    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{
       _id,
       title,
       "slug": slug.current
@@ -542,7 +562,7 @@ export const RESOURCE_SEARCH_QUERY = defineQuery(`
 
 // Tag search query
 export const TAG_SEARCH_QUERY = defineQuery(`
-  *[_type == "tag" && title match ($searchTerm + "*")]
+  *[_type == "tag" && title match ($searchTerm + "*") && language == $language]
   | score(
       boost(title match $searchTerm, 15),
       boost(title match ($searchTerm + "*"), 10),
@@ -555,8 +575,9 @@ export const TAG_SEARCH_QUERY = defineQuery(`
     _type,
     _score,
     title,
+    language,
     // Find patterns that use this tag
-    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)]{
+    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{
       _id,
       title,
       "slug": slug.current
@@ -566,7 +587,7 @@ export const TAG_SEARCH_QUERY = defineQuery(`
 
 // Simple pattern search query for command modal (no filters)
 export const PATTERN_SIMPLE_SEARCH_QUERY = defineQuery(`
-  *[_type == "pattern" && defined(slug.current)]
+  *[_type == "pattern" && defined(slug.current) && language == $language]
   | score(
       // Primary content scoring (highest priority)
       boost(title match $searchTerm, 15),
@@ -589,6 +610,7 @@ export const PATTERN_SIMPLE_SEARCH_QUERY = defineQuery(`
     _type,
     _score,
     title,
+    language,
     description,
     "slug": slug.current,
     tags[]->{
@@ -623,7 +645,7 @@ export const PATTERN_SIMPLE_SEARCH_QUERY = defineQuery(`
 
 // Simple query without scoring for when there's no search term
 export const PATTERN_FILTER_QUERY = defineQuery(`
-  *[_type == "pattern" && defined(slug.current)
+  *[_type == "pattern" && defined(slug.current) && language == $language
     // Apply audience filter if provided
     && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)
     // Apply theme filter if provided
@@ -637,6 +659,7 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
     _id,
     _type,
     title,
+    language,
     description,
     "slug": slug.current,
     tags[]->{
@@ -670,10 +693,11 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
 `);
 
 export const ONBOARDING_QUERY = defineQuery(`
-  *[_type == 'onboarding'][0]{
+  *[_type == 'onboarding' && language == $language][0]{
     _id,
     _type,
     title,
+    language,
     description,
     skipLabel,
     backLabel,
@@ -697,10 +721,11 @@ export const ONBOARDING_QUERY = defineQuery(`
 `);
 
 export const TAGS_WITH_PATTERNS_QUERY = defineQuery(`
-  *[_type == "tag"] | order(title asc) {
+  *[_type == "tag" && language == $language] | order(title asc) {
     _id,
     title,
-    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current)] | order(title asc) {
+    language,
+    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language] | order(title asc) {
       _id,
       title,
       "slug": slug.current
@@ -709,10 +734,11 @@ export const TAGS_WITH_PATTERNS_QUERY = defineQuery(`
 `);
 
 export const TAGS_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'tags'][0]{
+  *[_type == 'page' && slug.current == 'tags' && language == $language][0]{
     _id,
     _type,
     title,
+    language,
     "slug": slug.current,
     emptyStateMessage,
     description[]{
@@ -747,13 +773,14 @@ export const TAGS_PAGE_QUERY = defineQuery(`
 `);
 
 export const CARRIER_BAG_QUERY = defineQuery(`
-  *[_type == 'carrierBag'][0]{
+  *[_type == 'carrierBag' && language == $language][0]{
     _id,
     _type,
     _createdAt,
     _updatedAt,
     _rev,
     title,
+    language,
     information,
     emptyStateMessage,
   }
@@ -761,11 +788,12 @@ export const CARRIER_BAG_QUERY = defineQuery(`
 
 // Fetch patterns by an array of slugs with references needed for carrier bag
 export const PATTERNS_BY_SLUGS_QUERY = defineQuery(`
-  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs]{
+  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{
     ...,
     _id,
     _type,
     title,
+    language,
     description[]{
       ...,
       markDefs[]{
@@ -805,10 +833,11 @@ export const PATTERNS_BY_SLUGS_QUERY = defineQuery(`
 `);
 
 export const VALUES_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'values'][0]{
+  *[_type == 'page' && slug.current == 'values' && language == $language][0]{
     _id,
     _type,
     title,
+    language,
     "slug": slug.current,
     emptyStateMessage,
     description[]{
@@ -845,10 +874,11 @@ export const VALUES_PAGE_QUERY = defineQuery(`
 `);
 
 export const PATTERNS_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'patterns'][0]{
+  *[_type == 'page' && slug.current == 'patterns' && language == $language][0]{
     _id,
     _type,
     title,
+    language,
     "slug": slug.current,
     emptyStateMessage,
     description[]{
@@ -886,10 +916,11 @@ export const PATTERNS_PAGE_QUERY = defineQuery(`
 `);
 
 export const ABOUT_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'about'][0]{
+  *[_type == 'page' && slug.current == 'about' && language == $language][0]{
     _id,
     _type,
     title,
+    language,
     "slug": slug.current,
     emptyStateMessage,
     description[]{
@@ -926,10 +957,11 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
 `);
 
 export const HOME_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == '/'][0]{
+  *[_type == 'page' && slug.current == '/' && language == $language][0]{
     _id,
     _type,
     title,
+    language,
     "slug": slug.current,
     emptyStateMessage,
     description[]{
@@ -978,10 +1010,11 @@ export const HOME_PAGE_QUERY = defineQuery(`
 `);
 
 export const FAQ_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'faq'][0]{
+  *[_type == 'page' && slug.current == 'faq' && language == $language][0]{
     _id,
     _type,
     title,
+    language,
     "slug": slug.current,
     emptyStateMessage,
     description[]{
@@ -1018,9 +1051,10 @@ export const FAQ_PAGE_QUERY = defineQuery(`
 `);
 
 export const FAQS_QUERY = defineQuery(`
-  *[_type == "faq"]|order(orderRank) {
+  *[_type == "faq" && language == $language]|order(orderRank) {
     _id,
     title,
+    language,
     category->{
       _id,
       title,
@@ -1050,10 +1084,11 @@ export const ICONS_QUERY = defineQuery(`
 `);
 
 export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'acknowledgements'][0]{
+  *[_type == 'page' && slug.current == 'acknowledgements' && language == $language][0]{
     _id,
     _type,
     title,
+    language,
     "slug": slug.current,
     emptyStateMessage,
     description[]{
@@ -1090,10 +1125,11 @@ export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
 `);
 
 export const THEMES_PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == 'themes'][0]{
+  *[_type == 'page' && slug.current == 'themes' && language == $language][0]{
     _id,
     _type,
     title,
+    language,
     "slug": slug.current,
     emptyStateMessage,
     description[]{
@@ -1130,13 +1166,14 @@ export const THEMES_PAGE_QUERY = defineQuery(`
 `);
 
 export const FOOTER_QUERY = defineQuery(`
-  *[_type == 'footer'][0]{
+  *[_type == 'footer' && language == $language][0]{
     _id,
     _type,
     _createdAt,
     _updatedAt,
     _rev,
     title,
+    language,
     externalLinks[]{
       _key,
       label,
@@ -1157,13 +1194,14 @@ export const FOOTER_QUERY = defineQuery(`
 `);
 
 export const HEADER_QUERY = defineQuery(`
-  *[_type == 'header'][0]{
+  *[_type == 'header' && language == $language][0]{
     _id,
     _type,
     _createdAt,
     _updatedAt,
     _rev,
     title,
+    language,
     internalLinks[]{
       _key,
       label,
@@ -1179,7 +1217,7 @@ export const HEADER_QUERY = defineQuery(`
 
 // Query to check if patterns in carrier bag are stale
 export const PATTERNS_STALENESS_CHECK_QUERY = defineQuery(`
-  *[_type == "pattern" && _id in $patternIds]{
+  *[_type == "pattern" && _id in $patternIds && language == $language]{
     _id,
     _updatedAt
   }
@@ -1193,7 +1231,7 @@ export type PatternStalenessResult = {
 
 // Filter option queries
 export const AUDIENCES_QUERY = defineQuery(`
-  *[_type == "audience"] | order(title asc) {
+  *[_type == "audience" && language == $language] | order(title asc) {
     _id,
     title,
     "value": _id,
@@ -1202,7 +1240,7 @@ export const AUDIENCES_QUERY = defineQuery(`
 `);
 
 export const THEMES_QUERY = defineQuery(`
-  *[_type == "theme"] | order(title asc) {
+  *[_type == "theme" && language == $language] | order(title asc) {
     _id,
     title,
     "value": _id,
@@ -1211,7 +1249,7 @@ export const THEMES_QUERY = defineQuery(`
 `);
 
 export const TAGS_QUERY = defineQuery(`
-  *[_type == "tag" && count(*[_type == "pattern" && references(^._id)]) > 0] | order(title asc) {
+  *[_type == "tag" && language == $language && count(*[_type == "pattern" && references(^._id) && language == $language]) > 0] | order(title asc) {
     _id,
     title,
     "value": _id,
@@ -1221,19 +1259,19 @@ export const TAGS_QUERY = defineQuery(`
 
 export const FILTER_OPTIONS_QUERY = defineQuery(`
   {
-    "audiences": *[_type == "audience"] | order(title asc) {
+    "audiences": *[_type == "audience" && language == $language] | order(title asc) {
       _id,
       title,
       "value": _id,
       "label": title
     },
-    "themes": *[_type == "theme"] | order(title asc) {
+    "themes": *[_type == "theme" && language == $language] | order(title asc) {
       _id,
       title,
       "value": _id,
       "label": title
     },
-    "tags": *[_type == "tag" && count(*[_type == "pattern" && references(^._id)]) > 0] | order(title asc) {
+    "tags": *[_type == "tag" && language == $language && count(*[_type == "pattern" && references(^._id) && language == $language]) > 0] | order(title asc) {
       _id,
       title,
       "value": _id,
