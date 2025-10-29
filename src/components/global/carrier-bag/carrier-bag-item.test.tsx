@@ -6,6 +6,10 @@ import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
 
 type LinkProps = ComponentProps<typeof Link>;
 
+vi.mock("next/navigation", () => ({
+	usePathname: vi.fn(() => "/en/patterns"),
+}));
+
 vi.mock("next/link", () => ({
 	default: ({ children, href, ...props }: LinkProps) => {
 		const { onClick: origOnClick, ...rest } =
@@ -66,7 +70,7 @@ describe("CarrierBagItem", () => {
 
 		const link = screen.getByRole("link", { name: /Test Pattern/i });
 		expect(link).toBeInTheDocument();
-		expect(link).toHaveAttribute("href", "/pattern/test-pattern");
+		expect(link).toHaveAttribute("href", "/en/pattern/test-pattern");
 	});
 
 	it("does not render a link when slug is not provided", () => {

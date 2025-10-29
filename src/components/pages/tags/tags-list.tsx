@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
 import { Badge } from "~/components/ui/badge";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import type { TAGS_WITH_PATTERNS_QUERYResult } from "~/sanity/sanity.types";
 
@@ -23,6 +26,9 @@ export function TagsList({
 	tagsByLetter: TagsByLetter;
 	alphabet: string[];
 }) {
+	const pathname = usePathname();
+	const { language } = useMemo(() => parseLocalePath(pathname), [pathname]);
+
 	return (
 		<div className="space-y-8 pb-[144px] md:pb-[144px]" data-scroll-container>
 			<div id="tags-content" className="flex-1 space-y-4">
@@ -57,10 +63,14 @@ export function TagsList({
 											const PatternIconComponent = getPatternIconWithMapping(
 												pattern.slug ?? "",
 											);
+											const patternHref = buildLocaleHref(
+												language,
+												`/pattern/${pattern.slug ?? ""}`,
+											);
 											return (
 												<Badge key={pattern._id} variant="pattern" asChild>
 													<Link
-														href={`/pattern/${pattern.slug ?? ""}`}
+														href={patternHref}
 														className="inline-block w-max whitespace-normal break-words"
 													>
 														<PatternIconComponent className="h-3 w-3 flex-shrink-0 fill-icon/40 text-icon/70 opacity-40" />

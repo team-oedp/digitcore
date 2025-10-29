@@ -26,6 +26,7 @@ const mockRouter = {
 
 vi.mock("next/navigation", () => ({
 	useRouter: vi.fn(() => mockRouter),
+	usePathname: vi.fn(() => "/en/carrier-bag"),
 }));
 
 // Mock Next.js Link component
@@ -164,8 +165,8 @@ describe("CarrierBagContent Navigation", () => {
 		const patternOneLink = screen.getByRole("link", { name: /Pattern One/i });
 		const patternTwoLink = screen.getByRole("link", { name: /Pattern Two/i });
 
-		expect(patternOneLink).toHaveAttribute("href", "/pattern/pattern-one");
-		expect(patternTwoLink).toHaveAttribute("href", "/pattern/pattern-two");
+		expect(patternOneLink).toHaveAttribute("href", "/en/pattern/pattern-one");
+		expect(patternTwoLink).toHaveAttribute("href", "/en/pattern/pattern-two");
 	});
 
 	it("does not render links for patterns without slugs", () => {
@@ -189,7 +190,7 @@ describe("CarrierBagContent Navigation", () => {
 		}
 
 		await waitFor(() => {
-			expect(mockPush).toHaveBeenCalledWith("/pattern/pattern-one");
+			expect(mockPush).toHaveBeenCalledWith("/en/pattern/pattern-one");
 		});
 	});
 
@@ -260,7 +261,7 @@ describe("CarrierBagContent Navigation", () => {
 		const link = screen.getByRole("link", {
 			name: /Pattern With String Slug/i,
 		});
-		expect(link).toHaveAttribute("href", "/pattern/pattern-string-slug");
+		expect(link).toHaveAttribute("href", "/en/pattern/pattern-string-slug");
 	});
 
 	it("navigates correctly when pattern link is clicked directly", () => {
@@ -269,7 +270,7 @@ describe("CarrierBagContent Navigation", () => {
 		const patternOneLink = screen.getByRole("link", { name: /Pattern One/i });
 
 		// Verify the href is correct
-		expect(patternOneLink).toHaveAttribute("href", "/pattern/pattern-one");
+		expect(patternOneLink).toHaveAttribute("href", "/en/pattern/pattern-one");
 
 		// In a real browser, clicking the link would navigate
 		// Here we just verify the href is set correctly

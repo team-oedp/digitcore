@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { HeadingMorph } from "~/components/shared/heading-morph";
+import { MissingTranslationNotice } from "~/components/shared/missing-translation-notice";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import PatternCombination from "~/components/shared/pattern-combination-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
@@ -71,7 +72,7 @@ export default async function Page({ params }: LanguagePageProps) {
 	]);
 
 	if (!data) {
-		return <div>No content available for language: {language}</div>;
+		return <MissingTranslationNotice language={language} />;
 	}
 
 	const contentSections = (data?.content ?? []) as NonNullable<

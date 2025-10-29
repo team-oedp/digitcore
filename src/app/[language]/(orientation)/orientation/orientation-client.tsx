@@ -7,8 +7,8 @@ import {
 } from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import type { FilterOption } from "~/app/actions/filter-options";
 import Icon01 from "~/components/icons/shapes/icon-01";
 import Icon02 from "~/components/icons/shapes/icon-02";
@@ -29,7 +29,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
-import { parseLocalePath } from "~/lib/locale-path";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
 import type { Onboarding } from "~/sanity/sanity.types";
 import { useOrientationStore } from "~/stores/orientation";
@@ -404,6 +404,8 @@ function Slide1({
 }) {
 	const setSkipped = useOrientationStore((s) => s.setSkipped);
 	const router = useRouter();
+	const pathname = usePathname();
+	const { language } = useMemo(() => parseLocalePath(pathname), [pathname]);
 
 	const handleSkip = () => {
 		setSkipped(true);
@@ -413,10 +415,10 @@ function Slide1({
 			// Decode the URL parameter (handles %2F -> /)
 			const decodedPath = decodeURIComponent(returnToPath);
 			const safePath = getSafePath(decodedPath);
-			router.push(safePath);
+			router.push(buildLocaleHref(language, safePath));
 		} else {
 			// No returnTo means user came from home page, redirect to home
-			router.push("/");
+			router.push(buildLocaleHref(language, "/"));
 		}
 	};
 
@@ -517,7 +519,9 @@ function Slide1({
 							<ActionButton
 								onClick={() => {
 									setSkipped(true);
-									router.push(`/pattern/${patternSlug}`);
+									router.push(
+										buildLocaleHref(language, `/pattern/${patternSlug}`),
+									);
 								}}
 								asButton={true}
 							>
@@ -726,6 +730,8 @@ function Slide3({
 	const selectedAudienceIds = useOrientationStore((s) => s.selectedAudienceIds);
 	const setSelectedThemes = useOrientationStore((s) => s.setSelectedThemes);
 	const setCompleted = useOrientationStore((s) => s.setCompleted);
+	const pathname = usePathname();
+	const { language } = useMemo(() => parseLocalePath(pathname), [pathname]);
 
 	const toggleTheme = (themeId: string) => {
 		setSelectedThemes(
@@ -837,7 +843,7 @@ function Slide3({
 							<>
 								<span className="text-body-large capitalize">click</span>
 								<Link
-									href="/search"
+									href={buildLocaleHref(language, "/search")}
 									onClick={() => {
 										setCompleted(true);
 										// User completed the full onboarding

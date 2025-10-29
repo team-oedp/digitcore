@@ -4,7 +4,7 @@ import { ChartRelationshipIcon, Tag01Icon } from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useMemo } from "react";
+import React from "react";
 import { ClickableBadge } from "~/components/pages/pattern/clickable-badge";
 import {
 	BadgeGroup,
@@ -212,10 +212,7 @@ export function SearchResultItem({
 	const title = pattern.title || "Untitled Pattern";
 	const rawDescription = pattern.description || [];
 	const slug = pattern.slug || "";
-	const patternHref = useMemo(
-		() => buildLocaleHref(language, `/pattern/${slug}`),
-		[language, slug],
-	);
+	const patternHref = buildLocaleHref(language, `/pattern/${slug}`);
 
 	const PatternIconComponent = getPatternIconWithMapping(pattern.slug || "");
 
