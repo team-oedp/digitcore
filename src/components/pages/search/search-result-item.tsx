@@ -4,7 +4,7 @@ import { ChartRelationshipIcon, Tag01Icon } from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useMemo } from "react";
 import { ClickableBadge } from "~/components/pages/pattern/clickable-badge";
 import {
 	BadgeGroup,
@@ -14,7 +14,7 @@ import { Icon } from "~/components/shared/icon";
 import { ThemeMiniBadge } from "~/components/shared/theme-mini-badge";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { parseLocalePath } from "~/lib/locale-path";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	getMatchExplanation,
@@ -49,7 +49,7 @@ function PatternIcon({
 	return (
 		<div
 			className={cn(
-				"flex-shrink-0 text-neutral-500",
+				"shrink-0 text-neutral-500",
 				isPatternsPage ? "h-5 w-5" : "h-4 w-4",
 				className,
 			)}
@@ -77,13 +77,13 @@ function SearchResultBase({
 
 function ResultTitle({
 	title,
-	slug,
+	href,
 	showPatternIcon,
 	icon,
 	isPatternsPage = false,
 }: {
 	title: string;
-	slug: string;
+	href: string;
 	showPatternIcon: boolean;
 	icon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 	isPatternsPage?: boolean;
@@ -94,10 +94,7 @@ function ResultTitle({
 				{showPatternIcon && icon && (
 					<PatternIcon icon={icon} isPatternsPage={isPatternsPage} />
 				)}
-				<Link
-					href={`/pattern/${slug}`}
-					className="inline-flex items-start gap-3"
-				>
+				<Link href={href} className="inline-flex items-start gap-3">
 					<h3
 						className={cn(
 							"line-clamp-3 text-left font-light text-primary leading-tight",
@@ -114,7 +111,7 @@ function ResultTitle({
 				asChild
 				className="text-xs lg:text-sm"
 			>
-				<Link href={`/pattern/${slug}`}>Visit pattern</Link>
+				<Link href={href}>Visit pattern</Link>
 			</Button>
 		</div>
 	);
@@ -210,10 +207,15 @@ export function SearchResultItem({
 	showPatternIcon = false,
 }: SearchResultItemProps) {
 	const pathname = usePathname();
-	const { normalizedPath } = parseLocalePath(pathname);
+	const { normalizedPath, language } = parseLocalePath(pathname);
 	const isPatternsPage = normalizedPath === "/patterns";
 	const title = pattern.title || "Untitled Pattern";
 	const rawDescription = pattern.description || [];
+	const slug = pattern.slug || "";
+	const patternHref = useMemo(
+		() => buildLocaleHref(language, `/pattern/${slug}`),
+		[language, slug],
+	);
 
 	const PatternIconComponent = getPatternIconWithMapping(pattern.slug || "");
 
@@ -258,7 +260,7 @@ export function SearchResultItem({
 		<SearchResultBase>
 			<ResultTitle
 				title={title}
-				slug={pattern.slug || ""}
+				href={patternHref}
 				showPatternIcon={showPatternIcon}
 				icon={PatternIconComponent}
 				isPatternsPage={isPatternsPage}
