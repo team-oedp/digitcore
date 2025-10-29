@@ -20,39 +20,43 @@ import {
 import type { ContentList, Page as PageType } from "~/sanity/sanity.types";
 import type { LanguagePageProps } from "~/types/page-props";
 
-export async function generateMetadata(): Promise<Metadata> {
-	const [site, page] = await Promise.all([
-		sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
-		sanityFetch({ query: HOME_PAGE_QUERY, revalidate: 3600 }),
-	]);
-	const siteUrl = site?.url ?? "https://digitcore.org";
-	const title = page?.title ? `${page.title}` : "Home";
-	const description =
-		buildDescriptionFromPortableText(
-			page?.description as PortableTextBlock[] | null,
-			200,
-		) ??
-		site?.seoDescription ??
-		site?.description;
-	const canonical = buildAbsoluteUrl(siteUrl, "/");
-	return {
-		title,
-		description,
-		alternates: { canonical },
-		openGraph: {
-			type: "website",
-			url: canonical,
-			images: [
-				{
-					url: buildAbsoluteUrl(siteUrl, "/opengraph-image"),
-					width: 1200,
-					height: 630,
-					alt: title,
-				},
-			],
-		},
-		twitter: { card: "summary_large_image" },
-	};
+export async function generateMetadata({
+    params,
+}: LanguagePageProps): Promise<Metadata> {
+    const { language } = await params;
+
+    const [site, page] = await Promise.all([
+        sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
+        sanityFetch({ query: HOME_PAGE_QUERY, params: { language }, revalidate: 3600 }),
+    ]);
+    const siteUrl = site?.url ?? "https://digitcore.org";
+    const title = page?.title ? `${page.title}` : "Home";
+    const description =
+        buildDescriptionFromPortableText(
+            page?.description as PortableTextBlock[] | null,
+            200,
+        ) ??
+        site?.seoDescription ??
+        site?.description;
+    const canonical = buildAbsoluteUrl(siteUrl, `/${language}`);
+    return {
+        title,
+        description,
+        alternates: { canonical },
+        openGraph: {
+            type: "website",
+            url: canonical,
+            images: [
+                {
+                    url: buildAbsoluteUrl(siteUrl, "/opengraph-image"),
+                    width: 1200,
+                    height: 630,
+                    alt: title,
+                },
+            ],
+        },
+        twitter: { card: "summary_large_image" },
+    };
 }
 
 export default async function Page({ params }: LanguagePageProps) {
