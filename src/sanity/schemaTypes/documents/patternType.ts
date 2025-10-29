@@ -34,6 +34,7 @@ export const patternType = defineType({
 			type: "slug",
 			options: {
 				source: "title",
+				isUnique: () => true,
 				// isUnique: isUniqueOtherThanLanguage,
 			},
 			group: "content",

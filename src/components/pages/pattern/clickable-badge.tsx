@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { type ReactNode, forwardRef } from "react";
 import {
 	getAudienceNavigationUrl,
 	getTagNavigationUrl,
 	getThemeNavigationUrl,
 } from "~/lib/badge-navigation";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 
 type ClickableBadgeProps = {
 	children: ReactNode;
@@ -26,6 +28,9 @@ export const ClickableBadge = forwardRef<
 	HTMLAnchorElement,
 	ClickableBadgeProps
 >(({ children, type, id, title, className = "", icon, ...props }, ref) => {
+	const pathname = usePathname();
+	const { language } = parseLocalePath(pathname);
+
 	// Generate the appropriate URL based on badge type
 	const getNavigationUrl = (): string => {
 		switch (type) {
@@ -40,7 +45,7 @@ export const ClickableBadge = forwardRef<
 		}
 	};
 
-	const navigationUrl = getNavigationUrl();
+	const navigationUrl = buildLocaleHref(language, getNavigationUrl());
 
 	return (
 		<Link

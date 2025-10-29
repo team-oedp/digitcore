@@ -1,7 +1,7 @@
 "use client";
 
 import { Reorder } from "motion/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
 	type CarrierBagItem,
@@ -27,6 +27,7 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import { Toggle } from "~/components/ui/toggle";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 
 // Stable helpers and narrow types for dereferenced or reference values
@@ -99,6 +100,8 @@ export function CarrierBagContent({
 		(state) => state.isPatternRecentlyUpdated,
 	);
 	const router = useRouter();
+	const pathname = usePathname();
+	const { language } = parseLocalePath(pathname);
 
 	// UI state
 	const [sortBy, setSortBy] = useState<"az" | "za">("az");
@@ -179,7 +182,8 @@ export function CarrierBagContent({
 
 	const handleVisitItem = (slug?: string) => {
 		if (!slug) return;
-		router.push(`/pattern/${slug}`);
+		const href = buildLocaleHref(language, `/pattern/${slug}`);
+		router.push(href);
 	};
 
 	const clearAll = () => {

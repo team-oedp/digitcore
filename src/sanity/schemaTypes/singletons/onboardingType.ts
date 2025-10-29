@@ -25,6 +25,7 @@ export const onboardingType = defineType({
 			type: "slug",
 			options: {
 				source: "title",
+				isUnique: () => true, // disables uniqueness check
 				// isUnique: isUniqueOtherThanLanguage,
 			},
 		}),

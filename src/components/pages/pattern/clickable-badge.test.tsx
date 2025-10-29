@@ -2,6 +2,11 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ClickableBadge } from "./clickable-badge";
 
+// Mock next/navigation
+vi.mock("next/navigation", () => ({
+	usePathname: vi.fn(() => "/en/patterns/test"),
+}));
+
 // Mock the badge-navigation module
 vi.mock("~/lib/badge-navigation", () => ({
 	getTagNavigationUrl: vi.fn(
@@ -40,7 +45,7 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("href", "/tags#letter-A");
+			expect(link).toHaveAttribute("href", "/en/tags#letter-A");
 			expect(link).toHaveAttribute(
 				"aria-label",
 				"Navigate to tag: accessibility",
@@ -56,7 +61,7 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("href", "/tags");
+			expect(link).toHaveAttribute("href", "/en/tags");
 			expect(link).toHaveAttribute("aria-label", "Navigate to tag: tag-123");
 		});
 
@@ -87,7 +92,7 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("href", "/search?audiences=audience-456");
+			expect(link).toHaveAttribute("href", "/en/search?audiences=audience-456");
 			expect(link).toHaveAttribute(
 				"aria-label",
 				"Navigate to audience: Developers",
@@ -119,7 +124,7 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("href", "/search?themes=theme-789");
+			expect(link).toHaveAttribute("href", "/en/search?themes=theme-789");
 			expect(link).toHaveAttribute(
 				"aria-label",
 				"Navigate to theme: Sustainability",
@@ -183,7 +188,7 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("href", "/tags#letter-T");
+			expect(link).toHaveAttribute("href", "/en/tags#letter-T");
 			expect(link).toHaveAttribute(
 				"aria-label",
 				"Navigate to tag: Tag & Title with <special> chars",

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SearchClientWrapper } from "~/components/pages/search/search-client-wrapper";
 import { SearchInterfaceServer } from "~/components/pages/search/search-interface-server";
 import { SearchInterfaceSkeleton } from "~/components/pages/search/search-interface-skeleton";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
+import { MissingTranslationNotice } from "~/components/shared/missing-translation-notice";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -27,7 +27,7 @@ export default async function Page({ params }: LanguagePageProps) {
 	});
 
 	if (!pageData) {
-		return notFound();
+		return <MissingTranslationNotice language={language} />;
 	}
 
 	return (

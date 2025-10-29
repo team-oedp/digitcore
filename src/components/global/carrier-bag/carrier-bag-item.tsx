@@ -7,8 +7,10 @@ import {
 	Share02Icon,
 } from "@hugeicons/core-free-icons";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
 	getStaleItemClasses,
@@ -53,7 +55,13 @@ export function CarrierBagItem({
 	onRemove,
 	onVisit,
 }: CarrierBagItemProps) {
-	// Get the pattern icon based on slug, fallback to Share02Icon if no slug
+	const pathname = usePathname();
+	const { language } = parseLocalePath(pathname);
+
+	const patternHref = item.slug
+		? buildLocaleHref(language, `/pattern/${item.slug}`)
+		: null;
+
 	const PatternIcon = item.slug ? getPatternIconWithMapping(item.slug) : null;
 
 	const showUpdateAnimation = item.isUpdating || item.isRecentlyUpdated;
@@ -68,21 +76,21 @@ export function CarrierBagItem({
 			aria-label={getStaleStatusText(item.isStale)}
 		>
 			{/* Drag handle */}
-			<div className="flex-shrink-0 cursor-grab opacity-60 transition-opacity hover:opacity-100 active:cursor-grabbing">
+			<div className="shrink-0 cursor-grab opacity-60 transition-opacity hover:opacity-100 active:cursor-grabbing">
 				<Icon icon={DragDropVerticalIcon} size={16} strokeWidth={3} />
 			</div>
 
 			{/* Clickable content (icon + text) */}
-			{item.slug ? (
+			{item.slug && patternHref ? (
 				<Link
-					href={`/pattern/${item.slug}`}
+					href={patternHref}
 					className="relative flex min-w-0 flex-1 cursor-pointer items-start gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 					onClick={(e) => e.stopPropagation()}
 					onPointerDown={(e) => e.stopPropagation()}
 				>
-					<div className="mt-0.5 flex-shrink-0">
+					<div className="mt-0.5 shrink-0">
 						{PatternIcon ? (
-							<div className="h-4 w-4 flex-shrink-0 opacity-40">
+							<div className="h-4 w-4 shrink-0 opacity-40">
 								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
 							</div>
 						) : (
@@ -102,9 +110,9 @@ export function CarrierBagItem({
 				</Link>
 			) : (
 				<div className="relative flex min-w-0 flex-1 items-start gap-3 rounded-md">
-					<div className="mt-0.5 flex-shrink-0">
+					<div className="mt-0.5 shrink-0">
 						{PatternIcon ? (
-							<div className="h-4 w-4 flex-shrink-0 opacity-40">
+							<div className="h-4 w-4 shrink-0 opacity-40">
 								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
 							</div>
 						) : (
@@ -129,7 +137,7 @@ export function CarrierBagItem({
 				{item.isStale && (
 					/* Visual stale indicator for mobile (always visible) - content is being updated automatically */
 					<div
-						className="h-2 w-2 flex-shrink-0 rounded-full bg-amber-500 sm:hidden dark:bg-amber-400"
+						className="h-2 w-2 shrink-0 rounded-full bg-amber-500 sm:hidden dark:bg-amber-400"
 						aria-hidden="true"
 						title="Content is being updated automatically"
 					/>
@@ -147,9 +155,9 @@ export function CarrierBagItem({
 				>
 					<Icon icon={Cancel01Icon} size={14} />
 				</Button>
-				{item.slug ? (
+				{item.slug && patternHref ? (
 					<Link
-						href={`/pattern/${item.slug}`}
+						href={patternHref}
 						onClick={(e) => e.stopPropagation()}
 						onPointerDown={(e) => e.stopPropagation()}
 					>

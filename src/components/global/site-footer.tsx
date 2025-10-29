@@ -4,10 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { GitHubIcon } from "~/components/icons/logos/github-icon";
 import { ZenodoIcon } from "~/components/icons/logos/zenodo-icon";
+import type { Language } from "~/i18n/config";
+import { buildLocaleHref } from "~/lib/locale-path";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
 
 type SiteFooterProps = {
 	footerData: FOOTER_QUERYResult;
+	language: Language;
 };
 
 // Fallback data in case Sanity data is not available
@@ -34,7 +37,7 @@ const FALLBACK_SOCIAL_LINKS = [
 	},
 ];
 
-export function SiteFooter({ footerData }: SiteFooterProps) {
+export function SiteFooter({ footerData, language }: SiteFooterProps) {
 	// Use Sanity data if available, otherwise fall back to hardcoded data
 	const title =
 		footerData?.title || "Digital Toolkit for Open Environmental Research";
@@ -69,16 +72,22 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 						{internalLinks.length > 0 && (
 							<nav aria-label="Internal navigation links">
 								<ul className="space-y-1">
-									{internalLinks.map((link) => (
-										<li key={link._key}>
-											<Link
-												href={`/${link.page?.slug || "#"}`}
-												className="text-link text-sm leading-normal focus:outline-none"
-											>
-												{link.label}
-											</Link>
-										</li>
-									))}
+									{internalLinks.map((link) => {
+										const slug = link.page?.slug;
+										const href = slug
+											? buildLocaleHref(language, `/${slug}`)
+											: "#";
+										return (
+											<li key={link._key}>
+												<Link
+													href={href}
+													className="text-link text-sm leading-normal focus:outline-none"
+												>
+													{link.label}
+												</Link>
+											</li>
+										);
+									})}
 								</ul>
 							</nav>
 						)}
@@ -269,16 +278,22 @@ export function SiteFooter({ footerData }: SiteFooterProps) {
 									aria-label="Internal navigation links"
 								>
 									<ul className="space-y-1">
-										{internalLinks.map((link) => (
-											<li key={link._key}>
-												<Link
-													href={`/${link.page?.slug || "#"}`}
-													className="text-link text-sm focus:outline-none"
-												>
-													{link.label}
-												</Link>
-											</li>
-										))}
+										{internalLinks.map((link) => {
+											const slug = link.page?.slug;
+											const href = slug
+												? buildLocaleHref(language, `/${slug}`)
+												: "#";
+											return (
+												<li key={link._key}>
+													<Link
+														href={href}
+														className="text-link text-sm focus:outline-none"
+													>
+														{link.label}
+													</Link>
+												</li>
+											);
+										})}
 									</ul>
 								</nav>
 							)}
