@@ -19,44 +19,62 @@ import {
 } from "~/sanity/lib/queries";
 import type { ContentList, Page as PageType } from "~/sanity/sanity.types";
 import type { LanguagePageProps } from "~/types/page-props";
+import { i18n, type Language } from "~/i18n/config";
+
+const HOME_LANGUAGES_QUERY = `array::unique(*[_type == 'page' && slug.current == '/' && defined(language)].language)`;
+
+export async function generateStaticParams() {
+	const available = (await sanityFetch({
+		query: HOME_LANGUAGES_QUERY,
+		revalidate: 60,
+	})) as string[] | null;
+    const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
+    return (available ?? [])
+        .filter((id) => allowed.has(id as Language))
+        .map((id) => ({ language: id as Language }));
+}
 
 export async function generateMetadata({
-    params,
+	params,
 }: LanguagePageProps): Promise<Metadata> {
-    const { language } = await params;
+	const { language } = await params;
 
-    const [site, page] = await Promise.all([
-        sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
-        sanityFetch({ query: HOME_PAGE_QUERY, params: { language }, revalidate: 3600 }),
-    ]);
-    const siteUrl = site?.url ?? "https://digitcore.org";
-    const title = page?.title ? `${page.title}` : "Home";
-    const description =
-        buildDescriptionFromPortableText(
-            page?.description as PortableTextBlock[] | null,
-            200,
-        ) ??
-        site?.seoDescription ??
-        site?.description;
-    const canonical = buildAbsoluteUrl(siteUrl, `/${language}`);
-    return {
-        title,
-        description,
-        alternates: { canonical },
-        openGraph: {
-            type: "website",
-            url: canonical,
-            images: [
-                {
-                    url: buildAbsoluteUrl(siteUrl, "/opengraph-image"),
-                    width: 1200,
-                    height: 630,
-                    alt: title,
-                },
-            ],
-        },
-        twitter: { card: "summary_large_image" },
-    };
+	const [site, page] = await Promise.all([
+		sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
+		sanityFetch({
+			query: HOME_PAGE_QUERY,
+			params: { language },
+			revalidate: 3600,
+		}),
+	]);
+	const siteUrl = site?.url ?? "https://digitcore.org";
+	const title = page?.title ? `${page.title}` : "Home";
+	const description =
+		buildDescriptionFromPortableText(
+			page?.description as PortableTextBlock[] | null,
+			200,
+		) ??
+		site?.seoDescription ??
+		site?.description;
+	const canonical = buildAbsoluteUrl(siteUrl, `/${language}`);
+	return {
+		title,
+		description,
+		alternates: { canonical },
+		openGraph: {
+			type: "website",
+			url: canonical,
+			images: [
+				{
+					url: buildAbsoluteUrl(siteUrl, "/opengraph-image"),
+					width: 1200,
+					height: 630,
+					alt: title,
+				},
+			],
+		},
+		twitter: { card: "summary_large_image" },
+	};
 }
 
 export default async function Page({ params }: LanguagePageProps) {

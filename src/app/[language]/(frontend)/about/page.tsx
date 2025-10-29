@@ -7,29 +7,52 @@ import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
 import { buildAbsoluteUrl } from "~/lib/metadata";
+import { buildHreflang } from "~/lib/seo";
 import { sanityFetch } from "~/sanity/lib/client";
 import { ABOUT_PAGE_QUERY, SITE_SETTINGS_QUERY } from "~/sanity/lib/queries";
 import type { LanguagePageProps } from "~/types/page-props";
+import { i18n, type Language } from "~/i18n/config";
+
+const ABOUT_LANGUAGES_QUERY = `array::unique(*[_type == 'page' && slug.current == 'about' && defined(language)].language)`;
+
+export async function generateStaticParams() {
+	const available = (await sanityFetch({
+		query: ABOUT_LANGUAGES_QUERY,
+		revalidate: 60,
+	})) as string[] | null;
+	const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
+	return (available ?? [])
+		.filter((id) => allowed.has(id as Language))
+		.map((id) => ({ language: id as Language }));
+}
 
 export async function generateMetadata({
-	params,
+    params,
 }: LanguagePageProps): Promise<Metadata> {
 	const { language } = await params;
 
 	const [site, page] = await Promise.all([
 		sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
-		sanityFetch({ query: ABOUT_PAGE_QUERY, params: { language }, revalidate: 3600 }),
+		sanityFetch({
+			query: ABOUT_PAGE_QUERY,
+			params: { language },
+			revalidate: 3600,
+		}),
 	]);
 	const siteUrl = site?.url ?? "https://digitcore.org";
 	const title = page?.title ? `${page.title}` : "About";
 	const description = page?.description
 		? undefined
 		: (site?.seoDescription ?? site?.description);
-	const canonical = buildAbsoluteUrl(siteUrl, `/${language}/about`);
+    const canonical = buildAbsoluteUrl(siteUrl, `/${language}/about`);
+    const available = (await sanityFetch({ query: ABOUT_LANGUAGES_QUERY, revalidate: 60 })) as string[] | null;
+    const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
+    const languages = (available ?? []).filter((id) => allowed.has(id as Language)) as Language[];
+    const alternates = { canonical, languages: buildHreflang(siteUrl, "/about", languages) } as const;
 	return {
 		title,
-		description,
-		alternates: { canonical },
+        description,
+        alternates,
 		openGraph: {
 			type: "website",
 			url: canonical,
