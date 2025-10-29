@@ -7,18 +7,18 @@ import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { MissingTranslationNotice } from "~/components/shared/missing-translation-notice";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { type Language, i18n } from "~/i18n/config";
 import { buildAbsoluteUrl } from "~/lib/metadata";
 import { buildHreflang } from "~/lib/seo";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
 	GLOSSARY_PAGE_QUERY,
 	GLOSSARY_TERMS_QUERY,
+	SITE_SETTINGS_QUERY,
 } from "~/sanity/lib/queries";
-import { SITE_SETTINGS_QUERY } from "~/sanity/lib/queries";
 import type { GLOSSARY_TERMS_QUERYResult } from "~/sanity/sanity.types";
 import type { LanguagePageProps } from "~/types/page-props";
 import { GlossaryScroll } from "./glossary-scroll";
-import { i18n, type Language } from "~/i18n/config";
 
 const GLOSSARY_LANGUAGES_QUERY = `array::unique(*[_type == 'page' && slug.current == 'glossary' && defined(language)].language)`;
 
@@ -35,17 +35,28 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: LanguagePageProps) {
 	const { language } = await params;
-	const site = await sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 });
+	const site = await sanityFetch({
+		query: SITE_SETTINGS_QUERY,
+		revalidate: 3600,
+	});
 	const siteUrl = site?.url ?? "https://digitcore.org";
 	const canonical = buildAbsoluteUrl(siteUrl, `/${language}/glossary`);
-	const available = (await sanityFetch({ query: GLOSSARY_LANGUAGES_QUERY, revalidate: 60 })) as string[] | null;
+	const available = (await sanityFetch({
+		query: GLOSSARY_LANGUAGES_QUERY,
+		revalidate: 60,
+	})) as string[] | null;
 	const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
-	const languages = (available ?? []).filter((id) => allowed.has(id as Language)) as Language[];
+	const languages = (available ?? []).filter((id) =>
+		allowed.has(id as Language),
+	) as Language[];
 	return {
 		title: "Glossary | DIGITCORE",
 		description:
 			"Searchable reference for key terms and concepts used in the toolkit.",
-		alternates: { canonical, languages: buildHreflang(siteUrl, "/glossary", languages) },
+		alternates: {
+			canonical,
+			languages: buildHreflang(siteUrl, "/glossary", languages),
+		},
 	};
 }
 

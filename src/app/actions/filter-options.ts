@@ -39,7 +39,11 @@ export async function fetchFilterOptions(
 	const location = createLogLocation("filter-options.ts", "fetchFilterOptions");
 
 	try {
-        logger.searchInfo("Fetching filter options from Sanity", undefined, location);
+		logger.searchInfo(
+			"Fetching filter options from Sanity",
+			undefined,
+			location,
+		);
 
 		const startTime = Date.now();
 		const response = await client.fetch(FILTER_OPTIONS_QUERY, { language });
@@ -68,7 +72,7 @@ export async function fetchFilterOptions(
 			| undefined;
 		const data = dataUnknown as Buckets;
 
-        logger.groq(
+		logger.groq(
 			"Filter options query completed",
 			{
 				executionTime: `${endTime - startTime}ms`,
@@ -95,7 +99,7 @@ export async function fetchFilterOptions(
 
 		const result = { audiences, themes, tags };
 
-        logger.searchInfo(
+		logger.searchInfo(
 			"Filter options processed successfully",
 			{
 				audienceCount: audiences.length,
@@ -109,8 +113,8 @@ export async function fetchFilterOptions(
 			success: true,
 			data: result,
 		};
-    } catch (error) {
-        logger.searchError("Failed to fetch filter options", error, location);
+	} catch (error) {
+		logger.searchError("Failed to fetch filter options", error, location);
 
 		return {
 			success: false,

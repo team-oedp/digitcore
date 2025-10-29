@@ -151,8 +151,10 @@ export default async function Page({ params }: LanguagePageProps) {
 		<PageWrapper>
 			<div className="pb-44">
 				<HeadingMorph
-					text={(data as { heroHeading?: string } | null)?.heroHeading ??
-						"Welcome to the Digital Toolkit for Collaborative Environmental Research"}
+					text={
+						(data as { heroHeading?: string } | null)?.heroHeading ??
+						"Welcome to the Digital Toolkit for Collaborative Environmental Research"
+					}
 					transitionText="DIGITCORE"
 					morphDistancePx={{ base: 240, sm: 260, md: 320, lg: 360, xl: 400 }}
 					containerClass="overflow-y-auto"

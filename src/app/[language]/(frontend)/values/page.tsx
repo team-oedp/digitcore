@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
-import { buildAbsoluteUrl } from "~/lib/metadata";
-import { buildHreflang } from "~/lib/seo";
 import CustomizablePatternCombination from "~/components/shared/customizable-pattern-combination-wrapper";
 import { MissingTranslationNotice } from "~/components/shared/missing-translation-notice";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
+import { type Language, i18n } from "~/i18n/config";
+import { buildAbsoluteUrl } from "~/lib/metadata";
+import { buildHreflang } from "~/lib/seo";
 import { sanityFetch } from "~/sanity/lib/client";
 import { SITE_SETTINGS_QUERY, VALUES_PAGE_QUERY } from "~/sanity/lib/queries";
 import type { LanguagePageProps } from "~/types/page-props";
-import { i18n, type Language } from "~/i18n/config";
 
 const VALUES_LANGUAGES_QUERY = `array::unique(*[_type == 'page' && slug.current == 'values' && defined(language)].language)`;
 
@@ -28,17 +28,28 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: LanguagePageProps) {
 	const { language } = await params;
-	const site = await sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 });
+	const site = await sanityFetch({
+		query: SITE_SETTINGS_QUERY,
+		revalidate: 3600,
+	});
 	const siteUrl = site?.url ?? "https://digitcore.org";
 	const canonical = buildAbsoluteUrl(siteUrl, `/${language}/values`);
-	const available = (await sanityFetch({ query: VALUES_LANGUAGES_QUERY, revalidate: 60 })) as string[] | null;
+	const available = (await sanityFetch({
+		query: VALUES_LANGUAGES_QUERY,
+		revalidate: 60,
+	})) as string[] | null;
 	const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
-	const languages = (available ?? []).filter((id) => allowed.has(id as Language)) as Language[];
+	const languages = (available ?? []).filter((id) =>
+		allowed.has(id as Language),
+	) as Language[];
 	return {
 		title: "Values | DIGITCORE",
 		description:
 			"Open infrastructure and environmental research values and principles.",
-		alternates: { canonical, languages: buildHreflang(siteUrl, "/values", languages) },
+		alternates: {
+			canonical,
+			languages: buildHreflang(siteUrl, "/values", languages),
+		},
 	};
 }
 

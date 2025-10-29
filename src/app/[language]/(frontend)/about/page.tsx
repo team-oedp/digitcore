@@ -6,12 +6,12 @@ import { MissingTranslationNotice } from "~/components/shared/missing-translatio
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
+import { type Language, i18n } from "~/i18n/config";
 import { buildAbsoluteUrl } from "~/lib/metadata";
 import { buildHreflang } from "~/lib/seo";
 import { sanityFetch } from "~/sanity/lib/client";
 import { ABOUT_PAGE_QUERY, SITE_SETTINGS_QUERY } from "~/sanity/lib/queries";
 import type { LanguagePageProps } from "~/types/page-props";
-import { i18n, type Language } from "~/i18n/config";
 
 const ABOUT_LANGUAGES_QUERY = `array::unique(*[_type == 'page' && slug.current == 'about' && defined(language)].language)`;
 
@@ -27,7 +27,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({
-    params,
+	params,
 }: LanguagePageProps): Promise<Metadata> {
 	const { language } = await params;
 
@@ -44,15 +44,23 @@ export async function generateMetadata({
 	const description = page?.description
 		? undefined
 		: (site?.seoDescription ?? site?.description);
-    const canonical = buildAbsoluteUrl(siteUrl, `/${language}/about`);
-    const available = (await sanityFetch({ query: ABOUT_LANGUAGES_QUERY, revalidate: 60 })) as string[] | null;
-    const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
-    const languages = (available ?? []).filter((id) => allowed.has(id as Language)) as Language[];
-    const alternates = { canonical, languages: buildHreflang(siteUrl, "/about", languages) } as const;
+	const canonical = buildAbsoluteUrl(siteUrl, `/${language}/about`);
+	const available = (await sanityFetch({
+		query: ABOUT_LANGUAGES_QUERY,
+		revalidate: 60,
+	})) as string[] | null;
+	const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
+	const languages = (available ?? []).filter((id) =>
+		allowed.has(id as Language),
+	) as Language[];
+	const alternates = {
+		canonical,
+		languages: buildHreflang(siteUrl, "/about", languages),
+	} as const;
 	return {
 		title,
-        description,
-        alternates,
+		description,
+		alternates,
 		openGraph: {
 			type: "website",
 			url: canonical,

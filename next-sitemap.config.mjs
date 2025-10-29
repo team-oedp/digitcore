@@ -28,15 +28,16 @@ async function fetchPatternSlugs() {
 }
 
 async function fetchPageLanguages(slug) {
-  if (!sanityClient) return [];
-  const where = slug === "/" ? "slug.current == '/'" : `slug.current == '${slug}'`;
-  const query = `array::unique(*[_type == "page" && ${where} && defined(language)].language)`;
-  try {
-    const langs = await sanityClient.fetch(query);
-    return Array.isArray(langs) ? langs.filter(Boolean) : [];
-  } catch {
-    return [];
-  }
+	if (!sanityClient) return [];
+	const where =
+		slug === "/" ? "slug.current == '/'" : `slug.current == '${slug}'`;
+	const query = `array::unique(*[_type == "page" && ${where} && defined(language)].language)`;
+	try {
+		const langs = await sanityClient.fetch(query);
+		return Array.isArray(langs) ? langs.filter(Boolean) : [];
+	} catch {
+		return [];
+	}
 }
 
 export default {
@@ -46,30 +47,32 @@ export default {
 	outDir: "public",
 	// Auto-discovers static App Router routes; add dynamic ones here
 	additionalPaths: async (config) => {
-    const results = [];
-    // Static pages
-    const staticPages = ["/", "about", "values", "glossary"];
-    for (const slug of staticPages) {
-      const path = slug === "/" ? "/" : `/${slug}`;
-      const languages = await fetchPageLanguages(slug === "/" ? "/" : slug);
-      for (const lang of languages) {
-        results.push({ loc: `/${lang}${path === "/" ? "" : path}` });
-      }
-    }
+		const results = [];
+		// Static pages
+		const staticPages = ["/", "about", "values", "glossary"];
+		for (const slug of staticPages) {
+			const path = slug === "/" ? "/" : `/${slug}`;
+			const languages = await fetchPageLanguages(slug === "/" ? "/" : slug);
+			for (const lang of languages) {
+				results.push({ loc: `/${lang}${path === "/" ? "" : path}` });
+			}
+		}
 
-    // Patterns per language
-    const slugs = await fetchPatternSlugs();
-    for (const slug of slugs) {
-      // If patterns are language-scoped, fetch their languages; otherwise, emit for known languages
-      const langs = await sanityClient.fetch(
-        `array::unique(*[_type == "pattern" && slug.current == $slug && defined(language)].language)`,
-        { slug },
-      ).catch(() => []);
-      for (const lang of Array.isArray(langs) ? langs : []) {
-        results.push({ loc: `/${lang}/pattern/${slug}` });
-      }
-    }
-    return results;
+		// Patterns per language
+		const slugs = await fetchPatternSlugs();
+		for (const slug of slugs) {
+			// If patterns are language-scoped, fetch their languages; otherwise, emit for known languages
+			const langs = await sanityClient
+				.fetch(
+					`array::unique(*[_type == "pattern" && slug.current == $slug && defined(language)].language)`,
+					{ slug },
+				)
+				.catch(() => []);
+			for (const lang of Array.isArray(langs) ? langs : []) {
+				results.push({ loc: `/${lang}/pattern/${slug}` });
+			}
+		}
+		return results;
 	},
 	robotsTxtOptions: {
 		policies: [{ userAgent: "*", allow: "/" }],
