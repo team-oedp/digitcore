@@ -7,6 +7,7 @@ import "./src/env.js";
 /** @type {import("next").NextConfig} */
 const config = {
 	experimental: {
+		globalNotFound: true,
 		viewTransition: true,
 		browserDebugInfoInTerminal: true,
 		turbopackFileSystemCacheForDev: true,

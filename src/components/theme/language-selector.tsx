@@ -39,9 +39,50 @@ export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
 	);
 
 	const searchSuffix = useMemo(() => {
-		const query = searchParams?.toString() ?? "";
+		if (!searchParams) {
+			return "";
+		}
+
+		const params = new URLSearchParams(searchParams.toString());
+		if (!params.toString()) {
+			return "";
+		}
+
+		const isSearchPage = normalizedPath === "/search";
+
+		if (isSearchPage) {
+			// Reset search state when switching languages on the search page
+			const searchStateKeys = [
+				"q",
+				"audiences",
+				"themes",
+				"tags",
+				"enhance",
+				"page",
+				"limit",
+				"prefAudiences",
+				"prefThemes",
+			];
+
+			let removedAny = false;
+			for (const key of searchStateKeys) {
+				if (params.has(key)) {
+					params.delete(key);
+					removedAny = true;
+				}
+			}
+
+			if (removedAny) {
+				// Mark that search state was reset so the page can show a notice
+				params.set("reset", "1");
+				const remaining = params.toString();
+				return remaining ? `?${remaining}` : "";
+			}
+		}
+
+		const query = params.toString();
 		return query ? `?${query}` : "";
-	}, [searchParams]);
+	}, [searchParams, normalizedPath]);
 
 	return (
 		<div className={className}>

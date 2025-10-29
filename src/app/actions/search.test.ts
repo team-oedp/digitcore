@@ -516,7 +516,13 @@ describe("searchPatterns", () => {
 		expect(mockLogger.groq).toHaveBeenNthCalledWith(
 			3,
 			"Final GROQ query parameters",
-			{ searchTerm: "test", tags: [], themes: [], audiences: [] },
+			{
+				searchTerm: "test",
+				tags: [],
+				themes: [],
+				audiences: [],
+				language,
+			},
 			expect.any(Object),
 		);
 
