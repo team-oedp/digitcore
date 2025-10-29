@@ -4,8 +4,8 @@ import { TagsList } from "~/components/pages/tags/tags-list";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { CurrentLetterIndicator } from "~/components/shared/current-letter-indicator";
 import { LetterNavigation } from "~/components/shared/letter-navigation";
-import { PageHeading } from "~/components/shared/page-heading";
 import { MissingTranslationNotice } from "~/components/shared/missing-translation-notice";
+import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { sanityFetch } from "~/sanity/lib/client";
 import {

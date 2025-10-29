@@ -5,8 +5,8 @@ import { SearchClientWrapper } from "~/components/pages/search/search-client-wra
 import { SearchInterfaceServer } from "~/components/pages/search/search-interface-server";
 import { SearchInterfaceSkeleton } from "~/components/pages/search/search-interface-skeleton";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
-import { PageHeading } from "~/components/shared/page-heading";
 import { MissingTranslationNotice } from "~/components/shared/missing-translation-notice";
+import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { Skeleton } from "~/components/ui/skeleton";
 import { sanityFetch } from "~/sanity/lib/client";

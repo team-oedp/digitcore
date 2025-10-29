@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
-import { PageHeading } from "~/components/shared/page-heading";
 import { MissingTranslationNotice } from "~/components/shared/missing-translation-notice";
+import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { sanityFetch } from "~/sanity/lib/client";
 import {

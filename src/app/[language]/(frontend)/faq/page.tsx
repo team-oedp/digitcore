@@ -4,8 +4,8 @@ import { groupFaqsByCategory } from "~/app/[language]/(frontend)/faq/faq-helpers
 import { FAQCategorySection } from "~/components/pages/faq/faq-category-section";
 import { UncategorizedFAQSection } from "~/components/pages/faq/uncategorized-faq-section";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
-import { PageHeading } from "~/components/shared/page-heading";
 import { MissingTranslationNotice } from "~/components/shared/missing-translation-notice";
+import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { sanityFetch } from "~/sanity/lib/client";
 import { FAQS_QUERY, FAQ_PAGE_QUERY } from "~/sanity/lib/queries";
