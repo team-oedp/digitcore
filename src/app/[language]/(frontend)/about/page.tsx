@@ -11,17 +11,21 @@ import { sanityFetch } from "~/sanity/lib/client";
 import { ABOUT_PAGE_QUERY, SITE_SETTINGS_QUERY } from "~/sanity/lib/queries";
 import type { LanguagePageProps } from "~/types/page-props";
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+	params,
+}: LanguagePageProps): Promise<Metadata> {
+	const { language } = await params;
+
 	const [site, page] = await Promise.all([
 		sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
-		sanityFetch({ query: ABOUT_PAGE_QUERY, revalidate: 3600 }),
+		sanityFetch({ query: ABOUT_PAGE_QUERY, params: { language }, revalidate: 3600 }),
 	]);
 	const siteUrl = site?.url ?? "https://digitcore.org";
 	const title = page?.title ? `${page.title}` : "About";
 	const description = page?.description
 		? undefined
 		: (site?.seoDescription ?? site?.description);
-	const canonical = buildAbsoluteUrl(siteUrl, "/about");
+	const canonical = buildAbsoluteUrl(siteUrl, `/${language}/about`);
 	return {
 		title,
 		description,
