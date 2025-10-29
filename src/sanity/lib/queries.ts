@@ -961,6 +961,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
     _id,
     _type,
     title,
+    heroHeading,
     language,
     "slug": slug.current,
     emptyStateMessage,

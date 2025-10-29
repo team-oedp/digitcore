@@ -6,6 +6,7 @@ import { MissingTranslationNotice } from "~/components/shared/missing-translatio
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import PatternCombination from "~/components/shared/pattern-combination-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
+import { type Language, i18n } from "~/i18n/config";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
 import {
 	buildAbsoluteUrl,
@@ -19,7 +20,6 @@ import {
 } from "~/sanity/lib/queries";
 import type { ContentList, Page as PageType } from "~/sanity/sanity.types";
 import type { LanguagePageProps } from "~/types/page-props";
-import { i18n, type Language } from "~/i18n/config";
 
 const HOME_LANGUAGES_QUERY = `array::unique(*[_type == 'page' && slug.current == '/' && defined(language)].language)`;
 
@@ -28,10 +28,10 @@ export async function generateStaticParams() {
 		query: HOME_LANGUAGES_QUERY,
 		revalidate: 60,
 	})) as string[] | null;
-    const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
-    return (available ?? [])
-        .filter((id) => allowed.has(id as Language))
-        .map((id) => ({ language: id as Language }));
+	const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
+	return (available ?? [])
+		.filter((id) => allowed.has(id as Language))
+		.map((id) => ({ language: id as Language }));
 }
 
 export async function generateMetadata({
@@ -151,7 +151,8 @@ export default async function Page({ params }: LanguagePageProps) {
 		<PageWrapper>
 			<div className="pb-44">
 				<HeadingMorph
-					text="Welcome to the Digital Toolkit for Collaborative Environmental Research"
+					text={(data as { heroHeading?: string } | null)?.heroHeading ??
+						"Welcome to the Digital Toolkit for Collaborative Environmental Research"}
 					transitionText="DIGITCORE"
 					morphDistancePx={{ base: 240, sm: 260, md: 320, lg: 360, xl: 400 }}
 					containerClass="overflow-y-auto"
