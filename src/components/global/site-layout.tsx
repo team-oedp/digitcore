@@ -80,7 +80,7 @@ export function SiteLayout({
 							</main>
 							{!isCarrierBagRoute && (
 								<div>
-									<SiteFooter footerData={footerData} />
+									<SiteFooter footerData={footerData} language={language} />
 								</div>
 							)}
 						</div>
