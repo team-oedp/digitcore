@@ -6,15 +6,52 @@ import { PageWrapper } from "~/components/shared/page-wrapper";
 import PatternCombination from "~/components/shared/pattern-combination-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
+import {
+	buildAbsoluteUrl,
+	buildDescriptionFromPortableText,
+} from "~/lib/metadata";
 import { sanityFetch } from "~/sanity/lib/client";
-import { GLOSSARY_TERMS_QUERY, HOME_PAGE_QUERY } from "~/sanity/lib/queries";
+import {
+	GLOSSARY_TERMS_QUERY,
+	HOME_PAGE_QUERY,
+	SITE_SETTINGS_QUERY,
+} from "~/sanity/lib/queries";
 import type { ContentList, Page } from "~/sanity/sanity.types";
 
-export const metadata: Metadata = {
-	title: "Home | DIGITCORE",
-	description:
-		"DIGITCORE outlines challenges, problems, and phenomena experienced or observed by community organizations, researchers, and open source technologists working on collaborative environmental research. This toolkit is designed to help you make decisions about tools, modes of interaction, research design, and process.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const [site, page] = await Promise.all([
+		sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
+		sanityFetch({ query: HOME_PAGE_QUERY, revalidate: 3600 }),
+	]);
+	const siteUrl = site?.url ?? "https://digitcore.org";
+	const title = page?.title ? `${page.title}` : "Home";
+	const description =
+		buildDescriptionFromPortableText(
+			page?.description as PortableTextBlock[] | null,
+			200,
+		) ??
+		site?.seoDescription ??
+		site?.description;
+	const canonical = buildAbsoluteUrl(siteUrl, "/");
+	return {
+		title,
+		description,
+		alternates: { canonical },
+		openGraph: {
+			type: "website",
+			url: canonical,
+			images: [
+				{
+					url: buildAbsoluteUrl(siteUrl, "/opengraph-image"),
+					width: 1200,
+					height: 630,
+					alt: title,
+				},
+			],
+		},
+		twitter: { card: "summary_large_image" },
+	};
+}
 
 export default async function Home() {
 	const [data, glossaryTerms] = await Promise.all([

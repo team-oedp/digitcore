@@ -1,35 +1,34 @@
 "use client";
 
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
-import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "~/lib/utils";
 
 // Import the original shape icons but we'll override their colors
-const Icon01 = dynamic(() => import("~/components/icons/shapes/icon-01"));
-const Icon02 = dynamic(() => import("~/components/icons/shapes/icon-02"));
-const Icon03 = dynamic(() => import("~/components/icons/shapes/icon-03"));
-const Icon04 = dynamic(() => import("~/components/icons/shapes/icon-04"));
-const Icon05 = dynamic(() => import("~/components/icons/shapes/icon-05"));
-const Icon06 = dynamic(() => import("~/components/icons/shapes/icon-06"));
-const Icon07 = dynamic(() => import("~/components/icons/shapes/icon-07"));
-const Icon08 = dynamic(() => import("~/components/icons/shapes/icon-08"));
-const Icon09 = dynamic(() => import("~/components/icons/shapes/icon-09"));
-const Icon10 = dynamic(() => import("~/components/icons/shapes/icon-10"));
-const Icon11 = dynamic(() => import("~/components/icons/shapes/icon-11"));
-const Icon12 = dynamic(() => import("~/components/icons/shapes/icon-12"));
-const Icon13 = dynamic(() => import("~/components/icons/shapes/icon-13"));
-const Icon14 = dynamic(() => import("~/components/icons/shapes/icon-14"));
-const Icon15 = dynamic(() => import("~/components/icons/shapes/icon-15"));
-const Icon16 = dynamic(() => import("~/components/icons/shapes/icon-16"));
-const Icon17 = dynamic(() => import("~/components/icons/shapes/icon-17"));
-const Icon18 = dynamic(() => import("~/components/icons/shapes/icon-18"));
-const Icon19 = dynamic(() => import("~/components/icons/shapes/icon-19"));
-const Icon20 = dynamic(() => import("~/components/icons/shapes/icon-20"));
-const Icon21 = dynamic(() => import("~/components/icons/shapes/icon-21"));
-const Icon22 = dynamic(() => import("~/components/icons/shapes/icon-22"));
-const Icon23 = dynamic(() => import("~/components/icons/shapes/icon-23"));
-const Icon24 = dynamic(() => import("~/components/icons/shapes/icon-24"));
+import Icon01 from "~/components/icons/shapes/icon-01";
+import Icon02 from "~/components/icons/shapes/icon-02";
+import Icon03 from "~/components/icons/shapes/icon-03";
+import Icon04 from "~/components/icons/shapes/icon-04";
+import Icon05 from "~/components/icons/shapes/icon-05";
+import Icon06 from "~/components/icons/shapes/icon-06";
+import Icon07 from "~/components/icons/shapes/icon-07";
+import Icon08 from "~/components/icons/shapes/icon-08";
+import Icon09 from "~/components/icons/shapes/icon-09";
+import Icon10 from "~/components/icons/shapes/icon-10";
+import Icon11 from "~/components/icons/shapes/icon-11";
+import Icon12 from "~/components/icons/shapes/icon-12";
+import Icon13 from "~/components/icons/shapes/icon-13";
+import Icon14 from "~/components/icons/shapes/icon-14";
+import Icon15 from "~/components/icons/shapes/icon-15";
+import Icon16 from "~/components/icons/shapes/icon-16";
+import Icon17 from "~/components/icons/shapes/icon-17";
+import Icon18 from "~/components/icons/shapes/icon-18";
+import Icon19 from "~/components/icons/shapes/icon-19";
+import Icon20 from "~/components/icons/shapes/icon-20";
+import Icon21 from "~/components/icons/shapes/icon-21";
+import Icon22 from "~/components/icons/shapes/icon-22";
+import Icon23 from "~/components/icons/shapes/icon-23";
+import Icon24 from "~/components/icons/shapes/icon-24";
 
 const ICONS = [
 	Icon01,
@@ -264,12 +263,14 @@ export function CustomizablePatternCombination({
 											width={px}
 											height={px}
 											strokeWidth={1}
-											style={{
-												'--icon-fill-color': fillColor,
-												'--icon-stroke-color': strokeColor,
-												'--icon-fill-opacity': fillOpacity.toString(),
-												'--icon-stroke-opacity': strokeOpacity.toString(),
-											} as React.CSSProperties}
+											style={
+												{
+													"--icon-fill-color": fillColor,
+													"--icon-stroke-color": strokeColor,
+													"--icon-fill-opacity": fillOpacity.toString(),
+													"--icon-stroke-opacity": strokeOpacity.toString(),
+												} as React.CSSProperties
+											}
 										/>
 									</motion.div>
 								</div>

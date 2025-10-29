@@ -8,8 +8,13 @@ import { Solutions } from "~/components/pages/pattern/solutions";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { PatternHeading } from "~/components/shared/pattern-heading";
+import { buildAbsoluteUrl } from "~/lib/metadata";
 import { sanityFetch } from "~/sanity/lib/client";
-import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY } from "~/sanity/lib/queries";
+import {
+	PATTERN_PAGES_SLUGS_QUERY,
+	PATTERN_QUERY,
+	SITE_SETTINGS_QUERY,
+} from "~/sanity/lib/queries";
 import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
 
 export type PatternPageProps = {
@@ -32,14 +37,32 @@ export async function generateMetadata({
 	params,
 }: PatternPageProps): Promise<Metadata> {
 	const { slug } = await params;
-	const readable = slug
-		.replace(/-/g, " ")
-		.split(" ")
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-		.join(" ");
+	const [site, pattern] = await Promise.all([
+		sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
+		sanityFetch({ query: PATTERN_QUERY, params: { slug }, revalidate: 3600 }),
+	]);
+	const siteUrl = site?.url ?? "https://digitcore.org";
+	const title = pattern?.title ?? slug.replace(/-/g, " ");
+	const description =
+		pattern?.descriptionPlainText ?? site?.seoDescription ?? site?.description;
+	const ogUrl = buildAbsoluteUrl(siteUrl, `/pattern/${slug}`);
 	return {
-		title: `${readable} | Pattern | DIGITCORE`,
-		description: `${readable}.`,
+		title: `${title} | Pattern`,
+		description: description ?? undefined,
+		alternates: { canonical: ogUrl },
+		openGraph: {
+			type: "article",
+			url: ogUrl,
+			images: [
+				{
+					url: buildAbsoluteUrl(siteUrl, `/pattern/${slug}/opengraph-image`),
+					width: 1200,
+					height: 630,
+					alt: `${title} | DIGITCORE`,
+				},
+			],
+		},
+		twitter: { card: "summary_large_image" },
 	};
 }
 

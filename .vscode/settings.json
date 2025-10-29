@@ -52,5 +52,5 @@
 
 	// Explicitly disable Prettier and ESLint for this project
 	"prettier.enable": false,
-  "eslint.enable": false
+	"eslint.enable": false
 }

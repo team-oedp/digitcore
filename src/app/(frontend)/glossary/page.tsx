@@ -39,8 +39,8 @@ export default async function GlossaryPage() {
 	});
 
 	// Group terms by letter and ensure strict alphabetical ordering within each group
-	const termsByLetter =
-		glossaryTerms?.reduce<TermsByLetter>((acc, term) => {
+	const termsByLetter: TermsByLetter = (glossaryTerms ?? []).reduce(
+		(acc: TermsByLetter, term: GLOSSARY_TERMS_QUERYResult[number]) => {
 			const title = term.title ?? "";
 			const letter = title.charAt(0).toUpperCase();
 			const group = acc[letter] ?? [];
@@ -49,7 +49,9 @@ export default async function GlossaryPage() {
 			group.sort((a, b) => (a.title ?? "").localeCompare(b.title ?? ""));
 			acc[letter] = group;
 			return acc;
-		}, {}) ?? {};
+		},
+		{},
+	);
 
 	if (!pageData) {
 		return notFound();

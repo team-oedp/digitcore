@@ -6,14 +6,40 @@ import CustomizablePatternCombination from "~/components/shared/customizable-pat
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
+import { buildAbsoluteUrl } from "~/lib/metadata";
 import { sanityFetch } from "~/sanity/lib/client";
-import { ABOUT_PAGE_QUERY } from "~/sanity/lib/queries";
+import { ABOUT_PAGE_QUERY, SITE_SETTINGS_QUERY } from "~/sanity/lib/queries";
 
-export const metadata: Metadata = {
-	title: "About | DIGITCORE",
-	description:
-		"Learn about DIGITCORE and our mission for open infrastructure and environmental research.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const [site, page] = await Promise.all([
+		sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
+		sanityFetch({ query: ABOUT_PAGE_QUERY, revalidate: 3600 }),
+	]);
+	const siteUrl = site?.url ?? "https://digitcore.org";
+	const title = page?.title ? `${page.title}` : "About";
+	const description = page?.description
+		? undefined
+		: (site?.seoDescription ?? site?.description);
+	const canonical = buildAbsoluteUrl(siteUrl, "/about");
+	return {
+		title,
+		description,
+		alternates: { canonical },
+		openGraph: {
+			type: "website",
+			url: canonical,
+			images: [
+				{
+					url: buildAbsoluteUrl(siteUrl, "/opengraph-image"),
+					width: 1200,
+					height: 630,
+					alt: title,
+				},
+			],
+		},
+		twitter: { card: "summary_large_image" },
+	};
+}
 
 export default async function AboutPage() {
 	const data = await sanityFetch({
@@ -41,8 +67,8 @@ export default async function AboutPage() {
 							{/* Add section break before each section (except the first) */}
 							{index > 0 && (
 								<div className="flex justify-start pb-4">
-									<CustomizablePatternCombination 
-										randomPatterns={3} 
+									<CustomizablePatternCombination
+										randomPatterns={3}
 										size="md"
 										fillColor="#A35C89"
 										strokeColor="#A35C89"

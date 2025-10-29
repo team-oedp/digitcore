@@ -5,7 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"build": "next build",
-		"check": "biome check .",
+		"postbuild": "next-sitemap --config next-sitemap.config.mjs",
+		"check": "biome check",
 		"check:unsafe": "biome check --write --unsafe .",
 		"check:write": "biome check --write .",
 		"precheck": "npm run typecheck && npm run check:write && npm run build",
@@ -94,6 +95,7 @@
 		"cross-env": "^7.0.3",
 		"cypress": "^14.5.2",
 		"jsdom": "^24.0.0",
+		"next-sitemap": "^4.2.3",
 		"postcss": "^8.5.3",
 		"start-server-and-test": "^2.0.12",
 		"tailwindcss": "^4.0.15",
