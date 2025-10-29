@@ -25,6 +25,8 @@ import {
 	useSidebar,
 } from "~/components/ui/sidebar";
 import { useCarrierBagDocument } from "~/hooks/use-pattern-content";
+import type { Language } from "~/i18n/config";
+import { buildLocaleHref } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
 import type { CARRIER_BAG_QUERYResult } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
@@ -32,11 +34,13 @@ import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
 
 type CarrierBagSidebarProps = React.ComponentProps<typeof Sidebar> & {
 	carrierBagData?: CARRIER_BAG_QUERYResult;
+	language: Language;
 };
 
 export function CarrierBagSidebar({
 	className,
 	carrierBagData,
+	language,
 	...props
 }: CarrierBagSidebarProps) {
 	const isHydrated = useCarrierBagStore((state) => state.isHydrated);
@@ -137,7 +141,10 @@ export function CarrierBagSidebar({
 								className="text-muted-foreground transition-colors"
 							/>
 						</button>
-						<Link href="/carrier-bag" tabIndex={-1}>
+						<Link
+							href={buildLocaleHref(language, "/carrier-bag")}
+							tabIndex={-1}
+						>
 							<button
 								type="button"
 								className="flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear"

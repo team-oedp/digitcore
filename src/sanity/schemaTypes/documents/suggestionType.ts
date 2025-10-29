@@ -8,6 +8,13 @@ export const suggestionType = defineType({
 	icon: EnvelopeIcon,
 	fields: [
 		defineField({
+			// should match 'languageField' plugin configuration setting in sanity.config.ts, if customized
+			name: "language",
+			type: "string",
+			readOnly: true,
+			hidden: true,
+		}),
+		defineField({
 			name: "patternName",
 			title: "Pattern Name",
 			type: "string",

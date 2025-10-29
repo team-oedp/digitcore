@@ -4,8 +4,9 @@ import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
 
 export function ErrorHeader() {
@@ -30,13 +31,17 @@ export function ErrorHeader() {
 	}, [isExploreOpen]);
 
 	const pathname = usePathname();
+	const { language, normalizedPath } = useMemo(
+		() => parseLocalePath(pathname),
+		[pathname],
+	);
 
 	return (
 		<header className="fixed inset-x-2 top-2 z-50 flex h-12 items-center rounded-md bg-container-background">
 			<nav className="flex w-full items-center justify-between gap-3.5 px-5 py-1.5">
 				<div className="flex w-full items-center gap-6">
 					<Link
-						href="/"
+						href={buildLocaleHref(language, "/")}
 						aria-label="Digitcore Home"
 						className="flex h-6 w-6 flex-shrink-0 items-center justify-center"
 					>
@@ -60,12 +65,16 @@ export function ErrorHeader() {
 									asChild
 									className={cn(
 										"h-auto px-3 py-2 text-link capitalize",
-										pathname === "/onboarding"
+										normalizedPath === "/onboarding"
 											? "text-foreground"
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href="/onboarding?via=header">Orientation</Link>
+									<Link
+										href={buildLocaleHref(language, "/onboarding?via=header")}
+									>
+										Orientation
+									</Link>
 								</Button>
 							</motion.li>
 							<li>
@@ -74,12 +83,12 @@ export function ErrorHeader() {
 									asChild
 									className={cn(
 										"h-auto px-3 py-2 text-link capitalize",
-										pathname === "/about"
+										normalizedPath === "/about"
 											? "text-foreground"
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href="/about">About</Link>
+									<Link href={buildLocaleHref(language, "/about")}>About</Link>
 								</Button>
 							</li>
 							<li className="relative" data-explore-menu>
@@ -118,12 +127,14 @@ export function ErrorHeader() {
 														asChild
 														className={cn(
 															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/search"
+															normalizedPath === "/search"
 																? "text-foreground"
 																: "text-muted-foreground",
 														)}
 													>
-														<Link href="/search">Search</Link>
+														<Link href={buildLocaleHref(language, "/search")}>
+															Search
+														</Link>
 													</Button>
 												</motion.div>
 												<motion.div
@@ -141,12 +152,14 @@ export function ErrorHeader() {
 														asChild
 														className={cn(
 															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/patterns"
+															normalizedPath === "/patterns"
 																? "text-foreground"
 																: "text-muted-foreground",
 														)}
 													>
-														<Link href="/patterns">Patterns</Link>
+														<Link href={buildLocaleHref(language, "/patterns")}>
+															Patterns
+														</Link>
 													</Button>
 												</motion.div>
 												<motion.div
@@ -164,12 +177,14 @@ export function ErrorHeader() {
 														asChild
 														className={cn(
 															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/tags"
+															normalizedPath === "/tags"
 																? "text-foreground"
 																: "text-muted-foreground",
 														)}
 													>
-														<Link href="/tags">Tags</Link>
+														<Link href={buildLocaleHref(language, "/tags")}>
+															Tags
+														</Link>
 													</Button>
 												</motion.div>
 												<motion.div
@@ -187,12 +202,14 @@ export function ErrorHeader() {
 														asChild
 														className={cn(
 															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/values"
+															normalizedPath === "/values"
 																? "text-foreground"
 																: "text-muted-foreground",
 														)}
 													>
-														<Link href="/values">Values</Link>
+														<Link href={buildLocaleHref(language, "/values")}>
+															Values
+														</Link>
 													</Button>
 												</motion.div>
 												<motion.div
@@ -210,12 +227,14 @@ export function ErrorHeader() {
 														asChild
 														className={cn(
 															"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-															pathname === "/themes"
+															normalizedPath === "/themes"
 																? "text-foreground"
 																: "text-muted-foreground",
 														)}
 													>
-														<Link href="/themes">Themes</Link>
+														<Link href={buildLocaleHref(language, "/themes")}>
+															Themes
+														</Link>
 													</Button>
 												</motion.div>
 											</motion.div>

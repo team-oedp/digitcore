@@ -23,6 +23,7 @@ const mockHeaderData: HEADER_QUERYResult = {
 	_updatedAt: "2024-01-01T00:00:00Z",
 	_rev: "test-rev",
 	title: "Test Header",
+	language: "en",
 	internalLinks: [
 		{
 			_key: "orientation",
@@ -97,6 +98,7 @@ vi.mock("next/navigation", () => ({
 		push: vi.fn(),
 	}),
 	usePathname: () => "/test-page",
+	useSearchParams: () => new URLSearchParams(),
 }));
 
 // Mock Next.js components
@@ -161,6 +163,7 @@ describe("Carrier Bag Sidebar", () => {
 		_updatedAt: "2023-01-01T00:00:00Z",
 		_rev: "1",
 		title: "Test Pattern",
+		language: "en",
 		slug: "test-pattern",
 		description: null,
 		descriptionPlainText: "",
@@ -185,7 +188,7 @@ describe("Carrier Bag Sidebar", () => {
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 
@@ -231,7 +234,7 @@ describe("Carrier Bag Sidebar", () => {
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 
@@ -275,7 +278,7 @@ describe("Carrier Bag Sidebar", () => {
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 
@@ -308,13 +311,13 @@ describe("Carrier Bag Sidebar", () => {
 		it("should close sidebar when close button is clicked", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader headerData={mockHeaderData} />
+					<SiteHeader headerData={mockHeaderData} language="en" />
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 
@@ -360,13 +363,13 @@ describe("Carrier Bag Sidebar", () => {
 		it("should close sidebar when header toggle button is clicked", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader headerData={mockHeaderData} />
+					<SiteHeader headerData={mockHeaderData} language="en" />
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 
@@ -405,13 +408,13 @@ describe("Carrier Bag Sidebar", () => {
 		it("should allow sidebar to reopen after being closed", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader headerData={mockHeaderData} />
+					<SiteHeader headerData={mockHeaderData} language="en" />
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 

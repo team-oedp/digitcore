@@ -6,7 +6,6 @@ import {
 	Sun03Icon,
 } from "@hugeicons/core-free-icons";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 
 import {
 	DropdownMenu,
@@ -22,17 +21,6 @@ type ModeToggleProps = {
 
 export function ModeToggle({ className }: ModeToggleProps = {}) {
 	const { setTheme } = useTheme();
-	const [mounted, setMounted] = useState(false);
-
-	// Prevent hydration mismatch by only rendering after client mount
-	useEffect(() => {
-		setMounted(true);
-	}, []);
-
-	if (!mounted) {
-		return null;
-	}
-
 	return (
 		<div className={className}>
 			<DropdownMenu>

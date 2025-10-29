@@ -8,5 +8,5 @@ export default defineCliConfig({
 		dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
 	},
 	studioHost: "digitcore",
-	autoUpdates: true,
+	deployment: { autoUpdates: true },
 });

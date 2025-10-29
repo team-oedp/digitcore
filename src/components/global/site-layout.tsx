@@ -1,10 +1,12 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
 import { SiteHeader } from "~/components/global/site-header";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
+import type { Language } from "~/i18n/config";
+import { parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
 import type {
 	CARRIER_BAG_QUERYResult,
@@ -18,6 +20,7 @@ type SiteLayoutProps = {
 	headerData: HEADER_QUERYResult;
 	footerData: FOOTER_QUERYResult;
 	carrierBagData: CARRIER_BAG_QUERYResult;
+	language: Language;
 };
 
 export function SiteLayout({
@@ -25,9 +28,14 @@ export function SiteLayout({
 	headerData,
 	footerData,
 	carrierBagData,
+	language,
 }: SiteLayoutProps) {
 	const pathname = usePathname();
-	const isCarrierBagRoute = pathname === "/carrier-bag";
+	const { normalizedPath } = useMemo(
+		() => parseLocalePath(pathname),
+		[pathname],
+	);
+	const isCarrierBagRoute = normalizedPath === "/carrier-bag";
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	return (
 		<SidebarProvider
@@ -39,9 +47,13 @@ export function SiteLayout({
 			}
 			defaultOpen={false}
 		>
-			<SiteHeader headerData={headerData} />
+			<SiteHeader headerData={headerData} language={language} />
 			<div className="flex min-h-0 flex-1 flex-row-reverse gap-2 overflow-hidden bg-page-background pt-16 transition-[gap] md:pt-14 md:[&:has([data-slot=sidebar][data-state=collapsed])]:gap-0 md:[&:has([data-slot=sidebar][data-state=collapsed])]:delay-200 md:[&:has([data-slot=sidebar][data-state=collapsed])]:duration-0">
-				<CarrierBagSidebar className="peer" carrierBagData={carrierBagData} />
+				<CarrierBagSidebar
+					className="peer"
+					carrierBagData={carrierBagData}
+					language={language}
+				/>
 				<SidebarInset className="relative mx-2 mb-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-md md:m-0 md:mb-0">
 					<div
 						ref={scrollContainerRef}

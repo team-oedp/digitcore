@@ -1,5 +1,6 @@
 "use server";
 
+import { type Language, i18n } from "~/i18n/config";
 import { createLogLocation, logger } from "~/lib/logger";
 import { client } from "~/sanity/lib/client";
 import { FILTER_OPTIONS_QUERY } from "~/sanity/lib/queries";
@@ -32,7 +33,9 @@ export type FilterOptionsResult = {
 /**
  * Server action to fetch filter options from Sanity
  */
-export async function fetchFilterOptions(): Promise<FilterOptionsResult> {
+export async function fetchFilterOptions(
+	language: Language = i18n.base,
+): Promise<FilterOptionsResult> {
 	const location = createLogLocation("filter-options.ts", "fetchFilterOptions");
 
 	try {
@@ -43,7 +46,7 @@ export async function fetchFilterOptions(): Promise<FilterOptionsResult> {
 		);
 
 		const startTime = Date.now();
-		const response = await client.fetch(FILTER_OPTIONS_QUERY);
+		const response = await client.fetch(FILTER_OPTIONS_QUERY, { language });
 		const endTime = Date.now();
 
 		// Extract data from Sanity client response

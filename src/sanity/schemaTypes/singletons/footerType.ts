@@ -12,6 +12,13 @@ export const footerType = defineType({
 	],
 	fields: [
 		defineField({
+			// should match 'languageField' plugin configuration setting in sanity.config.ts, if customized
+			name: "language",
+			type: "string",
+			readOnly: true,
+			hidden: true,
+		}),
+		defineField({
 			name: "title",
 			type: "string",
 		}),
