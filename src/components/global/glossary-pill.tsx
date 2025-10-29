@@ -39,7 +39,10 @@ export function GlossaryPill({
 	}
 
 	// First occurrence gets icon and link
-	const glossaryHref = buildLocaleHref(language, createGlossaryLink(term.title));
+	const glossaryHref = buildLocaleHref(
+		language,
+		createGlossaryLink(term.title),
+	);
 
 	return (
 		<Link

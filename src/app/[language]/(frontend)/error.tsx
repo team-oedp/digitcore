@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { Icon } from "~/components/shared/icon";
 import { PageHeading } from "~/components/shared/page-heading";
-import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { Button } from "~/components/ui/button";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 
 export default function ErrorPage({
 	reset,
