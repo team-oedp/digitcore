@@ -57,7 +57,7 @@ export default function ResolvedLink({
 					icon={isExternal ? Share04Icon : File01Icon}
 					size={12}
 					strokeWidth={2}
-					className="inline-block flex-shrink-0"
+					className="inline-block shrink-0"
 				/>
 			</Link>
 		);

@@ -44,8 +44,8 @@ export function linkResolver(link: Link | undefined) {
 		case "pattern":
 			if (patternSlug) return `/patterns/${patternSlug}`;
 			return null;
-		case "onboarding":
-			return "/onboarding";
+		case "orientation":
+			return "/orientation";
 		default:
 			return null;
 	}

@@ -72,7 +72,7 @@ export const blockContentType = defineType({
 										{ title: "URL", value: "href" },
 										{ title: "Page", value: "page" },
 										{ title: "Pattern", value: "pattern" },
-										{ title: "Orientation", value: "onboarding" },
+										{ title: "Orientation", value: "orientation" },
 									],
 									layout: "radio",
 								},
