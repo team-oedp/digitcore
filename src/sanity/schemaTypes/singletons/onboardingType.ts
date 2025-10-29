@@ -1,6 +1,6 @@
 import { PresentationIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
-import { isUniqueOtherThanLanguage } from "../../lib/validation";
+// import { isUniqueOtherThanLanguage } from "../../lib/validation";
 
 export const onboardingType = defineType({
 	name: "onboarding",
@@ -25,7 +25,7 @@ export const onboardingType = defineType({
 			type: "slug",
 			options: {
 				source: "title",
-				isUnique: isUniqueOtherThanLanguage,
+				// isUnique: isUniqueOtherThanLanguage,
 			},
 		}),
 		defineField({

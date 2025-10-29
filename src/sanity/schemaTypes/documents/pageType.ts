@@ -1,6 +1,6 @@
 import { DesktopIcon, StringIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { isUniqueOtherThanLanguage } from "../../lib/validation";
+// import { isUniqueOtherThanLanguage } from "../../lib/validation";
 
 export const pageType = defineType({
 	name: "page",
@@ -26,7 +26,7 @@ export const pageType = defineType({
 			type: "slug",
 			options: {
 				source: "title",
-				isUnique: isUniqueOtherThanLanguage,
+				// isUnique: isUniqueOtherThanLanguage,
 			},
 		}),
 		defineField({
