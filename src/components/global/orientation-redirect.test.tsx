@@ -1,5 +1,5 @@
 import { render, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { OrientationRedirect } from "./orientation-redirect";
 
 type OrientationStateMock = {
@@ -54,7 +54,9 @@ describe("OrientationRedirect", () => {
 
 		await waitFor(() => {
 			expect(pushMock).toHaveBeenCalledWith(
-				expect.stringMatching(/^http:\/\/localhost(?::3000)?\/en\/orientation$/),
+				expect.stringMatching(
+					/^http:\/\/localhost(?::3000)?\/en\/orientation$/,
+				),
 			);
 		});
 	});
