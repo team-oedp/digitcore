@@ -426,14 +426,20 @@ export function HeadingMorph({
 			)
 		: useTransform(scrollY, [0, 1], [1, 1]);
 
-	// Center CTA visibility: remains visible through morph, fades as underlying content comes in
+	// Center CTA visibility: visible through morph, fade once content begins to scroll in
+	const fadeStartPx = useMemo(() => {
+		const base = Number(effectiveMorphDistance ?? 0);
+		const offset = Math.max(20, Math.floor(effectiveScrollLockDistance * 0.25));
+		return base + offset;
+	}, [effectiveMorphDistance, effectiveScrollLockDistance]);
+	const fadeEndPx = useMemo(() => {
+		const base = Number(effectiveMorphDistance ?? 0);
+		const span = Math.max(80, Math.floor(effectiveScrollLockDistance * 0.75));
+		return base + span;
+	}, [effectiveMorphDistance, effectiveScrollLockDistance]);
 	const ctaOpacity = useTransform(
 		scrollY,
-		[
-			0,
-			effectiveMorphDistance,
-			(effectiveMorphDistance as number) + effectiveLingerDistance,
-		],
+		[0, fadeStartPx, fadeEndPx],
 		[1, 1, 0],
 	);
 
@@ -490,6 +496,10 @@ export function HeadingMorph({
 							rotationSensitivityRange={[0.7, 1.5]}
 							highlightAutoRotate
 							highlightAutoRotateSpeedDegPerSec={10}
+							fadeOutAfterGatePx={Math.max(
+								140,
+								Math.floor(effectiveScrollLockDistance * 0.7),
+							)}
 						/>
 					</div>
 

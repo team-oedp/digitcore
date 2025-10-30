@@ -88,6 +88,8 @@ type Props = {
 	highlightAutoRotateSpeedDegPerSec?: number;
 	/** Override which icon index the highlighted tile uses (0-based, defaults to 0) */
 	highlightIconIndex?: number;
+	/** After gate (morph) completes, fade icons out fully over this window scroll distance (px). 0 disables. */
+	fadeOutAfterGatePx?: number;
 };
 
 function seeded(n: number) {
@@ -112,6 +114,7 @@ export default function PatternGrid({
 	highlightAutoRotate = true,
 	highlightAutoRotateSpeedDegPerSec = 12,
 	highlightIconIndex = 0,
+	fadeOutAfterGatePx = 0,
 }: Props) {
 	const rootRef = useRef<HTMLDivElement | null>(null);
 	const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
@@ -343,8 +346,20 @@ export default function PatternGrid({
 						const gateFactor = gate
 							? Math.min(1, Math.max(0, (gp - gateDelay) / gateWindow))
 							: 1;
-						// Only fade-in (no fade-out); keep opacity based on base+gate
+						// Base fade-in; keep opacity based on base+gate
 						let opacity = baseOpacity * gateFactor;
+						// Post-gate fade-out window based on global scroll after gate completion
+						if (fadeOutAfterGatePx > 0 && gate && gp >= 0.98) {
+							const progressed = Math.max(
+								0,
+								winY - gateWindowYRef.current || 0,
+							);
+							const t = Math.max(
+								0,
+								Math.min(1, progressed / fadeOutAfterGatePx),
+							);
+							opacity *= 1 - t;
+						}
 						const isHighlight = highlightIndex === i;
 						if (isHighlight) {
 							// Make CTA slightly more opaque than others by raising its cap subtly
