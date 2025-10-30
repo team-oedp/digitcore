@@ -315,7 +315,7 @@
                                           },
                                           {
                                             "type": "string",
-                                            "value": "onboarding"
+                                            "value": "orientation"
                                           }
                                         ]
                                       },
@@ -678,7 +678,7 @@
                                   },
                                   {
                                     "type": "string",
-                                    "value": "onboarding"
+                                    "value": "orientation"
                                   }
                                 ]
                               },
@@ -999,7 +999,7 @@
                             },
                             {
                               "type": "string",
-                              "value": "onboarding"
+                              "value": "orientation"
                             }
                           ]
                         },
@@ -2392,7 +2392,7 @@
               },
               {
                 "type": "string",
-                "value": "onboarding"
+                "value": "orientation"
               }
             ]
           },
