@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import CustomizablePatternCombination from "~/components/shared/customizable-pattern-combination-wrapper";
@@ -53,11 +52,7 @@ export async function generateMetadata({ params }: LanguagePageProps) {
 	};
 }
 
-export const metadata: Metadata = {
-	title: "Values | DIGITCORE",
-	description:
-		"Open infrastructure and environmental research values and principles.",
-};
+// metadata is generated via generateMetadata above
 
 export default async function Page({ params }: LanguagePageProps) {
 	const { language } = await params;

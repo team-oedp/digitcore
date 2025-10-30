@@ -1,7 +1,7 @@
 /// <reference types="vitest/globals" />
 /// <reference types="@testing-library/jest-dom/vitest" />
 import { fireEvent, render, screen } from "@testing-library/react";
-import { vi } from "vitest";
+import { expect, vi } from "vitest";
 import { CustomizableIcon } from "../customizable-icon";
 
 // Mock the actual SVG file content

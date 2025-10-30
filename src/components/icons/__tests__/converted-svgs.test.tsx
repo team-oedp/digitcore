@@ -2,6 +2,7 @@
 /// <reference types="@testing-library/jest-dom" />
 import fs from "node:fs";
 import path from "node:path";
+import { beforeAll, describe, expect, it } from "vitest";
 
 describe("Converted SVG Files", () => {
 	const iconsDir = path.join(process.cwd(), "public/icons");
@@ -163,6 +164,10 @@ describe("Converted SVG Files", () => {
 
 		// All files should have the same conversion pattern
 		const firstPattern = conversionPatterns[0];
+		expect(firstPattern).toBeDefined();
+		if (!firstPattern) {
+			throw new Error("No conversion patterns found");
+		}
 		for (const pattern of conversionPatterns) {
 			expect(pattern.hasFillVar).toBe(firstPattern.hasFillVar);
 			expect(pattern.hasStrokeVar).toBe(firstPattern.hasStrokeVar);

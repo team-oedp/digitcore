@@ -47,9 +47,6 @@
 		"node_modules",
 		"dist",
 		".next",
-		"**/*.test.ts",
-		"**/*.test.tsx",
-		"**/__tests__/**",
 		"cypress/**",
 		"src/sanity/dist",
 		"src/sanity/**"

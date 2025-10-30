@@ -2,7 +2,7 @@
 /// <reference types="@testing-library/jest-dom/vitest" />
 import { fireEvent } from "@testing-library/dom";
 import { render, screen } from "@testing-library/react";
-import { vi } from "vitest";
+import { expect, vi } from "vitest";
 import { CustomizableIcon } from "../customizable-icon";
 
 describe("CustomizableIcon Color Customization", () => {

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { GlossaryList } from "~/components/pages/glossary/glossary-list";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
@@ -60,11 +59,7 @@ export async function generateMetadata({ params }: LanguagePageProps) {
 	};
 }
 
-export const metadata: Metadata = {
-	title: "Glossary | DIGITCORE",
-	description:
-		"Searchable reference for key terms and concepts used in the toolkit.",
-};
+// metadata is generated via generateMetadata above
 
 const ALPHABET = Array.from({ length: 26 }, (_, i) =>
 	String.fromCharCode(65 + i),

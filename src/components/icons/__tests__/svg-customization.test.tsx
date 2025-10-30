@@ -1,6 +1,7 @@
 /// <reference types="vitest/globals" />
 /// <reference types="@testing-library/jest-dom/vitest" />
 import { render, screen } from "@testing-library/react";
+import { expect } from "vitest";
 
 // Mock SVG content as JSX for safer rendering
 const MockSvg = () => (
@@ -263,7 +264,9 @@ describe("SVG Conversion Validation", () => {
 		expect(paths).toHaveLength(2);
 
 		// First path should have fill attributes
-		const fillPath = paths[0];
+		const fillPath = paths.item(0);
+		expect(fillPath).not.toBeNull();
+		if (!fillPath) return; // Narrow for TS
 		expect(fillPath.getAttribute("fill")).toMatch(
 			/var\(--icon-fill-color,\s*#85A374\)/,
 		);
@@ -272,7 +275,9 @@ describe("SVG Conversion Validation", () => {
 		);
 
 		// Second path should have stroke attributes
-		const strokePath = paths[1];
+		const strokePath = paths.item(1);
+		expect(strokePath).not.toBeNull();
+		if (!strokePath) return; // Narrow for TS
 		expect(strokePath.getAttribute("stroke")).toMatch(
 			/var\(--icon-stroke-color,\s*#85A374\)/,
 		);

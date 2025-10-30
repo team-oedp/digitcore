@@ -8,12 +8,16 @@ import { Solutions } from "~/components/pages/pattern/solutions";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { PatternHeading } from "~/components/shared/pattern-heading";
-import { buildAbsoluteUrl } from "~/lib/metadata";
 import type { Language } from "~/i18n/config";
 import { i18n } from "~/i18n/config";
+import { buildAbsoluteUrl } from "~/lib/metadata";
 import { type RouteSlug, normalizeSlug } from "~/lib/slug-utils";
 import { sanityFetch } from "~/sanity/lib/client";
-import { PATTERN_PAGES_SLUGS_QUERY, PATTERN_QUERY, SITE_SETTINGS_QUERY } from "~/sanity/lib/queries";
+import {
+	PATTERN_PAGES_SLUGS_QUERY,
+	PATTERN_QUERY,
+	SITE_SETTINGS_QUERY,
+} from "~/sanity/lib/queries";
 import type {
 	PATTERN_PAGES_SLUGS_QUERYResult,
 	PATTERN_QUERYResult,
@@ -53,55 +57,59 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-    props: PatternPageProps,
+	props: PatternPageProps,
 ): Promise<Metadata> {
-    const { language, slug } = await props.params;
-    const normalizedSlug = normalizeSlug(slug as RouteSlug);
+	const { language, slug } = await props.params;
+	const normalizedSlug = normalizeSlug(slug as RouteSlug);
 
-    if (!normalizedSlug) {
-        return { title: "Pattern" };
-    }
+	if (!normalizedSlug) {
+		return { title: "Pattern" };
+	}
 
-    const [site, pattern] = await Promise.all([
-        sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
-        sanityFetch({
-            query: PATTERN_QUERY,
-            params: { slug: normalizedSlug, language },
-            revalidate: 3600,
-        }),
-    ]);
+	const [site, pattern] = await Promise.all([
+		sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
+		sanityFetch({
+			query: PATTERN_QUERY,
+			params: { slug: normalizedSlug, language },
+			revalidate: 3600,
+		}),
+	]);
 
-    const siteUrl = site?.url ?? "https://digitcore.org";
-    const readable = normalizedSlug
-        .replace(/-/g, " ")
-        .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(" ");
-    const title = pattern?.title ?? readable;
-    const description =
-        (pattern as { descriptionPlainText?: string } | null)?.descriptionPlainText ??
-        site?.seoDescription ??
-        site?.description;
-    const ogUrl = buildAbsoluteUrl(siteUrl, `/pattern/${normalizedSlug}`);
+	const siteUrl = site?.url ?? "https://digitcore.org";
+	const readable = normalizedSlug
+		.replace(/-/g, " ")
+		.split(" ")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+		.join(" ");
+	const title = pattern?.title ?? readable;
+	const description =
+		(pattern as { descriptionPlainText?: string } | null)
+			?.descriptionPlainText ??
+		site?.seoDescription ??
+		site?.description;
+	const ogUrl = buildAbsoluteUrl(siteUrl, `/pattern/${normalizedSlug}`);
 
-    return {
-        title: `${title} | Pattern`,
-        description: description ?? undefined,
-        alternates: { canonical: ogUrl },
-        openGraph: {
-            type: "article",
-            url: ogUrl,
-            images: [
-                {
-                    url: buildAbsoluteUrl(siteUrl, `/pattern/${normalizedSlug}/opengraph-image`),
-                    width: 1200,
-                    height: 630,
-                    alt: `${title} | DIGITCORE`,
-                },
-            ],
-        },
-        twitter: { card: "summary_large_image" },
-    };
+	return {
+		title: `${title} | Pattern`,
+		description: description ?? undefined,
+		alternates: { canonical: ogUrl },
+		openGraph: {
+			type: "article",
+			url: ogUrl,
+			images: [
+				{
+					url: buildAbsoluteUrl(
+						siteUrl,
+						`/pattern/${normalizedSlug}/opengraph-image`,
+					),
+					width: 1200,
+					height: 630,
+					alt: `${title} | DIGITCORE`,
+				},
+			],
+		},
+		twitter: { card: "summary_large_image" },
+	};
 }
 
 export default async function Page(props: PatternPageProps) {

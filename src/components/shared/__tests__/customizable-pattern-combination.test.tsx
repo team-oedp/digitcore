@@ -1,7 +1,7 @@
 /// <reference types="vitest/globals" />
 /// <reference types="@testing-library/jest-dom/vitest" />
 import { render } from "@testing-library/react";
-import { vi } from "vitest";
+import { expect, vi } from "vitest";
 import { CustomizablePatternCombination } from "../customizable-pattern-combination";
 
 // Mock the shape icon components

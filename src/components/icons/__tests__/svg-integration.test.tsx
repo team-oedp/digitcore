@@ -3,7 +3,7 @@ import path from "node:path";
 /// <reference types="vitest/globals" />
 /// <reference types="@testing-library/jest-dom/vitest" />
 import { render, screen } from "@testing-library/react";
-import { vi } from "vitest";
+import { expect, vi } from "vitest";
 import { CustomizableIcon } from "../customizable-icon";
 
 // Mock fetch to return actual SVG content
