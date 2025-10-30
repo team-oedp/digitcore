@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDownIcon } from "lucide-react";
 import {
 	motion,
 	useMotionValueEvent,
@@ -33,6 +34,8 @@ type HeadingMorphProps = {
 	scrollLockDistancePx?: ResponsiveNumber;
 	/** Extra distance to keep the target word fully visible before fading. */
 	lingerDistancePx?: ResponsiveNumber;
+	/** Show a subtle center CTA (glowing dot) that fades as content appears */
+	showScrollCTA?: boolean;
 };
 
 export function HeadingMorph({
@@ -50,6 +53,7 @@ export function HeadingMorph({
 	headerHeightVh,
 	scrollLockDistancePx,
 	lingerDistancePx,
+	showScrollCTA = true,
 }: HeadingMorphProps) {
 	const elementRef = useRef<HTMLDivElement>(null);
 	const contentMeasureRef = useRef<HTMLDivElement>(null);
@@ -422,6 +426,17 @@ export function HeadingMorph({
 			)
 		: useTransform(scrollY, [0, 1], [1, 1]);
 
+	// Center CTA visibility: remains visible through morph, fades as underlying content comes in
+	const ctaOpacity = useTransform(
+		scrollY,
+		[
+			0,
+			effectiveMorphDistance,
+			(effectiveMorphDistance as number) + effectiveLingerDistance,
+		],
+		[1, 1, 0],
+	);
+
 	// No unmounting; we only fade with largeHeadingOpacity so content doesn't jump
 
 	// Grid layout constants for background behind heading
@@ -469,10 +484,81 @@ export function HeadingMorph({
 							cellSize={gridCellSize}
 							gapPx={gridGapPx}
 							rows={gridRows}
-							highlightOneRandom
-							highlightMinOpacity={0.8}
+							highlightCTA
+							highlightMinOpacity={0.55}
+							rotateOnScroll
+							rotationSensitivityRange={[0.7, 1.5]}
+							highlightAutoRotate
+							highlightAutoRotateSpeedDegPerSec={10}
 						/>
 					</div>
+
+					{/* Subtle bottom-center CTA: circular button with down arrow and uneven halo */}
+					{showScrollCTA && (
+						<div className="-translate-x-1/2 pointer-events-none fixed bottom-10 left-1/2 z-30 transform">
+							<motion.div
+								style={{ opacity: ctaOpacity }}
+								className="relative"
+								initial={false}
+							>
+								{/* icon only (no outline), subtle vertical bob */}
+								<motion.div
+									animate={{ y: [0, 4, 0] }}
+									transition={{
+										duration: 3.0,
+										repeat: Number.POSITIVE_INFINITY,
+										ease: "easeInOut",
+									}}
+									className="flex items-center justify-center"
+								>
+									<ChevronDownIcon className="size-[1.6rem] text-icon/80" />
+								</motion.div>
+								{/* subtle background fill to match page background */}
+								<div className="-inset-3 -z-10 absolute rounded-full bg-background/35" />
+								{/* soft asymmetric masked glows (no fill center) */}
+								<motion.div
+									className="-inset-4 -z-20 absolute rounded-full bg-background/25 blur-[18px]"
+									style={{
+										background: undefined,
+										WebkitMaskImage:
+											"radial-gradient(circle, transparent 62%, black 63%)",
+										maskImage:
+											"radial-gradient(circle, transparent 62%, black 63%)",
+									}}
+									animate={{
+										opacity: [0.18, 0.28, 0.18],
+										x: [-0.6, 0.5, -0.4],
+										y: [0.5, -0.4, 0.3],
+									}}
+									transition={{
+										duration: 3.2,
+										repeat: Number.POSITIVE_INFINITY,
+										ease: "easeInOut",
+									}}
+								/>
+								<motion.div
+									className="-inset-6 -z-20 absolute rounded-full bg-background/15 blur-[22px]"
+									style={{
+										background: undefined,
+										WebkitMaskImage:
+											"radial-gradient(circle, transparent 58%, black 60%)",
+										maskImage:
+											"radial-gradient(circle, transparent 58%, black 60%)",
+									}}
+									animate={{
+										opacity: [0.12, 0.22, 0.12],
+										x: [0.5, -0.4, 0.3],
+										y: [-0.4, 0.5, -0.3],
+									}}
+									transition={{
+										duration: 4,
+										repeat: Number.POSITIVE_INFINITY,
+										ease: "easeInOut",
+									}}
+								/>
+							</motion.div>
+						</div>
+					)}
 
 					{/* Large heading */}
 					<motion.h1
