@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
+import { notFound } from "next/navigation";
 import { SearchResultItem } from "~/components/pages/search/search-result-item";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
-import { MissingTranslationNotice } from "~/components/shared/missing-translation-notice";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { sanityFetch } from "~/sanity/lib/client";
@@ -60,7 +60,7 @@ export default async function Page({ params }: LanguagePageProps) {
 	}
 
 	if (!pageData) {
-		return <MissingTranslationNotice language={language} />;
+		notFound();
 	}
 
 	return (

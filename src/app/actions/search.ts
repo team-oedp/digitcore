@@ -168,13 +168,13 @@ export async function searchPatterns(
 		);
 
 		let query: string;
-		let finalQueryParams: Record<string, unknown>;
+		let preparedQueryParams: Record<string, unknown>;
 
 		if (hasSearchTerm) {
 			// Use appropriate search query based on preferences
 			if (hasPreferences) {
 				query = PATTERN_SEARCH_WITH_PREFERENCES_QUERY;
-				finalQueryParams = queryParams; // Include all params including preferences
+				preparedQueryParams = queryParams; // Include all params including preferences
 				logger.groq(
 					"Using PATTERN_SEARCH_WITH_PREFERENCES_QUERY",
 					undefined,
@@ -182,7 +182,8 @@ export async function searchPatterns(
 				);
 			} else {
 				query = PATTERN_SEARCH_QUERY;
-				finalQueryParams = {
+				preparedQueryParams = {
+					language,
 					audiences: queryParams.audiences,
 					themes: queryParams.themes,
 					tags: queryParams.tags,
@@ -199,7 +200,7 @@ export async function searchPatterns(
 			const escapedSearchTerm = parsedParams.searchTerm
 				.trim()
 				.replace(/["\\]/g, "\\$&"); // Escape quotes and backslashes
-			finalQueryParams.searchTerm = escapedSearchTerm;
+			preparedQueryParams.searchTerm = escapedSearchTerm;
 
 			logger.groq(
 				"Search term escaped",
@@ -209,9 +210,10 @@ export async function searchPatterns(
 		} else {
 			// Use filter query (no search term, only filters)
 			query = PATTERN_FILTER_QUERY;
-			finalQueryParams = hasPreferences
+			preparedQueryParams = hasPreferences
 				? queryParams
 				: {
+						language,
 						audiences: queryParams.audiences,
 						themes: queryParams.themes,
 						tags: queryParams.tags,
@@ -219,7 +221,7 @@ export async function searchPatterns(
 			logger.groq("Using PATTERN_FILTER_QUERY", { hasPreferences }, location);
 		}
 
-		logger.groq("Final GROQ query parameters", finalQueryParams, location);
+		logger.groq("Final GROQ query parameters", preparedQueryParams, location);
 		logger.groq("Query type", hasSearchTerm ? "SEARCH" : "FILTER", location);
 
 		// Execute GROQ query
@@ -229,7 +231,7 @@ export async function searchPatterns(
 			location,
 		);
 		const startTime = Date.now();
-		const response = await client.fetch(query, finalQueryParams);
+		const response = await client.fetch(query, preparedQueryParams);
 		const endTime = Date.now();
 
 		// Extract results from Sanity client response

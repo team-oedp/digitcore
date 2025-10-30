@@ -5,20 +5,19 @@ import { SearchClientWrapper } from "~/components/pages/search/search-client-wra
 import { SearchInterfaceServer } from "~/components/pages/search/search-interface-server";
 import { SearchInterfaceSkeleton } from "~/components/pages/search/search-interface-skeleton";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
-import { MissingTranslationNotice } from "~/components/shared/missing-translation-notice";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { Skeleton } from "~/components/ui/skeleton";
 import { sanityFetch } from "~/sanity/lib/client";
 import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
-import type { LanguagePageProps } from "~/types/page-props";
+import type { LanguageSearchPageProps } from "~/types/page-props";
 
 export const metadata: Metadata = {
 	title: "Search | DIGITCORE",
 	description: "Search patterns, tags, themes, and audiences.",
 };
 
-export default async function Page({ params }: LanguagePageProps) {
+export default async function Page({ params }: LanguageSearchPageProps) {
 	const { language } = await params;
 	const pageData = await sanityFetch({
 		query: SEARCH_PAGE_QUERY,
@@ -26,15 +25,11 @@ export default async function Page({ params }: LanguagePageProps) {
 		revalidate: 60,
 	});
 
-	if (!pageData) {
-		return <MissingTranslationNotice language={language} />;
-	}
-
 	return (
 		<PageWrapper>
 			<div className="flex flex-col gap-10 pb-44">
-				{pageData.title && <PageHeading title={pageData.title} />}
-				{pageData.description && (
+				{pageData?.title && <PageHeading title={pageData.title} />}
+				{pageData?.description && (
 					<CustomPortableText
 						value={pageData.description as PortableTextBlock[]}
 						className="mt-8 text-body"
@@ -47,7 +42,7 @@ export default async function Page({ params }: LanguagePageProps) {
 					<Suspense fallback={<Skeleton className="h-32 w-full" />}>
 						<SearchClientWrapper
 							language={language}
-							emptyStateMessage={pageData.emptyStateMessage ?? undefined}
+							emptyStateMessage={pageData?.emptyStateMessage ?? undefined}
 						/>
 					</Suspense>
 				</div>
