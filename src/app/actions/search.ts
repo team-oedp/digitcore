@@ -1,6 +1,6 @@
 "use server";
 
-import { type Language, i18n } from "~/i18n/config";
+import type { Language } from "~/i18n/config";
 import { createLogLocation, logger } from "~/lib/logger";
 import type { ParsedSearchParams } from "~/lib/search";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
@@ -10,6 +10,7 @@ import {
 	PATTERN_SEARCH_QUERY,
 	PATTERN_SEARCH_WITH_PREFERENCES_QUERY,
 	PATTERN_SIMPLE_SEARCH_QUERY,
+	PATTERN_SUGGESTIONS_WITH_PREFERENCES_QUERY,
 	RESOURCE_SEARCH_QUERY,
 	SOLUTION_SEARCH_QUERY,
 	TAG_SEARCH_QUERY,
@@ -524,6 +525,43 @@ export async function searchContentForCommandModal(
 			totalCount: 0,
 			searchParams: parseSearchParams({ page: 1, limit: 20 }),
 		};
+	}
+}
+
+/**
+ * Fetch suggestion patterns ranked by preference match (both > audience count > theme)
+ */
+export async function getPatternSuggestionsWithPreferences(
+	language: Language,
+	preferences: { selectedAudienceIds: string[]; selectedThemeIds: string[] },
+	limit = 5,
+) {
+	const location = createLogLocation(
+		"search.ts",
+		"getPatternSuggestionsWithPreferences",
+	);
+
+	try {
+		const params = {
+			language,
+			prefAudiences: preferences.selectedAudienceIds ?? [],
+			prefThemes: preferences.selectedThemeIds ?? [],
+			limit,
+		} as const;
+
+		logger.groq("Fetching suggestions with preferences", params, location);
+		const results = await client.fetch(
+			PATTERN_SUGGESTIONS_WITH_PREFERENCES_QUERY,
+			params,
+		);
+		return Array.isArray(results) ? results : [];
+	} catch (error) {
+		logger.searchError(
+			"getPatternSuggestionsWithPreferences failed",
+			error,
+			location,
+		);
+		return [];
 	}
 }
 
