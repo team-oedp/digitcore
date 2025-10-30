@@ -1,7 +1,6 @@
 import {
 	ArrowRight02Icon,
 	ChartRelationshipIcon,
-	Link02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
@@ -42,14 +41,17 @@ function SolutionBadge({ solution, index }: SolutionBadgeProps) {
 		>
 			<Badge
 				variant="solution"
+				data-testid="badge-solution"
 				icon={
-					<HugeiconsIcon
-						icon={ChartRelationshipIcon}
-						size={12}
-						color="currentColor"
-						strokeWidth={1.5}
-						className="md:h-[14px] md:w-[14px]"
-					/>
+					<span data-testid="badge-icon">
+						<HugeiconsIcon
+							icon={ChartRelationshipIcon}
+							size={12}
+							color="currentColor"
+							strokeWidth={1.5}
+							className="md:h-[14px] md:w-[14px]"
+						/>
+					</span>
 				}
 			>
 				{title}
@@ -101,6 +103,7 @@ export function Resources({ resources }: ResourcesProps) {
 										<CustomPortableText
 											value={resource.description as PortableTextBlock[]}
 											className="text-body-muted"
+											data-testid="portable-text"
 										/>
 									)}
 								</div>

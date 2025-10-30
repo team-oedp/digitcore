@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import type { PortableTextBlock } from "next-sanity";
 import { notFound } from "next/navigation";
 import { GlossaryList } from "~/components/pages/glossary/glossary-list";
@@ -7,20 +6,60 @@ import { CurrentLetterIndicator } from "~/components/shared/current-letter-indic
 import { LetterNavigation } from "~/components/shared/letter-navigation";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { type Language, i18n } from "~/i18n/config";
+import { buildAbsoluteUrl } from "~/lib/metadata";
+import { buildHreflang } from "~/lib/seo";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
 	GLOSSARY_PAGE_QUERY,
 	GLOSSARY_TERMS_QUERY,
+	SITE_SETTINGS_QUERY,
 } from "~/sanity/lib/queries";
 import type { GLOSSARY_TERMS_QUERYResult } from "~/sanity/sanity.types";
 import type { LanguagePageProps } from "~/types/page-props";
 import { GlossaryScroll } from "./glossary-scroll";
 
-export const metadata: Metadata = {
-	title: "Glossary | DIGITCORE",
-	description:
-		"Searchable reference for key terms and concepts used in the toolkit.",
-};
+const GLOSSARY_LANGUAGES_QUERY = `array::unique(*[_type == 'page' && slug.current == 'glossary' && defined(language)].language)`;
+
+export async function generateStaticParams() {
+	const available = (await sanityFetch({
+		query: GLOSSARY_LANGUAGES_QUERY,
+		revalidate: 60,
+	})) as string[] | null;
+	const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
+	return (available ?? [])
+		.filter((id) => allowed.has(id as Language))
+		.map((id) => ({ language: id as Language }));
+}
+
+export async function generateMetadata({ params }: LanguagePageProps) {
+	const { language } = await params;
+	const site = await sanityFetch({
+		query: SITE_SETTINGS_QUERY,
+		revalidate: 3600,
+	});
+	const siteUrl = site?.url ?? "https://digitcore.org";
+	const canonical = buildAbsoluteUrl(siteUrl, `/${language}/glossary`);
+	const available = (await sanityFetch({
+		query: GLOSSARY_LANGUAGES_QUERY,
+		revalidate: 60,
+	})) as string[] | null;
+	const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
+	const languages = (available ?? []).filter((id) =>
+		allowed.has(id as Language),
+	) as Language[];
+	return {
+		title: "Glossary | DIGITCORE",
+		description:
+			"Searchable reference for key terms and concepts used in the toolkit.",
+		alternates: {
+			canonical,
+			languages: buildHreflang(siteUrl, "/glossary", languages),
+		},
+	};
+}
+
+// metadata is generated via generateMetadata above
 
 const ALPHABET = Array.from({ length: 26 }, (_, i) =>
 	String.fromCharCode(65 + i),
@@ -45,8 +84,8 @@ export default async function Page({ params }: LanguagePageProps) {
 	]);
 
 	// Group terms by letter and ensure strict alphabetical ordering within each group
-	const termsByLetter =
-		glossaryTerms?.reduce<TermsByLetter>((acc, term) => {
+	const termsByLetter: TermsByLetter = (glossaryTerms ?? []).reduce(
+		(acc: TermsByLetter, term: GLOSSARY_TERMS_QUERYResult[number]) => {
 			const title = term.title ?? "";
 			const letter = title.charAt(0).toUpperCase();
 			const group = acc[letter] ?? [];
@@ -55,7 +94,9 @@ export default async function Page({ params }: LanguagePageProps) {
 			group.sort((a, b) => (a.title ?? "").localeCompare(b.title ?? ""));
 			acc[letter] = group;
 			return acc;
-		}, {}) ?? {};
+		},
+		{},
+	);
 
 	if (!pageData) {
 		notFound();

@@ -6,17 +6,76 @@ import { HeadingMorph } from "~/components/shared/heading-morph";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import PatternCombination from "~/components/shared/pattern-combination-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
+import { type Language, i18n } from "~/i18n/config";
 import type { GlossaryTerm } from "~/lib/glossary-utils";
+import {
+	buildAbsoluteUrl,
+	buildDescriptionFromPortableText,
+} from "~/lib/metadata";
 import { sanityFetch } from "~/sanity/lib/client";
-import { GLOSSARY_TERMS_QUERY, HOME_PAGE_QUERY } from "~/sanity/lib/queries";
+import {
+	GLOSSARY_TERMS_QUERY,
+	HOME_PAGE_QUERY,
+	SITE_SETTINGS_QUERY,
+} from "~/sanity/lib/queries";
 import type { ContentList, Page as PageType } from "~/sanity/sanity.types";
 import type { LanguagePageProps } from "~/types/page-props";
 
-export const metadata: Metadata = {
-	title: "Home | DIGITCORE",
-	description:
-		"DIGITCORE outlines challenges, problems, and phenomena experienced or observed by community organizations, researchers, and open source technologists working on collaborative environmental research. This toolkit is designed to help you make decisions about tools, modes of interaction, research design, and process.",
-};
+const HOME_LANGUAGES_QUERY = `array::unique(*[_type == 'page' && slug.current == '/' && defined(language)].language)`;
+
+export async function generateStaticParams() {
+	const available = (await sanityFetch({
+		query: HOME_LANGUAGES_QUERY,
+		revalidate: 60,
+	})) as string[] | null;
+	const allowed = new Set<Language>(i18n.languages.map((l) => l.id));
+	return (available ?? [])
+		.filter((id) => allowed.has(id as Language))
+		.map((id) => ({ language: id as Language }));
+}
+
+export async function generateMetadata({
+	params,
+}: LanguagePageProps): Promise<Metadata> {
+	const { language } = await params;
+
+	const [site, page] = await Promise.all([
+		sanityFetch({ query: SITE_SETTINGS_QUERY, revalidate: 3600 }),
+		sanityFetch({
+			query: HOME_PAGE_QUERY,
+			params: { language },
+			revalidate: 3600,
+		}),
+	]);
+	const siteUrl = site?.url ?? "https://digitcore.org";
+	const title = page?.title ? `${page.title}` : "Home";
+	const description =
+		buildDescriptionFromPortableText(
+			page?.description as PortableTextBlock[] | null,
+			200,
+		) ??
+		site?.seoDescription ??
+		site?.description;
+	const canonical = buildAbsoluteUrl(siteUrl, `/${language}`);
+	return {
+		title,
+		description,
+		alternates: { canonical },
+		openGraph: {
+			type: "website",
+			url: canonical,
+			images: [
+				{
+					url: buildAbsoluteUrl(siteUrl, "/opengraph-image"),
+					width: 1200,
+					height: 630,
+					alt: title,
+				},
+			],
+		},
+		twitter: { card: "summary_large_image" },
+	};
+}
 
 export default async function Page({ params }: LanguagePageProps) {
 	const { language } = await params;
@@ -92,7 +151,10 @@ export default async function Page({ params }: LanguagePageProps) {
 		<PageWrapper>
 			<div className="pb-44">
 				<HeadingMorph
-					text="Welcome to the Digital Toolkit for Collaborative Environmental Research"
+					text={
+						(data as { heroHeading?: string } | null)?.heroHeading ??
+						"Welcome to the Digital Toolkit for Collaborative Environmental Research"
+					}
 					transitionText="DIGITCORE"
 					morphDistancePx={{ base: 240, sm: 260, md: 320, lg: 360, xl: 400 }}
 					containerClass="overflow-y-auto"

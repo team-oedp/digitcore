@@ -25,11 +25,12 @@ export function CustomPortableText({
 	className,
 	value,
 	as: Component = "div",
+	...props
 }: {
 	className?: string;
 	value: PortableTextBlock[];
 	as?: React.ElementType;
-}) {
+} & React.HTMLAttributes<HTMLElement>) {
 	// Glossary terms are now editor-annotated; no auto-detection during render.
 
 	const components: PortableTextComponents = {
@@ -153,7 +154,7 @@ export function CustomPortableText({
 	};
 
 	return (
-		<Component className={cn(className, "prose max-w-none")}>
+		<Component className={cn(className, "prose max-w-none")} {...props}>
 			<PortableText components={components} value={value} />
 		</Component>
 	);

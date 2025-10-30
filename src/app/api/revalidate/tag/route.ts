@@ -34,7 +34,8 @@ export async function POST(req: NextRequest) {
 		}
 
 		for (const tag of body.tags) {
-			revalidateTag(tag, "max");
+			// Support differing Next.js type signatures across versions
+			(revalidateTag as unknown as (t: string, options?: unknown) => void)(tag);
 		}
 
 		return NextResponse.json({ body });

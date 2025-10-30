@@ -24,6 +24,7 @@
 				"name": "next"
 			}
 		],
+		"types": ["vitest", "vitest/globals", "@testing-library/jest-dom"],
 		"incremental": true,
 		/* Path Aliases */
 		"baseUrl": ".",
@@ -38,8 +39,16 @@
 		"**/*.tsx",
 		"**/*.cjs",
 		"**/*.js",
+		"**/*.d.ts",
 		".next/types/**/*.ts",
 		".next/dev/types/**/*.ts"
 	],
-	"exclude": ["node_modules", "dist", ".next", "src/sanity/dist"]
+	"exclude": [
+		"node_modules",
+		"dist",
+		".next",
+		"cypress/**",
+		"src/sanity/dist",
+		"src/sanity/**"
+	]
 }

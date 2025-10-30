@@ -1,5 +1,17 @@
 import { defineQuery } from "next-sanity";
 
+// Site settings (SEO + Social) singletons
+export const SITE_SETTINGS_QUERY = defineQuery(`*[_type == "siteSettings"][0]{
+  title,
+  description,
+  url,
+  seoTitle,
+  seoDescription,
+  "seoImage": seoImage.asset->url,
+  keywords,
+  openGraph{ siteName, twitterHandle },
+}`);
+
 export const PATTERNS_QUERY =
 	defineQuery(`*[_type == "pattern" && defined(slug.current) && language == $language][]{
     _id,
@@ -949,6 +961,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
     _id,
     _type,
     title,
+    heroHeading,
     language,
     "slug": slug.current,
     emptyStateMessage,

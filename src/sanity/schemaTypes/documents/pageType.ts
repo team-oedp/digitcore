@@ -36,6 +36,12 @@ export const pageType = defineType({
 			type: "blockContent",
 		}),
 		defineField({
+			name: "heroHeading",
+			title: "Hero heading",
+			type: "string",
+			description: "Heading shown at the top of the home page",
+		}),
+		defineField({
 			name: "content",
 			title: "Content",
 			type: "array",
