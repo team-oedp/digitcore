@@ -56,7 +56,7 @@ export type ContentList = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
+            linkType?: 'href' | 'page' | 'pattern' | 'orientation'
             href?: string
             page?: {
               _ref: string
@@ -108,7 +108,7 @@ export type Content = {
           _key: string
         }
       | {
-          linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
+          linkType?: 'href' | 'page' | 'pattern' | 'orientation'
           href?: string
           page?: {
             _ref: string
@@ -154,7 +154,7 @@ export type BlockContent = Array<{
         _key: string
       }
     | {
-        linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
+        linkType?: 'href' | 'page' | 'pattern' | 'orientation'
         href?: string
         page?: {
           _ref: string
@@ -412,7 +412,7 @@ export type Footer = {
 export type Link = {
   _type: 'link'
   label?: string
-  linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
+  linkType?: 'href' | 'page' | 'pattern' | 'orientation'
   href?: string
   page?: {
     _ref: string
@@ -1837,7 +1837,7 @@ export type GLOSSARY_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -1934,7 +1934,7 @@ export type PAGE_BY_SLUG_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -1979,7 +1979,7 @@ export type SEARCH_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -2647,7 +2647,7 @@ export type TAGS_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -2688,7 +2688,7 @@ export type TAGS_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -2734,7 +2734,7 @@ export type TAGS_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                  linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -2974,7 +2974,7 @@ export type VALUES_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -3014,7 +3014,7 @@ export type VALUES_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -3061,7 +3061,7 @@ export type VALUES_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                  linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -3118,7 +3118,7 @@ export type PATTERNS_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -3158,7 +3158,7 @@ export type PATTERNS_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -3205,7 +3205,7 @@ export type PATTERNS_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                  linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -3262,7 +3262,7 @@ export type ABOUT_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -3302,7 +3302,7 @@ export type ABOUT_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -3349,7 +3349,7 @@ export type ABOUT_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                  linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -3406,7 +3406,7 @@ export type HOME_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -3446,7 +3446,7 @@ export type HOME_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -3493,7 +3493,7 @@ export type HOME_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                  linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -3543,7 +3543,7 @@ export type HOME_PAGE_QUERYResult = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+            linkType?: 'href' | 'orientation' | 'page' | 'pattern'
             href?: string
             page?: {
               _ref: string
@@ -3591,7 +3591,7 @@ export type HOME_PAGE_QUERYResult = {
             _key: string
           }
         | {
-            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+            linkType?: 'href' | 'orientation' | 'page' | 'pattern'
             href?: string
             page?: {
               _ref: string
@@ -3646,7 +3646,7 @@ export type FAQ_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -3686,7 +3686,7 @@ export type FAQ_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -3733,7 +3733,7 @@ export type FAQ_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                  linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -3809,7 +3809,7 @@ export type FAQS_QUERYResult = Array<{
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -3873,7 +3873,7 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -3913,7 +3913,7 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -3960,7 +3960,7 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                  linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
@@ -4017,7 +4017,7 @@ export type THEMES_PAGE_QUERYResult = {
           pattern: null
         }
       | {
-          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+          linkType?: 'href' | 'orientation' | 'page' | 'pattern'
           href?: string
           page: string | null
           pattern: string | null
@@ -4057,7 +4057,7 @@ export type THEMES_PAGE_QUERYResult = {
                 pattern: null
               }
             | {
-                linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                 href?: string
                 page: string | null
                 pattern: string | null
@@ -4104,7 +4104,7 @@ export type THEMES_PAGE_QUERYResult = {
                   _key: string
                 }
               | {
-                  linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
+                  linkType?: 'href' | 'orientation' | 'page' | 'pattern'
                   href?: string
                   page?: {
                     _ref: string
