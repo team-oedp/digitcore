@@ -84,35 +84,30 @@ describe("SearchSuggestions", () => {
 		mockOrientationState.selectedAudienceIds = ["aud1"];
 		mockOrientationState.selectedThemeIds = ["th1"];
 
-		mockSearch.mockResolvedValue({
-			success: true,
-			data: [
-				{
-					_id: "p1",
-					_type: "pattern",
-					title: "Pattern One",
-					language: "en",
-					description: [],
-					slug: "pattern-one",
-					tags: [],
-					audiences: [],
-					theme: null,
-				},
-				{
-					_id: "p2",
-					_type: "pattern",
-					title: "Pattern Two",
-					language: "en",
-					description: [],
-					slug: "pattern-two",
-					tags: [],
-					audiences: [],
-					theme: null,
-				},
-			],
-			totalCount: 2,
-			searchParams: { page: 1, limit: 20 },
-		});
+		mockSearch.mockResolvedValue([
+			{
+				_id: "p1",
+				_type: "pattern",
+				title: "Pattern One",
+				language: "en",
+				description: [],
+				slug: "pattern-one",
+				tags: [],
+				audiences: [],
+				theme: null,
+			},
+			{
+				_id: "p2",
+				_type: "pattern",
+				title: "Pattern Two",
+				language: "en",
+				description: [],
+				slug: "pattern-two",
+				tags: [],
+				audiences: [],
+				theme: null,
+			},
+		]);
 
 		render(<SearchSuggestions />);
 

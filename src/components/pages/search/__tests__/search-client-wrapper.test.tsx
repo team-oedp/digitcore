@@ -166,6 +166,7 @@ describe("SearchClientWrapper integration with suggestions", () => {
 
 		// Suggestions header appears below
 		expect(await screen.findByText(/Suggestions for you/i)).toBeInTheDocument();
-		expect(await screen.findByText("Suggestion Three")).toBeInTheDocument();
+		// Our mock for getPatternSuggestionsWithPreferences returns "Suggestion One"
+		expect(await screen.findByText("Suggestion One")).toBeInTheDocument();
 	});
 });
