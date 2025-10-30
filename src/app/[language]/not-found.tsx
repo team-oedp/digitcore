@@ -1,19 +1,26 @@
-"use client";
-
 import { Home09Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useMemo } from "react";
+import { getNotFoundContent } from "~/app/not-found-content";
 import { ErrorHeader } from "~/components/global/error-header";
 import { Icon } from "~/components/shared/icon";
 import { PageHeading } from "~/components/shared/page-heading";
 import { Button } from "~/components/ui/button";
-import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
+import { type Language, i18n, supportedLanguageIds } from "~/i18n/config";
 
-export default function NotFound() {
-	const pathname = usePathname();
-	const { language } = useMemo(() => parseLocalePath(pathname), [pathname]);
-	const homeHref = buildLocaleHref(language, "/");
+export default function NotFound({
+	params,
+}: {
+	params: { language?: string };
+}) {
+	const languageParam = params?.language;
+	const isSupported =
+		typeof languageParam === "string" &&
+		supportedLanguageIds.has(languageParam as Language);
+	const language = (
+		isSupported ? (languageParam as Language) : i18n.base
+	) as Language;
+	const content = getNotFoundContent(language);
+	const homeHref = `/${language}`;
 
 	return (
 		<div className="flex h-screen w-full flex-col overflow-hidden">
@@ -24,14 +31,9 @@ export default function NotFound() {
 						<PageHeading title="404" />
 						<div className="mt-8 space-y-8">
 							<div className="space-y-4 text-neutral-600 text-xl leading-normal">
-								<p>
-									Unfortunately, the page you were looking for cannot be found
-									or may not exist.
-								</p>
-								<p>
-									Return to the DIGITCORE toolkit using your browser's back
-									button or click the link below to go to the homepage.
-								</p>
+								{content.paragraphs.map((paragraph) => (
+									<p key={crypto.randomUUID()}>{paragraph}</p>
+								))}
 							</div>
 
 							<Button
@@ -40,7 +42,7 @@ export default function NotFound() {
 								className="rounded-md border-border bg-card px-3 py-2 text-neutral-500 text-sm uppercase hover:bg-secondary"
 							>
 								<Link href={homeHref} className="flex items-center gap-3">
-									Go to DIGITCORE homepage
+									{content.ctaLabel}
 									<Icon icon={Home09Icon} size={14} />
 								</Link>
 							</Button>

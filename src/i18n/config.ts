@@ -1,14 +1,15 @@
-const languages = [
-	{ id: "en", title: "English", isDefault: true },
-	{ id: "es", title: "Spanish", isDefault: false },
-] as const;
+import {
+	defaultLanguageId,
+	documentInternationalizationConfig,
+} from "~/sanity/document-internationalization-config";
 
-const baseLanguage =
-	languages.find((language) => language.isDefault)?.id ?? languages[0].id;
+const languages = [
+	...documentInternationalizationConfig.supportedLanguages,
+] as const;
 
 export const i18n = {
 	languages,
-	base: baseLanguage,
+	base: defaultLanguageId,
 } as const;
 
 export type LanguageDefinition = (typeof i18n)["languages"][number];

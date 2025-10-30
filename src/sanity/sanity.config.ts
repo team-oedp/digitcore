@@ -6,6 +6,10 @@ import {
 import { visionTool } from "@sanity/vision";
 import { type ConfigContext, type Template, defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
+import {
+	documentInternationalizationConfig,
+	languageFieldName,
+} from "./document-internationalization-config";
 import { dataset, projectId } from "./env";
 import { schema } from "./schemaTypes/index";
 import { structure } from "./structure";
@@ -19,7 +23,7 @@ export default defineConfig({
 			translate: {
 				document: {
 					// Specify the field containing the language for the document
-					languageField: "language",
+					languageField: languageFieldName,
 				},
 			},
 		}),
@@ -27,30 +31,7 @@ export default defineConfig({
 			structure,
 		}),
 		visionTool(),
-		documentInternationalization({
-			supportedLanguages: [
-				{ id: "es", title: "Spanish" },
-				{ id: "en", title: "English" },
-			],
-			languageField: "language",
-			schemaTypes: [
-				"pattern",
-				"audience",
-				"solution",
-				"resource",
-				"faq",
-				"faqCategory",
-				"tag",
-				"theme",
-				"glossary",
-				"page",
-				"onboarding",
-				"header",
-				"footer",
-				"carrierBag",
-				"siteSettings",
-			],
-		}),
+		documentInternationalization(documentInternationalizationConfig),
 	],
 	schema,
 	document: {
