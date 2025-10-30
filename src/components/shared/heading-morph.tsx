@@ -469,6 +469,8 @@ export function HeadingMorph({
 							cellSize={gridCellSize}
 							gapPx={gridGapPx}
 							rows={gridRows}
+							highlightOneRandom
+							highlightMinOpacity={0.8}
 						/>
 					</div>
 

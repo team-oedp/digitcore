@@ -70,6 +70,10 @@ type Props = {
 	rows?: number;
 	cols?: number;
 	gate?: MotionValue<number> | null; // optional morph gate
+	/** When true, one random tile is highlighted at stronger opacity to draw attention */
+	highlightOneRandom?: boolean;
+	/** Minimum opacity to use for the highlighted tile */
+	highlightMinOpacity?: number;
 };
 
 function seeded(n: number) {
@@ -85,6 +89,8 @@ export default function PatternGrid({
 	rows,
 	cols,
 	gate,
+	highlightOneRandom = false,
+	highlightMinOpacity = 0.75,
 }: Props) {
 	const rootRef = useRef<HTMLDivElement | null>(null);
 	const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
@@ -193,6 +199,23 @@ export default function PatternGrid({
 		[r, c],
 	);
 
+	// Choose a random cell index to highlight once the grid size is known
+	const [highlightIndex, setHighlightIndex] = useState<number | null>(
+		highlightOneRandom ? 0 : null,
+	);
+	useEffect(() => {
+		if (!highlightOneRandom) {
+			setHighlightIndex(null);
+			return;
+		}
+		const total = r * c;
+		if (total <= 0) return;
+		// Pick a random index deterministically per mount; avoid SSR mismatch by running on client
+		const idx = Math.floor(Math.random() * total);
+		setHighlightIndex(idx);
+		// Re-pick when grid dimensions change meaningfully
+	}, [highlightOneRandom, r, c]);
+
 	return (
 		<div
 			ref={rootRef}
@@ -237,7 +260,13 @@ export default function PatternGrid({
 							? Math.min(1, Math.max(0, (gp - gateDelay) / gateWindow))
 							: 1;
 						// Only fade-in (no fade-out); keep opacity based on base+gate
-						const opacity = baseOpacity * gateFactor;
+						let opacity = baseOpacity * gateFactor;
+						// Emphasize a single random tile but cap to the same max used by the grid tiles
+						if (highlightOneRandom && highlightIndex === i) {
+							const maxAllowed = finalOpacity; // same cap as other tiles
+							const boosted = Math.max(opacity, highlightMinOpacity);
+							opacity = Math.min(maxAllowed, boosted);
+						}
 						// slight rotation variance for liveliness
 						const dir = seeded(i + 3) > 0.5 ? 1 : -1;
 						const rotAmp = 4 + Math.floor(seeded(i + 11) * 6); // 4..9
