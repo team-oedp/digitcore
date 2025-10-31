@@ -1,11 +1,11 @@
-import { LinkIcon, StackCompactIcon } from "@sanity/icons";
+import { LinkIcon, InsertBelowIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
 
 export const footerType = defineType({
 	name: "footer",
 	title: "Footer",
 	type: "document",
-	icon: StackCompactIcon,
+	icon: InsertBelowIcon,
 	groups: [
 		{ name: "externalLinks", title: "External links" },
 		{ name: "internalLinks", title: "Internal links" },

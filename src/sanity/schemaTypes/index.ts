@@ -15,6 +15,7 @@ import { themeType } from "./documents/themeType";
 import { blockContentType } from "./objects/blockContentType";
 import { contentListType } from "./objects/contentListType";
 import { contentType } from "./objects/contentType";
+import { recordType } from "./objects/recordType";
 import { linkType } from "./objects/linkType";
 import { carrierBagType } from "./singletons/carrierBagType";
 import { footerType } from "./singletons/footerType";
@@ -27,6 +28,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 		linkType,
 		blockContentType,
 		contentType,
+			recordType,
 		contentListType,
 		tagType,
 		patternType,

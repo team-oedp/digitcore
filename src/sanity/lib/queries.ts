@@ -867,6 +867,17 @@ export const VALUES_PAGE_QUERY = defineQuery(`
           "glossary": glossary->{_id, title}
         }
       },
+      // For record type
+      name,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       // For contentList type
       title,
       items[]{

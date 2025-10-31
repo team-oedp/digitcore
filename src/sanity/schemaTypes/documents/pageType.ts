@@ -1,4 +1,4 @@
-import { DesktopIcon, StringIcon } from "@sanity/icons";
+import { BlockquoteIcon, DesktopIcon, StringIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
 // import { isUniqueOtherThanLanguage } from "../../lib/validation";
 
@@ -54,6 +54,10 @@ export const pageType = defineType({
 				defineArrayMember({
 					type: "contentList",
 					icon: StringIcon,
+				}),
+				defineArrayMember({
+					type: "record",
+					icon: BlockquoteIcon,
 				}),
 			],
 		}),
