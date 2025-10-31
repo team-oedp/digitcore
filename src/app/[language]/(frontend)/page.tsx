@@ -214,7 +214,7 @@ export default async function Page({ params }: LanguagePageProps) {
 								return (
 									<div
 										key={contentList._key || `list-${listIndex}`}
-										className="space-y-6"
+										className="mt-8 space-y-6"
 									>
 										{Array.isArray(listItems) &&
 											listItems.length > 0 &&
