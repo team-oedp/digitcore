@@ -1,4 +1,5 @@
 import { BlockquoteIcon, DesktopIcon, StringIcon } from "@sanity/icons";
+import type { SanityDocument } from "sanity";
 import { defineArrayMember, defineField, defineType } from "sanity";
 // import { isUniqueOtherThanLanguage } from "../../lib/validation";
 
@@ -40,6 +41,12 @@ export const pageType = defineType({
 			title: "Hero heading",
 			type: "string",
 			description: "Heading shown at the top of the home page",
+			hidden: ({ document }: { document?: SanityDocument }) => {
+				const title = (document as { title?: string } | undefined)?.title;
+				const slug = (document as { slug?: { current?: string } } | undefined)
+					?.slug?.current;
+				return !(title === "Home" || slug === "/");
+			},
 		}),
 		defineField({
 			name: "content",

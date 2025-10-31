@@ -3026,7 +3026,7 @@ export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
   publishedAt?: string
 }>
 // Variable: VALUES_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'values' && language == $language][0]{    _id,    _type,    title,    language,    "slug": slug.current,    emptyStateMessage,    description[]{      ...,      markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }    },    "descriptionPlainText": pt::text(description),    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    }  }
+// Query: *[_type == 'page' && slug.current == 'values' && language == $language][0]{    _id,    _type,    title,    language,    "slug": slug.current,    emptyStateMessage,    description[]{      ...,      markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }    },    "descriptionPlainText": pt::text(description),    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      // For record type      name,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    }  }
 export type VALUES_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -3110,6 +3110,8 @@ export type VALUES_PAGE_QUERYResult = {
           _type: 'block'
           _key: string
         }> | null
+        name: null
+        description: null
         title: null
         items: null
       }
@@ -3118,6 +3120,8 @@ export type VALUES_PAGE_QUERYResult = {
         _type: 'contentList'
         heading: null
         body: null
+        name: null
+        description: null
         title: string | null
         items: Array<{
           _key: string
@@ -3173,6 +3177,42 @@ export type VALUES_PAGE_QUERYResult = {
         _type: 'record'
         heading: null
         body: null
+        name: string | null
+        description: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+          listItem?: 'bullet'
+          markDefs: Array<
+            | {
+                glossary: {
+                  _id: string
+                  title: string | null
+                } | null
+                _type: 'glossaryTerm'
+                _key: string
+                page: null
+                pattern: null
+              }
+            | {
+                linkType?: 'href' | 'orientation' | 'page' | 'pattern'
+                href?: string
+                page: string | null
+                pattern: string | null
+                openInNewTab?: boolean
+                _type: 'link'
+                _key: string
+                glossary: null
+              }
+          > | null
+          level?: number
+          _type: 'block'
+          _key: string
+        }> | null
         title: null
         items: null
       }
@@ -3971,7 +4011,7 @@ export type ICONS_QUERYResult = Array<{
   } | null
 }>
 // Variable: ACKNOWLEDGEMENTS_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == 'acknowledgements' && language == $language][0]{    _id,    _type,    title,    language,    "slug": slug.current,    emptyStateMessage,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "descriptionPlainText": pt::text(description),    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      // For contentList type      title,      items[]{        _key,        title,        description      }    }  }
+// Query: *[_type == 'page' && slug.current == 'acknowledgements' && language == $language][0]{    _id,    _type,    title,    language,    "slug": slug.current,    emptyStateMessage,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "descriptionPlainText": pt::text(description),    content[]{      _key,      _type,      heading,      body[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      title,      items[]{        _key,        title,        description      },      name,      description    }  }
 export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
   _id: string
   _type: 'page'
@@ -4057,6 +4097,8 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
         }> | null
         title: null
         items: null
+        name: null
+        description: null
       }
     | {
         _key: string
@@ -4112,6 +4154,8 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
             _key: string
           }> | null
         }> | null
+        name: null
+        description: null
       }
     | {
         _key: string
@@ -4120,6 +4164,51 @@ export type ACKNOWLEDGEMENTS_PAGE_QUERYResult = {
         body: null
         title: null
         items: null
+        name: string | null
+        description: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+          listItem?: 'bullet'
+          markDefs?: Array<
+            | {
+                glossary?: {
+                  _ref: string
+                  _type: 'reference'
+                  _weak?: boolean
+                  [internalGroqTypeReferenceTo]?: 'glossary'
+                }
+                _type: 'glossaryTerm'
+                _key: string
+              }
+            | {
+                linkType?: 'href' | 'orientation' | 'page' | 'pattern'
+                href?: string
+                page?: {
+                  _ref: string
+                  _type: 'reference'
+                  _weak?: boolean
+                  [internalGroqTypeReferenceTo]?: 'page'
+                }
+                pattern?: {
+                  _ref: string
+                  _type: 'reference'
+                  _weak?: boolean
+                  [internalGroqTypeReferenceTo]?: 'pattern'
+                }
+                openInNewTab?: boolean
+                _type: 'link'
+                _key: string
+              }
+          >
+          level?: number
+          _type: 'block'
+          _key: string
+        }> | null
       }
   > | null
 } | null
@@ -4411,14 +4500,14 @@ declare module '@sanity/client' {
     '\n  *[_type == \'page\' && slug.current == \'tags\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': TAGS_PAGE_QUERYResult
     "\n  *[_type == 'carrierBag' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    information,\n    emptyStateMessage,\n  }\n": CARRIER_BAG_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{\n    ...,\n    _id,\n    _type,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      _type,\n      title,\n      description,\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      title,\n      description,\n      links,\n      solutions[]->{ _id, title }\n    }\n  }\n': PATTERNS_BY_SLUGS_QUERYResult
-    '\n  *[_type == \'page\' && slug.current == \'values\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': VALUES_PAGE_QUERYResult
+    '\n  *[_type == \'page\' && slug.current == \'values\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For record type\n      name,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': VALUES_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'patterns\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    emptyStateMessage,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': PATTERNS_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'about\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description,\n      }\n    }\n  }\n': ABOUT_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'/\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    heroHeading,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    // Full content blocks, including contentList sections\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    },\n    // Convenience projections for specific content lists by title\n    "audiences": content[_type == \'contentList\' && title == \'Audiences\'][0].items[]{\n      _key,\n      title,\n      description\n    },\n    "values": content[_type == \'contentList\' && title == \'Values\'][0].items[]{\n      _key,\n      title,\n      description\n    }\n  }\n': HOME_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'faq\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': FAQ_PAGE_QUERYResult
     '\n  *[_type == "faq" && language == $language]|order(orderRank) {\n    _id,\n    title,\n    language,\n    category->{\n      _id,\n      title,\n      description[]{\n        ...,\n      }\n    },\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    }\n  }\n': FAQS_QUERYResult
     '\n  *[_type == "icon"] | order(title asc) {\n    _id,\n    _type,\n    title,\n    svg\n  }\n': ICONS_QUERYResult
-    '\n  *[_type == \'page\' && slug.current == \'acknowledgements\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': ACKNOWLEDGEMENTS_PAGE_QUERYResult
+    '\n  *[_type == \'page\' && slug.current == \'acknowledgements\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      },\n      name,\n      description\n    }\n  }\n': ACKNOWLEDGEMENTS_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'themes\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': THEMES_PAGE_QUERYResult
     '\n  *[_type == \'footer\' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    externalLinks[]{\n      _key,\n      label,\n      url\n    },\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n    licenseLink\n  }\n': FOOTER_QUERYResult
     '\n  *[_type == \'header\' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n  }\n': HEADER_QUERYResult

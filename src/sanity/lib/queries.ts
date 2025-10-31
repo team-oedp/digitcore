@@ -1135,13 +1135,14 @@ export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
           "glossary": glossary->{_id, title}
         }
       },
-      // For contentList type
       title,
       items[]{
         _key,
         title,
         description
-      }
+      },
+      name,
+      description
     }
   }
 `);

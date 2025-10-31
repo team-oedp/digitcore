@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
+import { Record } from "~/components/shared/record";
 import { SectionHeading } from "~/components/shared/section-heading";
 import { sanityFetch } from "~/sanity/lib/client";
 import { ACKNOWLEDGEMENTS_PAGE_QUERY } from "~/sanity/lib/queries";
@@ -37,7 +38,7 @@ export default async function Page({ params }: LanguagePageProps) {
 						className="mt-8 text-body"
 					/>
 				)}
-				<div className="flex flex-col gap-8 pt-20 lg:pt-60">
+				<div className="flex flex-col gap-10 pt-20 lg:pt-20">
 					{data.content?.map((section) => (
 						<section key={section._key} className="flex flex-col gap-5">
 							{section._type === "content" && section.heading && (
@@ -47,6 +48,14 @@ export default async function Page({ params }: LanguagePageProps) {
 								<CustomPortableText
 									value={section.body as PortableTextBlock[]}
 									className="prose"
+								/>
+							)}
+							{section._type === "record" && (
+								<Record
+									name={section.name}
+									description={
+										section.description as PortableTextBlock[] | null
+									}
 								/>
 							)}
 						</section>
