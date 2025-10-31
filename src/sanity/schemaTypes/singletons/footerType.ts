@@ -1,4 +1,4 @@
-import { LinkIcon, InsertBelowIcon } from "@sanity/icons";
+import { InsertBelowIcon, LinkIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
 
 export const footerType = defineType({

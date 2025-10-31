@@ -1,4 +1,4 @@
-import { LinkIcon, InsertAboveIcon } from "@sanity/icons";
+import { InsertAboveIcon, LinkIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
 
 export const headerType = defineType({
