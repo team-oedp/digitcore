@@ -84,7 +84,7 @@ export default async function Page({ params }: LanguagePageProps) {
 					Array.from(themeGroups.values()).map(({ theme, patterns }) => (
 						<div
 							key={theme._id}
-							className="mt-8 overflow-hidden rounded-lg border border-neutral-300 border-dashed bg-muted p-8 md:p-6"
+							className="mt-8 overflow-hidden rounded-lg border border-neutral-300 border-dashed p-8 md:p-6"
 						>
 							<div className="flex flex-col gap-5">
 								<div className="flex flex-col gap-1">
