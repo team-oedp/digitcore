@@ -202,6 +202,7 @@ export const GLOSSARY_PAGE_QUERY = defineQuery(`
         "glossary": glossary->{_id, title}
       }
     },
+    "descriptionPlainText": pt::text(description),
   }`);
 
 export const GLOSSARY_TERMS_QUERY = defineQuery(`
@@ -256,6 +257,7 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
         "glossary": glossary->{_id, title}
       }
     },
+    "descriptionPlainText": pt::text(description),
   }`);
 
 export const SEARCH_PAGE_QUERY = defineQuery(`
@@ -275,6 +277,7 @@ export const SEARCH_PAGE_QUERY = defineQuery(`
         "glossary": glossary->{_id, title}
       }
     },
+    "descriptionPlainText": pt::text(description),
   }`);
 
 export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
@@ -749,6 +752,7 @@ export const TAGS_PAGE_QUERY = defineQuery(`
         "pattern": pattern->slug.current
       }
     },
+    "descriptionPlainText": pt::text(description),
     content[]{
       _key,
       _type,
@@ -849,6 +853,7 @@ export const VALUES_PAGE_QUERY = defineQuery(`
           "glossary": glossary->{_id, title}
         }
     },
+    "descriptionPlainText": pt::text(description),
     content[]{
       _key,
       _type,
@@ -890,6 +895,7 @@ export const PATTERNS_PAGE_QUERY = defineQuery(`
         "glossary": glossary->{_id, title}
       }
     },
+    "descriptionPlainText": pt::text(description),
     emptyStateMessage,
     content[]{
       _key,
@@ -932,6 +938,7 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
         "glossary": glossary->{_id, title}
       }
     },
+    "descriptionPlainText": pt::text(description),
     content[]{
       _key,
       _type,
@@ -950,7 +957,7 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
       items[]{
         _key,
         title,
-        description
+        description,
       }
     }
   }
@@ -974,6 +981,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
         "glossary": glossary->{_id, title}
       }
     },
+    "descriptionPlainText": pt::text(description),
     // Full content blocks, including contentList sections
     content[]{
       _key,
@@ -1027,6 +1035,7 @@ export const FAQ_PAGE_QUERY = defineQuery(`
         "glossary": glossary->{_id, title}
       }
     },
+    "descriptionPlainText": pt::text(description),
     content[]{
       _key,
       _type,
@@ -1101,6 +1110,7 @@ export const ACKNOWLEDGEMENTS_PAGE_QUERY = defineQuery(`
         "glossary": glossary->{_id, title}
       }
     },
+    "descriptionPlainText": pt::text(description),
     content[]{
       _key,
       _type,
@@ -1142,6 +1152,7 @@ export const THEMES_PAGE_QUERY = defineQuery(`
         "glossary": glossary->{_id, title}
       }
     },
+    "descriptionPlainText": pt::text(description),
     content[]{
       _key,
       _type,
