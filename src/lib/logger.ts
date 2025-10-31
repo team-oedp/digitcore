@@ -65,16 +65,23 @@ class SearchLogger {
 		// Store logs in sessionStorage for debugging (client-side only)
 		if (this.isClient) {
 			try {
-				const logs = JSON.parse(
-					sessionStorage.getItem("search-debug-logs") || "[]",
-				);
+				const raw = sessionStorage.getItem("search-debug-logs");
+				let logsParsed: unknown = [];
+				if (raw?.trim().startsWith("[")) {
+					try {
+						logsParsed = JSON.parse(raw);
+					} catch {
+						logsParsed = [];
+					}
+				}
+				const logs = Array.isArray(logsParsed) ? (logsParsed as unknown[]) : [];
 				logs.push(entry);
 				// Keep only last 100 logs to prevent memory issues
 				if (logs.length > 100) {
 					logs.splice(0, logs.length - 100);
 				}
 				sessionStorage.setItem("search-debug-logs", JSON.stringify(logs));
-			} catch (_e) {
+			} catch {
 				// Ignore storage errors
 			}
 		}
@@ -154,7 +161,10 @@ class SearchLogger {
 		if (!this.isClient) return [];
 
 		try {
-			return JSON.parse(sessionStorage.getItem("search-debug-logs") || "[]");
+			const raw = sessionStorage.getItem("search-debug-logs");
+			if (!raw || !raw.trim().startsWith("[")) return [];
+			const parsed = JSON.parse(raw);
+			return Array.isArray(parsed) ? parsed : [];
 		} catch {
 			return [];
 		}

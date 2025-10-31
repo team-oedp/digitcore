@@ -486,6 +486,39 @@ export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
   }
 `);
 
+// Suggestions query: return items that match either audiences or theme
+// Rank items that match both first, then by audience match count, then theme match, then title
+export const PATTERN_SUGGESTIONS_WITH_PREFERENCES_QUERY = defineQuery(`
+  *[
+    _type == "pattern" &&
+    defined(slug.current) &&
+    language == $language &&
+    (
+      (defined($prefAudiences) && count($prefAudiences) > 0 && count((audiences[]._ref)[@ in $prefAudiences]) > 0) ||
+      (defined($prefThemes) && count($prefThemes) > 0 && theme._ref in $prefThemes)
+    )
+  ]
+  | order(
+      (
+        (defined($prefAudiences) && count($prefAudiences) > 0 && count((audiences[]._ref)[@ in $prefAudiences]) > 0) &&
+        (defined($prefThemes) && count($prefThemes) > 0 && theme._ref in $prefThemes)
+      ) desc,
+      count((audiences[]._ref)[@ in $prefAudiences]) desc,
+      (theme._ref in $prefThemes) desc,
+      title asc
+    )[0...$limit]{
+    _id,
+    _type,
+    title,
+    language,
+    "slug": slug.current,
+    description,
+    tags[]->{ _id, title },
+    audiences[]->{ _id, title },
+    theme->{ _id, title, description }
+  }
+`);
+
 // Direct solution search query
 export const SOLUTION_SEARCH_QUERY = defineQuery(`
   *[_type == "solution" && language == $language]
