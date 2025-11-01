@@ -14,6 +14,7 @@ import { useOrientationStore } from "~/stores/orientation";
 import { SearchResultsSkeleton } from "./search-result-skeleton";
 import { SearchResults } from "./search-results";
 import { SearchResultsHeaderClient } from "./search-results-header-client";
+import { SearchSuggestions } from "./search-suggestions";
 
 type SearchClientWrapperProps = {
 	emptyStateMessage?: string;
@@ -303,8 +304,10 @@ export function SearchClientWrapper({
 			/>
 
 			{!hasSearchCriteria ? (
-				// No search criteria - show blank area
-				<div className="py-12" />
+				// No search criteria - show suggestions (if eligible)
+				<div className="py-12">
+					<SearchSuggestions />
+				</div>
 			) : isLoading ? (
 				<SearchResultsSkeleton count={6} />
 			) : searchResult && !searchResult.success ? (
@@ -327,6 +330,9 @@ export function SearchClientWrapper({
 							No results found. Try adjusting your search terms or filters
 						</p>
 					)}
+					<div className="mt-6">
+						<SearchSuggestions />
+					</div>
 				</div>
 			) : searchResult ? (
 				<SearchResults
