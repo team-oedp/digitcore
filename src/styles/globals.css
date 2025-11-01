@@ -176,7 +176,7 @@
 	}
 
 	* {
-		@apply border-neutral-300 outline-ring/50;
+		@apply border-border outline-ring/50;
 	}
 
 	html {

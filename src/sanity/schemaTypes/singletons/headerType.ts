@@ -1,11 +1,11 @@
-import { LinkIcon, StackCompactIcon } from "@sanity/icons";
+import { InsertAboveIcon, LinkIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
 
 export const headerType = defineType({
 	name: "header",
 	title: "Header",
 	type: "document",
-	icon: StackCompactIcon,
+	icon: InsertAboveIcon,
 	fields: [
 		defineField({
 			// should match 'languageField' plugin configuration setting in sanity.config.ts, if customized
