@@ -1,7 +1,5 @@
 "use client";
 
-import { useCarrierBagStore } from "~/stores/carrier-bag";
-
 import {
 	ArrowExpand02Icon,
 	Cancel01Icon,
@@ -14,6 +12,7 @@ import {
 } from "~/components/global/carrier-bag/carrier-bag-item";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
+import { useCarrierBagStore } from "~/stores/carrier-bag";
 import {
 	Sidebar,
 	SidebarContent,
@@ -109,7 +108,7 @@ export function CarrierBagSidebarModal() {
 											item={itemData}
 											onRemove={() => handleRemoveItem(item.pattern._id)}
 											onVisit={() =>
-												handleVisitItem(item.pattern.slug?.current)
+												handleVisitItem(item.pattern.slug ?? undefined)
 											}
 										/>
 									);
@@ -128,7 +127,7 @@ export function CarrierBagSidebarModal() {
 							onClick={clearBag}
 							disabled={!isHydrated || items.length === 0}
 						>
-							Clear all items
+							Remove all items
 						</Button>
 						<Button
 							variant="outline"

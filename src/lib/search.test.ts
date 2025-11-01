@@ -76,6 +76,7 @@ describe("search functionality", () => {
 				audiences: ["students", "researchers"],
 				themes: ["sustainability"],
 				tags: ["tag1", "tag2", "tag3"],
+				enhance: false,
 				page: 2,
 				limit: 30,
 			});
@@ -90,6 +91,7 @@ describe("search functionality", () => {
 				audiences: [],
 				themes: [],
 				tags: [],
+				enhance: false,
 				page: 1,
 				limit: 20,
 			});
@@ -151,6 +153,7 @@ describe("search functionality", () => {
 				audiences: ["students", "researchers"],
 				themes: ["sustainability", "innovation"],
 				tags: ["tag1", "tag2"],
+				enhance: false,
 				page: 2,
 				limit: 50,
 			};
@@ -169,6 +172,7 @@ describe("search functionality", () => {
 			const params: Partial<ParsedSearchParams> = {
 				searchTerm: "",
 				audiences: ["students"],
+				enhance: false,
 			};
 
 			const result = serializeSearchParams(params);
@@ -183,6 +187,7 @@ describe("search functionality", () => {
 				audiences: [],
 				themes: [],
 				tags: [],
+				enhance: false,
 			};
 
 			const result = serializeSearchParams(params);
@@ -196,6 +201,7 @@ describe("search functionality", () => {
 		it("should omit default page value (1)", () => {
 			const params: Partial<ParsedSearchParams> = {
 				searchTerm: "test",
+				enhance: false,
 				page: 1,
 			};
 
@@ -208,6 +214,7 @@ describe("search functionality", () => {
 		it("should omit default limit value (20)", () => {
 			const params: Partial<ParsedSearchParams> = {
 				searchTerm: "test",
+				enhance: false,
 				limit: 20,
 			};
 
@@ -219,6 +226,7 @@ describe("search functionality", () => {
 
 		it("should include non-default page and limit values", () => {
 			const params: Partial<ParsedSearchParams> = {
+				enhance: false,
 				page: 3,
 				limit: 10,
 			};
@@ -233,6 +241,7 @@ describe("search functionality", () => {
 			const params: Partial<ParsedSearchParams> = {
 				searchTerm: "partial search",
 				tags: ["important-tag"],
+				enhance: false,
 			};
 
 			const result = serializeSearchParams(params);
@@ -295,6 +304,7 @@ describe("search functionality", () => {
 				audiences: [],
 				themes: [],
 				tags: [],
+				enhance: false,
 				page: 1,
 				limit: 20,
 			});

@@ -94,6 +94,7 @@ The text utility classes provide a standardized way to style text content with c
 ### Automatic Styling
 
 Each utility class automatically applies:
+
 - Appropriate typography scale
 - Consistent spacing and margins
 - Proper heading hierarchy
@@ -123,6 +124,7 @@ You can combine these classes with additional Tailwind classes:
 ### From Old Prose Classes
 
 **Before:**
+
 ```tsx
 <div className="prose prose-sm prose-p:text-primary prose-p:text-sm">
   <p>Content</p>
@@ -130,6 +132,7 @@ You can combine these classes with additional Tailwind classes:
 ```
 
 **After:**
+
 ```tsx
 <div className="text-content-primary-sm">
   <p>Content</p>
@@ -139,6 +142,7 @@ You can combine these classes with additional Tailwind classes:
 ### From CustomPortableText with className
 
 **Before:**
+
 ```tsx
 <CustomPortableText 
   value={content} 
@@ -147,6 +151,7 @@ You can combine these classes with additional Tailwind classes:
 ```
 
 **After:**
+
 ```tsx
 <CustomPortableText 
   value={content} 

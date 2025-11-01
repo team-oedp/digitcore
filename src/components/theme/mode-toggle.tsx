@@ -15,13 +15,12 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Icon } from "../shared/icon";
 
-interface ModeToggleProps {
+type ModeToggleProps = {
 	className?: string;
-}
+};
 
 export function ModeToggle({ className }: ModeToggleProps = {}) {
 	const { setTheme } = useTheme();
-
 	return (
 		<div className={className}>
 			<DropdownMenu>
@@ -29,7 +28,7 @@ export function ModeToggle({ className }: ModeToggleProps = {}) {
 					<button
 						type="button"
 						aria-label="Select theme"
-						className="group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear hover:bg-main-foreground/40 focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:border-border/50 dark:focus-visible:ring-neutral-800 dark:hover:border-white/10 dark:hover:bg-main-foreground/20"
+						className="group relative flex h-7 items-center rounded-md px-2 py-0.5 text-muted-foreground outline-none transition-colors duration-150 ease-linear hover:text-foreground"
 					>
 						{/* Render both icons and rely on CSS so SSR matches client */}
 						<Icon

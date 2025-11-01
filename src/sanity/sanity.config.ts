@@ -1,21 +1,50 @@
-import { codeInput } from "@sanity/code-input";
+import { assist } from "@sanity/assist";
+import {
+	DeleteTranslationAction,
+	documentInternationalization,
+} from "@sanity/document-internationalization";
 import { visionTool } from "@sanity/vision";
-import { defineConfig } from "sanity";
+import { type ConfigContext, type Template, defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
+import {
+	documentInternationalizationConfig,
+	languageFieldName,
+} from "./document-internationalization-config";
 import { dataset, projectId } from "./env";
 import { schema } from "./schemaTypes/index";
 import { structure } from "./structure";
 
 export default defineConfig({
-	title: "Digitcore",
+	title: "DIGITCORE",
 	projectId,
 	dataset,
 	plugins: [
+		assist({
+			translate: {
+				document: {
+					// Specify the field containing the language for the document
+					languageField: languageFieldName,
+				},
+			},
+		}),
 		structureTool({
 			structure,
 		}),
 		visionTool(),
-		codeInput(),
+		documentInternationalization(documentInternationalizationConfig),
 	],
 	schema,
+	document: {
+		actions: (prev, { schemaType }) => {
+			// Add to the same schema types you use for internationalization
+			if (["page"].includes(schemaType)) {
+				// You might also like to filter out the built-in "delete" action
+				return [...prev, DeleteTranslationAction];
+			}
+
+			return prev;
+		},
+	},
+	templates: (prev: Template[], context: ConfigContext): Template[] =>
+		prev.filter((template) => !["pattern", "page"].includes(template.id)),
 });

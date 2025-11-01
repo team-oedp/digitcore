@@ -14,6 +14,12 @@ export const env = createEnv({
 		SANITY_API_WRITE_TOKEN: z
 			.string()
 			.min(1, "Missing SANITY_API_WRITE_TOKEN env var"),
+		/**
+		 * Secret for validating Sanity webhook signatures
+		 */
+		SANITY_REVALIDATE_SECRET: z
+			.string()
+			.min(1, "Missing SANITY_REVALIDATE_SECRET env var"),
 		RESEND_API_KEY: z.string().optional(),
 		SUGGESTION_NOTIFICATION_EMAIL: z.string().email().optional(),
 		EMAIL_FROM: z.string().optional(),
@@ -35,6 +41,7 @@ export const env = createEnv({
 	runtimeEnv: {
 		NODE_ENV: process.env.NODE_ENV,
 		SANITY_API_WRITE_TOKEN: process.env.SANITY_API_WRITE_TOKEN,
+		SANITY_REVALIDATE_SECRET: process.env.SANITY_REVALIDATE_SECRET,
 		RESEND_API_KEY: process.env.RESEND_API_KEY,
 		SUGGESTION_NOTIFICATION_EMAIL: process.env.SUGGESTION_NOTIFICATION_EMAIL,
 		EMAIL_FROM: process.env.EMAIL_FROM,

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Resend } from "resend";
 import { EmailTemplate } from "~/components/email-template";
 import { env } from "~/env";
@@ -54,6 +53,7 @@ export async function sendSuggestionEmail(payload: SuggestionEmailPayload) {
 			: DEFAULT_EMAIL_FROM;
 
 	console.log(SUGGESTION_NOTIFICATION_EMAIL.split(",").map((e) => e.trim()));
+
 	const options = {
 		from: fromAddress,
 		to: SUGGESTION_NOTIFICATION_EMAIL.split(",").map((e) => e.trim()),

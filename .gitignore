@@ -49,7 +49,23 @@ yarn-error.log*
 dist/
 
 # claude
+.claude/
+.claude/*
 CLAUDE.md
 
 # warp
 WARP.md
+
+# gemini
+GEMINI.md
+
+# codex
+AGENTS.md
+
+# suggestions
+.suggestions/
+.suggestions/*
+
+# kiro
+.kiro/
+.kiro/*

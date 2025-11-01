@@ -1,5 +1,6 @@
 "use server";
 
+import type { Language } from "~/i18n/config";
 import { createLogLocation, logger } from "~/lib/logger";
 import type { ParsedSearchParams } from "~/lib/search";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
@@ -7,56 +8,57 @@ import { client } from "~/sanity/lib/client";
 import {
 	PATTERN_FILTER_QUERY,
 	PATTERN_SEARCH_QUERY,
+	PATTERN_SEARCH_WITH_PREFERENCES_QUERY,
 	PATTERN_SIMPLE_SEARCH_QUERY,
+	PATTERN_SUGGESTIONS_WITH_PREFERENCES_QUERY,
 	RESOURCE_SEARCH_QUERY,
 	SOLUTION_SEARCH_QUERY,
 	TAG_SEARCH_QUERY,
 } from "~/sanity/lib/queries";
+import type { Resource, Solution, Tag } from "~/sanity/sanity.types";
+import type { SearchPattern } from "~/types/search";
 
-// Base content type for all search results
-export type SearchBaseContent = {
-	_id: string;
-	_type: string;
+/**
+ * Direct solution search result
+ * Extends Sanity's Solution type with search-specific fields (_score and patterns)
+ */
+export type SearchSolution = Pick<
+	Solution,
+	"_id" | "_type" | "title" | "description" | "audiences"
+> & {
 	_score?: number;
-	title: string | null;
-	description?: Array<unknown> | null;
-};
-
-// Direct solution search result
-export type SearchSolution = SearchBaseContent & {
-	_type: "solution";
-	audiences?: Array<{
-		_id: string;
-		title?: string;
-	}> | null;
 	patterns?: Array<{
 		_id: string;
-		title?: string;
+		title: string | null;
 		slug: string;
 	}> | null;
 };
 
-// Direct resource search result
-export type SearchResource = SearchBaseContent & {
-	_type: "resource";
-	links?: Array<unknown> | null;
-	solutions?: Array<{
-		_id: string;
-		title?: string;
-	}> | null;
+/**
+ * Direct resource search result
+ * Extends Sanity's Resource type with search-specific fields (_score and patterns)
+ */
+export type SearchResource = Pick<
+	Resource,
+	"_id" | "_type" | "title" | "description" | "solutions" | "mainLink"
+> & {
+	_score?: number;
 	patterns?: Array<{
 		_id: string;
-		title?: string;
+		title: string | null;
 		slug: string;
 	}> | null;
 };
 
-// Direct tag search result
-export type SearchTag = SearchBaseContent & {
-	_type: "tag";
+/**
+ * Direct tag search result
+ * Extends Sanity's Tag type with search-specific fields (_score and patterns)
+ */
+export type SearchTag = Pick<Tag, "_id" | "_type" | "title"> & {
+	_score?: number;
 	patterns?: Array<{
 		_id: string;
-		title?: string;
+		title: string | null;
 		slug: string;
 	}> | null;
 };
@@ -84,68 +86,12 @@ export type ComprehensiveSearchResult = {
 	searchParams: ParsedSearchParams;
 };
 
-export type SearchPattern = {
-	_id: string;
-	_type: "pattern";
-	_score?: number;
-	title: string | null;
-	description: Array<{
-		children?: Array<{
-			marks?: Array<string>;
-			text?: string;
-			_type: "span";
-			_key: string;
-		}>;
-		style?: "normal";
-		listItem?: never;
-		markDefs?: Array<{
-			href?: string;
-			_type: "link";
-			_key: string;
-		}>;
-		level?: number;
-		_type: "block";
-		_key: string;
-	}> | null;
-	slug: string | null;
-	tags: Array<{
-		_id: string;
-		title?: string;
-	}> | null;
-	audiences: Array<{
-		_id: string;
-		title?: string;
-	}> | null;
-	theme: {
-		_id: string;
-		title?: string;
-		description?: Array<unknown>;
-	} | null;
-	solutions: Array<{
-		_id: string;
-		title?: string;
-		description?: Array<unknown>;
-	}> | null;
-	resources: Array<{
-		_id: string;
-		title?: string;
-		description?: Array<unknown>;
-		solutions?: Array<{
-			_id: string;
-			title?: string;
-		}> | null;
-		solution?: Array<{
-			_id: string;
-			title?: string;
-		}> | null;
-	}> | null;
-};
-
 /**
  * Server action to search patterns with GROQ scoring and filtering
  */
 export async function searchPatterns(
 	formData: FormData,
+	language: Language,
 ): Promise<SearchResult> {
 	const location = createLogLocation("search.ts", "searchPatterns");
 
@@ -158,8 +104,15 @@ export async function searchPatterns(
 			audiences: formData.get("audiences")?.toString(),
 			themes: formData.get("themes")?.toString(),
 			tags: formData.get("tags")?.toString(),
+			enhance: formData.get("enhance")?.toString(),
 			page: formData.get("page")?.toString(),
 			limit: formData.get("limit")?.toString(),
+		};
+
+		// Extract preference parameters for boosting
+		const prefParams = {
+			prefAudiences: formData.get("prefAudiences")?.toString(),
+			prefThemes: formData.get("prefThemes")?.toString(),
 		};
 
 		logger.search("Raw form data parameters", rawParams, location);
@@ -171,11 +124,22 @@ export async function searchPatterns(
 		const parsedParams = parseSearchParams(validatedParams);
 		logger.search("Parsed parameters", parsedParams, location);
 
+		// Parse preference parameters for boosting
+		const prefAudiences = prefParams.prefAudiences
+			? prefParams.prefAudiences.split(",").filter(Boolean)
+			: [];
+		const prefThemes = prefParams.prefThemes
+			? prefParams.prefThemes.split(",").filter(Boolean)
+			: [];
+
 		// Prepare GROQ query parameters - always provide all parameters (empty arrays if no values)
 		const queryParams: Record<string, unknown> = {
+			language,
 			audiences: parsedParams.audiences || [],
 			themes: parsedParams.themes || [],
 			tags: parsedParams.tags || [],
+			prefAudiences: prefAudiences,
+			prefThemes: prefThemes,
 		};
 
 		logger.search(
@@ -188,37 +152,77 @@ export async function searchPatterns(
 			location,
 		);
 
-		// Determine which query to use based on search term
+		// Determine which query to use based on search term and preferences
 		const hasSearchTerm = parsedParams.searchTerm?.trim();
+		const hasPreferences = prefAudiences.length > 0 || prefThemes.length > 0;
+
 		logger.search(
-			"Has search term",
-			{ hasSearchTerm: !!hasSearchTerm, searchTerm: parsedParams.searchTerm },
+			"Query selection criteria",
+			{
+				hasSearchTerm: !!hasSearchTerm,
+				searchTerm: parsedParams.searchTerm,
+				hasPreferences,
+				prefAudiencesCount: prefAudiences.length,
+				prefThemesCount: prefThemes.length,
+			},
 			location,
 		);
 
 		let query: string;
+		let preparedQueryParams: Record<string, unknown>;
+
 		if (hasSearchTerm) {
-			query = PATTERN_SEARCH_QUERY;
+			// Use appropriate search query based on preferences
+			if (hasPreferences) {
+				query = PATTERN_SEARCH_WITH_PREFERENCES_QUERY;
+				preparedQueryParams = queryParams; // Include all params including preferences
+				logger.groq(
+					"Using PATTERN_SEARCH_WITH_PREFERENCES_QUERY",
+					undefined,
+					location,
+				);
+			} else {
+				query = PATTERN_SEARCH_QUERY;
+				preparedQueryParams = {
+					language,
+					audiences: queryParams.audiences,
+					themes: queryParams.themes,
+					tags: queryParams.tags,
+					// Don't include preference params for regular search
+				};
+				logger.groq(
+					"Using PATTERN_SEARCH_QUERY (no preferences)",
+					undefined,
+					location,
+				);
+			}
+
 			// Escape special characters in search term for GROQ
 			const escapedSearchTerm = parsedParams.searchTerm
 				.trim()
 				.replace(/["\\]/g, "\\$&"); // Escape quotes and backslashes
-			queryParams.searchTerm = escapedSearchTerm;
+			preparedQueryParams.searchTerm = escapedSearchTerm;
+
 			logger.groq(
-				"Using PATTERN_SEARCH_QUERY with escaped search term",
+				"Search term escaped",
 				{ original: parsedParams.searchTerm, escaped: escapedSearchTerm },
 				location,
 			);
 		} else {
+			// Use filter query (no search term, only filters)
 			query = PATTERN_FILTER_QUERY;
-			logger.groq(
-				"Using PATTERN_FILTER_QUERY (no search term)",
-				undefined,
-				location,
-			);
+			preparedQueryParams = hasPreferences
+				? queryParams
+				: {
+						language,
+						audiences: queryParams.audiences,
+						themes: queryParams.themes,
+						tags: queryParams.tags,
+					};
+			logger.groq("Using PATTERN_FILTER_QUERY", { hasPreferences }, location);
 		}
 
-		logger.groq("Final GROQ query parameters", queryParams, location);
+		logger.groq("Final GROQ query parameters", preparedQueryParams, location);
 		logger.groq("Query type", hasSearchTerm ? "SEARCH" : "FILTER", location);
 
 		// Execute GROQ query
@@ -228,7 +232,7 @@ export async function searchPatterns(
 			location,
 		);
 		const startTime = Date.now();
-		const response = await client.fetch(query, queryParams);
+		const response = await client.fetch(query, preparedQueryParams);
 		const endTime = Date.now();
 
 		// Extract results from Sanity client response
@@ -316,6 +320,7 @@ export async function searchPatterns(
  */
 export async function searchPatternsWithParams(
 	searchParams: URLSearchParams,
+	language: Language,
 ): Promise<SearchResult> {
 	const location = createLogLocation("search.ts", "searchPatternsWithParams");
 
@@ -334,9 +339,72 @@ export async function searchPatternsWithParams(
 		}
 
 		logger.search("Delegating to searchPatterns", undefined, location);
-		return await searchPatterns(formData);
+		return await searchPatterns(formData, language);
 	} catch (error) {
 		logger.searchError("searchPatternsWithParams failed", error, location);
+
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : "Search failed",
+			totalCount: 0,
+			searchParams: parseSearchParams({ page: 1, limit: 20 }),
+		};
+	}
+}
+
+/**
+ * Search function that accepts onboarding preferences for result boosting
+ */
+
+export async function searchPatternsWithPreferences(
+	searchParams: URLSearchParams,
+	preferences: {
+		selectedAudienceIds: string[];
+		selectedThemeIds: string[];
+	},
+	language: Language,
+): Promise<SearchResult> {
+	const location = createLogLocation(
+		"search.ts",
+		"searchPatternsWithPreferences",
+	);
+
+	try {
+		logger.searchInfo(
+			"Starting search with onboarding preferences",
+			{
+				searchParams: Object.fromEntries(searchParams.entries()),
+				preferences,
+			},
+			location,
+		);
+
+		const formData = new FormData();
+
+		// Add search params
+		for (const [key, value] of searchParams) {
+			formData.append(key, value);
+		}
+
+		// Add preference parameters for GROQ boosting (only if not empty)
+		if (preferences.selectedAudienceIds.length > 0) {
+			formData.append(
+				"prefAudiences",
+				preferences.selectedAudienceIds.join(","),
+			);
+		}
+		if (preferences.selectedThemeIds.length > 0) {
+			formData.append("prefThemes", preferences.selectedThemeIds.join(","));
+		}
+
+		logger.search(
+			"Delegating to searchPatterns with preferences",
+			undefined,
+			location,
+		);
+		return await searchPatterns(formData, language);
+	} catch (error) {
+		logger.searchError("searchPatternsWithPreferences failed", error, location);
 
 		return {
 			success: false,
@@ -352,6 +420,7 @@ export async function searchPatternsWithParams(
  */
 export async function searchContentForCommandModal(
 	searchTerm: string,
+	language: Language,
 ): Promise<ComprehensiveSearchResult> {
 	const location = createLogLocation("search.ts", "searchAllContent");
 
@@ -369,11 +438,11 @@ export async function searchContentForCommandModal(
 
 		// Escape search term for GROQ
 		const escapedSearchTerm = searchTerm.trim().replace(/["\\]/g, "\\$&");
-		const queryParams = { searchTerm: escapedSearchTerm };
+		const queryParams = { searchTerm: escapedSearchTerm, language };
 
 		logger.search(
 			"Executing direct GROQ queries",
-			{ escapedSearchTerm },
+			{ escapedSearchTerm, language },
 			location,
 		);
 
@@ -460,12 +529,50 @@ export async function searchContentForCommandModal(
 }
 
 /**
+ * Fetch suggestion patterns ranked by preference match (both > audience count > theme)
+ */
+export async function getPatternSuggestionsWithPreferences(
+	language: Language,
+	preferences: { selectedAudienceIds: string[]; selectedThemeIds: string[] },
+	limit = 5,
+) {
+	const location = createLogLocation(
+		"search.ts",
+		"getPatternSuggestionsWithPreferences",
+	);
+
+	try {
+		const params = {
+			language,
+			prefAudiences: preferences.selectedAudienceIds ?? [],
+			prefThemes: preferences.selectedThemeIds ?? [],
+			limit,
+		} as const;
+
+		logger.groq("Fetching suggestions with preferences", params, location);
+		const results = await client.fetch(
+			PATTERN_SUGGESTIONS_WITH_PREFERENCES_QUERY,
+			params,
+		);
+		return Array.isArray(results) ? results : [];
+	} catch (error) {
+		logger.searchError(
+			"getPatternSuggestionsWithPreferences failed",
+			error,
+			location,
+		);
+		return [];
+	}
+}
+
+/**
  * Original comprehensive search function preserved for search page compatibility
  */
 export async function searchAllContent(
 	searchParams: URLSearchParams,
+	language: Language,
 ): Promise<ComprehensiveSearchResult> {
 	// Delegate to the direct search function by extracting the search term
 	const searchTerm = searchParams.get("q")?.trim() || "";
-	return await searchContentForCommandModal(searchTerm);
+	return await searchContentForCommandModal(searchTerm, language);
 }

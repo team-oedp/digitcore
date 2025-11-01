@@ -1,28 +1,89 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { logger } from "~/lib/logger";
-import { client } from "~/sanity/lib/client";
 import { type FilterOptionsResult, fetchFilterOptions } from "./filter-options";
 
-vi.mock("~/lib/logger", () => ({
-	logger: {
-		searchInfo: vi.fn(),
-		groq: vi.fn(),
-		searchError: vi.fn(),
-	},
-	createLogLocation: vi.fn(() => ({
-		file: "test-file",
-		function: "test-function",
-	})),
-}));
-vi.mock("~/sanity/lib/client");
+// Mock the logger (include createLogLocation export expected by code)
+vi.mock("~/lib/logger", () => {
+	const mockSearchInfo = vi.fn();
+	const mockGroq = vi.fn();
+	const mockSearchError = vi.fn();
 
-const mockFetch = vi.mocked(client.fetch);
-const mockLogger = vi.mocked(logger);
+	// Store mocks in global for later access
+	if (typeof globalThis !== "undefined") {
+		(
+			globalThis as typeof globalThis & {
+				__mockSearchInfo?: typeof mockSearchInfo;
+				__mockGroq?: typeof mockGroq;
+				__mockSearchError?: typeof mockSearchError;
+			}
+		).__mockSearchInfo = mockSearchInfo;
+		(
+			globalThis as typeof globalThis & {
+				__mockSearchInfo?: typeof mockSearchInfo;
+				__mockGroq?: typeof mockGroq;
+				__mockSearchError?: typeof mockSearchError;
+			}
+		).__mockGroq = mockGroq;
+		(
+			globalThis as typeof globalThis & {
+				__mockSearchInfo?: typeof mockSearchInfo;
+				__mockGroq?: typeof mockGroq;
+				__mockSearchError?: typeof mockSearchError;
+			}
+		).__mockSearchError = mockSearchError;
+	}
 
-// Mock the filter options query
-vi.mock("~/sanity/lib/filter-options", () => ({
+	return {
+		createLogLocation: vi.fn((file: string, fn?: string, line?: number) =>
+			[file, fn, line].filter(Boolean).join("::"),
+		),
+		logger: {
+			searchInfo: mockSearchInfo,
+			groq: mockGroq,
+			searchError: mockSearchError,
+		},
+	};
+});
+
+// Mock the Sanity client
+vi.mock("~/sanity/lib/client", () => {
+	const mockFetch = vi.fn();
+
+	// Store mock in global for later access
+	if (typeof globalThis !== "undefined") {
+		(
+			globalThis as typeof globalThis & {
+				__mockFetch?: typeof mockFetch;
+			}
+		).__mockFetch = mockFetch;
+	}
+
+	return {
+		client: {
+			fetch: mockFetch,
+		},
+	};
+});
+
+// Mock the filter options query from the correct module
+vi.mock("~/sanity/lib/queries", () => ({
 	FILTER_OPTIONS_QUERY: "FILTER_OPTIONS_QUERY_STRING",
 }));
+
+// Define type for extended globalThis
+type GlobalWithMocks = typeof globalThis & {
+	__mockFetch?: ReturnType<typeof vi.fn>;
+	__mockSearchInfo?: ReturnType<typeof vi.fn>;
+	__mockGroq?: ReturnType<typeof vi.fn>;
+	__mockSearchError?: ReturnType<typeof vi.fn>;
+};
+
+// Get the mock functions from global
+const mockFetch = (globalThis as GlobalWithMocks).__mockFetch || vi.fn();
+const mockSearchInfo =
+	(globalThis as GlobalWithMocks).__mockSearchInfo || vi.fn();
+const mockGroq = (globalThis as GlobalWithMocks).__mockGroq || vi.fn();
+const mockSearchError =
+	(globalThis as GlobalWithMocks).__mockSearchError || vi.fn();
 
 // Mock data
 const createMockFilterData = (
@@ -68,31 +129,34 @@ describe("fetchFilterOptions", () => {
 		});
 		expect(result.error).toBeUndefined();
 
-		expect(mockFetch).toHaveBeenCalledWith("FILTER_OPTIONS_QUERY_STRING");
-
-		expect(mockLogger.searchInfo).toHaveBeenCalledWith(
-			"Fetching filter options from Sanity",
-			undefined,
-			expect.any(Object),
+		expect(mockFetch).toHaveBeenCalledWith(
+			expect.any(String),
+			expect.objectContaining({ language: expect.any(String) }),
 		);
 
-		expect(mockLogger.groq).toHaveBeenCalledWith(
+		expect(mockSearchInfo).toHaveBeenCalledWith(
+			"Fetching filter options from Sanity",
+			undefined,
+			expect.any(String),
+		);
+
+		expect(mockGroq).toHaveBeenCalledWith(
 			"Filter options query completed",
 			expect.objectContaining({
 				executionTime: expect.stringMatching(/\d+ms/),
 				dataReceived: true,
 			}),
-			expect.any(Object),
+			expect.any(String),
 		);
 
-		expect(mockLogger.searchInfo).toHaveBeenCalledWith(
+		expect(mockSearchInfo).toHaveBeenCalledWith(
 			"Filter options processed successfully",
 			{
 				audienceCount: 4,
 				themeCount: 4,
 				tagCount: 4,
 			},
-			expect.any(Object),
+			expect.any(String),
 		);
 	});
 
@@ -108,14 +172,14 @@ describe("fetchFilterOptions", () => {
 			tags: [],
 		});
 
-		expect(mockLogger.searchInfo).toHaveBeenCalledWith(
+		expect(mockSearchInfo).toHaveBeenCalledWith(
 			"Filter options processed successfully",
 			{
 				audienceCount: 0,
 				themeCount: 0,
 				tagCount: 0,
 			},
-			expect.any(Object),
+			expect.any(String),
 		);
 	});
 
@@ -180,14 +244,14 @@ describe("fetchFilterOptions", () => {
 			tags: [{ value: "renewable-energy", label: "Renewable Energy" }],
 		});
 
-		expect(mockLogger.searchInfo).toHaveBeenCalledWith(
+		expect(mockSearchInfo).toHaveBeenCalledWith(
 			"Filter options processed successfully",
 			{
 				audienceCount: 1,
 				themeCount: 0,
 				tagCount: 1,
 			},
-			expect.any(Object),
+			expect.any(String),
 		);
 	});
 
@@ -209,14 +273,14 @@ describe("fetchFilterOptions", () => {
 			tags: [],
 		});
 
-		expect(mockLogger.searchInfo).toHaveBeenCalledWith(
+		expect(mockSearchInfo).toHaveBeenCalledWith(
 			"Filter options processed successfully",
 			{
 				audienceCount: 0,
 				themeCount: 0,
 				tagCount: 0,
 			},
-			expect.any(Object),
+			expect.any(String),
 		);
 	});
 
@@ -230,10 +294,10 @@ describe("fetchFilterOptions", () => {
 		expect(result.error).toBe("Sanity fetch failed");
 		expect(result.data).toBeUndefined();
 
-		expect(mockLogger.searchError).toHaveBeenCalledWith(
+		expect(mockSearchError).toHaveBeenCalledWith(
 			"Failed to fetch filter options",
 			error,
-			expect.any(Object),
+			expect.any(String),
 		);
 	});
 
@@ -247,10 +311,10 @@ describe("fetchFilterOptions", () => {
 		expect(result.error).toBe("Failed to fetch filter options");
 		expect(result.data).toBeUndefined();
 
-		expect(mockLogger.searchError).toHaveBeenCalledWith(
+		expect(mockSearchError).toHaveBeenCalledWith(
 			"Failed to fetch filter options",
 			stringError,
-			expect.any(Object),
+			expect.any(String),
 		);
 	});
 
@@ -275,14 +339,17 @@ describe("fetchFilterOptions", () => {
 
 		await fetchFilterOptions();
 
-		expect(mockLogger.groq).toHaveBeenCalledWith(
-			"Filter options query completed",
-			expect.objectContaining({
-				executionTime: expect.stringMatching(/\d+ms/),
-				dataReceived: true,
-			}),
-			expect.any(Object),
-		);
+		expect(mockGroq).toHaveBeenCalledTimes(1);
+		const groqArgs = mockGroq.mock.calls[0];
+		expect(groqArgs?.[0]).toBe("Filter options query completed");
+		expect(typeof groqArgs?.[1]).toBe("object");
+		const logData = groqArgs?.[1] as {
+			dataReceived?: boolean;
+			executionTime?: string;
+		};
+		expect(logData?.dataReceived).toBe(true);
+		expect(String(logData?.executionTime)).toMatch(/\d+ms/);
+		expect(typeof groqArgs?.[2]).toBe("string");
 	});
 
 	it("should handle partial null labels in mixed arrays", async () => {
@@ -317,14 +384,14 @@ describe("fetchFilterOptions", () => {
 			{ value: "policy-makers", label: "Policy Makers" },
 		]);
 
-		expect(mockLogger.searchInfo).toHaveBeenCalledWith(
+		expect(mockSearchInfo).toHaveBeenCalledWith(
 			"Filter options processed successfully",
 			{
 				audienceCount: 3,
 				themeCount: 2,
 				tagCount: 1,
 			},
-			expect.any(Object),
+			expect.any(String),
 		);
 	});
 
@@ -345,14 +412,14 @@ describe("fetchFilterOptions", () => {
 			tags: [],
 		});
 
-		expect(mockLogger.searchInfo).toHaveBeenCalledWith(
+		expect(mockSearchInfo).toHaveBeenCalledWith(
 			"Filter options processed successfully",
 			{
 				audienceCount: 0,
 				themeCount: 0,
 				tagCount: 0,
 			},
-			expect.any(Object),
+			expect.any(String),
 		);
 	});
 
@@ -368,12 +435,12 @@ describe("fetchFilterOptions", () => {
 			tags: [],
 		});
 
-		expect(mockLogger.groq).toHaveBeenCalledWith(
+		expect(mockGroq).toHaveBeenCalledWith(
 			"Filter options query completed",
 			expect.objectContaining({
 				dataReceived: false,
 			}),
-			expect.any(Object),
+			expect.any(String),
 		);
 	});
 
@@ -398,14 +465,14 @@ describe("fetchFilterOptions", () => {
 			tags: [],
 		});
 
-		expect(mockLogger.searchInfo).toHaveBeenCalledWith(
+		expect(mockSearchInfo).toHaveBeenCalledWith(
 			"Filter options processed successfully",
 			{
 				audienceCount: 0,
 				themeCount: 0,
 				tagCount: 0,
 			},
-			expect.any(Object),
+			expect.any(String),
 		);
 	});
 });

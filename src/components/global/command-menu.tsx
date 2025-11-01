@@ -1,41 +1,25 @@
-import { usePathname, useRouter } from "next/navigation";
-
-import { useCallback, useEffect, useRef, useState } from "react";
+"use client";
 
 import { Search02Icon } from "@hugeicons/core-free-icons";
-import { useTheme } from "next-themes";
-import { useDebounce } from "use-debounce";
-import type {
-	SearchPattern,
-	SearchResource,
-	SearchSolution,
-	SearchTag,
-} from "~/app/actions/search";
-import { searchContentForCommandModal } from "~/app/actions/search";
-import { usePageContentSearch } from "~/hooks/use-page-content-search";
-import {
-	type PortableTextBlock,
-	extractTextFromPortableText,
-	getMatchExplanation,
-	highlightMatches,
-	truncateWithContext,
-} from "~/lib/search-utils";
-
 import {
 	ArrowDownIcon,
 	ArrowUpIcon,
 	AsteriskIcon,
-	CommandIcon,
 	CornerDownLeftIcon,
 	FileTextIcon,
 	FolderIcon,
 	HashIcon,
 	LightbulbIcon,
 } from "lucide-react";
-
-import { cn } from "~/lib/utils";
-import { Icon } from "../shared/icon";
-
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useDebounce } from "use-debounce";
+import type {
+	SearchResource,
+	SearchSolution,
+	SearchTag,
+} from "~/app/actions/search";
+import { searchContentForCommandModal } from "~/app/actions/search";
 import {
 	CommandDialog,
 	CommandEmpty,
@@ -44,83 +28,28 @@ import {
 	CommandItem,
 	CommandList,
 } from "~/components/ui/command";
-
-type CommandMenuItemProps = {
-	shortcut?: string;
-	icon: React.ReactNode;
-	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	onAction: () => void;
-	children?: React.ReactNode;
-	className?: string;
-	searchValue?: string;
-} & React.ComponentProps<typeof CommandItem>;
-
-function CommandMenuItem({
-	children,
-	icon,
-	shortcut,
-	className,
-	setIsOpen,
-	onAction,
-	searchValue,
-	...props
-}: CommandMenuItemProps) {
-	const itemRef = useRef<HTMLDivElement | null>(null);
-
-	function setItemRef(node: HTMLDivElement | null) {
-		itemRef.current = node;
-	}
-
-	useEffect(() => {
-		if (!shortcut) return;
-
-		function handleKeyDown(e: KeyboardEvent) {
-			if (e.key === shortcut && (e.metaKey || e.ctrlKey)) {
-				e.preventDefault();
-				setIsOpen(false);
-				onAction();
-			}
-		}
-
-		document.addEventListener("keydown", handleKeyDown);
-
-		return () => document.removeEventListener("keydown", handleKeyDown);
-	}, [setIsOpen, onAction, shortcut]);
-
-	return (
-		<CommandItem
-			{...props}
-			ref={setItemRef}
-			className={cn("cursor-pointer", className)}
-		>
-			<div className="flex items-center gap-2">
-				<div className="opacity-70">{icon}</div>
-				{children}
-			</div>
-			{shortcut && (
-				<div className="ml-auto flex gap-1">
-					<div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-200 font-semibold text-neutral-400 text-xs uppercase dark:bg-[#141414]">
-						<CommandIcon size={12} />
-					</div>
-					<div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-200 font-semibold text-neutral-400 text-xs uppercase dark:bg-[#141414]">
-						{shortcut}
-					</div>
-				</div>
-			)}
-		</CommandItem>
-	);
-}
+import { usePageContentSearch } from "~/hooks/use-page-content-search";
+import { parseLocalePath } from "~/lib/locale-path";
+import {
+	type PortableTextBlock,
+	extractTextFromPortableText,
+	getMatchExplanation,
+	highlightMatches,
+	truncateWithContext,
+} from "~/lib/search-utils";
+import { cn } from "~/lib/utils";
+import type { SearchPattern } from "~/types/search";
+import { Icon } from "../shared/icon";
 
 export function CommandMenu() {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const router = useRouter();
 	const pathname = usePathname();
-
-	const { resolvedTheme: theme } = useTheme();
-	const patternSlug = pathname.startsWith("/pattern/")
-		? pathname.split("/").pop()
-		: undefined;
+	const { language, normalizedPath } = useMemo(
+		() => parseLocalePath(pathname),
+		[pathname],
+	);
 
 	// Comprehensive search using enhanced server-side search action
 	const [query, setQuery] = useState("");
@@ -131,7 +60,6 @@ export function CommandMenu() {
 		tags: SearchTag[];
 	}>({ patterns: [], solutions: [], resources: [], tags: [] });
 	const [globalLoading, setGlobalLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
 	const [debouncedQuery] = useDebounce(query, 300);
 
 	// Enhanced search effect using comprehensive search
@@ -144,7 +72,6 @@ export function CommandMenu() {
 					resources: [],
 					tags: [],
 				});
-				setError(null);
 				return;
 			}
 
@@ -154,17 +81,16 @@ export function CommandMenu() {
 			}
 
 			setGlobalLoading(true);
-			setError(null);
 			try {
 				// Use direct search function for command modal
 				const result = await searchContentForCommandModal(
 					debouncedQuery.trim(),
+					language,
 				);
 
 				if (result.success && result.data) {
 					setSearchResults(result.data);
 				} else {
-					setError(result.error || "Search failed");
 					setSearchResults({
 						patterns: [],
 						solutions: [],
@@ -172,8 +98,7 @@ export function CommandMenu() {
 						tags: [],
 					});
 				}
-			} catch (err) {
-				setError("Search failed");
+			} catch (_err) {
 				setSearchResults({
 					patterns: [],
 					solutions: [],
@@ -185,7 +110,7 @@ export function CommandMenu() {
 			}
 		};
 		performSearch();
-	}, [debouncedQuery, isOpen]);
+	}, [debouncedQuery, isOpen, language]);
 
 	// Page content search (only enabled on pattern pages)
 	const {
@@ -204,12 +129,6 @@ export function CommandMenu() {
 	};
 
 	const isLoading = globalLoading || pageLoading;
-	const hasResults =
-		searchResults.patterns.length > 0 ||
-		searchResults.solutions.length > 0 ||
-		searchResults.resources.length > 0 ||
-		searchResults.tags.length > 0 ||
-		pageResults.length > 0;
 
 	// Reset search state when modal opens/closes
 	useEffect(() => {
@@ -222,37 +141,29 @@ export function CommandMenu() {
 				resources: [],
 				tags: [],
 			});
-			setError(null);
 			clearPageSearch();
 		}
 	}, [isOpen, clearPageSearch]);
 
-	const clearSearch = useCallback(() => {
-		setQuery("");
-		setSearchResults({ patterns: [], solutions: [], resources: [], tags: [] });
-		setError(null);
-		clearPageSearch();
-	}, [clearPageSearch]);
-
 	const getCurrentPageTitle = () => {
-		if (pathname === "/") return "Home";
-		if (pathname === "/faq") return "FAQ";
-		if (pathname === "/explore") return "Explore";
-		if (pathname === "/patterns") return "Patterns";
-		if (pathname === "/tags") return "Tags";
-		if (pathname === "/values") return "Values";
-		if (pathname === "/glossary") return "Glossary";
-		if (pathname === "/onboarding") return "Onboarding";
-		if (pathname === "/carrier-bag") return "Carrier Bag";
-		if (pathname.startsWith("/pattern/")) return "Pattern";
-		return pathname.split("/").pop()?.replace(/-/g, " ") || "Unknown";
+		if (normalizedPath === "/") return "Home";
+		if (normalizedPath === "/faq") return "FAQ";
+		if (normalizedPath === "/search") return "Search";
+		if (normalizedPath === "/patterns") return "Patterns";
+		if (normalizedPath === "/tags") return "Tags";
+		if (normalizedPath === "/values") return "Values";
+		if (normalizedPath === "/glossary") return "Glossary";
+		if (normalizedPath === "/orientation") return "Orientation";
+		if (normalizedPath === "/carrier-bag") return "Carrier Bag";
+		if (normalizedPath.startsWith("/pattern/")) return "Pattern";
+		return normalizedPath.split("/").pop()?.replace(/-/g, " ") || "Unknown";
 	};
 
 	const currentPage = getCurrentPageTitle();
 
 	// Helper function to get compact search context for command modal
 	const getCompactMatchContext = (
-		title: string | null,
+		title: string | null | undefined,
 		description: Array<unknown> | null | undefined,
 		searchTerm: string,
 	): {
@@ -331,7 +242,7 @@ export function CommandMenu() {
 		return { hasMatch: titleMatch };
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	// biome-ignore lint/correctness/useExhaustiveDependencies: false positive
 	useEffect(() => {
 		function handleKeyDown(e: KeyboardEvent) {
 			if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -351,10 +262,10 @@ export function CommandMenu() {
 				type="button"
 				onClick={() => setIsOpen((prev) => !prev)}
 				className={cn(
-					"group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear hover:bg-main-foreground/40 focus-visible:ring-1 focus-visible:ring-neutral-300/80 dark:border-border/50 dark:focus-visible:ring-neutral-800 dark:hover:border-white/10 dark:hover:bg-main-foreground/20",
+					"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear",
 				)}
 			>
-				<CommandMenuIcon />
+				<CommandMenuIcon isOpen={isOpen} />
 			</button>
 			<CommandDialog
 				open={isOpen}
@@ -444,7 +355,9 @@ export function CommandMenu() {
 													value={result.title || ""}
 													onSelect={() => {
 														if (result.slug)
-															router.push(`/pattern/${result.slug}`);
+															router.push(
+																`/${language}/pattern/${result.slug}`,
+															);
 														setIsOpen(false);
 													}}
 													className="cursor-pointer px-3 py-2"
@@ -505,7 +418,7 @@ export function CommandMenu() {
 															const firstPattern = sol.patterns[0];
 															if (firstPattern?.slug) {
 																router.push(
-																	`/pattern/${firstPattern.slug}#${sol._id}`,
+																	`/${language}/pattern/${firstPattern.slug}#${sol._id}`,
 																);
 															}
 														}
@@ -576,7 +489,7 @@ export function CommandMenu() {
 															const firstPattern = res.patterns[0];
 															if (firstPattern?.slug) {
 																router.push(
-																	`/pattern/${firstPattern.slug}#${res._id}`,
+																	`/${language}/pattern/${firstPattern.slug}#${res._id}`,
 																);
 															}
 														}
@@ -646,10 +559,12 @@ export function CommandMenu() {
 														if (tag.patterns && tag.patterns.length > 0) {
 															const firstPattern = tag.patterns[0];
 															if (firstPattern?.slug) {
-																router.push(`/pattern/${firstPattern.slug}`);
+																router.push(
+																	`/${language}/pattern/${firstPattern.slug}`,
+																);
 															}
 														} else {
-															router.push(`/tags#${tag._id}`);
+															router.push(`/${language}/tags#${tag._id}`);
 														}
 														setIsOpen(false);
 													}}
@@ -690,7 +605,7 @@ export function CommandMenu() {
 					<div className="text-muted-foreground text-sm">
 						You are on the {currentPage.toLowerCase()} page
 					</div>
-					<div className="flex items-center gap-4">
+					<div className="hidden lg:flex lg:items-center lg:gap-4">
 						<div className="flex items-center gap-2">
 							<div className="flex items-center gap-1.5">
 								<div className="rounded bg-neutral-200 p-1 text-neutral-500 dark:bg-neutral-800">
@@ -715,11 +630,17 @@ export function CommandMenu() {
 	);
 }
 
-function CommandMenuIcon() {
+function CommandMenuIcon({ isOpen }: { isOpen: boolean }) {
 	return (
-		<span className={cn("flex items-center gap-0.5 text-primary text-sm")}>
+		<span
+			className={cn(
+				"flex items-center gap-0.5 text-sm transition-colors",
+				isOpen
+					? "text-foreground"
+					: "text-muted-foreground group-hover:text-foreground",
+			)}
+		>
 			<Icon icon={Search02Icon} size={14} />
-			<CommandIcon size={14} /> K
 		</span>
 	);
 }

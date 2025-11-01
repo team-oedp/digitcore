@@ -1,20 +1,18 @@
 import { ChartRelationshipIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "@portabletext/types";
-import { CustomPortableText } from "~/components/global/custom-portable-text";
+import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { Badge } from "~/components/ui/badge";
-import type { Solution } from "~/sanity/sanity.types";
+import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
+import { ClickableBadge } from "./clickable-badge";
 import { SuggestSolutionButton } from "./suggest-solution-button";
 
-type AudienceDisplay = {
-	_id?: string;
-	_key?: string;
-	_ref?: string;
-	title?: string;
-};
+type SolutionItem = NonNullable<
+	NonNullable<PATTERN_QUERYResult>["solutions"]
+>[number];
 
 type SolutionsProps = {
-	solutions?: Solution[] | null;
+	solutions?: SolutionItem[] | null;
 	patternName?: string;
 	patternSlug?: string;
 };
@@ -43,57 +41,56 @@ export function Solutions({
 				<h2 className="font-light text-[24px] text-primary md:text-[32px]">
 					Solutions
 				</h2>
-				<div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#f7f7f7] px-3 py-1 md:h-8 md:w-8 md:px-4 md:py-1.5">
-					<HugeiconsIcon
-						icon={ChartRelationshipIcon}
-						size={16}
-						color="currentColor"
-						strokeWidth={1.5}
-						className="md:h-5 md:w-5"
-					/>
-				</div>
 			</header>
 
 			<div className="flex flex-col gap-3 md:gap-[13px]">
-				{solutions.map((solution: Solution, index: number) => (
+				{solutions.map((solution, index) => (
 					<div
 						key={solution._id}
-						className="flex items-start gap-4 pb-6 md:gap-8 md:pb-9"
+						className="flex items-baseline gap-4 pb-6 md:gap-8 md:pb-9"
 					>
 						<div className="flex w-8 min-w-8 flex-col items-start gap-2.5 md:w-10 md:min-w-10">
-							<span className="font-normal text-[16px] text-primary leading-[20px] md:text-[18px] md:leading-[22px]">
+							<h3 className="font-normal text-base text-body-muted leading-normal md:text-xl md:leading-tight lg:text-[28px] lg:leading-normal">
 								{getSolutionNumber(index)}
-							</span>
+							</h3>
 						</div>
 
 						<div className="flex flex-1 flex-col gap-2 md:gap-2.5">
-							<h3 className="font-normal text-[16px] text-primary leading-[20px] md:text-[18px] md:leading-[22px]">
+							<h3 className="font-light text-base text-primary leading-normal md:text-xl md:leading-tight lg:text-[28px] lg:leading-normal">
 								{solution.title}
 							</h3>
 							{solution.description && (
 								<CustomPortableText
 									value={solution.description as PortableTextBlock[]}
-									className="prose max-w-none text-xs leading-normal md:text-sm"
+									className="text-body-muted"
 								/>
 							)}
 
 							{solution.audiences && solution.audiences.length > 0 && (
 								<div className="flex flex-wrap gap-1.5 md:gap-2">
-									{solution.audiences.map((audience: AudienceDisplay) => (
+									{solution.audiences.map((audience) => (
 										<Badge
-											key={audience._id ?? audience._key ?? audience._ref}
+											key={audience._id}
 											variant="audience"
-											icon={
-												<HugeiconsIcon
-													icon={ChartRelationshipIcon}
-													size={12}
-													color="currentColor"
-													strokeWidth={1.5}
-													className="md:h-[14px] md:w-[14px]"
-												/>
-											}
+											className="cursor-pointer"
+											asChild
 										>
-											{audience.title ?? audience._ref}
+											<ClickableBadge
+												type="audience"
+												id={audience._id}
+												title={audience.title ?? undefined}
+												icon={
+													<HugeiconsIcon
+														icon={ChartRelationshipIcon}
+														size={12}
+														color="currentColor"
+														strokeWidth={1.5}
+														className="md:h-[14px] md:w-[14px]"
+													/>
+												}
+											>
+												{audience.title}
+											</ClickableBadge>
 										</Badge>
 									))}
 								</div>

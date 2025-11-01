@@ -6,12 +6,57 @@ import {
 	within,
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { PatternForCarrierBag } from "~/components/global/carrier-bag/carrier-bag-item";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
 import { SiteHeader } from "~/components/global/site-header";
 import { PatternHeading } from "~/components/shared/pattern-heading";
 import { SidebarProvider } from "~/components/ui/sidebar";
-import type { Pattern } from "~/sanity/sanity.types";
+import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
+import { ExploreMenuStoreProvider } from "~/stores/explore-menu";
+import { FontStoreProvider } from "~/stores/font";
+
+const mockHeaderData: HEADER_QUERYResult = {
+	_id: "test-header",
+	_type: "header",
+	_createdAt: "2024-01-01T00:00:00Z",
+	_updatedAt: "2024-01-01T00:00:00Z",
+	_rev: "test-rev",
+	title: "Test Header",
+	language: "en",
+	internalLinks: [
+		{
+			_key: "orientation",
+			label: "Orientation",
+			page: {
+				_id: "orientation-page",
+				_type: "page",
+				title: "Orientation",
+				slug: "orientation",
+			},
+		},
+		{
+			_key: "about",
+			label: "About",
+			page: {
+				_id: "about-page",
+				_type: "page",
+				title: "About",
+				slug: "about",
+			},
+		},
+		{
+			_key: "search",
+			label: "Search",
+			page: {
+				_id: "search-page",
+				_type: "page",
+				title: "Search",
+				slug: "search",
+			},
+		},
+	],
+};
 
 // Mock the pattern icons utility
 vi.mock("~/utils/pattern-icons", () => ({
@@ -53,6 +98,7 @@ vi.mock("next/navigation", () => ({
 		push: vi.fn(),
 	}),
 	usePathname: () => "/test-page",
+	useSearchParams: () => new URLSearchParams(),
 }));
 
 // Mock Next.js components
@@ -61,11 +107,26 @@ vi.mock("next/link", () => ({
 		href,
 		children,
 		...props
-	}: { href: string; children: React.ReactNode; [key: string]: unknown }) => (
-		<a href={href} {...props}>
-			{children}
-		</a>
-	),
+	}: {
+		href: string;
+		children: React.ReactNode;
+		[key: string]: unknown;
+	}) => {
+		const { onClick: origOnClick, ...rest } =
+			(props as React.AnchorHTMLAttributes<HTMLAnchorElement>) || {};
+		return (
+			<a
+				href={href}
+				{...rest}
+				onClick={(e) => {
+					e.preventDefault();
+					origOnClick?.(e as React.MouseEvent<HTMLAnchorElement, MouseEvent>);
+				}}
+			>
+				{children}
+			</a>
+		);
+	},
 }));
 
 // Mock theme components
@@ -84,21 +145,33 @@ vi.mock("~/components/global/command-menu", () => ({
 // Create a wrapper component that provides all necessary contexts
 function TestWrapper({ children }: { children: React.ReactNode }) {
 	return (
-		<CarrierBagStoreProvider>
-			<SidebarProvider defaultOpen={false}>{children}</SidebarProvider>
-		</CarrierBagStoreProvider>
+		<FontStoreProvider>
+			<CarrierBagStoreProvider>
+				<ExploreMenuStoreProvider>
+					<SidebarProvider defaultOpen={false}>{children}</SidebarProvider>
+				</ExploreMenuStoreProvider>
+			</CarrierBagStoreProvider>
+		</FontStoreProvider>
 	);
 }
 
 describe("Carrier Bag Sidebar", () => {
-	const mockPattern: Pattern = {
+	const mockPattern: PatternForCarrierBag = {
 		_id: "test-pattern-1",
 		_type: "pattern",
 		_createdAt: "2023-01-01T00:00:00Z",
 		_updatedAt: "2023-01-01T00:00:00Z",
 		_rev: "1",
 		title: "Test Pattern",
-		slug: { _type: "slug", current: "test-pattern" },
+		language: "en",
+		slug: "test-pattern",
+		description: null,
+		descriptionPlainText: "",
+		tags: null,
+		audiences: null,
+		theme: null,
+		solutions: null,
+		resources: null,
 	};
 
 	beforeEach(() => {
@@ -115,7 +188,7 @@ describe("Carrier Bag Sidebar", () => {
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 
@@ -161,7 +234,7 @@ describe("Carrier Bag Sidebar", () => {
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 
@@ -205,7 +278,7 @@ describe("Carrier Bag Sidebar", () => {
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 
@@ -223,7 +296,7 @@ describe("Carrier Bag Sidebar", () => {
 
 			// Verify clear and download buttons are enabled
 			const clearButton = screen.getByRole("button", {
-				name: /clear all items/i,
+				name: /remove all items/i,
 			});
 			const downloadButton = screen.getByRole("button", {
 				name: /download list as json/i,
@@ -238,13 +311,13 @@ describe("Carrier Bag Sidebar", () => {
 		it("should close sidebar when close button is clicked", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader />
+					<SiteHeader headerData={mockHeaderData} language="en" />
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 
@@ -290,13 +363,13 @@ describe("Carrier Bag Sidebar", () => {
 		it("should close sidebar when header toggle button is clicked", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader />
+					<SiteHeader headerData={mockHeaderData} language="en" />
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 
@@ -335,13 +408,13 @@ describe("Carrier Bag Sidebar", () => {
 		it("should allow sidebar to reopen after being closed", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader />
+					<SiteHeader headerData={mockHeaderData} language="en" />
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
 						pattern={mockPattern}
 					/>
-					<CarrierBagSidebar data-testid="carrier-bag-sidebar" />
+					<CarrierBagSidebar data-testid="carrier-bag-sidebar" language="en" />
 				</TestWrapper>,
 			);
 

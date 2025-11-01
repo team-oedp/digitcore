@@ -1,38 +1,23 @@
-import type { PortableTextBlock } from "next-sanity";
+import { Mail01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
+import { GitHubIcon } from "~/components/icons/logos/github-icon";
+import { ZenodoIcon } from "~/components/icons/logos/zenodo-icon";
+import type { Language } from "~/i18n/config";
+import { buildLocaleHref } from "~/lib/locale-path";
 import type { FOOTER_QUERYResult } from "~/sanity/sanity.types";
-import { CustomPortableText } from "./custom-portable-text";
 
 type SiteFooterProps = {
 	footerData: FOOTER_QUERYResult;
+	language: Language;
 };
 
 // Fallback data in case Sanity data is not available
 const FALLBACK_SOCIAL_LINKS = [
 	{
-		name: "Instagram",
-		href: "https://www.instagram.com/openenvirodata/",
-		isExternal: true,
-	},
-	{
-		name: "LinkedIn",
-		href: "https://www.linkedin.com/company/open-environmental-data-project/",
-		isExternal: true,
-	},
-	{
 		name: "GitHub",
 		href: "https://github.com/oedp",
-		isExternal: true,
-	},
-	{
-		name: "Medium",
-		href: "https://openenvironmentaldata.medium.com/",
-		isExternal: true,
-	},
-	{
-		name: "Substack",
-		href: "https://substack.com/@openenvironmentaldataproject",
 		isExternal: true,
 	},
 	{
@@ -40,104 +25,279 @@ const FALLBACK_SOCIAL_LINKS = [
 		href: "mailto:info@openenvironmentaldata.org",
 		isExternal: false,
 	},
+	{
+		name: "LinkedIn",
+		href: "https://www.linkedin.com/company/open-environmental-data-project/",
+		isExternal: true,
+	},
+	{
+		name: "Substack",
+		href: "https://substack.com/@openenvironmentaldataproject",
+		isExternal: true,
+	},
 ];
 
-export function SiteFooter({ footerData }: SiteFooterProps) {
+export function SiteFooter({ footerData, language }: SiteFooterProps) {
 	// Use Sanity data if available, otherwise fall back to hardcoded data
 	const title =
 		footerData?.title || "Digital Toolkit for Open Environmental Research";
 	const internalLinks = footerData?.internalLinks || [];
 	const externalLinks = footerData?.externalLinks || [];
-	const license = footerData?.license;
+	const license = footerData?.licenseLink;
 
-	// Combine internal and external links, fallback to hardcoded social links if no external links from Sanity
-	const allExternalLinks =
-		externalLinks.length > 0
-			? externalLinks
-			: FALLBACK_SOCIAL_LINKS.map((link) => ({
-					_key: link.name.toLowerCase(),
-					label: link.name,
-					url: link.href,
-				}));
+	// Note: External links from Sanity are available but currently using hardcoded icons
+	// Future enhancement: Could integrate externalLinks data with dynamic icon rendering
 
 	return (
-		<footer className="mx-3 mt-auto h-[400px] rounded-md bg-background">
+		<footer className="mx-3 mt-auto h-[300px] rounded-md bg-footer-background md:h-[200px]">
 			<div className="pb-3">
-				<div className="flex h-[400px] flex-col px-4 py-3 md:px-8 md:py-6">
-					{/* Main content area */}
-					<div className="grid grid-cols-1 gap-16 md:grid-cols-12">
-						{/* Header with logo and title */}
-						<div className="flex items-start md:col-span-8">
-							<div className="flex items-start md:items-center">
-								<Image
-									src="/oedp-icon.png"
-									alt="Digital Toolkit logo"
-									width={24}
-									height={24}
-									className="mt-1 mr-3 md:mt-0"
-									style={{ height: "auto" }}
-									priority
-								/>
-								<h2 className="text-balance font-normal text-md md:text-lg">
-									{title}
-								</h2>
-							</div>
+				<div className="flex h-[300px] flex-col px-4 py-3 md:h-[200px] md:px-8 md:py-6">
+					{/* Mobile Layout - Vertical Stack */}
+					<div className="flex h-full flex-col justify-between md:hidden">
+						{/* 1. Logo + Title */}
+						<div className="flex items-center">
+							<Image
+								src="/pattern-logo.svg"
+								alt="Digitcore logo"
+								width={24}
+								height={24}
+								className="mr-3"
+								style={{ height: "auto" }}
+								priority
+							/>
+							<h2 className="text-balance font-normal text-md">DIGITCORE</h2>
 						</div>
 
-						{/* Navigation links */}
-						<nav
-							className="md:col-span-4 md:col-start-9"
-							aria-label="Footer navigation links"
-						>
-							<ul className="space-y-1">
-								{/* Internal links from Sanity */}
-								{internalLinks.map((link) => (
-									<li key={link._key}>
-										<Link
-											href={`/${link.page?.slug || "#"}`}
-											className="link text-sm focus:outline-none"
-										>
-											{link.label}
-										</Link>
-									</li>
-								))}
+						{/* 2. Internal Links */}
+						{internalLinks.length > 0 && (
+							<nav aria-label="Internal navigation links">
+								<ul className="space-y-1">
+									{internalLinks.map((link) => {
+										const slug = link.page?.slug;
+										const href = slug
+											? buildLocaleHref(language, `/${slug}`)
+											: "#";
+										return (
+											<li key={link._key}>
+												<Link
+													href={href}
+													className="text-link text-sm leading-normal focus:outline-none"
+												>
+													{link.label}
+												</Link>
+											</li>
+										);
+									})}
+								</ul>
+							</nav>
+						)}
 
-								{/* External links from Sanity or fallback social links */}
-								{allExternalLinks.map((link) => {
-									const isExternal =
-										link.url?.startsWith("http") ||
-										link.url?.startsWith("mailto");
-									return (
-										<li key={link._key}>
-											<a
-												href={link.url || "#"}
-												className="link text-sm focus:outline-none"
-												{...(isExternal && {
-													target: "_blank",
-													rel: "noopener noreferrer",
-													"aria-label": `${link.label} (opens in new tab)`,
-												})}
-											>
-												{link.label}
-											</a>
-										</li>
-									);
-								})}
-							</ul>
+						{/* 3. External Icon Links */}
+						<nav aria-label="External links">
+							<div className="flex items-center gap-4">
+								{/* OEDP Icon */}
+								<a
+									href="https://openenvironmentaldata.org"
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label="Open Environmental Data Project (opens in new tab)"
+									className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none"
+								>
+									<Image
+										src="/oedp-icon.png"
+										alt="OEDP"
+										width={19.2}
+										height={19.2}
+										style={{ height: "auto" }}
+									/>
+								</a>
+
+								{/* GitHub Icon */}
+								<a
+									href="https://github.com/oedp"
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label="GitHub (opens in new tab)"
+									className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none"
+								>
+									<GitHubIcon className="h-[1.2rem] w-[1.2rem]" />
+								</a>
+
+								{/* Zenodo Icon */}
+								<a
+									href="https://zenodo.org/communities/oedp"
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label="Zenodo (opens in new tab)"
+									className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none"
+								>
+									<ZenodoIcon className="h-[1.2rem] w-[1.2rem]" />
+								</a>
+
+								{/* Email Icon */}
+								<a
+									href="mailto:info@openenvironmentaldata.org"
+									aria-label="Email Open Environmental Data Project"
+									className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none"
+								>
+									<HugeiconsIcon
+										icon={Mail01Icon}
+										size={24}
+										color="currentColor"
+										strokeWidth={1.5}
+									/>
+								</a>
+							</div>
 						</nav>
+
+						{/* 4. License/Copyright - Last */}
+						<div className="w-full text-left text-primary text-xs">
+							{license ? (
+								<Link
+									href={license.href || "#"}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="inline-flex w-fit items-center gap-1 rounded-md border border-neutral-300 bg-primary/5 px-2.5 pt-0.5 pb-1 align-middle text-primary text-xs leading-normal no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+								>
+									{license.label || "License"}
+								</Link>
+							) : (
+								<p>Open Environmental Data Project 2025</p>
+							)}
+						</div>
 					</div>
 
-					{/* License/Copyright text */}
-					<div className="mt-auto text-left text-primary text-xs">
-						{license ? (
-							<CustomPortableText
-								value={license as PortableTextBlock[]}
-								className="prose max-w-none text-primary text-xs"
-								as="div"
-							/>
-						) : (
-							<p>Open Environmental Data Project 2025</p>
-						)}
+					{/* Desktop Layout - Grid */}
+					<div className="hidden md:flex md:h-full md:flex-col">
+						{/* Top section with logo + title on left, external icon links on right */}
+						<div className="mb-8 grid grid-cols-12 gap-16">
+							<div className="col-span-8 flex items-start">
+								<div className="flex items-center">
+									<Image
+										src="/pattern-logo.svg"
+										alt="Digitcore logo"
+										width={24}
+										height={24}
+										className="mr-3"
+										style={{ height: "auto" }}
+										priority
+									/>
+									<h2 className="text-balance font-normal text-lg lg:hidden">
+										DIGITCORE
+									</h2>
+									<h2 className="hidden text-balance font-normal text-lg lg:block">
+										{title}
+									</h2>
+								</div>
+							</div>
+
+							{/* External links as horizontal row of icons in top right */}
+							<nav
+								className="col-span-4 flex justify-end"
+								aria-label="External links"
+							>
+								<div className="flex items-center gap-4">
+									{/* OEDP Icon */}
+									<a
+										href="https://openenvironmentaldata.org"
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label="Open Environmental Data Project (opens in new tab)"
+										className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none"
+									>
+										<Image
+											src="/oedp-icon.png"
+											alt="OEDP"
+											width={19.2}
+											height={19.2}
+											style={{ height: "auto" }}
+										/>
+									</a>
+
+									{/* GitHub Icon */}
+									<a
+										href="https://github.com/oedp"
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label="GitHub (opens in new tab)"
+										className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none"
+									>
+										<GitHubIcon className="h-[1.2rem] w-[1.2rem]" />
+									</a>
+
+									{/* Zenodo Icon */}
+									<a
+										href="https://zenodo.org/communities/oedp"
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label="Zenodo (opens in new tab)"
+										className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none"
+									>
+										<ZenodoIcon className="h-[1.2rem] w-[1.2rem]" />
+									</a>
+
+									{/* Email Icon */}
+									<a
+										href="mailto:info@openenvironmentaldata.org"
+										aria-label="Email Open Environmental Data Project"
+										className="rounded text-primary transition-colors hover:text-primary/80 focus:outline-none"
+									>
+										<HugeiconsIcon
+											icon={Mail01Icon}
+											size={19.2}
+											color="currentColor"
+											strokeWidth={1.5}
+										/>
+									</a>
+								</div>
+							</nav>
+						</div>
+
+						{/* Bottom section with internal text links on the right, license on the left */}
+						<div className="mt-auto grid grid-cols-12 items-end">
+							{/* License left column */}
+							<div className="col-span-8 col-start-1 w-full self-end text-left text-primary text-xs leading-normal">
+								{license ? (
+									<Link
+										href={license.href || "#"}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="inline-flex w-fit items-center gap-1 rounded-md border border-neutral-300 bg-primary/5 px-2.5 pt-0.5 pb-1 align-middle text-primary text-xs leading-normal no-underline transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+									>
+										{license.label || "License"}
+									</Link>
+								) : (
+									<p>Open Environmental Data Project 2025</p>
+								)}
+							</div>
+
+							{/* Internal links right side, text left-aligned */}
+							{internalLinks.length > 0 && (
+								<nav
+									className="col-span-3 col-start-10 self-end text-right"
+									aria-label="Internal navigation links"
+								>
+									<ul className="space-y-1">
+										{internalLinks.map((link) => {
+											const slug = link.page?.slug;
+											const href = slug
+												? buildLocaleHref(language, `/${slug}`)
+												: "#";
+											return (
+												<li key={link._key}>
+													<Link
+														href={href}
+														className="text-link text-sm focus:outline-none"
+													>
+														{link.label}
+													</Link>
+												</li>
+											);
+										})}
+									</ul>
+								</nav>
+							)}
+						</div>
 					</div>
 				</div>
 			</div>

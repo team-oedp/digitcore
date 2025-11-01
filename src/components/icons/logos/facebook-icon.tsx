@@ -1,11 +1,13 @@
 import type React from "react";
+import { useId } from "react";
 
 export function FacebookIcon(props: React.ComponentPropsWithoutRef<"svg">) {
+	const gradientId = useId();
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 36 36"
-			fill="url(#facebook__a)"
+			fill={`url(#${gradientId})`}
 			height="20"
 			width="20"
 			className="h-5 w-5"
@@ -14,7 +16,7 @@ export function FacebookIcon(props: React.ComponentPropsWithoutRef<"svg">) {
 			{...props}
 		>
 			<defs>
-				<linearGradient x1="50%" x2="50%" y1="97.078%" y2="0%" id="facebook__a">
+				<linearGradient x1="50%" x2="50%" y1="97.078%" y2="0%" id={gradientId}>
 					<stop offset="0%" stopColor="#0062E0" />
 					<stop offset="100%" stopColor="#19AFFF" />
 				</linearGradient>

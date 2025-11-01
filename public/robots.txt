@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://digitcore.org
+
+# Sitemaps
+Sitemap: https://digitcore.org/sitemap.xml

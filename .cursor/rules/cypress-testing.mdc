@@ -1,0 +1,589 @@
+# Cypress Testing Guidelines for DIGITCORE Toolkit
+
+## Overview
+
+This guide provides comprehensive guidelines for writing end-to-end tests using Cypress in the DIGITCORE Toolkit project, based on the current implementation and codebase structure. This guide ensures consistent, reliable, and maintainable tests.
+
+## Project Context
+
+- **Framework**: Next.js 15 with React 19 (App Router)
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **State Management**: Zustand (carrier bag), tRPC
+- **Theme System**: next-themes (light/dark/system modes)
+- **Base URL**: http://localhost:3000
+- **Current Cypress Version**: 14.5.2
+
+## Current Implementation
+
+### Existing Scripts (package.json)
+
+```json
+{
+  "scripts": {
+    "cypress:open": "cross-env NODE_ENV=test SKIP_ENV_VALIDATION=1 cypress open",
+    "cypress:run": "cross-env NODE_ENV=test SKIP_ENV_VALIDATION=1 cypress run",
+    "e2e": "start-server-and-test dev http://localhost:3000 \"cross-env NODE_ENV=test SKIP_ENV_VALIDATION=1 cypress run --e2e\"",
+    "e2e:dev": "start-server-and-test dev http://localhost:3000 \"cross-env NODE_ENV=test SKIP_ENV_VALIDATION=1 cypress open --e2e\"",
+    "e2e:production": "start-server-and-test start http://localhost:3000 \"cypress run --e2e\""
+  }
+}
+```
+
+### Current Configuration (cypress.config.ts)
+
+```typescript
+import { defineConfig } from "cypress";
+
+export default defineConfig({
+  e2e: {
+    baseUrl: "http://localhost:3000",
+    specPattern: "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+    supportFile: "cypress/support/e2e.{js,ts}",
+    video: false,
+    screenshotOnRunFailure: false,
+  },
+  component: {
+    devServer: {
+      framework: "next",
+      bundler: "webpack",
+    },
+  },
+});
+```
+
+## Current File Structure
+
+```text
+cypress/
+├── e2e/
+│   └── middleware-onboarding.cy.ts  # Existing onboarding middleware tests
+├── support/
+│   ├── commands.ts                  # Currently contains example code
+│   ├── e2e.ts                       # Minimal support file
+│   └── component-index.html         # Component testing template
+├── fixtures/
+│   └── example.json                 # Default fixture
+└── downloads/                       # Downloads directory
+```
+
+## Testing Patterns
+
+### 1. Navigation Testing
+
+Based on actual SiteHeader component structure:
+
+```typescript
+describe('Navigation', () => {
+  beforeEach(() => {
+    cy.visit('/')
+  })
+
+  it('should display main navigation links', () => {
+    // Test main logo/home link
+    cy.get('header').find('a[href="/"]').should('contain', 'Digitcore')
+    
+    // Test desktop navigation links (hidden on mobile)
+    cy.get('nav').within(() => {
+      cy.get('a[href="/onboarding"]').should('contain', 'Start here')
+      cy.get('a[href="/explore"]').should('contain', 'Explore')  
+      cy.get('a[href="/patterns"]').should('contain', 'Patterns')
+      cy.get('a[href="/tags"]').should('contain', 'Tags')
+      cy.get('a[href="/glossary"]').should('contain', 'Glossary')
+      cy.get('a[href="/values"]').should('contain', 'Values')
+      cy.get('a[href="/faq"]').should('contain', 'FAQ')
+      cy.get('a[href="/about"]').should('contain', 'About')
+      cy.get('a[href="/acknowledgements"]').should('contain', 'Acknowledgements')
+    })
+  })
+
+  it('should navigate to each page correctly', () => {
+    const pages = [
+      { href: '/onboarding', text: 'Start here' },
+      { href: '/explore', text: 'Explore' },
+      { href: '/patterns', text: 'Patterns' },
+      { href: '/tags', text: 'Tags' },
+      { href: '/glossary', text: 'Glossary' },
+      { href: '/values', text: 'Values' },
+      { href: '/faq', text: 'FAQ' },
+      { href: '/about', text: 'About' },
+      { href: '/acknowledgements', text: 'Acknowledgements' }
+    ]
+
+    pages.forEach(({ href, text }) => {
+      cy.get(`a[href="${href}"]`).first().click()
+      cy.url().should('include', href)
+      // Return to home
+      cy.get('a[href="/"]').first().click()
+    })
+  })
+
+  it('should handle mobile navigation', () => {
+    cy.viewport('iphone-6')
+    // Test mobile menu button exists (implementation may vary)
+    cy.get('button').contains('Menu').should('exist')
+  })
+})
+```
+
+### 2. Theme Toggle Testing
+
+Based on actual ModeToggle component:
+
+```typescript
+describe('Theme Toggle', () => {
+  beforeEach(() => {
+    cy.visit('/')
+  })
+
+  it('should open theme dropdown menu', () => {
+    // Find theme toggle button (has aria-label "Select theme")
+    cy.get('button[aria-label="Select theme"]').click()
+    
+    // Check dropdown menu items
+    cy.get('[role="menu"]').within(() => {
+      cy.contains('Light').should('be.visible')
+      cy.contains('Dark').should('be.visible') 
+      cy.contains('System').should('be.visible')
+    })
+  })
+
+  it('should switch to dark theme', () => {
+    cy.get('button[aria-label="Select theme"]').click()
+    cy.contains('Dark').click()
+    cy.get('html').should('have.class', 'dark')
+    
+    // Verify persistence after page reload
+    cy.reload()
+    cy.get('html').should('have.class', 'dark')
+  })
+
+  it('should switch to light theme', () => {
+    cy.get('button[aria-label="Select theme"]').click()
+    cy.contains('Light').click()
+    cy.get('html').should('not.have.class', 'dark')
+    
+    // Verify persistence
+    cy.reload()
+    cy.get('html').should('not.have.class', 'dark')
+  })
+
+  it('should respect system theme', () => {
+    cy.get('button[aria-label="Select theme"]').click()
+    cy.contains('System').click()
+    
+    // System theme should be set (exact appearance depends on OS settings)
+    cy.reload()
+    // Theme persistence check
+    cy.get('button[aria-label="Select theme"]').should('exist')
+  })
+})
+```
+
+### 3. Onboarding Middleware Testing
+
+Based on existing middleware-onboarding.cy.ts implementation:
+
+```typescript
+describe('Onboarding middleware', () => {
+  before(() => {
+    // Warm up dev server compilation to avoid initial timeouts
+    cy.visit('/')
+  })
+
+  // Handle known React/Next.js performance measurement errors
+  Cypress.on('uncaught:exception', (err) => {
+    // Ignore performance measurement errors that occur with 404 pages
+    if (err.message.includes("Failed to execute 'measure' on 'Performance'")) {
+      return false
+    }
+    // Let other errors fail the test
+    return true
+  })
+
+  it('redirects first-time visitor to /onboarding', () => {
+    cy.clearCookies()
+    cy.visit('/explore', { failOnStatusCode: false })
+    cy.location('pathname', { timeout: 120000 }).should('eq', '/onboarding')
+  })
+
+  it('passes through when onboarding cookie is present', () => {
+    cy.setCookie('onboarding_completed', '1')
+    cy.visit('/explore')
+    cy.location('pathname').should('eq', '/explore')
+  })
+
+  it('preserves pattern slug and query params', () => {
+    cy.clearCookies()
+    cy.visit('/pattern/foo?bar=baz', { failOnStatusCode: false })
+    cy.location('pathname', { timeout: 120000 }).should('eq', '/onboarding')
+    cy.location('search').should('contain', 'pattern=foo')
+    cy.location('search').should('contain', 'returnTo=%2Fpattern%2Ffoo%3Fbar%3Dbaz')
+  })
+
+  it('does not redirect when already on /onboarding', () => {
+    cy.clearCookies()
+    cy.visit('/onboarding')
+    cy.location('pathname').should('eq', '/onboarding')
+  })
+})
+```
+
+### 4. Carrier Bag Testing (Zustand + localStorage)
+
+Based on actual CarrierBagStore implementation:
+
+```typescript
+describe('Carrier Bag Functionality', () => {
+  beforeEach(() => {
+    // Clear localStorage before each test
+    cy.clearLocalStorage()
+    cy.visit('/')
+  })
+
+  it('should start with empty carrier bag', () => {
+    cy.visit('/carrier-bag')
+    // Check for empty state message or no items
+    cy.get('main').should('be.visible')
+  })
+
+  it('should persist carrier bag state in localStorage', () => {
+    // Set up carrier bag data directly in localStorage
+    cy.window().then((win) => {
+      const mockCarrierBagData = {
+        state: {
+          items: [
+            {
+              pattern: {
+                _id: 'test-pattern-1',
+                title: 'Test Pattern',
+                _updatedAt: new Date().toISOString()
+              },
+              dateAdded: new Date().toISOString(),
+              notes: 'Test notes',
+              contentVersion: new Date().toISOString()
+            }
+          ],
+          isHydrated: true,
+          isOpen: false,
+          isPinned: false,
+          isModalMode: false,
+          stalePatternIds: [],
+          updatingPatternIds: [],
+          recentlyUpdatedIds: [],
+          hasUnseenUpdates: false,
+          lastUpdateTime: null,
+          showClearConfirmation: false
+        },
+        version: 0
+      }
+      win.localStorage.setItem('carrier-bag', JSON.stringify(mockCarrierBagData))
+    })
+    
+    cy.visit('/carrier-bag')
+    cy.reload()
+    
+    // Verify data persists after reload
+    cy.window().then((win) => {
+      const stored = win.localStorage.getItem('carrier-bag')
+      expect(stored).to.not.be.null
+      const parsed = JSON.parse(stored)
+      expect(parsed.state.items).to.have.length(1)
+    })
+  })
+
+  it('should open carrier bag sidebar', () => {
+    // Look for carrier bag trigger button (backpack icon)
+    cy.get('button').contains('svg').click()
+    // Check if sidebar opens (implementation specific)
+    cy.get('[data-state="open"]').should('exist')
+  })
+})
+```
+
+### 5. Responsive Design Testing
+
+```typescript
+describe('Responsive Design', () => {
+  const viewports = [
+    { device: 'mobile', width: 375, height: 667 },
+    { device: 'tablet', width: 768, height: 1024 },
+    { device: 'desktop', width: 1280, height: 720 }
+  ]
+
+  viewports.forEach(({ device, width, height }) => {
+    it(`should display correctly on ${device}`, () => {
+      cy.viewport(width, height)
+      cy.visit('/')
+      
+      cy.get('[data-testid="header"]').should('be.visible')
+      cy.get('[data-testid="main-content"]').should('be.visible')
+      
+      if (device === 'mobile') {
+        // Test mobile-specific behavior
+        cy.get('[data-testid="mobile-menu-toggle"]').should('be.visible')
+      } else {
+        // Test desktop navigation
+        cy.get('[data-testid="desktop-nav"]').should('be.visible')
+      }
+    })
+  })
+})
+```
+
+## Custom Commands
+
+### Support Commands (cypress/support/commands.ts)
+
+```typescript
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Login with test user credentials
+       */
+      login(): Chainable<void>
+      
+      /**
+       * Set theme preference
+       */
+      setTheme(theme: 'light' | 'dark' | 'system'): Chainable<void>
+      
+      /**
+       * Add pattern to carrier bag
+       */
+      addToCarrierBag(pattern: { id: string; title: string }): Chainable<void>
+      
+      /**
+       * Navigate to page and verify URL
+       */
+      navigateAndVerify(path: string, expectedHeading: string): Chainable<void>
+    }
+  }
+}
+
+Cypress.Commands.add('setTheme', (theme: 'light' | 'dark' | 'system') => {
+  cy.get('[data-testid="theme-toggle"]').click()
+  cy.get(`[data-testid="theme-${theme}"]`).click()
+})
+
+Cypress.Commands.add('addToCarrierBag', (pattern) => {
+  cy.window().then((win) => {
+    const existing = JSON.parse(win.localStorage.getItem('carrier-bag') || '[]')
+    existing.push(pattern)
+    win.localStorage.setItem('carrier-bag', JSON.stringify(existing))
+  })
+})
+
+Cypress.Commands.add('navigateAndVerify', (path: string, expectedHeading: string) => {
+  cy.visit(path)
+  cy.url().should('include', path)
+  cy.get('h1').should('contain', expectedHeading)
+})
+```
+
+## Data Test IDs
+
+### Required Data Test IDs to Add to Components
+
+Add these `data-testid` attributes to your components:
+
+#### Navigation (layout.tsx)
+
+```tsx
+// Header navigation
+<nav data-testid="header">
+  <Link href="/" data-testid="nav-home">DIGITCORE Toolkit</Link>
+  <Link href="/carrier-bag" data-testid="nav-carrier-bag">Carrier Bag</Link>
+  <Link href="/tags" data-testid="nav-tags">Tags</Link>
+  <Link href="/glossary" data-testid="nav-glossary">Glossary</Link>
+  <Link href="/onboarding" data-testid="nav-onboarding">Onboarding</Link>
+  <Link href="/values" data-testid="nav-values">Values</Link>
+  <Link href="/search" data-testid="nav-search">Search</Link>
+</nav>
+
+// Theme toggle
+<DropdownMenuTrigger data-testid="theme-toggle">
+<DropdownMenuItem data-testid="theme-light">Light</DropdownMenuItem>
+<DropdownMenuItem data-testid="theme-dark">Dark</DropdownMenuItem>
+<DropdownMenuItem data-testid="theme-system">System</DropdownMenuItem>
+
+// Main content
+<main data-testid="main-content">{children}</main>
+```
+
+#### Pages
+```tsx
+// Home page (page.tsx)
+<section data-testid="hero-section">
+  <Button data-testid="get-started-btn">Get Started</Button>
+  <Button data-testid="view-carrier-bag-btn">View Carrier Bag</Button>
+</section>
+
+// Carrier bag
+<div data-testid="carrier-bag-items">
+  <div data-testid="carrier-bag-item">
+    <button data-testid="remove-from-carrier-bag">Remove</button>
+  </div>
+</div>
+
+// Search page
+<input data-testid="search-input" />
+<button data-testid="search-submit">Search</button>
+<div data-testid="search-results">
+  <div data-testid="search-result-item">...</div>
+</div>
+<div data-testid="search-error">...</div>
+```
+
+## Best Practices
+
+### 1. Test Organization
+
+- Group related tests in describe blocks
+- Use descriptive test names that explain the expected behavior
+- Keep tests focused on a single piece of functionality
+- Use beforeEach hooks to set up common test preconditions
+
+### 2. Selectors
+
+- **Prefer data-testid attributes** over CSS classes or element types
+- Use semantic selectors when data-testid is not available
+- Avoid fragile selectors that depend on implementation details
+
+### 3. Assertions
+
+- Use specific assertions (`.should('contain', 'text')` vs `.should('exist')`)
+- Test both positive and negative cases
+- Verify state changes and persistence where applicable
+
+### 4. Performance
+
+- Use `cy.intercept()` to mock API calls and avoid external dependencies
+- Keep tests isolated and independent
+- Use fixtures for consistent test data
+
+### 5. Debugging
+
+- Use `cy.debug()` and `cy.pause()` for debugging failing tests
+- Take screenshots on failures automatically (configured in cypress.config.ts)
+- Use descriptive error messages in custom commands
+
+## Environment-Specific Testing
+
+### Development
+
+```typescript
+// cypress.config.ts
+if (Cypress.env('NODE_ENV') === 'development') {
+  config.baseUrl = 'http://localhost:3000'
+  config.video = false
+  config.screenshotOnRunFailure = true
+}
+```
+
+### CI/CD
+
+```typescript
+// For GitHub Actions or similar
+if (Cypress.env('CI')) {
+  config.video = true
+  config.screenshotOnRunFailure = true
+  config.reporter = 'junit'
+  config.reporterOptions = {
+    mochaFile: 'cypress/results/results-[hash].xml'
+  }
+}
+```
+
+## Common Patterns for DIGITCORE
+
+### Testing tRPC Integration
+
+```typescript
+it('should load data from tRPC', () => {
+  cy.intercept('POST', '/api/trpc/post.getAll', { fixture: 'posts.json' }).as('getPosts')
+  
+  cy.visit('/patterns')
+  cy.wait('@getPosts')
+  
+  cy.get('[data-testid="pattern-list"]').should('be.visible')
+  cy.get('[data-testid="pattern-item"]').should('have.length.greaterThan', 0)
+})
+```
+
+### Testing Zustand Store
+
+```typescript
+it('should update carrier bag store', () => {
+  cy.visit('/carrier-bag')
+  
+  cy.window().its('store').invoke('getState').should('have.property', 'items')
+  
+  // Add item via UI
+  cy.get('[data-testid="add-pattern-btn"]').click()
+  
+  cy.window().its('store').invoke('getState')
+    .its('items').should('have.length', 1)
+})
+```
+
+### Testing Theme Persistence
+
+```typescript
+it('should persist theme across sessions', () => {
+  cy.setTheme('dark')
+  cy.get('html').should('have.class', 'dark')
+  
+  // Simulate page refresh
+  cy.reload()
+  cy.get('html').should('have.class', 'dark')
+  
+  // Simulate new session
+  cy.clearAllSessionStorage()
+  cy.visit('/')
+  cy.get('html').should('have.class', 'dark') // Should persist via localStorage
+})
+```
+
+## Running Tests
+
+### Development Workflow
+
+1. **Development Mode**: `npm run e2e:dev` - Starts dev server and opens Cypress
+2. **Headless Testing**: `npm run e2e` - Runs tests in headless mode against dev server
+3. **Production Testing**: 
+   ```bash
+   npm run build && npm run e2e:production
+   ```
+
+### Best Practices for Next.js Testing
+
+- **Test against production builds** when possible for accurate results
+- Use `start-server-and-test` to ensure server is ready before running tests
+- For CI/CD, always test against production builds: `npm run build && npm run start`
+- **Component testing limitations**: Server Components cannot be component tested - focus on E2E tests
+- **Keep components pure**: Minimize Next.js integrations within components for better testability
+- **Use cy.intercept()** to mock external dependencies and API calls
+- **Test isolation**: Each test should be independent and not rely on previous test state
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Element not found**: Check data-testid attributes are added to components
+2. **Timing issues**: Use `cy.wait()` for API calls or `cy.should()` for element states
+3. **State persistence**: Verify localStorage/sessionStorage is being used correctly
+4. **Theme switching**: Ensure theme provider is properly configured
+5. **TypeScript errors**: Ensure Cypress version is 13.6.3+ for Next.js compatibility
+6. **Server Components**: Remember that Server Components can't be component tested - use E2E instead
+
+### Debugging Commands
+
+```typescript
+cy.debug()           // Pause execution and open DevTools
+cy.pause()           // Pause execution
+cy.screenshot()      // Take screenshot
+cy.get('element').debug()  // Debug specific element
+```
+
+This guide should be updated as new patterns emerge and the application evolves.

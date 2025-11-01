@@ -1,21 +1,33 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import type Link from "next/link";
+import type { ComponentProps } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { CarrierBagItem, type CarrierBagItemData } from "./carrier-bag-item";
 
-import type { ComponentProps } from "react";
-
 type LinkProps = ComponentProps<typeof Link>;
 
+vi.mock("next/navigation", () => ({
+	usePathname: vi.fn(() => "/en/patterns"),
+}));
+
 vi.mock("next/link", () => ({
-	default: ({ children, href, ...props }: LinkProps) => (
-		<a
-			href={typeof href === "string" ? href : href?.pathname || ""}
-			{...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
-		>
-			{children}
-		</a>
-	),
+	default: ({ children, href, ...props }: LinkProps) => {
+		const { onClick: origOnClick, ...rest } =
+			(props as React.AnchorHTMLAttributes<HTMLAnchorElement>) ||
+			({} as React.AnchorHTMLAttributes<HTMLAnchorElement>);
+		return (
+			<a
+				href={typeof href === "string" ? href : href?.pathname || ""}
+				{...rest}
+				onClick={(e) => {
+					e.preventDefault();
+					origOnClick?.(e);
+				}}
+			>
+				{children}
+			</a>
+		);
+	},
 }));
 
 describe("CarrierBagItem", () => {
@@ -58,7 +70,7 @@ describe("CarrierBagItem", () => {
 
 		const link = screen.getByRole("link", { name: /Test Pattern/i });
 		expect(link).toBeInTheDocument();
-		expect(link).toHaveAttribute("href", "/pattern/test-pattern");
+		expect(link).toHaveAttribute("href", "/en/pattern/test-pattern");
 	});
 
 	it("does not render a link when slug is not provided", () => {
@@ -202,5 +214,62 @@ describe("CarrierBagItem", () => {
 		// Should not throw errors when clicking buttons without callbacks
 		expect(() => fireEvent.click(removeButton)).not.toThrow();
 		expect(() => fireEvent.click(visitButton)).not.toThrow();
+	});
+
+	describe("stale content functionality", () => {
+		const staleItem: CarrierBagItemData = {
+			...baseItem,
+			isStale: true,
+		};
+
+		it("shows stale styling when item is stale", () => {
+			render(<CarrierBagItem item={staleItem} />);
+
+			const container = screen.getByLabelText(
+				"Content has been updated in the system",
+			);
+			expect(container).toHaveClass("bg-amber-50");
+			expect(container).toHaveClass("dark:bg-amber-950/30");
+		});
+
+		it("shows normal styling when item is not stale", () => {
+			render(<CarrierBagItem item={baseItem} />);
+
+			// Find the root container div
+			const container = screen
+				.getByText("Test Pattern")
+				.closest(".carrier-bag-item-container");
+			expect(container).toHaveClass("bg-item-background");
+			expect(container).not.toHaveClass("bg-amber-50");
+		});
+
+		it("shows mobile stale indicator dot when item is stale", () => {
+			render(<CarrierBagItem item={staleItem} />);
+
+			// The mobile indicator has aria-hidden="true", so it won't have a role
+			const mobileIndicator = document.querySelector(
+				".bg-amber-500.sm\\:hidden",
+			);
+			expect(mobileIndicator).toBeInTheDocument();
+			expect(mobileIndicator).toHaveClass("h-2", "w-2", "rounded-full");
+		});
+
+		it("has proper accessibility attributes for stale content", () => {
+			render(<CarrierBagItem item={staleItem} />);
+
+			const container = screen.getByLabelText(
+				"Content has been updated in the system",
+			);
+			expect(container).toBeInTheDocument();
+
+			// Mobile indicator should have helpful title for stale content
+			const mobileIndicator = document.querySelector(
+				".bg-amber-500.sm\\:hidden",
+			);
+			expect(mobileIndicator).toHaveAttribute(
+				"title",
+				"Content is being updated automatically",
+			);
+		});
 	});
 });

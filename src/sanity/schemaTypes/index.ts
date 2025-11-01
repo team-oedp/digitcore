@@ -1,6 +1,7 @@
 import type { SchemaTypeDefinition } from "sanity";
 
 import { audienceType } from "./documents/audienceType";
+import { faqCategoryType } from "./documents/faqCategoryType";
 import { faqType } from "./documents/faqType";
 import { glossaryType } from "./documents/glossaryType";
 import { iconType } from "./documents/iconType";
@@ -12,11 +13,13 @@ import { suggestionType } from "./documents/suggestionType";
 import { tagType } from "./documents/tagType";
 import { themeType } from "./documents/themeType";
 import { blockContentType } from "./objects/blockContentType";
-import { cardCarouselType } from "./objects/cardCarouselType";
+import { contentListType } from "./objects/contentListType";
 import { contentType } from "./objects/contentType";
 import { linkType } from "./objects/linkType";
+import { recordType } from "./objects/recordType";
 import { carrierBagType } from "./singletons/carrierBagType";
 import { footerType } from "./singletons/footerType";
+import { headerType } from "./singletons/headerType";
 import { onboardingType } from "./singletons/onboardingType";
 import { siteSettingsType } from "./singletons/siteSettingsType";
 
@@ -25,7 +28,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 		linkType,
 		blockContentType,
 		contentType,
-		cardCarouselType,
+		recordType,
+		contentListType,
 		tagType,
 		patternType,
 		audienceType,
@@ -41,5 +45,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 		siteSettingsType,
 		footerType,
 		iconType,
+		faqCategoryType,
+		headerType,
 	],
 };

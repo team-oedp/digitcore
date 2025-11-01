@@ -1,15 +1,33 @@
 import { PresentationIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
+// import { isUniqueOtherThanLanguage } from "../../lib/validation";
 
 export const onboardingType = defineType({
 	name: "onboarding",
-	title: "Onboarding",
+	title: "Orientation",
 	type: "document",
 	icon: PresentationIcon,
 	fields: [
 		defineField({
+			// should match 'languageField' plugin configuration setting in sanity.config.ts, if customized
+			name: "language",
+			type: "string",
+			readOnly: true,
+			hidden: true,
+		}),
+		defineField({
 			name: "title",
 			type: "string",
+		}),
+		defineField({
+			name: "slug",
+			title: "Slug",
+			type: "slug",
+			options: {
+				source: "title",
+				isUnique: () => true, // disables uniqueness check
+				// isUnique: isUniqueOtherThanLanguage,
+			},
 		}),
 		defineField({
 			name: "description",
@@ -20,7 +38,8 @@ export const onboardingType = defineType({
 			name: "skipLabel",
 			title: "Skip label",
 			type: "string",
-			initialValue: "Skip onboarding",
+			initialValue: "Skip orientation",
+			hidden: true,
 		}),
 		defineField({
 			name: "backLabel",
@@ -80,7 +99,7 @@ export const onboardingType = defineType({
 					name: "primaryCtaLabel",
 					title: "Primary CTA label",
 					type: "string",
-					initialValue: "Tell me more about the Digitcore library",
+					initialValue: "Tell me more about the DIGITCORE library",
 				}),
 				defineField({
 					name: "secondaryCtaText",

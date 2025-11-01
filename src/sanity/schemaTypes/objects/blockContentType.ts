@@ -1,5 +1,5 @@
+import { TextIcon } from "@sanity/icons";
 import { defineArrayMember, defineField, defineType } from "sanity";
-
 /**
  * This is the schema type for block content used in the post document type
  * Importing this type into the studio configuration's `schema` property
@@ -41,6 +41,22 @@ export const blockContentType = defineType({
 				],
 				// Annotations can be any object structure – e.g. a link or a footnote.
 				annotations: [
+					// Glossary term annotation: lets editors explicitly mark a term and reference a glossary doc
+					{
+						name: "glossaryTerm",
+						type: "object",
+						title: "Glossary Term",
+						icon: TextIcon,
+						fields: [
+							defineField({
+								name: "glossary",
+								title: "Glossary Term",
+								type: "reference",
+								to: [{ type: "glossary" }],
+								validation: (Rule) => Rule.required(),
+							}),
+						],
+					},
 					{
 						name: "link",
 						type: "object",
@@ -56,6 +72,7 @@ export const blockContentType = defineType({
 										{ title: "URL", value: "href" },
 										{ title: "Page", value: "page" },
 										{ title: "Pattern", value: "pattern" },
+										{ title: "Orientation", value: "orientation" },
 									],
 									layout: "radio",
 								},

@@ -7,22 +7,41 @@ import {
 	Share02Icon,
 } from "@hugeicons/core-free-icons";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
-import type { Pattern } from "~/sanity/sanity.types";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
+import { getPatternIconWithMapping } from "~/lib/pattern-icons";
+import {
+	getStaleItemClasses,
+	getStaleStatusText,
+} from "~/lib/stale-content-utils";
+import { cn } from "~/lib/utils";
+import type {
+	PATTERNS_BY_SLUGS_QUERYResult,
+	PATTERN_QUERYResult,
+} from "~/sanity/sanity.types";
+
+export type PatternForCarrierBag =
+	| NonNullable<PATTERN_QUERYResult>
+	| PATTERNS_BY_SLUGS_QUERYResult[number];
 
 export type CarrierBagItem = {
-	pattern: Pattern;
+	pattern: PatternForCarrierBag;
 	dateAdded: string;
 	notes?: string;
+	contentVersion?: string;
 };
 
 export type CarrierBagItemData = {
 	id: string;
 	title: string;
 	slug?: string;
-	icon?: React.ComponentType;
+	icon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 	subtitle?: string;
+	isStale?: boolean;
+	isUpdating?: boolean;
+	isRecentlyUpdated?: boolean;
 };
 
 export type CarrierBagItemProps = {
@@ -36,26 +55,50 @@ export function CarrierBagItem({
 	onRemove,
 	onVisit,
 }: CarrierBagItemProps) {
+	const pathname = usePathname();
+	const { language } = parseLocalePath(pathname);
+
+	const patternHref = item.slug
+		? buildLocaleHref(language, `/pattern/${item.slug}`)
+		: null;
+
+	const PatternIcon = item.slug ? getPatternIconWithMapping(item.slug) : null;
+
+	const showUpdateAnimation = item.isUpdating || item.isRecentlyUpdated;
+
 	return (
-		<div className="carrier-bag-item-container flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2.5 transition-colors hover:bg-muted/50 [&:hover_.item-actions]:opacity-100">
+		<div
+			className={cn(
+				getStaleItemClasses(item.isStale),
+				showUpdateAnimation &&
+					"animate-pulse rounded-md border-2 border-yellow-500/60 shadow-sm shadow-yellow-500/20",
+			)}
+			aria-label={getStaleStatusText(item.isStale)}
+		>
 			{/* Drag handle */}
-			<div className="flex-shrink-0 cursor-grab opacity-60 transition-opacity hover:opacity-100 active:cursor-grabbing">
+			<div className="shrink-0 cursor-grab opacity-60 transition-opacity hover:opacity-100 active:cursor-grabbing">
 				<Icon icon={DragDropVerticalIcon} size={16} strokeWidth={3} />
 			</div>
 
 			{/* Clickable content (icon + text) */}
-			{item.slug ? (
+			{item.slug && patternHref ? (
 				<Link
-					href={`/pattern/${item.slug}`}
-					className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+					href={patternHref}
+					className="relative flex min-w-0 flex-1 cursor-pointer items-start gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 					onClick={(e) => e.stopPropagation()}
 					onPointerDown={(e) => e.stopPropagation()}
 				>
-					<div className="flex-shrink-0">
-						<Icon icon={Share02Icon} size={16} />
+					<div className="mt-0.5 shrink-0">
+						{PatternIcon ? (
+							<div className="h-4 w-4 shrink-0 opacity-40">
+								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
+							</div>
+						) : (
+							<Icon icon={Share02Icon} size={16} className="opacity-40" />
+						)}
 					</div>
 					<div className="min-w-0 flex-1">
-						<p className="truncate font-normal text-[13px] text-foreground hover:underline">
+						<p className="truncate font-normal text-[13px] text-foreground">
 							{item.title}
 						</p>
 						{item.subtitle ? (
@@ -66,25 +109,39 @@ export function CarrierBagItem({
 					</div>
 				</Link>
 			) : (
-				<>
-					<div className="flex-shrink-0">
-						<Icon icon={Share02Icon} size={16} />
+				<div className="relative flex min-w-0 flex-1 items-start gap-3 rounded-md">
+					<div className="mt-0.5 shrink-0">
+						{PatternIcon ? (
+							<div className="h-4 w-4 shrink-0 opacity-40">
+								<PatternIcon className="h-full w-full fill-icon/50 text-icon/50" />
+							</div>
+						) : (
+							<Icon icon={Share02Icon} size={16} className="opacity-40" />
+						)}
 					</div>
 					<div className="min-w-0 flex-1">
-						<p className="truncate font-normal text-foreground text-sm">
+						<p className="truncate font-normal text-foreground text-sm uppercase">
 							{item.title}
 						</p>
 						{item.subtitle ? (
-							<p className="truncate text-muted-foreground text-sm">
+							<p className="truncate text-muted-foreground text-sm capitalize">
 								{item.subtitle}
 							</p>
 						) : null}
 					</div>
-				</>
+				</div>
 			)}
 
 			{/* Actions */}
-			<div className="item-actions flex items-center gap-1 opacity-0 transition-opacity">
+			<div className="item-actions relative flex items-center gap-1 opacity-0 transition-opacity max-sm:opacity-100 sm:opacity-0">
+				{item.isStale && (
+					/* Visual stale indicator for mobile (always visible) - content is being updated automatically */
+					<div
+						className="h-2 w-2 shrink-0 rounded-full bg-amber-500 sm:hidden dark:bg-amber-400"
+						aria-hidden="true"
+						title="Content is being updated automatically"
+					/>
+				)}
 				<Button
 					variant="ghost"
 					size="sm"
@@ -94,13 +151,13 @@ export function CarrierBagItem({
 						onRemove?.(item.id);
 					}}
 					onPointerDown={(e) => e.stopPropagation()}
-					aria-label={`Remove ${item.title}`}
+					aria-label={`Remove ${item.title} from carrier bag`}
 				>
 					<Icon icon={Cancel01Icon} size={14} />
 				</Button>
-				{item.slug ? (
+				{item.slug && patternHref ? (
 					<Link
-						href={`/pattern/${item.slug}`}
+						href={patternHref}
 						onClick={(e) => e.stopPropagation()}
 						onPointerDown={(e) => e.stopPropagation()}
 					>

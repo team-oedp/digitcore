@@ -35,9 +35,11 @@ const A4_WIDTH = 420; // Scaled down from 595px for better fit in modal
 const A4_HEIGHT = 594; // Scaled down from 842px for better fit in modal
 
 // Web preview components that match the PDF layout
-const PreviewCoverPage = ({
+const _PreviewCoverPage = ({
 	documentData,
-}: { documentData: CarrierBagDocumentData }) => (
+}: {
+	documentData: CarrierBagDocumentData;
+}) => (
 	<div
 		className="relative flex flex-col items-center justify-center bg-white text-center"
 		style={{ width: A4_WIDTH, height: A4_HEIGHT, padding: "28px" }}
@@ -63,9 +65,11 @@ const PreviewCoverPage = ({
 	</div>
 );
 
-const PreviewTableOfContents = ({
+const _PreviewTableOfContents = ({
 	documentData,
-}: { documentData: CarrierBagDocumentData }) => (
+}: {
+	documentData: CarrierBagDocumentData;
+}) => (
 	<div
 		className="relative bg-white"
 		style={{ width: A4_WIDTH, height: A4_HEIGHT, padding: "28px" }}
@@ -96,7 +100,9 @@ const PreviewTableOfContents = ({
 
 const PreviewPatternConnections = ({
 	connections,
-}: { connections: PatternContentData["connections"] }) => {
+}: {
+	connections: PatternContentData["connections"];
+}) => {
 	if (connections.length === 0) return null;
 
 	return (
@@ -124,7 +130,9 @@ const PreviewPatternConnections = ({
 
 const PreviewSolutions = ({
 	solutions,
-}: { solutions: PatternContentData["solutions"] }) => {
+}: {
+	solutions: PatternContentData["solutions"];
+}) => {
 	if (solutions.length === 0) return null;
 
 	return (
@@ -164,7 +172,9 @@ const PreviewSolutions = ({
 
 const PreviewResources = ({
 	resources,
-}: { resources: PatternContentData["resources"] }) => {
+}: {
+	resources: PatternContentData["resources"];
+}) => {
 	if (resources.length === 0) return null;
 
 	return (
@@ -201,7 +211,10 @@ const PreviewResources = ({
 const PreviewPatternNotes = ({
 	notes,
 	dateAdded,
-}: { notes?: string; dateAdded?: string }) => {
+}: {
+	notes?: string;
+	dateAdded?: string;
+}) => {
 	if (!notes) return null;
 
 	return (
@@ -214,7 +227,7 @@ const PreviewPatternNotes = ({
 	);
 };
 
-const PreviewPatternPage = ({
+const _PreviewPatternPage = ({
 	pattern,
 	pageNumber,
 	totalPages,
@@ -274,7 +287,7 @@ export function PDFPreviewModal({
 	const [previewUrl, setPreviewUrl] = useState<string | undefined>();
 	const previewUrlRef = useRef<string | undefined>(undefined);
 	const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
-	const [actualPageCount, setActualPageCount] = useState<number | null>(null);
+	const [_actualPageCount, setActualPageCount] = useState<number | null>(null);
 
 	useEffect(() => {
 		// Only run in browser

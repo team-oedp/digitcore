@@ -42,7 +42,7 @@ export function CurrentLetterIndicator({
 
 	// Build refs for each section we care about and observe them from below the header
 	const setActiveLetter = useSectionInViewStore((s) => s.setActiveLetter);
-	const headerOffset = useSectionInViewStore((s) => s.headerOffset);
+	const _headerOffset = useSectionInViewStore((s) => s.headerOffset);
 
 	// Stable sorted letters to track
 	const letters = useMemo(() => {
@@ -94,7 +94,7 @@ export function CurrentLetterIndicator({
 			if (element) {
 				observer.observe(element);
 			} else {
-				console.warn(`❌ Element not found: letter-${letter}`);
+				console.warn(`Element not found: letter-${letter}`);
 			}
 		}
 
@@ -155,7 +155,7 @@ export function CurrentLetterIndicator({
 		<div className="max-w-4xl">
 			{/* Sentinel positioned at the header bottom to align our measurement */}
 			<div ref={sentinelRef} style={{ height: 1, marginTop: 0 }} />
-			<div className="mb-8 w-32 font-light text-8xl text-neutral-300 leading-none transition-opacity duration-200">
+			<div className="mb-8 w-32 font-light text-8xl text-brand leading-none transition-opacity duration-200">
 				{isActiveValid ? activeLetter : (fallback ?? "")}
 			</div>
 		</div>

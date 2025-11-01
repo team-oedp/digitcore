@@ -24,16 +24,16 @@ export function SolutionPreview({
 		<HoverCard openDelay={100}>
 			<HoverCardTrigger asChild>{children}</HoverCardTrigger>
 			<HoverCardContent className="w-80 p-0" align="start" sideOffset={8}>
-				<div className="flex flex-col gap-3.5 rounded-lg bg-neutral-100 p-3.5">
+				<div className="flex flex-col gap-3.5 rounded-lg bg-popover p-3.5">
 					<div className="flex flex-col gap-2">
-						<h3 className="font-normal text-lg text-primary leading-[22px]">
+						<h3 className="font-normal text-lg text-popover-foreground leading-[22px]">
 							{solutionTitle}
 						</h3>
-						<span className="w-fit rounded-md bg-neutral-200 px-2 py-1 text-neutral-600 text-xs">
+						<span className="w-fit rounded-md bg-muted px-2 py-1 text-muted-foreground text-xs">
 							Solution {solutionNumber}
 						</span>
 					</div>
-					<p className="font-normal text-sm text-zinc-500 leading-normal">
+					<p className="font-normal text-muted-foreground text-sm leading-normal">
 						{solutionDescription}
 					</p>
 				</div>

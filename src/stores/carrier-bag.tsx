@@ -3,8 +3,10 @@
 import { createContext, useContext, useRef } from "react";
 import { createStore, useStore } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
-import type { Pattern } from "~/sanity/sanity.types";
+import type {
+	CarrierBagItem,
+	PatternForCarrierBag,
+} from "~/components/global/carrier-bag/carrier-bag-item";
 
 type CarrierBagState = {
 	items: CarrierBagItem[];
@@ -12,8 +14,18 @@ type CarrierBagState = {
 	isOpen: boolean;
 	isPinned: boolean;
 	isModalMode: boolean;
-	addPattern: (pattern: Pattern, notes?: string) => void;
+	stalePatternIds: string[];
+	updatingPatternIds: string[];
+	recentlyUpdatedIds: string[];
+	hasUnseenUpdates: boolean;
+	lastUpdateTime: number | null;
+	showClearConfirmation: boolean;
+	addPattern: (pattern: PatternForCarrierBag, notes?: string) => void;
 	removePattern: (patternId: string) => void;
+	updatePattern: (
+		patternId: string,
+		updatedPattern: PatternForCarrierBag,
+	) => void;
 	updateNotes: (patternId: string, notes: string) => void;
 	clearBag: () => void;
 	setItems: (items: CarrierBagItem[]) => void;
@@ -26,6 +38,19 @@ type CarrierBagState = {
 	setPin: (pinned: boolean) => void;
 	toggleModalMode: () => void;
 	setModalMode: (modalMode: boolean) => void;
+	setStalePatternIds: (ids: string[]) => void;
+	isPatternStale: (patternId: string) => boolean;
+	markPatternFresh: (patternId: string, newVersion: string) => void;
+	setUpdatingPatternIds: (ids: string[]) => void;
+	addUpdatingPattern: (patternId: string) => void;
+	removeUpdatingPattern: (patternId: string) => void;
+	isPatternUpdating: (patternId: string) => boolean;
+	isPatternRecentlyUpdated: (patternId: string) => boolean;
+	markPatternUpdated: (patternId: string) => void;
+	markUpdatesAsSeen: () => void;
+	clearExpiredUpdates: () => void;
+	showClearConfirmationPane: () => void;
+	hideClearConfirmationPane: () => void;
 };
 
 export const createCarrierBagStore = () =>
@@ -37,8 +62,14 @@ export const createCarrierBagStore = () =>
 				isOpen: false,
 				isPinned: false,
 				isModalMode: false,
+				stalePatternIds: [],
+				updatingPatternIds: [],
+				recentlyUpdatedIds: [],
+				hasUnseenUpdates: false,
+				lastUpdateTime: null,
+				showClearConfirmation: false,
 
-				addPattern: (pattern: Pattern, notes?: string) => {
+				addPattern: (pattern: PatternForCarrierBag, notes?: string) => {
 					const { items } = get();
 
 					if (items.some((item) => item.pattern._id === pattern._id)) {
@@ -49,6 +80,7 @@ export const createCarrierBagStore = () =>
 						pattern,
 						dateAdded: new Date().toISOString(),
 						notes,
+						contentVersion: pattern._updatedAt,
 					};
 
 					set({ items: [...items, newItem], isOpen: true });
@@ -59,6 +91,26 @@ export const createCarrierBagStore = () =>
 					set({
 						items: items.filter((item) => item.pattern._id !== patternId),
 					});
+				},
+
+				updatePattern: (
+					patternId: string,
+					updatedPattern: PatternForCarrierBag,
+				) => {
+					const { items, markPatternUpdated } = get();
+					set({
+						items: items.map((item) =>
+							item.pattern._id === patternId
+								? {
+										...item,
+										pattern: updatedPattern,
+										contentVersion: updatedPattern._updatedAt,
+									}
+								: item,
+						),
+					});
+					// Mark this pattern as recently updated
+					markPatternUpdated(patternId);
 				},
 
 				setItems: (items: CarrierBagItem[]) => {
@@ -75,7 +127,7 @@ export const createCarrierBagStore = () =>
 				},
 
 				clearBag: () => {
-					set({ items: [] });
+					set({ items: [], showClearConfirmation: false });
 				},
 
 				hasPattern: (patternId: string) => {
@@ -98,7 +150,12 @@ export const createCarrierBagStore = () =>
 				},
 
 				setOpen: (open: boolean) => {
+					const { markUpdatesAsSeen } = get();
 					set({ isOpen: open });
+					// Mark updates as seen when drawer is opened
+					if (open) {
+						markUpdatesAsSeen();
+					}
 				},
 
 				togglePin: () => {
@@ -118,6 +175,103 @@ export const createCarrierBagStore = () =>
 				setModalMode: (modalMode: boolean) => {
 					set({ isModalMode: modalMode });
 				},
+
+				setStalePatternIds: (ids: string[]) => {
+					set({ stalePatternIds: ids });
+				},
+
+				isPatternStale: (patternId: string) => {
+					const { stalePatternIds } = get();
+					return stalePatternIds.includes(patternId);
+				},
+
+				markPatternFresh: (patternId: string, newVersion: string) => {
+					const { items, stalePatternIds } = get();
+
+					// Update contentVersion for the pattern
+					const updatedItems = items.map((item) =>
+						item.pattern._id === patternId
+							? { ...item, contentVersion: newVersion }
+							: item,
+					);
+
+					// Remove from stale list
+					const updatedStaleIds = stalePatternIds.filter(
+						(id) => id !== patternId,
+					);
+
+					set({
+						items: updatedItems,
+						stalePatternIds: updatedStaleIds,
+					});
+				},
+
+				setUpdatingPatternIds: (ids: string[]) => {
+					set({ updatingPatternIds: ids });
+				},
+
+				addUpdatingPattern: (patternId: string) => {
+					const { updatingPatternIds } = get();
+					if (!updatingPatternIds.includes(patternId)) {
+						set({ updatingPatternIds: [...updatingPatternIds, patternId] });
+					}
+				},
+
+				removeUpdatingPattern: (patternId: string) => {
+					const { updatingPatternIds } = get();
+					set({
+						updatingPatternIds: updatingPatternIds.filter(
+							(id) => id !== patternId,
+						),
+					});
+				},
+
+				isPatternUpdating: (patternId: string) => {
+					const { updatingPatternIds } = get();
+					return updatingPatternIds.includes(patternId);
+				},
+
+				isPatternRecentlyUpdated: (patternId: string) => {
+					const { recentlyUpdatedIds } = get();
+					return recentlyUpdatedIds.includes(patternId);
+				},
+
+				markPatternUpdated: (patternId: string) => {
+					const { recentlyUpdatedIds } = get();
+					if (!recentlyUpdatedIds.includes(patternId)) {
+						set({
+							recentlyUpdatedIds: [...recentlyUpdatedIds, patternId],
+							hasUnseenUpdates: true,
+							lastUpdateTime: Date.now(),
+						});
+					}
+				},
+
+				markUpdatesAsSeen: () => {
+					set({
+						hasUnseenUpdates: false,
+					});
+				},
+
+				clearExpiredUpdates: () => {
+					const { lastUpdateTime } = get();
+					if (lastUpdateTime && Date.now() - lastUpdateTime > 120000) {
+						// 2 minutes
+						set({
+							recentlyUpdatedIds: [],
+							hasUnseenUpdates: false,
+							lastUpdateTime: null,
+						});
+					}
+				},
+
+				showClearConfirmationPane: () => {
+					set({ showClearConfirmation: true });
+				},
+
+				hideClearConfirmationPane: () => {
+					set({ showClearConfirmation: false });
+				},
 			}),
 			{
 				name: "carrier-bag",
@@ -128,7 +282,7 @@ export const createCarrierBagStore = () =>
 					state?.setOpen(false);
 				},
 				partialize: (state) => ({
-					// Only persist items, not UI state
+					// Only persist items, not UI state or transient staleness/update notification data
 					items: state.items,
 				}),
 			},
@@ -141,7 +295,9 @@ const CarrierBagStoreContext = createContext<ReturnType<
 
 export const CarrierBagStoreProvider = ({
 	children,
-}: { children: React.ReactNode }) => {
+}: {
+	children: React.ReactNode;
+}) => {
 	const storeRef = useRef<ReturnType<typeof createCarrierBagStore>>(
 		createCarrierBagStore(),
 	);
@@ -156,6 +312,9 @@ export const CarrierBagStoreProvider = ({
 	);
 };
 
+// Stable identity selector to avoid infinite loops
+const carrierBagIdentitySelector = (state: CarrierBagState) => state;
+
 export const useCarrierBagStore = <T = CarrierBagState>(
 	selector?: (state: CarrierBagState) => T,
 ) => {
@@ -165,5 +324,9 @@ export const useCarrierBagStore = <T = CarrierBagState>(
 			"useCarrierBagStore must be used within CarrierBagStoreProvider",
 		);
 	}
-	return selector ? useStore(store, selector) : (useStore(store) as T);
+
+	// Use stable identity selector when no selector provided
+	const stableSelector =
+		selector || (carrierBagIdentitySelector as (state: CarrierBagState) => T);
+	return useStore(store, stableSelector);
 };

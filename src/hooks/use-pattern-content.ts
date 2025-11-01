@@ -6,7 +6,10 @@
 
 import type { PortableTextBlock } from "@portabletext/types";
 import { useEffect } from "react";
-import type { CarrierBagItem } from "~/components/global/carrier-bag/carrier-bag-item";
+import type {
+	CarrierBagItem,
+	PatternForCarrierBag,
+} from "~/components/global/carrier-bag/carrier-bag-item";
 import type {
 	Audience,
 	PATTERN_QUERYResult,
@@ -104,12 +107,12 @@ export type PatternContentData = {
 /**
  * Hook to process pattern data into a consistent structure for rendering
  */
-export type PopulatedPattern = Pattern & {
-	tags?: TagEntity[];
-	audiences?: AudienceEntity[];
-	themes?: ThemeEntity[];
-	solutions?: SolutionEntity[];
-	resources?: ResourceEntity[];
+export type PopulatedPattern = PatternForCarrierBag & {
+	tags?: TagEntity[] | null;
+	audiences?: AudienceEntity[] | null;
+	theme?: ThemeEntity | null;
+	solutions?: SolutionEntity[] | null;
+	resources?: ResourceEntity[] | null;
 };
 
 export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
@@ -144,7 +147,8 @@ export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
 					slug: pattern.slug
 						? { current: pattern.slug, _type: "slug" as const }
 						: undefined,
-					description: pattern.description ?? undefined,
+					description: (pattern.description ??
+						undefined) as unknown as Pattern["description"],
 				},
 			],
 			solutions:
@@ -157,7 +161,8 @@ export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
 							_updatedAt: new Date().toISOString(),
 							_rev: "",
 							title: solution.title || undefined,
-							description: solution.description || undefined,
+							description: (solution.description ||
+								undefined) as unknown as Solution["description"],
 						}) as Solution,
 				) || [],
 			resources:
@@ -170,7 +175,8 @@ export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
 							_updatedAt: new Date().toISOString(),
 							_rev: "",
 							title: resource.title || undefined,
-							description: resource.description || undefined,
+							description: (resource.description ||
+								undefined) as unknown as Resource["description"],
 						}) as Resource,
 				) || [],
 			tags:
@@ -199,18 +205,8 @@ export function usePatternContentStore(pattern: PATTERN_QUERYResult) {
 				) || [],
 		};
 
-		console.log("Setting searchable content in store:", searchableContent);
-		console.log("Content breakdown:", {
-			patterns: searchableContent.patterns.length,
-			solutions: searchableContent.solutions?.length || 0,
-			resources: searchableContent.resources?.length || 0,
-			tags: searchableContent.tags?.length || 0,
-			audiences: searchableContent.audiences?.length || 0,
-		});
-
 		// Set the pattern slug for GROQ searches
 		const patternSlug = typeof pattern.slug === "string" ? pattern.slug : null;
-		console.log("Setting pattern slug:", patternSlug);
 
 		setContent(searchableContent);
 		setPatternSlug(patternSlug);
@@ -227,8 +223,7 @@ export const usePatternContent = (
 		description: portableTextToString(
 			pattern.description as PortableTextBlock[],
 		),
-		slug:
-			typeof pattern.slug === "string" ? pattern.slug : pattern.slug?.current,
+		slug: pattern.slug ?? undefined,
 	};
 
 	// Process connections
@@ -256,14 +251,20 @@ export const usePatternContent = (
 		});
 	}
 
-	if (pattern.themes && pattern.themes.length > 0) {
+	if (pattern.theme) {
 		connections.push({
 			type: "themes",
-			title: "Themes",
-			items: (pattern.themes as ThemeEntity[]).map((theme) => ({
-				id: theme._id ?? theme._key ?? theme._ref ?? "",
-				title: theme?.title || theme?._ref || "Unknown Theme",
-			})),
+			title: "Theme",
+			items: [
+				{
+					id:
+						pattern.theme._id ??
+						(pattern.theme as SanityReference)._key ??
+						(pattern.theme as SanityReference)._ref ??
+						"",
+					title: pattern.theme.title || "Unknown Theme",
+				},
+			],
 		});
 	}
 

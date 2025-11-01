@@ -199,9 +199,9 @@ const styles = StyleSheet.create({
 		color: "#71717a",
 		lineHeight: 1.4,
 	},
-	// Pattern styles with improved spacing
+	// Pattern styles with improved spacing - match web UI sizing
 	patternTitle: {
-		fontSize: 28, // Reduced from 32 for better PDF fit
+		fontSize: 28, // Match web UI desktop size (32px would be too large for PDF)
 		fontWeight: 300,
 		color: "#000000",
 		marginBottom: 20,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
 		lineHeight: 1.6, // More generous line height for body text
 	},
 	sectionTitle: {
-		fontSize: 26, // Reduced from 32
+		fontSize: 28, // Match web UI desktop size (32px) - closer to web experience
 		fontWeight: 300,
 		color: "#000000",
 		marginTop: 30,
@@ -241,41 +241,68 @@ const styles = StyleSheet.create({
 		flexWrap: "wrap",
 		gap: 6,
 	},
-	tag: {
-		backgroundColor: "#f3f4f6",
-		color: "#374151",
+	// Theme badge styles - match web UI ochre colors
+	themeTag: {
+		backgroundColor: "#fef3e2", // ochre-light equivalent
+		borderColor: "#f59e0b", // ochre-default equivalent
+		borderWidth: 1,
+		color: "#92400e", // ochre-dark equivalent
 		fontSize: 10,
 		paddingHorizontal: 8,
 		paddingVertical: 4,
 		borderRadius: 4,
 		lineHeight: 1.2,
 	},
-	// Solution styles with better spacing
+	// Audience badge styles - match web UI cerulean colors
+	audienceTag: {
+		backgroundColor: "#dbeafe", // cerulean-light equivalent
+		borderColor: "#3b82f6", // cerulean-default equivalent
+		borderWidth: 1,
+		color: "#1e40af", // cerulean-dark equivalent
+		fontSize: 10,
+		paddingHorizontal: 8,
+		paddingVertical: 4,
+		borderRadius: 4,
+		lineHeight: 1.2,
+	},
+	// Tag badge styles - match web UI purple colors
+	tagBadge: {
+		backgroundColor: "#f3e8ff", // purple-light equivalent
+		borderColor: "#a855f7", // purple-default equivalent
+		borderWidth: 1,
+		color: "#7c2d12", // purple-dark equivalent
+		fontSize: 10,
+		paddingHorizontal: 8,
+		paddingVertical: 4,
+		borderRadius: 4,
+		lineHeight: 1.2,
+	},
+	// Solution styles with better spacing - match web UI
 	solutionContainer: {
 		marginBottom: 25,
 	},
 	solutionHeader: {
 		flexDirection: "row",
 		alignItems: "flex-start",
-		gap: 20, // Reduced gap for better layout
+		gap: 24, // Match web UI gap-4 md:gap-8 (32px at desktop)
 		marginBottom: 10,
 	},
 	solutionNumber: {
-		fontSize: 18,
+		fontSize: 18, // Match web UI desktop size (18px)
 		fontWeight: 400,
 		color: "#000000",
-		width: 30, // Reduced width for better proportions
-		lineHeight: 1.2,
+		width: 32, // Match web UI w-8 md:w-10 (40px at desktop)
+		lineHeight: 1.25, // Match web UI leading-[22px] at 18px font
 	},
 	solutionContent: {
 		flex: 1,
 	},
 	solutionTitle: {
-		fontSize: 18,
+		fontSize: 18, // Match web UI desktop size (18px)
 		fontWeight: 400,
 		color: "#000000",
 		marginBottom: 10,
-		lineHeight: 1.4,
+		lineHeight: 1.25, // Match web UI leading-[22px] at 18px font
 	},
 	solutionDescription: {
 		fontSize: 14,
@@ -286,30 +313,31 @@ const styles = StyleSheet.create({
 	audienceContainer: {
 		flexDirection: "row",
 		flexWrap: "wrap",
-		gap: 8,
+		gap: 8, // Match web UI gap-1.5 md:gap-2 (8px at desktop)
 	},
-	audienceTag: {
-		backgroundColor: "#dbeafe",
-		borderColor: "#bfdbfe",
+	// Solution audience badge styles - match web UI cerulean colors exactly
+	solutionAudienceTag: {
+		backgroundColor: "#dbeafe", // cerulean-light
+		borderColor: "#3b82f6", // cerulean-default
 		borderWidth: 1,
-		color: "#1e40af",
-		fontSize: 12, // Reduced from 14
+		color: "#1e40af", // cerulean-dark
+		fontSize: 12,
 		paddingHorizontal: 8,
 		paddingVertical: 4,
 		borderRadius: 6,
 		lineHeight: 1.3,
 	},
-	// Resource styles
+	// Resource styles - match web UI border colors
 	resourceContainer: {
-		borderTopColor: "#d4d4d8",
+		borderTopColor: "#d1d5db", // Match neutral-300 from web UI
 		borderTopWidth: 1,
 		borderStyle: "dashed",
 		paddingTop: 20,
 		paddingBottom: 20,
 	},
 	resourceTitle: {
-		fontSize: 18, // Match solution title size
-		fontWeight: 400, // Lighter weight for consistency
+		fontSize: 18, // Match web UI desktop size and solution title consistency
+		fontWeight: 400, // Match web UI font-normal
 		color: "#000000",
 		marginBottom: 8,
 		lineHeight: 1.4,
@@ -325,6 +353,18 @@ const styles = StyleSheet.create({
 		color: "#6b7280",
 		fontStyle: "italic",
 		lineHeight: 1.4,
+	},
+	// Resource solution badge styles - match web UI coral colors
+	resourceSolutionTag: {
+		backgroundColor: "#fef2f2", // coral-light equivalent
+		borderColor: "#f87171", // coral-default equivalent
+		borderWidth: 1,
+		color: "#dc2626", // coral-dark equivalent
+		fontSize: 10,
+		paddingHorizontal: 8,
+		paddingVertical: 4,
+		borderRadius: 4,
+		lineHeight: 1.2,
 	},
 	// Notes styles
 	notesContainer: {
@@ -417,6 +457,22 @@ type PDFPatternConnectionsProps = {
 const PDFPatternConnections = ({ connections }: PDFPatternConnectionsProps) => {
 	if (connections.length === 0) return null;
 
+	// Helper function to get appropriate badge style based on connection type
+	const getBadgeStyle = (connectionType: string) => {
+		switch (connectionType.toLowerCase()) {
+			case "theme":
+				return styles.themeTag;
+			case "audience":
+			case "audiences":
+				return styles.audienceTag;
+			case "tag":
+			case "tags":
+				return styles.tagBadge;
+			default:
+				return styles.tagBadge; // fallback to tag style
+		}
+	};
+
 	return (
 		<View style={styles.connectionContainer}>
 			{connections.map((connection) => (
@@ -426,7 +482,7 @@ const PDFPatternConnections = ({ connections }: PDFPatternConnectionsProps) => {
 					</Text>
 					<View style={styles.tagContainer}>
 						{connection.items.map((item) => (
-							<Text key={item.id} style={styles.tag}>
+							<Text key={item.id} style={getBadgeStyle(connection.type)}>
 								{item.title}
 							</Text>
 						))}
@@ -448,7 +504,7 @@ const PDFSolutions = ({ solutions }: PDFSolutionsProps) => {
 	return (
 		<View>
 			<Text style={styles.sectionTitle}>Solutions</Text>
-			{solutions.map((solution, index) => (
+			{solutions.map((solution, _index) => (
 				<View key={solution.id} style={styles.solutionContainer}>
 					<View style={styles.solutionHeader}>
 						<Text style={styles.solutionNumber}>{solution.number}</Text>
@@ -462,7 +518,7 @@ const PDFSolutions = ({ solutions }: PDFSolutionsProps) => {
 							{solution.audiences.length > 0 && (
 								<View style={styles.audienceContainer}>
 									{solution.audiences.map((audience) => (
-										<Text key={audience.id} style={styles.audienceTag}>
+										<Text key={audience.id} style={styles.solutionAudienceTag}>
 											{audience.title}
 										</Text>
 									))}
@@ -495,7 +551,7 @@ const PDFResources = ({ resources }: PDFResourcesProps) => {
 						...(index === resources.length - 1
 							? [
 									{
-										borderBottomColor: "#d4d4d8",
+										borderBottomColor: "#d1d5db", // Match neutral-300 from web UI
 										borderBottomWidth: 1,
 										borderStyle: "dashed" as const,
 									},
@@ -510,9 +566,18 @@ const PDFResources = ({ resources }: PDFResourcesProps) => {
 						</Text>
 					)}
 					{resource.relatedSolutions.length > 0 && (
-						<Text style={styles.resourceSolutions}>
-							Related solutions: {resource.relatedSolutions.join(", ")}
-						</Text>
+						<View>
+							<Text style={[styles.resourceSolutions, { marginBottom: 6 }]}>
+								Related solutions:
+							</Text>
+							<View style={styles.tagContainer}>
+								{resource.relatedSolutions.map((solution) => (
+									<Text key={solution} style={styles.resourceSolutionTag}>
+										{solution}
+									</Text>
+								))}
+							</View>
+						</View>
 					)}
 				</View>
 			))}

@@ -3,9 +3,7 @@ import type React from "react";
 export default function Icon09(props: React.ComponentPropsWithoutRef<"svg">) {
 	return (
 		<svg
-			width="201"
-			height="200"
-			viewBox="0 0 201 200"
+			viewBox="0 0 125 138"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 			aria-label="Digitcore"
@@ -13,9 +11,14 @@ export default function Icon09(props: React.ComponentPropsWithoutRef<"svg">) {
 			{...props}
 		>
 			<path
-				d="M156.612 46.7226C167.847 84.9891 160.455 134.941 145.897 168.668C107.026 164.492 87.4532 143.552 43.0262 131.997C18.9161 64.1717 100.451 33.8839 110.393 31.332C133.253 32.3742 145.21 37.3515 156.612 46.7226Z"
-				stroke="currentColor"
-				strokeWidth="1"
+				d="M118.824 15.7148C130.059 53.9812 122.668 103.933 108.109 137.661C69.2383 133.485 49.6656 112.544 5.23858 100.989C-18.8715 33.1639 62.6635 2.87613 72.6052 0.324219C95.4654 1.36642 107.423 6.34366 118.824 15.7148Z"
+				fill="var(--icon-fill-color, #85A374)"
+				fillOpacity="var(--icon-fill-opacity, 0.5)"
+			/>
+			<path
+				d="M72.6606 0.827148C95.3044 1.86953 107.134 6.78837 118.387 16.0049C129.481 53.9833 122.204 103.519 107.794 137.12C88.629 135.002 74.1678 128.79 58.9702 121.64C43.7353 114.471 27.7557 106.361 5.62256 100.574C-0.274968 83.8265 0.319425 69.4164 4.6665 57.1729C9.03847 44.8592 17.2189 34.702 26.4829 26.5547C44.9368 10.3253 67.6044 2.14654 72.6606 0.827148Z"
+				stroke="var(--icon-stroke-color, #85A374)"
+				strokeOpacity="var(--icon-stroke-opacity, 0.5)"
 				strokeLinecap="round"
 				strokeLinejoin="round"
 			/>

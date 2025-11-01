@@ -47,14 +47,14 @@ export function LetterNavigation<T>({
 					let stateClasses = "";
 					if (!hasItems) {
 						stateClasses =
-							"text-neutral-300 pointer-events-none cursor-not-allowed";
+							"text-neutral-300 dark:text-neutral-700 pointer-events-none cursor-not-allowed";
 					} else if (isActive) {
-						// Active letter gets bold and darker color
-						stateClasses = "text-neutral-900 font-semibold";
+						// Active letter gets bold and darker or lighter color
+						stateClasses = "text-neutral-800 dark:text-neutral-200 font-medium";
 					} else {
 						// Inactive but available letters
 						stateClasses =
-							"text-neutral-500 hover:text-neutral-700 font-normal";
+							"text-neutral-500 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 font-normal";
 					}
 
 					return (

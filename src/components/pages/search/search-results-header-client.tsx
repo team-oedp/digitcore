@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { Skeleton } from "~/components/ui/skeleton";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
 
 type SearchResultsHeaderClientProps = {
@@ -20,12 +21,12 @@ export function SearchResultsHeaderClient({
 
 	try {
 		const rawParams = {
-			q: searchParams.get("q") ?? undefined,
-			audiences: searchParams.get("audiences") ?? undefined,
-			themes: searchParams.get("themes") ?? undefined,
-			tags: searchParams.get("tags") ?? undefined,
-			page: searchParams.get("page") ?? undefined,
-			limit: searchParams.get("limit") ?? undefined,
+			q: searchParams?.get("q") ?? undefined,
+			audiences: searchParams?.get("audiences") ?? undefined,
+			themes: searchParams?.get("themes") ?? undefined,
+			tags: searchParams?.get("tags") ?? undefined,
+			page: searchParams?.get("page") ?? undefined,
+			limit: searchParams?.get("limit") ?? undefined,
 		};
 		const validatedParams = searchParamsSchema.parse(rawParams);
 		const parsedParams = parseSearchParams(validatedParams);
@@ -43,33 +44,23 @@ export function SearchResultsHeaderClient({
 
 	// Don't show anything if no search criteria
 	if (!hasSearchCriteria) {
-		return (
-			<div className="flex items-center justify-between">
-				<div className="flex items-center gap-2">
-					<span className="text-sm text-zinc-400">Ready to search</span>
-				</div>
-			</div>
-		);
+		return null;
 	}
 
 	if (isLoading) {
-		return (
-			<div className="flex items-center justify-between">
-				<div className="h-6 w-48 animate-pulse rounded bg-zinc-200" />
-			</div>
-		);
+		return <Skeleton className="h-6 w-48" />;
 	}
 
 	return (
-		<div className="flex items-center justify-between">
-			<div className="flex items-center gap-2">
-				<span className="text-zinc-600">
-					{resultCount} {resultCount === 1 ? "result" : "results"}
+		<div className="flex items-center gap-1">
+			<span className="text-base text-muted-foreground text-prose">
+				{resultCount} {resultCount === 1 ? "result" : "results"}
+			</span>
+			{searchQuery && (
+				<span className="text-base text-muted-foreground text-prose">
+					for "{searchQuery}"
 				</span>
-				{searchQuery && (
-					<span className="text-zinc-400">for "{searchQuery}"</span>
-				)}
-			</div>
+			)}
 		</div>
 	);
 }

@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { i18n } from "~/i18n/config";
 import { logger } from "~/lib/logger";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
 import { client } from "~/sanity/lib/client";
@@ -21,6 +22,7 @@ vi.mock("~/sanity/lib/client");
 vi.mock("~/lib/search");
 
 const mockFetch = vi.mocked(client.fetch);
+const language = i18n.base;
 const mockSearchParamsSchema = vi.mocked(searchParamsSchema);
 const mockParseSearchParams = vi.mocked(parseSearchParams);
 const mockLogger = vi.mocked(logger);
@@ -92,6 +94,7 @@ describe("searchPatterns", () => {
 			audiences: ["urban-planners"],
 			themes: ["sustainability"],
 			tags: ["climate-change"],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -117,7 +120,7 @@ describe("searchPatterns", () => {
 			limit: "20",
 		});
 
-		const result = await searchPatterns(formData);
+		const result = await searchPatterns(formData, language);
 
 		expect(result.success).toBe(true);
 		expect(result.data).toEqual(mockResults);
@@ -143,6 +146,7 @@ describe("searchPatterns", () => {
 			audiences: ["students"],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -168,7 +172,7 @@ describe("searchPatterns", () => {
 			limit: "20",
 		});
 
-		const result = await searchPatterns(formData);
+		const result = await searchPatterns(formData, language);
 
 		expect(result.success).toBe(true);
 		expect(result.data).toEqual(mockResults);
@@ -199,6 +203,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -217,7 +222,7 @@ describe("searchPatterns", () => {
 
 		const formData = new FormData();
 
-		const result = await searchPatterns(formData);
+		const result = await searchPatterns(formData, language);
 
 		expect(result.success).toBe(true);
 		expect(result.data).toEqual(mockResults);
@@ -231,6 +236,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -253,7 +259,7 @@ describe("searchPatterns", () => {
 			limit: "20",
 		});
 
-		await searchPatterns(formData);
+		await searchPatterns(formData, language);
 
 		expect(mockFetch).toHaveBeenCalledWith(
 			"SEARCH_QUERY_STRING",
@@ -270,6 +276,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -292,7 +299,7 @@ describe("searchPatterns", () => {
 			limit: "20",
 		});
 
-		await searchPatterns(formData);
+		await searchPatterns(formData, language);
 
 		// Should use filter query for whitespace-only search term
 		expect(mockFetch).toHaveBeenCalledWith(
@@ -314,7 +321,7 @@ describe("searchPatterns", () => {
 			page: "invalid",
 		});
 
-		const result = await searchPatterns(formData);
+		const result = await searchPatterns(formData, language);
 
 		expect(result.success).toBe(false);
 		expect(result.error).toBe("Invalid search parameters");
@@ -342,6 +349,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		});
@@ -350,7 +358,7 @@ describe("searchPatterns", () => {
 
 		const formData = createFormData({ q: "test" });
 
-		const result = await searchPatterns(formData);
+		const result = await searchPatterns(formData, language);
 
 		expect(result.success).toBe(false);
 		expect(result.error).toBe("GROQ syntax error");
@@ -372,6 +380,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		});
@@ -380,7 +389,7 @@ describe("searchPatterns", () => {
 
 		const formData = createFormData({ q: "test" });
 
-		const result = await searchPatterns(formData);
+		const result = await searchPatterns(formData, language);
 
 		expect(result.success).toBe(false);
 		expect(result.error).toBe("Search failed - GROQ query error");
@@ -402,6 +411,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		});
@@ -410,7 +420,7 @@ describe("searchPatterns", () => {
 
 		const formData = createFormData({ q: "test" });
 
-		const result = await searchPatterns(formData);
+		const result = await searchPatterns(formData, language);
 
 		expect(result.success).toBe(false);
 		expect(result.error).toBe("Search failed - unknown error");
@@ -424,6 +434,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -442,7 +453,7 @@ describe("searchPatterns", () => {
 
 		const formData = createFormData({ q: "test" });
 
-		await searchPatterns(formData);
+		await searchPatterns(formData, language);
 
 		expect(mockFetch).toHaveBeenCalledWith(
 			"SEARCH_QUERY_STRING",
@@ -461,6 +472,7 @@ describe("searchPatterns", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -479,7 +491,7 @@ describe("searchPatterns", () => {
 
 		const formData = createFormData({ q: "test" });
 
-		await searchPatterns(formData);
+		await searchPatterns(formData, language);
 
 		expect(mockLogger.searchInfo).toHaveBeenCalledWith(
 			"Starting search operation",
@@ -487,9 +499,51 @@ describe("searchPatterns", () => {
 			expect.any(Object),
 		);
 
-		expect(mockLogger.groq).toHaveBeenCalledWith(
-			"Using PATTERN_SEARCH_QUERY with escaped search term",
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			1,
+			"Using PATTERN_SEARCH_QUERY (no preferences)",
+			undefined,
+			expect.any(Object),
+		);
+
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			2,
+			"Search term escaped",
 			{ original: "test", escaped: "test" },
+			expect.any(Object),
+		);
+
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			3,
+			"Final GROQ query parameters",
+			{
+				searchTerm: "test",
+				tags: [],
+				themes: [],
+				audiences: [],
+				language,
+			},
+			expect.any(Object),
+		);
+
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			4,
+			"Query type",
+			"SEARCH",
+			expect.any(Object),
+		);
+
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			5,
+			"Executing GROQ query",
+			{ queryType: "SEARCH" },
+			expect.any(Object),
+		);
+
+		expect(mockLogger.groq).toHaveBeenNthCalledWith(
+			6,
+			"GROQ query completed",
+			{ executionTime: expect.stringMatching(/\d+ms/), resultCount: 2 },
 			expect.any(Object),
 		);
 
@@ -513,6 +567,7 @@ describe("searchPatternsWithParams", () => {
 			audiences: ["students"],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -536,7 +591,7 @@ describe("searchPatternsWithParams", () => {
 			limit: "20",
 		});
 
-		const result = await searchPatternsWithParams(searchParams);
+		const result = await searchPatternsWithParams(searchParams, language);
 
 		expect(result.success).toBe(true);
 		expect(result.data).toEqual(mockResults);
@@ -567,7 +622,7 @@ describe("searchPatternsWithParams", () => {
 			page: "invalid",
 		});
 
-		const result = await searchPatternsWithParams(searchParams);
+		const result = await searchPatternsWithParams(searchParams, language);
 
 		expect(result.success).toBe(false);
 		expect(result.error).toBe("URLSearchParams conversion failed");
@@ -588,6 +643,7 @@ describe("searchPatternsWithParams", () => {
 			audiences: [],
 			themes: [],
 			tags: [],
+			enhance: false,
 			page: 1,
 			limit: 20,
 		};
@@ -606,7 +662,7 @@ describe("searchPatternsWithParams", () => {
 
 		const searchParams = new URLSearchParams();
 
-		const result = await searchPatternsWithParams(searchParams);
+		const result = await searchPatternsWithParams(searchParams, language);
 
 		expect(result.success).toBe(true);
 		expect(result.data).toEqual(mockResults);
@@ -621,7 +677,7 @@ describe("searchPatternsWithParams", () => {
 
 		const searchParams = new URLSearchParams({ q: "test" });
 
-		const result = await searchPatternsWithParams(searchParams);
+		const result = await searchPatternsWithParams(searchParams, language);
 
 		expect(result.success).toBe(false);
 		expect(result.error).toBe("Search failed - unknown error");
@@ -635,6 +691,7 @@ describe("searchPatternsWithParams", () => {
 			audiences: ["students", "researchers"],
 			themes: ["sustainability", "innovation"],
 			tags: ["climate", "environment"],
+			enhance: false,
 			page: 2,
 			limit: 50,
 		};
@@ -660,7 +717,7 @@ describe("searchPatternsWithParams", () => {
 			limit: "50",
 		});
 
-		const result = await searchPatternsWithParams(searchParams);
+		const result = await searchPatternsWithParams(searchParams, language);
 
 		expect(result.success).toBe(true);
 		expect(result.searchParams).toEqual(mockParsedParams);

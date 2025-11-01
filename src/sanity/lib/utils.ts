@@ -26,19 +26,26 @@ export function linkResolver(link: Link | undefined) {
 		link.linkType = "href";
 	}
 
+	// support projections where page/pattern are slug strings
+	const pageSlug: string | undefined =
+		typeof (link as unknown as { page?: unknown })?.page === "string"
+			? ((link as unknown as { page?: string }).page as string)
+			: undefined;
+	const patternSlug: string | undefined =
+		typeof (link as unknown as { pattern?: unknown })?.pattern === "string"
+			? ((link as unknown as { pattern?: string }).pattern as string)
+			: undefined;
 	switch (link.linkType) {
 		case "href":
 			return link.href || null;
 		case "page":
-			if (link?.page && typeof link.page === "string") {
-				return `/${link.page}`;
-			}
+			if (pageSlug) return `/${pageSlug}`;
 			return null;
 		case "pattern":
-			if (link?.pattern && typeof link.pattern === "string") {
-				return `/patterns/${link.pattern}`;
-			}
+			if (patternSlug) return `/patterns/${patternSlug}`;
 			return null;
+		case "orientation":
+			return "/orientation";
 		default:
 			return null;
 	}

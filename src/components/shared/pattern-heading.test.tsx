@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Pattern } from "~/sanity/sanity.types";
+import type { PatternForCarrierBag } from "~/components/global/carrier-bag/carrier-bag-item";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { PatternHeading } from "./pattern-heading";
 
@@ -22,14 +22,22 @@ function TestWrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe("PageHeading Carrier Bag Functionality", () => {
-	const mockPattern: Pattern = {
+	const mockPattern: PatternForCarrierBag = {
 		_id: "test-pattern-1",
 		_type: "pattern",
 		_createdAt: "2023-01-01T00:00:00Z",
 		_updatedAt: "2023-01-01T00:00:00Z",
 		_rev: "1",
 		title: "Test Pattern",
-		slug: { _type: "slug", current: "test-pattern" },
+		slug: "test-pattern",
+		language: "en",
+		description: null,
+		descriptionPlainText: "",
+		tags: null,
+		audiences: null,
+		theme: null,
+		solutions: null,
+		resources: null,
 	};
 
 	beforeEach(() => {
@@ -87,7 +95,7 @@ describe("PageHeading Carrier Bag Functionality", () => {
 		// Should have hover styles (not green active state)
 		expect(saveButton).toHaveClass(
 			"cursor-pointer",
-			"bg-white",
+			"bg-transparent",
 			"hover:bg-secondary",
 		);
 		expect(saveButton).not.toHaveClass("border-green-200", "bg-green-50");

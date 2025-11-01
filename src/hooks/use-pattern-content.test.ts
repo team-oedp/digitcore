@@ -42,9 +42,11 @@ const createMockPattern = (
 	_updatedAt: "2023-01-01T00:00:00Z",
 	_rev: "rev1",
 	title: "Test Pattern",
-	slug: { current: "test-pattern", _type: "slug" },
+	slug: "test-pattern",
+	language: "en",
 	// biome-ignore lint/suspicious/noExplicitAny: Mocking complex PortableText type requires any
 	description: createMockPortableText("Test pattern description") as any,
+	descriptionPlainText: "Test pattern description",
 	tags: [
 		{
 			_id: "tag1",
@@ -67,17 +69,15 @@ const createMockPattern = (
 			// biome-ignore lint/suspicious/noExplicitAny: Mocking Sanity reference type requires any
 		} as any,
 	],
-	themes: [
-		{
-			_id: "theme1",
-			_type: "theme",
-			_createdAt: "2023-01-01T00:00:00Z",
-			_updatedAt: "2023-01-01T00:00:00Z",
-			_rev: "rev1",
-			title: "Test Theme",
-			// biome-ignore lint/suspicious/noExplicitAny: Mocking Sanity reference type requires any
-		} as any,
-	],
+	theme: {
+		_id: "theme1",
+		_type: "theme",
+		_createdAt: "2023-01-01T00:00:00Z",
+		_updatedAt: "2023-01-01T00:00:00Z",
+		_rev: "rev1",
+		title: "Test Theme",
+		// biome-ignore lint/suspicious/noExplicitAny: Mocking Sanity reference type requires any
+	} as any,
 	solutions: [
 		{
 			_id: "solution1",
@@ -286,7 +286,7 @@ describe("usePatternContent", () => {
 		const themesConnection = content.connections.find(
 			(c) => c.type === "themes",
 		);
-		expect(themesConnection?.title).toBe("Themes");
+		expect(themesConnection?.title).toBe("Theme");
 		expect(themesConnection?.items).toHaveLength(1);
 		expect(themesConnection?.items[0]?.title).toBe("Test Theme");
 
@@ -338,7 +338,7 @@ describe("usePatternContent", () => {
 		const pattern = createMockPattern({
 			tags: undefined,
 			audiences: undefined,
-			themes: undefined,
+			theme: undefined,
 		});
 		const { result } = renderHook(() => usePatternContent(pattern));
 
@@ -349,7 +349,7 @@ describe("usePatternContent", () => {
 		const pattern = createMockPattern({
 			tags: [],
 			audiences: [],
-			themes: [],
+			theme: null,
 		});
 		const { result } = renderHook(() => usePatternContent(pattern));
 
@@ -527,7 +527,7 @@ describe("utility hooks", () => {
 				"Audiences",
 			);
 			expect(result.current.find((c) => c.type === "themes")?.title).toBe(
-				"Themes",
+				"Theme",
 			);
 		});
 	});

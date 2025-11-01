@@ -11,7 +11,7 @@ import {
 	MultiSelectItem,
 	MultiSelectTrigger,
 	MultiSelectValue,
-} from "~/components/ui/multiselect";
+} from "~/components/ui/multi-select";
 import { createLogLocation, logger } from "~/lib/logger";
 import {
 	type ParsedSearchParams,
@@ -19,6 +19,8 @@ import {
 	searchParamsSchema,
 	serializeSearchParams,
 } from "~/lib/search";
+import { useOrientationStore } from "~/stores/orientation";
+import { EnhanceToggle } from "./enhance-toggle";
 
 type FilterOption = {
 	value: string;
@@ -42,6 +44,23 @@ export function SearchInterface({
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
+	// Get orientation preferences for enhance toggle - use individual selectors to avoid object recreation
+	const selectedAudienceIds = useOrientationStore(
+		(state) => state.selectedAudienceIds,
+	);
+	const selectedThemeIds = useOrientationStore(
+		(state) => state.selectedThemeIds,
+	);
+	const hasCompletedOrientation = useOrientationStore(
+		(state) => state.hasCompletedOrientation,
+	);
+
+	const orientationPreferences = {
+		selectedAudienceIds,
+		selectedThemeIds,
+		hasCompletedOrientation,
+	};
+
 	logger.debug(
 		"client",
 		"SearchInterface initialized",
@@ -59,12 +78,13 @@ export function SearchInterface({
 		try {
 			return parseSearchParams(
 				searchParamsSchema.parse({
-					q: searchParams.get("q") ?? undefined,
-					audiences: searchParams.get("audiences") ?? undefined,
-					themes: searchParams.get("themes") ?? undefined,
-					tags: searchParams.get("tags") ?? undefined,
-					page: searchParams.get("page") ?? undefined,
-					limit: searchParams.get("limit") ?? undefined,
+					q: searchParams?.get("q") ?? undefined,
+					audiences: searchParams?.get("audiences") ?? undefined,
+					themes: searchParams?.get("themes") ?? undefined,
+					tags: searchParams?.get("tags") ?? undefined,
+					enhance: searchParams?.get("enhance") ?? undefined,
+					page: searchParams?.get("page") ?? undefined,
+					limit: searchParams?.get("limit") ?? undefined,
 				}),
 			);
 		} catch (error) {
@@ -73,6 +93,29 @@ export function SearchInterface({
 			return parseSearchParams({ page: 1, limit: 20 });
 		}
 	}, [searchParams]);
+
+	// Check if user has preferences from orientation
+	const hasPreferences =
+		orientationPreferences.hasCompletedOrientation &&
+		(orientationPreferences.selectedAudienceIds.length > 0 ||
+			orientationPreferences.selectedThemeIds.length > 0);
+
+	// Get enhance state from URL, default to true if preferences exist and no URL parameter
+	const enhanceEnabled =
+		currentParams.enhance !== undefined
+			? currentParams.enhance
+			: hasPreferences;
+
+	// Helper functions to get preference labels for hover text
+	const getAudienceLabels = (ids: string[]) =>
+		ids
+			.map((id) => audienceOptions.find((opt) => opt.value === id)?.label)
+			.filter(Boolean) as string[];
+
+	const getThemeLabels = (ids: string[]) =>
+		ids
+			.map((id) => themeOptions.find((opt) => opt.value === id)?.label)
+			.filter(Boolean) as string[];
 
 	// Completely isolated search input state - no URL sync
 	const [searchTerm, setSearchTerm] = useState("");
@@ -144,7 +187,7 @@ export function SearchInterface({
 				location,
 			);
 
-			router.push(newUrl);
+			if (newUrl) router.push(newUrl);
 		},
 		[pathname, router, location],
 	);
@@ -181,6 +224,14 @@ export function SearchInterface({
 		(tags: string[]) => {
 			setOptimisticTags(tags);
 			updateSearchParams({ tags });
+		},
+		[updateSearchParams],
+	);
+
+	// Handle enhance toggle changes
+	const handleEnhanceToggle = useCallback(
+		(enabled: boolean) => {
+			updateSearchParams({ enhance: enabled });
 		},
 		[updateSearchParams],
 	);
@@ -224,13 +275,13 @@ export function SearchInterface({
 							onChange={(e) => handleSearchChange(e.target.value)}
 							onKeyDown={handleKeyDown}
 							placeholder="Search patterns, solutions, resources..."
-							className="h-8 rounded-none border-0 border-neutral-300 border-b bg-transparent px-0 py-1 pr-16 text-sm text-zinc-500 shadow-none placeholder:text-zinc-500 focus-visible:border-neutral-300 focus-visible:ring-0 focus-visible:ring-offset-0"
+							className="h-8 rounded-none border-0 border-neutral-300 border-b bg-transparent px-0 py-1 pr-16 text-foreground text-sm shadow-none placeholder:text-muted-foreground focus-visible:border-neutral-400 focus-visible:ring-0 focus-visible:ring-offset-0 dark:border-neutral-700 dark:bg-transparent dark:focus-visible:border-neutral-500"
 						/>
 						{searchTerm && (
 							<button
 								onClick={() => handleSearchChange("")}
 								type="button"
-								className="absolute right-0 cursor-pointer text-sm text-zinc-400 transition-colors hover:text-zinc-600"
+								className="absolute right-0 cursor-pointer text-muted-foreground text-sm transition-colors hover:text-foreground"
 								title="Clear search"
 							>
 								Clear
@@ -238,15 +289,23 @@ export function SearchInterface({
 						)}
 					</div>
 				</div>
-				{/* Helper text */}
-				<div className="-mt-2 mb-2 text-xs text-zinc-400">
-					Start typing to search patterns, solutions, and resources across the
-					toolkit
-				</div>
 			</div>
 
+			{/* Enhance Toggle */}
+			<EnhanceToggle
+				enabled={enhanceEnabled}
+				onToggle={handleEnhanceToggle}
+				hasCompletedOnboarding={orientationPreferences.hasCompletedOrientation}
+				audiencePreferences={getAudienceLabels(
+					orientationPreferences.selectedAudienceIds,
+				)}
+				themePreferences={getThemeLabels(
+					orientationPreferences.selectedThemeIds,
+				)}
+			/>
+
 			{/* Filter Tools */}
-			<div className="flex w-full max-w-4xl gap-3 p-0.5">
+			<div className="flex w-full max-w-4xl flex-col gap-3 p-0.5 md:flex-row">
 				{/* Audience Multiselect */}
 				<div className="min-w-0 flex-1">
 					<div className="mb-1 text-primary text-xs">Audiences</div>
@@ -254,7 +313,7 @@ export function SearchInterface({
 						values={optimisticAudiences}
 						onValuesChange={handleAudienceChange}
 					>
-						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">
+						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg bg-transparent text-[14px] text-primary shadow-none hover:bg-transparent dark:bg-transparent dark:hover:bg-transparent">
 							<MultiSelectValue
 								placeholder="Select audiences"
 								overflowBehavior="cutoff"
@@ -284,7 +343,7 @@ export function SearchInterface({
 						values={optimisticThemes}
 						onValuesChange={handleThemeChange}
 					>
-						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">
+						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg bg-transparent text-[14px] text-primary shadow-none hover:bg-transparent dark:bg-transparent dark:hover:bg-transparent">
 							<MultiSelectValue
 								placeholder="Select themes"
 								overflowBehavior="cutoff"
@@ -314,7 +373,7 @@ export function SearchInterface({
 						values={optimisticTags}
 						onValuesChange={handleTagsChange}
 					>
-						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg text-[14px] text-primary shadow-none">
+						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg bg-transparent text-[14px] text-primary shadow-none hover:bg-transparent dark:bg-transparent dark:hover:bg-transparent">
 							<MultiSelectValue
 								placeholder="Select tags"
 								overflowBehavior="cutoff"

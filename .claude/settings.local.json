@@ -1,6 +1,21 @@
 {
-	"permissions": {
-		"allow": ["Bash(npm run typecheck:*)", "Bash(npm test:*)"],
-		"deny": []
-	}
+  "permissions": {
+    "allow": [
+      "Bash(npm run typecheck:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run check:write:*)",
+      "Bash(npm run dev:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.sanity.io)",
+      "Bash(grep:*)",
+      "Bash(mkdir:*)",
+      "Read(//Users/henrybabbage/Desktop/**)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run check:*)"
+    ],
+    "deny": []
+  }
 }

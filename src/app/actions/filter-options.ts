@@ -1,5 +1,6 @@
 "use server";
 
+import { type Language, i18n } from "~/i18n/config";
 import { createLogLocation, logger } from "~/lib/logger";
 import { client } from "~/sanity/lib/client";
 import { FILTER_OPTIONS_QUERY } from "~/sanity/lib/filter-options";
@@ -32,7 +33,9 @@ export type FilterOptionsResult = {
 /**
  * Server action to fetch filter options from Sanity
  */
-export async function fetchFilterOptions(): Promise<FilterOptionsResult> {
+export async function fetchFilterOptions(
+	language: Language = i18n.base,
+): Promise<FilterOptionsResult> {
 	const location = createLogLocation("filter-options.ts", "fetchFilterOptions");
 
 	try {
@@ -43,16 +46,31 @@ export async function fetchFilterOptions(): Promise<FilterOptionsResult> {
 		);
 
 		const startTime = Date.now();
-		const response = await client.fetch(FILTER_OPTIONS_QUERY);
+		const response = await client.fetch(FILTER_OPTIONS_QUERY, { language });
 		const endTime = Date.now();
+
+		// Temporary debug to understand test environment behavior
 
 		// Extract data from Sanity client response
 		// Handle both direct response (production) and { result: data } format (testing)
-		const responseAsAny = response as SanityResponse<typeof response>;
-		const data =
-			"result" in responseAsAny && responseAsAny.result !== undefined
-				? responseAsAny.result
-				: response;
+		const wrapper = response as SanityResponse<unknown> | undefined;
+		const isWrapped =
+			!!wrapper &&
+			typeof wrapper === "object" &&
+			"result" in (wrapper as Record<string, unknown>);
+		const dataUnknown = isWrapped
+			? (wrapper as { result: unknown }).result
+			: (response as unknown);
+
+		type Buckets =
+			| {
+					audiences?: SanityFilterOption[] | null;
+					themes?: SanityFilterOption[] | null;
+					tags?: SanityFilterOption[] | null;
+			  }
+			| null
+			| undefined;
+		const data = dataUnknown as Buckets;
 
 		logger.groq(
 			"Filter options query completed",
@@ -67,25 +85,17 @@ export async function fetchFilterOptions(): Promise<FilterOptionsResult> {
 			location,
 		);
 
-		// Provide default options if fetch fails and filter out null labels
-		const audiences = (data?.audiences || [])
-			.filter((item: SanityFilterOption) => item.label !== null)
-			.map((item: SanityFilterOption) => ({
-				value: item.value,
-				label: item.label as string,
-			}));
-		const themes = (data?.themes || [])
-			.filter((item: SanityFilterOption) => item.label !== null)
-			.map((item: SanityFilterOption) => ({
-				value: item.value,
-				label: item.label as string,
-			}));
-		const tags = (data?.tags || [])
-			.filter((item: SanityFilterOption) => item.label !== null)
-			.map((item: SanityFilterOption) => ({
-				value: item.value,
-				label: item.label as string,
-			}));
+		// Normalize and filter out null labels
+		function normalize(xs: SanityFilterOption[] | null | undefined) {
+			const arr = Array.isArray(xs) ? xs : [];
+			return arr
+				.filter((item) => item?.label !== null)
+				.map((item) => ({ value: item.value, label: String(item.label) }));
+		}
+
+		const audiences = normalize(data?.audiences);
+		const themes = normalize(data?.themes);
+		const tags = normalize(data?.tags);
 
 		const result = { audiences, themes, tags };
 

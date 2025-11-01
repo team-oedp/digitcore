@@ -3,8 +3,8 @@
 import { Menu, Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
 	Sheet,
@@ -15,40 +15,83 @@ import {
 	SheetTrigger,
 } from "~/components/ui/sheet";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
+import { type Language, i18n } from "~/i18n/config";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
+import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
 
-const navItems = [
-	{ href: "/onboarding", label: "Start here", isIndented: false },
-	{ href: "/explore", label: "Explore", isIndented: false },
-	{ href: "/patterns", label: "Patterns", isIndented: true },
-	{ href: "/tags", label: "Tags", isIndented: true },
-	{ href: "/values", label: "Values", isIndented: true },
-	{ href: "/about", label: "About", isIndented: false },
-];
+const LANGUAGE_OPTIONS = i18n.languages.map((language) => ({
+	code: language.id,
+	label: language.title,
+}));
 
-const languages = [
-	{ code: "EN", label: "English" },
-	{ code: "ES", label: "Spanish" },
-	{ code: "PT", label: "Português" },
-	{ code: "FR", label: "Français" },
-	{ code: "KR", label: "한국어" },
-];
+type MobileNavDialogProps = {
+	headerData: HEADER_QUERYResult;
+	language: Language;
+};
 
-export function MobileNavDialog() {
+export function MobileNavDialog({
+	headerData,
+	language,
+}: MobileNavDialogProps) {
 	const [open, setOpen] = useState(false);
-	const [selectedLanguage, setSelectedLanguage] = useState("EN");
+	const [mounted, setMounted] = useState(false);
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const { normalizedPath, language: routeLanguage } = useMemo(
+		() => parseLocalePath(pathname),
+		[pathname],
+	);
+	const currentLanguage = routeLanguage ?? language;
+	const queryString = useMemo(
+		() => searchParams?.toString() ?? "",
+		[searchParams],
+	);
 	const { theme, setTheme } = useTheme();
+
+	// Prevent hydration mismatch by only rendering theme toggle after client mount
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	// Filter navigation links based on page slug
+	// "orientation" and "about" go in main menu, everything else in explore menu
+	const headerLinks = (headerData?.internalLinks ?? []).flatMap((link) => {
+		if (!link) return [];
+		const label = link.label?.trim();
+		const slug = link.page?.slug?.trim();
+
+		if (!link.page || !label || !slug) {
+			return [];
+		}
+
+		return [
+			{
+				...link,
+				label,
+				page: {
+					...link.page,
+					slug,
+				},
+			},
+		];
+	});
+	const mainMenuLinks = headerLinks.filter(
+		(link) => link.page.slug === "orientation" || link.page.slug === "about",
+	);
+	const exploreMenuLinks = headerLinks.filter(
+		(link) => link.page.slug !== "orientation" && link.page.slug !== "about",
+	);
 
 	return (
 		<Sheet open={open} onOpenChange={setOpen}>
 			<SheetTrigger asChild>
 				<button
 					type="button"
-					className="group relative flex h-7 items-center rounded-md border border-border bg-background px-2 py-0.5 outline-none duration-150 ease-linear hover:bg-main-foreground/40 focus-visible:ring-1 focus-visible:ring-neutral-300/80 md:hidden dark:border-border/50 dark:focus-visible:ring-neutral-800 dark:hover:border-white/10 dark:hover:bg-main-foreground/20"
+					className="group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear md:hidden"
 					aria-label="Open navigation menu"
 				>
-					<Menu className="h-4 w-4 text-primary" />
+					<Menu className="h-[14px] w-[14px] text-muted-foreground transition-colors group-hover:text-foreground" />
 				</button>
 			</SheetTrigger>
 			<SheetContent
@@ -56,7 +99,7 @@ export function MobileNavDialog() {
 				className="flex w-full flex-col p-0 sm:max-w-full"
 			>
 				<SheetHeader className="px-4 pt-6 pb-3">
-					<SheetTitle className="px-1.5 font-medium text-primary text-sm uppercase">
+					<SheetTitle className="px-1.5 font-medium text-base text-primary uppercase">
 						Menu
 					</SheetTitle>
 					<SheetDescription className="sr-only">
@@ -67,24 +110,69 @@ export function MobileNavDialog() {
 
 				<nav className="flex-1 overflow-y-auto px-4 py-6">
 					<ul className="space-y-1">
-						{navItems.map((item) => (
-							<li key={item.href}>
-								<Button
-									variant="ghost"
-									asChild
-									className={cn(
-										"w-full justify-start font-normal text-base",
-										item.isIndented ? "pr-1.5 pl-8" : "px-1.5",
-										pathname === item.href
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
-									onClick={() => setOpen(false)}
-								>
-									<Link href={item.href}>{item.label}</Link>
-								</Button>
-							</li>
-						))}
+						{mainMenuLinks.map((link) => {
+							const slug = link.page?.slug;
+							if (!slug) return null;
+
+							const href = `/${slug}`;
+							const isActive = normalizedPath === href;
+
+							return (
+								<li key={link._key}>
+									<Button
+										variant="ghost"
+										asChild
+										className={cn(
+											"w-full justify-start px-1.5 font-normal text-base hover:bg-transparent",
+											isActive
+												? "text-foreground"
+												: "text-muted-foreground hover:text-foreground",
+										)}
+										onClick={() => setOpen(false)}
+									>
+										<Link href={buildLocaleHref(currentLanguage, href)}>
+											{link.label}
+										</Link>
+									</Button>
+								</li>
+							);
+						})}
+						{exploreMenuLinks.length > 0 && (
+							<>
+								<li>
+									<div className="px-1.5 font-normal text-base text-muted-foreground">
+										Explore
+									</div>
+								</li>
+								{exploreMenuLinks.map((link) => {
+									const slug = link.page?.slug;
+									if (!slug) return null;
+
+									const href = `/${slug}`;
+									const isActive = normalizedPath === href;
+
+									return (
+										<li key={link._key}>
+											<Button
+												variant="ghost"
+												asChild
+												className={cn(
+													"w-full justify-start pr-1.5 pl-8 font-normal text-base hover:bg-transparent",
+													isActive
+														? "text-foreground"
+														: "text-muted-foreground hover:text-foreground",
+												)}
+												onClick={() => setOpen(false)}
+											>
+												<Link href={buildLocaleHref(currentLanguage, href)}>
+													{link.label}
+												</Link>
+											</Button>
+										</li>
+									);
+								})}
+							</>
+						)}
 					</ul>
 				</nav>
 
@@ -97,76 +185,79 @@ export function MobileNavDialog() {
 						<div className="px-1.5">
 							<ToggleGroup
 								type="single"
-								value={selectedLanguage}
-								onValueChange={(value) => value && setSelectedLanguage(value)}
+								value={currentLanguage}
+								onValueChange={() => {}}
 								className="flex-wrap justify-start gap-2"
 							>
-								{languages.map((lang) => (
-									<ToggleGroupItem
-										key={lang.code}
-										value={lang.code}
-										className="min-w-[60px] flex-none"
-										aria-label={`Select ${lang.label}`}
-										disabled={lang.code !== "EN"}
-									>
-										{lang.code}
-									</ToggleGroupItem>
-								))}
+								{LANGUAGE_OPTIONS.map((lang) => {
+									const href =
+										queryString.length > 0
+											? `${normalizedPath}?${queryString}`
+											: normalizedPath;
+									return (
+										<ToggleGroupItem
+											key={lang.code}
+											value={lang.code}
+											asChild
+											className="min-w-[60px] flex-none border-0 bg-transparent px-0 text-muted-foreground hover:bg-transparent hover:text-foreground data-[state=on]:bg-transparent data-[state=on]:text-foreground"
+											aria-label={`Switch to ${lang.label}`}
+										>
+											<Link
+												href={buildLocaleHref(lang.code, href)}
+												onClick={() => setOpen(false)}
+												className="flex w-full items-center justify-center gap-2 px-2 py-1.5 text-xs"
+											>
+												{lang.code.toUpperCase()}
+											</Link>
+										</ToggleGroupItem>
+									);
+								})}
 							</ToggleGroup>
 						</div>
 					</div>
 
 					{/* Theme Selection */}
-					<div className="space-y-2">
-						<div className="px-1.5 font-medium text-muted-foreground text-sm">
-							Mode
+					{mounted && (
+						<div className="space-y-2">
+							<div className="px-1.5 font-medium text-muted-foreground text-sm">
+								Mode
+							</div>
+							<div className="px-1.5">
+								<ToggleGroup
+									type="single"
+									value={theme}
+									onValueChange={(value) => value && setTheme(value)}
+									className="gap-3"
+									variant="ghost"
+								>
+									<ToggleGroupItem
+										value="light"
+										aria-label="Light mode"
+										className="border-0 text-muted-foreground hover:text-foreground data-[state=on]:text-foreground"
+									>
+										<Sun className="mr-1 h-4 w-4" />
+										Light
+									</ToggleGroupItem>
+									<ToggleGroupItem
+										value="dark"
+										aria-label="Dark mode"
+										className="border-0 text-muted-foreground hover:text-foreground data-[state=on]:text-foreground"
+									>
+										<Moon className="mr-1 h-4 w-4" />
+										Dark
+									</ToggleGroupItem>
+									<ToggleGroupItem
+										value="system"
+										aria-label="System mode"
+										className="border-0 text-muted-foreground hover:text-foreground data-[state=on]:text-foreground"
+									>
+										<Monitor className="mr-1 h-4 w-4" />
+										System
+									</ToggleGroupItem>
+								</ToggleGroup>
+							</div>
 						</div>
-						<div className="px-1.5">
-							<ToggleGroup
-								type="single"
-								value={theme}
-								onValueChange={(value) => value && setTheme(value)}
-								className="gap-3"
-							>
-								<ToggleGroupItem
-									value="light"
-									aria-label="Light mode"
-									className={cn(
-										theme === "light"
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
-								>
-									<Sun className="mr-1 h-4 w-4" />
-									Light
-								</ToggleGroupItem>
-								<ToggleGroupItem
-									value="dark"
-									aria-label="Dark mode"
-									className={cn(
-										theme === "dark"
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
-								>
-									<Moon className="mr-1 h-4 w-4" />
-									Dark
-								</ToggleGroupItem>
-								<ToggleGroupItem
-									value="system"
-									aria-label="System mode"
-									className={cn(
-										theme === "system"
-											? "bg-accent text-foreground"
-											: "text-muted-foreground hover:text-foreground",
-									)}
-								>
-									<Monitor className="mr-1 h-4 w-4" />
-									System
-								</ToggleGroupItem>
-							</ToggleGroup>
-						</div>
-					</div>
+					)}
 				</div>
 			</SheetContent>
 		</Sheet>

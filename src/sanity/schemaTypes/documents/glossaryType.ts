@@ -1,5 +1,5 @@
 import { BookIcon } from "@sanity/icons";
-import { defineArrayMember, defineField, defineType } from "sanity";
+import { defineField, defineType } from "sanity";
 
 export const glossaryType = defineType({
 	name: "glossary",
@@ -7,6 +7,13 @@ export const glossaryType = defineType({
 	type: "document",
 	icon: BookIcon,
 	fields: [
+		defineField({
+			// should match 'languageField' plugin configuration setting in sanity.config.ts, if customized
+			name: "language",
+			type: "string",
+			readOnly: true,
+			hidden: true,
+		}),
 		defineField({
 			name: "title",
 			type: "string",
