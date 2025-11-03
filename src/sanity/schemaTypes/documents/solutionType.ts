@@ -18,7 +18,18 @@ export const solutionType = defineType({
 		defineField({
 			name: "title",
 			type: "string",
-			validation: (Rule) => Rule.required().custom(validateUniqueTitle()),
+			validation: (Rule) => {
+				const uniqueTitleValidator = validateUniqueTitle();
+				return [
+					Rule.required(),
+					Rule.custom(async (value, context) => {
+						const result = await uniqueTitleValidator(value, context);
+						return result === true
+							? true
+							: "Another solution with this title already exists";
+					}).warning("Another solution with this title already exists"),
+				];
+			},
 		}),
 		defineField({
 			name: "description",

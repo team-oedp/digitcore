@@ -18,7 +18,18 @@ export const resourceType = defineType({
 		defineField({
 			name: "title",
 			type: "string",
-			validation: (Rule) => Rule.required().custom(validateUniqueTitle()),
+			validation: (Rule) => {
+				const uniqueTitleValidator = validateUniqueTitle();
+				return [
+					Rule.required(),
+					Rule.custom(async (value, context) => {
+						const result = await uniqueTitleValidator(value, context);
+						return result === true
+							? true
+							: "Another resource with this title already exists";
+					}).warning("Another resource with this title already exists"),
+				];
+			},
 		}),
 		defineField({
 			name: "description",
