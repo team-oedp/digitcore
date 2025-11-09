@@ -10,6 +10,7 @@ import { buildAbsoluteUrl } from "~/lib/metadata";
 import { buildHreflang } from "~/lib/seo";
 import { sanityFetch } from "~/sanity/lib/client";
 import { SITE_SETTINGS_QUERY, VALUES_PAGE_QUERY } from "~/sanity/lib/queries";
+import type { VALUES_PAGE_QUERYResult } from "~/sanity/sanity.types";
 import type { LanguagePageProps } from "~/types/page-props";
 
 const VALUES_LANGUAGES_QUERY = `array::unique(*[_type == 'page' && slug.current == 'values' && defined(language)].language)`;
@@ -77,31 +78,38 @@ export default async function Page({ params }: LanguagePageProps) {
 					/>
 				)}
 				<div className="flex flex-col gap-20 pt-20 lg:gap-40 lg:pt-40">
-					{pageData.content?.map((section, index) => (
-						<section key={section._key} className="flex flex-col gap-5">
-							{index > 0 && (
-								<div className="flex justify-start pb-4">
-									<CustomizablePatternCombination
-										randomPatterns={3}
-										size="md"
-										fillColor="#A67859"
-										strokeColor="#A67859"
-										fillOpacity={0.5}
-										strokeOpacity={0.5}
+					{pageData.content?.map(
+						(
+							section: NonNullable<
+								NonNullable<VALUES_PAGE_QUERYResult>["content"]
+							>[number],
+							index: number,
+						) => (
+							<section key={section._key} className="flex flex-col gap-5">
+								{index > 0 && (
+									<div className="flex justify-start pb-4">
+										<CustomizablePatternCombination
+											randomPatterns={3}
+											size="md"
+											fillColor="#A67859"
+											strokeColor="#A67859"
+											fillOpacity={0.5}
+											strokeOpacity={0.5}
+										/>
+									</div>
+								)}
+								{section._type === "content" && section.heading && (
+									<SectionHeading heading={section.heading} />
+								)}
+								{section._type === "content" && section.body && (
+									<CustomPortableText
+										value={section.body as PortableTextBlock[]}
+										className="text-body [&_p]:mb-1"
 									/>
-								</div>
-							)}
-							{section._type === "content" && section.heading && (
-								<SectionHeading heading={section.heading} />
-							)}
-							{section._type === "content" && section.body && (
-								<CustomPortableText
-									value={section.body as PortableTextBlock[]}
-									className="text-body [&_p]:mb-1"
-								/>
-							)}
-						</section>
-					))}
+								)}
+							</section>
+						),
+					)}
 				</div>
 			</div>
 		</PageWrapper>

@@ -110,4 +110,3 @@ export const searchType = defineType({
 		},
 	},
 });
-

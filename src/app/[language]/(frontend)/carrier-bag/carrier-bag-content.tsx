@@ -323,8 +323,7 @@ export function CarrierBagContent({
 								carrierBagData?.filterByAudiencesSearchPlaceholder ||
 								"Search Audiences...",
 							emptyMessage:
-								carrierBagData?.filterByAudiencesEmptyMessage ||
-								"No Audiences",
+								carrierBagData?.filterByAudiencesEmptyMessage || "No Audiences",
 						}}
 					>
 						<MultiSelectGroup

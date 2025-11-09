@@ -12,9 +12,7 @@
 		"deploy-graphql": "sanity graphql deploy",
 		"typecheck": "tsc -p tsconfig.json --noEmit"
 	},
-	"keywords": [
-		"sanity"
-	],
+	"keywords": ["sanity"],
 	"dependencies": {
 		"@sanity/assist": "^5.0.1",
 		"@sanity/code-input": "^6.0.0",
