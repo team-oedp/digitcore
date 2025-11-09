@@ -51,15 +51,41 @@ import type {
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { CarrierBagContent } from "./carrier-bag-content";
 
-const uiData = {
-	nav: [
-		{ label: "Export Patterns As PDF", icon: FileDownloadIcon },
-		{ label: "Generate Link", icon: Link05Icon },
-		{ label: "Share To Socials", icon: Chatting01Icon },
-		{ label: "Download List As JSON", icon: Download05Icon },
-		{ label: "Remove All", icon: Delete02Icon },
-	],
+type NavItem = {
+	label: string;
+	icon: typeof FileDownloadIcon;
+	key: string;
 };
+
+function getNavItems(data?: CARRIER_BAG_QUERYResult): NavItem[] {
+	return [
+		{
+			label: data?.exportPdfButtonLabel || "Export Patterns As PDF",
+			icon: FileDownloadIcon,
+			key: "exportPdf",
+		},
+		{
+			label: data?.generateLinkButtonLabel || "Generate Link",
+			icon: Link05Icon,
+			key: "generateLink",
+		},
+		{
+			label: data?.shareToSocialsButtonLabel || "Share To Socials",
+			icon: Chatting01Icon,
+			key: "shareToSocials",
+		},
+		{
+			label: data?.downloadJsonButtonLabel || "Download List As JSON",
+			icon: Download05Icon,
+			key: "downloadJson",
+		},
+		{
+			label: data?.removeAllButtonLabel || "Remove All",
+			icon: Delete02Icon,
+			key: "removeAll",
+		},
+	];
+}
 
 function SidebarContentComponent(props: {
 	data?: CARRIER_BAG_QUERYResult;
@@ -68,7 +94,7 @@ function SidebarContentComponent(props: {
 	shareOpen: boolean;
 	setShareOpen: (open: boolean) => void;
 	shareUrl: string;
-	handleNavClick: (label: string) => void;
+	handleNavClick: (key: string) => void;
 }) {
 	const {
 		data,
@@ -79,17 +105,21 @@ function SidebarContentComponent(props: {
 		shareUrl,
 		handleNavClick,
 	} = props;
+	const navItems = getNavItems(data);
+	const utilitiesLabel = data?.utilitiesGroupLabel || "Utilities";
+	const applicationLabel = data?.applicationSectionLabel || "Application";
+
 	return (
 		<>
 			<SidebarContent className="flex h-full flex-col justify-start gap-4 bg-container-background">
 				<SidebarGroup className="flex flex-col">
 					<SidebarGroupContent className="flex flex-col">
 						<div>
-							<SidebarGroupLabel>Utilities</SidebarGroupLabel>
+							<SidebarGroupLabel>{utilitiesLabel}</SidebarGroupLabel>
 							<SidebarMenu>
-								{uiData.nav.map((item) => (
-									<SidebarMenuItem key={item.label}>
-										{item.label === "Export Patterns As PDF" ? (
+								{navItems.map((item) => (
+									<SidebarMenuItem key={item.key}>
+										{item.key === "exportPdf" ? (
 											<PDFPreviewModal
 												documentData={documentData}
 												disabled={itemsCount === 0}
@@ -109,7 +139,7 @@ function SidebarContentComponent(props: {
 													</button>
 												</SidebarMenuButton>
 											</PDFPreviewModal>
-										) : item.label === "Share To Socials" ? (
+										) : item.key === "shareToSocials" ? (
 											<Popover open={shareOpen} onOpenChange={setShareOpen}>
 												<PopoverTrigger asChild>
 													<SidebarMenuButton asChild>
@@ -185,7 +215,7 @@ function SidebarContentComponent(props: {
 													</div>
 												</PopoverContent>
 											</Popover>
-										) : item.label === "Generate Link" ? (
+										) : item.key === "generateLink" ? (
 											<SidebarMenuButton asChild>
 												<CopyButton
 													className="w-full"
@@ -213,7 +243,7 @@ function SidebarContentComponent(props: {
 												<button
 													type="button"
 													className="w-full"
-													onClick={() => handleNavClick(item.label)}
+													onClick={() => handleNavClick(item.key)}
 													disabled={itemsCount === 0}
 												>
 													<div className="flex items-center gap-2">
@@ -233,7 +263,7 @@ function SidebarContentComponent(props: {
 				</SidebarGroup>
 				{data?.information && (
 					<SidebarGroup>
-						<SidebarGroupLabel>Application</SidebarGroupLabel>
+						<SidebarGroupLabel>{applicationLabel}</SidebarGroupLabel>
 						<SidebarGroupAction>
 							<span className="sr-only">About</span>
 						</SidebarGroupAction>
@@ -247,13 +277,17 @@ function SidebarContentComponent(props: {
 				)}
 			</SidebarContent>
 			<SidebarFooter className="mt-auto flex flex-col items-start bg-container-background">
-				<CloseCarrierBagButton />
+				<CloseCarrierBagButton label={data?.closeCarrierBagButtonLabel} />
 			</SidebarFooter>
 		</>
 	);
 }
 
-function CloseCarrierBagButton() {
+function CloseCarrierBagButton({
+	label,
+}: {
+	label?: string | null;
+}) {
 	const router = useRouter();
 
 	return (
@@ -273,7 +307,7 @@ function CloseCarrierBagButton() {
 				router.push("/");
 			}}
 		>
-			<span className="text-xs uppercase">Close carrier bag</span>
+			<span className="text-xs uppercase">{label || "Close carrier bag"}</span>
 		</Button>
 	);
 }
@@ -364,19 +398,19 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 		URL.revokeObjectURL(href);
 	};
 
-	const handleNavClick = (label: string) => {
-		switch (label) {
-			case "Remove All":
+	const handleNavClick = (key: string) => {
+		switch (key) {
+			case "removeAll":
 				clearBag();
 				break;
-			case "Download List As JSON":
+			case "downloadJson":
 				handleDownloadJson();
 				break;
-			case "Export Patterns As PDF":
+			case "exportPdf":
 				break;
-			case "Generate Link":
+			case "generateLink":
 				break;
-			case "Share To Socials":
+			case "shareToSocials":
 				setShareOpen((o) => !o);
 				break;
 		}
@@ -452,6 +486,7 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 					</div>
 				}
 				emptyStateMessage={data?.emptyStateMessage}
+				carrierBagData={data}
 			/>
 		</SidebarProvider>
 	);

@@ -28,6 +28,7 @@ import {
 } from "~/components/ui/select";
 import { Toggle } from "~/components/ui/toggle";
 import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
+import type { CARRIER_BAG_QUERYResult } from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 
 // Stable helpers and narrow types for dereferenced or reference values
@@ -85,9 +86,11 @@ function extractUniqueFilterOptions(
 export function CarrierBagContent({
 	mobileTrigger,
 	emptyStateMessage,
+	carrierBagData,
 }: {
 	mobileTrigger?: React.ReactNode;
 	emptyStateMessage?: string | null;
+	carrierBagData?: CARRIER_BAG_QUERYResult;
 }) {
 	const items = useCarrierBagStore((state) => state.items);
 	const removePattern = useCarrierBagStore((state) => state.removePattern);
@@ -205,7 +208,12 @@ export function CarrierBagContent({
 							size="default"
 							className="mt-1 rounded-full"
 						>
-							{`${items.length} saved items`}
+							{carrierBagData?.savedItemsBadgeText
+								? carrierBagData.savedItemsBadgeText.replace(
+										"{count}",
+										items.length.toString(),
+									)
+								: `${items.length} saved items`}
 						</Badge>
 					</div>
 					{mobileTrigger && mobileTrigger}
@@ -213,7 +221,9 @@ export function CarrierBagContent({
 			</div>
 
 			<div className="flex flex-wrap items-center gap-2">
-				<h3 className="font-normal text-foreground text-sm">Filters</h3>
+				<h3 className="font-normal text-foreground text-sm">
+					{carrierBagData?.filtersLabel || "Filters"}
+				</h3>
 
 				{/* Sort by */}
 				<Select
@@ -229,8 +239,12 @@ export function CarrierBagContent({
 						<SelectValue placeholder="Sort By" />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="az">Title (A–Z)</SelectItem>
-						<SelectItem value="za">Title (Z–A)</SelectItem>
+						<SelectItem value="az">
+							{carrierBagData?.sortTitleAzLabel || "Title (A–Z)"}
+						</SelectItem>
+						<SelectItem value="za">
+							{carrierBagData?.sortTitleZaLabel || "Title (Z–A)"}
+						</SelectItem>
 					</SelectContent>
 				</Select>
 
@@ -245,7 +259,10 @@ export function CarrierBagContent({
 					aria-label="Group by Theme"
 					className="h-auto min-h-9 px-3 py-1.5 font-normal"
 				>
-					{groupByTheme ? "Grouped by Theme" : "Group by Theme"}
+					{groupByTheme
+						? carrierBagData?.groupByThemeButtonLabelActive ||
+							"Grouped by Theme"
+						: carrierBagData?.groupByThemeButtonLabel || "Group by Theme"}
 				</Toggle>
 
 				{/* Tags multi-select */}
@@ -257,12 +274,24 @@ export function CarrierBagContent({
 					}}
 				>
 					<MultiSelectTrigger aria-label="Filter by Tags">
-						<MultiSelectValue placeholder="Filter by Tags" />
+						<MultiSelectValue
+							placeholder={
+								carrierBagData?.filterByTagsPlaceholder || "Filter by Tags"
+							}
+						/>
 					</MultiSelectTrigger>
 					<MultiSelectContent
-						search={{ placeholder: "Search Tags...", emptyMessage: "No Tags" }}
+						search={{
+							placeholder:
+								carrierBagData?.filterByTagsSearchPlaceholder ||
+								"Search Tags...",
+							emptyMessage:
+								carrierBagData?.filterByTagsEmptyMessage || "No Tags",
+						}}
 					>
-						<MultiSelectGroup heading="Tags">
+						<MultiSelectGroup
+							heading={carrierBagData?.filterByTagsGroupHeading || "Tags"}
+						>
 							{availableTags.map((t) => (
 								<MultiSelectItem key={t.id} value={t.id}>
 									{t.title}
@@ -281,15 +310,28 @@ export function CarrierBagContent({
 					}}
 				>
 					<MultiSelectTrigger aria-label="Filter by Audiences">
-						<MultiSelectValue placeholder="Filter by Audiences" />
+						<MultiSelectValue
+							placeholder={
+								carrierBagData?.filterByAudiencesPlaceholder ||
+								"Filter by Audiences"
+							}
+						/>
 					</MultiSelectTrigger>
 					<MultiSelectContent
 						search={{
-							placeholder: "Search Audiences...",
-							emptyMessage: "No Audiences",
+							placeholder:
+								carrierBagData?.filterByAudiencesSearchPlaceholder ||
+								"Search Audiences...",
+							emptyMessage:
+								carrierBagData?.filterByAudiencesEmptyMessage ||
+								"No Audiences",
 						}}
 					>
-						<MultiSelectGroup heading="Audiences">
+						<MultiSelectGroup
+							heading={
+								carrierBagData?.filterByAudiencesGroupHeading || "Audiences"
+							}
+						>
 							{availableAudiences.map((a) => (
 								<MultiSelectItem key={a.id} value={a.id}>
 									{a.title}
@@ -304,7 +346,7 @@ export function CarrierBagContent({
 					className="text-muted-foreground capitalize hover:text-foreground"
 					onClick={clearAll}
 				>
-					Clear all
+					{carrierBagData?.clearAllButtonLabel || "Clear all"}
 				</Button>
 			</div>
 
