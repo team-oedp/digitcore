@@ -99,7 +99,8 @@ const mockSearchData: SEARCH_CONFIG_QUERYResult = {
 	audiencePreferencesLabel: null,
 	themePreferencesLabel: null,
 	preferencesConjunction: null,
-	enhanceHoverDescription: null,
+	enhanceHoverDescriptionPrefix: null,
+	enhanceHoverDescriptionSuffix: null,
 	commandMenuInputPlaceholder: null,
 	commandMenuLoadingText: null,
 	commandMenuEmptyState: null,
@@ -116,6 +117,9 @@ const mockSearchData: SEARCH_CONFIG_QUERYResult = {
 	commandMenuMatchInTitleTooltip: null,
 	commandMenuMatchInDescriptionTooltip: null,
 	commandMenuMatchInTagTooltip: null,
+	resultsHeaderResultText: null,
+	resultsHeaderResultsText: null,
+	resultsHeaderForText: null,
 };
 
 // Mock the pattern icons utility

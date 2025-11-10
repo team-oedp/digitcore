@@ -188,7 +188,14 @@
         },
         "optional": true
       },
-      "enhanceHoverDescription": {
+      "enhanceHoverDescriptionPrefix": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "enhanceHoverDescriptionSuffix": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -301,6 +308,27 @@
         "optional": true
       },
       "commandMenuMatchInTagTooltip": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "resultsHeaderResultText": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "resultsHeaderResultsText": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "resultsHeaderForText": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

@@ -842,7 +842,8 @@ export const SEARCH_CONFIG_QUERY = defineQuery(`
     audiencePreferencesLabel,
     themePreferencesLabel,
     preferencesConjunction,
-    enhanceHoverDescription,
+    enhanceHoverDescriptionPrefix,
+    enhanceHoverDescriptionSuffix,
     commandMenuInputPlaceholder,
     commandMenuLoadingText,
     commandMenuEmptyState,
@@ -859,6 +860,9 @@ export const SEARCH_CONFIG_QUERY = defineQuery(`
     commandMenuMatchInTitleTooltip,
     commandMenuMatchInDescriptionTooltip,
     commandMenuMatchInTagTooltip,
+    resultsHeaderResultText,
+    resultsHeaderResultsText,
+    resultsHeaderForText,
   }
 `);
 

@@ -63,13 +63,16 @@ export function EnhanceToggle({
 
 		const preferencesText = parts.join(conjunction);
 
-		const descriptionTemplate =
-			searchData?.enhanceHoverDescription ??
+		const prefix =
+			searchData?.enhanceHoverDescriptionPrefix ??
 			(isSpanish
-				? "Los resultados que coincidan con sus {preferencesText} serán priorizados."
-				: "Results that match your {preferencesText} will be prioritized.");
+				? "Los resultados que coincidan con sus"
+				: "Results that match your");
+		const suffix =
+			searchData?.enhanceHoverDescriptionSuffix ??
+			(isSpanish ? "serán priorizados." : "will be prioritized.");
 
-		return descriptionTemplate.replace("{preferencesText}", preferencesText);
+		return `${prefix} ${preferencesText} ${suffix}`;
 	};
 
 	// If user has preferences, show the enhance toggle

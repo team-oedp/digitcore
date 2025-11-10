@@ -2,18 +2,25 @@
 
 import { useSearchParams } from "next/navigation";
 import { Skeleton } from "~/components/ui/skeleton";
+import type { Language } from "~/i18n/config";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
+import type { SEARCH_CONFIG_QUERYResult } from "~/sanity/sanity.types";
 
 type SearchResultsHeaderClientProps = {
 	resultCount?: number;
 	isLoading?: boolean;
+	searchData?: SEARCH_CONFIG_QUERYResult;
+	language?: Language;
 };
 
 export function SearchResultsHeaderClient({
 	resultCount = 0,
 	isLoading = false,
+	searchData,
+	language = "en",
 }: SearchResultsHeaderClientProps) {
 	const searchParams = useSearchParams();
+	const isSpanish = language === "es";
 
 	// Parse search term from URL
 	let searchQuery = "";
@@ -51,14 +58,24 @@ export function SearchResultsHeaderClient({
 		return <Skeleton className="h-6 w-48" />;
 	}
 
+	const resultText =
+		resultCount === 1
+			? (searchData?.resultsHeaderResultText ??
+				(isSpanish ? "resultado" : "result"))
+			: (searchData?.resultsHeaderResultsText ??
+				(isSpanish ? "resultados" : "results"));
+
+	const forText =
+		searchData?.resultsHeaderForText ?? (isSpanish ? "para" : "for");
+
 	return (
 		<div className="flex items-center gap-1">
 			<span className="text-base text-muted-foreground text-prose">
-				{resultCount} {resultCount === 1 ? "result" : "results"}
+				{resultCount} {resultText}
 			</span>
 			{searchQuery && (
 				<span className="text-base text-muted-foreground text-prose">
-					for "{searchQuery}"
+					{forText} "{searchQuery}"
 				</span>
 			)}
 		</div>

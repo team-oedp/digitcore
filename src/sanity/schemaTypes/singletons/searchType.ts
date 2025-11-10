@@ -128,14 +128,14 @@ export const searchType = defineType({
 			type: "string",
 			title: "Audience Preferences Label",
 			description:
-				"Label text for audience preferences in enhance hover (e.g., 'audience preferences')",
+				"Label text that appears before audience preference values in the Enhance toggle hover card on the search page. This text prefixes the actual preference values in parentheses (e.g., 'audience preferences' in 'audience preferences (Researcher, Developer)').",
 		}),
 		defineField({
 			name: "themePreferencesLabel",
 			type: "string",
 			title: "Theme Preferences Label",
 			description:
-				"Label text for theme preferences in enhance hover (e.g., 'theme preferences')",
+				"Label text that appears before theme preference values in the Enhance toggle hover card on the search page. This text prefixes the actual preference values in parentheses (e.g., 'theme preferences' in 'theme preferences (Community Engagement)').",
 		}),
 		defineField({
 			name: "preferencesConjunction",
@@ -144,11 +144,18 @@ export const searchType = defineType({
 			description: "Conjunction word to join preferences (e.g., 'and' or 'y')",
 		}),
 		defineField({
-			name: "enhanceHoverDescription",
+			name: "enhanceHoverDescriptionPrefix",
 			type: "string",
-			title: "Enhance Hover Description",
+			title: "Enhance Hover Description Prefix",
 			description:
-				"Description text for enhance hover card. Use {preferencesText} as placeholder (e.g., 'Results that match your {preferencesText} will be prioritized.')",
+				"Text that appears before the preferences in the enhance hover description (e.g., 'Results that match your')",
+		}),
+		defineField({
+			name: "enhanceHoverDescriptionSuffix",
+			type: "string",
+			title: "Enhance Hover Description Suffix",
+			description:
+				"Text that appears after the preferences in the enhance hover description (e.g., 'will be prioritized.')",
 		}),
 		defineField({
 			name: "commandMenuInputPlaceholder",
@@ -207,7 +214,7 @@ export const searchType = defineType({
 			type: "string",
 			title: "Command Menu Status Text",
 			description:
-				"Status text template showing current page. Use {page} as placeholder (e.g., 'You are on the {page} page')",
+				"Status text prefix for current page. The page name will be automatically appended (e.g., 'You are on the')",
 		}),
 		defineField({
 			name: "commandMenuNavigationLabel",
@@ -228,14 +235,14 @@ export const searchType = defineType({
 			type: "string",
 			title: "Command Menu 'In Pattern' Text",
 			description:
-				"Text template showing pattern context. Use {pattern} as placeholder (e.g., 'in {pattern}')",
+				"Text template showing pattern context. The pattern name will be automatically inserted (e.g., 'in')",
 		}),
 		defineField({
 			name: "commandMenuPatternCountText",
 			type: "string",
 			title: "Command Menu Pattern Count Text",
 			description:
-				"Text template for pattern count. Use {count} as placeholder (e.g., '{count} pattern' or '{count} patterns')",
+				"Text template for pattern count. The count number and plural form will be automatically inserted (e.g., 'pattern' or 'patterns')",
 		}),
 		defineField({
 			name: "commandMenuMatchInTitleTooltip",
@@ -257,6 +264,24 @@ export const searchType = defineType({
 			title: "Command Menu Match In Tag Tooltip",
 			description:
 				"Tooltip text for match indicator in tag name (e.g., 'Match in tag name')",
+		}),
+		defineField({
+			name: "resultsHeaderResultText",
+			type: "string",
+			title: "Results Header Result Text (Singular)",
+			description: "Text for singular result count (e.g., 'result')",
+		}),
+		defineField({
+			name: "resultsHeaderResultsText",
+			type: "string",
+			title: "Results Header Results Text (Plural)",
+			description: "Text for plural result count (e.g., 'results')",
+		}),
+		defineField({
+			name: "resultsHeaderForText",
+			type: "string",
+			title: "Results Header 'For' Text",
+			description: "Text that appears before the search query (e.g., 'for')",
 		}),
 	],
 	preview: {

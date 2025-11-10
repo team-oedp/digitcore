@@ -223,11 +223,8 @@ export function CommandMenu({ searchData }: CommandMenuProps) {
 	};
 	const getTagsHeading = () => getText("commandMenuTagsHeading", "Tags");
 	const getStatusText = (page: string) => {
-		const template = getText(
-			"commandMenuStatusText",
-			"You are on the {page} page",
-		);
-		return template.replace("{page}", page);
+		const template = getText("commandMenuStatusText", "You are on the");
+		return `${template} ${page} page`;
 	};
 	const getNavigationLabel = () => {
 		const fallback = language === "es" ? "Navegación" : "Navigation";
@@ -238,18 +235,13 @@ export function CommandMenu({ searchData }: CommandMenuProps) {
 		return getText("commandMenuOpenResultLabel", fallback);
 	};
 	const getInPatternText = (pattern: string) => {
-		const template = getText("commandMenuInPatternText", "in {pattern}");
-		return template.replace("{pattern}", pattern);
+		const template = getText("commandMenuInPatternText", "in");
+		return `${template} ${pattern}`;
 	};
 	const getPatternCountText = (count: number) => {
-		const template = getText(
-			"commandMenuPatternCountText",
-			"{count} pattern{plural}",
-		);
+		const baseText = getText("commandMenuPatternCountText", "pattern");
 		const plural = count !== 1 ? "s" : "";
-		return template
-			.replace("{count}", count.toString())
-			.replace("{plural}", plural);
+		return `${count} ${baseText}${plural}`;
 	};
 	const getMatchInTitleTooltip = () =>
 		getText("commandMenuMatchInTitleTooltip", "Match in title");
