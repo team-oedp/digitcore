@@ -202,7 +202,9 @@ export function CarrierBagContent({
 			<div className="sticky top-0 z-10 pt-2 pb-2">
 				<div className="flex items-start justify-between gap-6">
 					<div className="flex-1">
-						<h1 className="pb-1 text-page-heading">Carrier Bag</h1>
+						<h1 className="pb-1 text-page-heading">
+							{carrierBagData?.title || "Carrier Bag"}
+						</h1>
 						<Badge
 							variant="outline"
 							size="default"

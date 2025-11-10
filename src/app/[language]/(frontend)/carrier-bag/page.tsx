@@ -5,13 +5,23 @@ import { CARRIER_BAG_QUERY, SITE_SETTINGS_QUERY } from "~/sanity/lib/queries";
 import type { LanguagePageProps } from "~/types/page-props";
 import { CarrierBagPage } from "./carrier-bag-page";
 
-export async function generateMetadata(): Promise<Metadata> {
-	const site = await sanityFetch({
-		query: SITE_SETTINGS_QUERY,
-		revalidate: 3600,
-	});
+export async function generateMetadata({
+	params,
+}: LanguagePageProps): Promise<Metadata> {
+	const { language } = await params;
+	const [site, carrierBag] = await Promise.all([
+		sanityFetch({
+			query: SITE_SETTINGS_QUERY,
+			revalidate: 3600,
+		}),
+		sanityFetch({
+			query: CARRIER_BAG_QUERY,
+			params: { language },
+			revalidate: 3600,
+		}),
+	]);
 	const siteUrl = site?.url ?? "https://digitcore.org";
-	const title = "Carrier Bag";
+	const title = carrierBag?.title ?? "Carrier Bag";
 	const description = site?.seoDescription ?? site?.description;
 	const canonical = buildAbsoluteUrl(siteUrl, "/carrier-bag");
 	return {

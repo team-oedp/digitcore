@@ -124,7 +124,9 @@ export function CarrierBagSidebar({
 			<SidebarHeader className="bg-container-background">
 				<div className="flex items-start justify-between p-2">
 					<div className="flex flex-col">
-						<h3 className="text-heading-compact">Carrier Bag</h3>
+						<h3 className="text-heading-compact">
+							{carrierBagData?.title || "Carrier Bag"}
+						</h3>
 						{/* Background updates only - no loading UI to avoid confusion */}
 					</div>
 					<div className="flex items-center gap-1">

@@ -2875,6 +2875,20 @@
           "type": "string"
         },
         "optional": true
+      },
+      "saveToCarrierBagButtonLabel": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "savedToCarrierBagButtonLabel": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
       }
     }
   },
