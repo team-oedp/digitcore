@@ -13,13 +13,15 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
 import { Icon } from "../shared/icon";
 
 type ModeToggleProps = {
 	className?: string;
+	headerData?: HEADER_QUERYResult;
 };
 
-export function ModeToggle({ className }: ModeToggleProps = {}) {
+export function ModeToggle({ className, headerData }: ModeToggleProps = {}) {
 	const { setTheme } = useTheme();
 	return (
 		<div className={className}>
@@ -27,7 +29,7 @@ export function ModeToggle({ className }: ModeToggleProps = {}) {
 				<DropdownMenuTrigger asChild>
 					<button
 						type="button"
-						aria-label="Select theme"
+						aria-label={headerData?.modeToggleButtonLabel ?? "Select theme"}
 						className="group relative flex h-7 items-center rounded-md px-2 py-0.5 text-muted-foreground outline-none transition-colors duration-150 ease-linear hover:text-foreground"
 					>
 						{/* Render both icons and rely on CSS so SSR matches client */}
@@ -43,7 +45,9 @@ export function ModeToggle({ className }: ModeToggleProps = {}) {
 							aria-hidden="true"
 							className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
 						/>
-						<span className="sr-only">Toggle theme</span>
+						<span className="sr-only">
+							{headerData?.modeToggleSrOnlyLabel ?? "Toggle theme"}
+						</span>
 					</button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="min-w-32" align="end">
@@ -54,7 +58,7 @@ export function ModeToggle({ className }: ModeToggleProps = {}) {
 							className="opacity-60"
 							aria-hidden="true"
 						/>
-						<span>Light</span>
+						<span>{headerData?.themeLightLabel ?? "Light"}</span>
 					</DropdownMenuItem>
 					<DropdownMenuItem onClick={() => setTheme("dark")}>
 						<Icon
@@ -63,7 +67,7 @@ export function ModeToggle({ className }: ModeToggleProps = {}) {
 							className="opacity-60"
 							aria-hidden="true"
 						/>
-						<span>Dark</span>
+						<span>{headerData?.themeDarkLabel ?? "Dark"}</span>
 					</DropdownMenuItem>
 					<DropdownMenuItem onClick={() => setTheme("system")}>
 						<Icon
@@ -72,7 +76,7 @@ export function ModeToggle({ className }: ModeToggleProps = {}) {
 							className="opacity-60"
 							aria-hidden="true"
 						/>
-						<span>System</span>
+						<span>{headerData?.themeSystemLabel ?? "System"}</span>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>

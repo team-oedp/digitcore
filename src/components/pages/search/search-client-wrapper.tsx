@@ -304,6 +304,8 @@ export function SearchClientWrapper({
 			<SearchResultsHeaderClient
 				resultCount={searchResult?.totalCount || 0}
 				isLoading={isLoading && hasSearchCriteria}
+				searchData={searchData}
+				language={language}
 			/>
 
 			{!hasSearchCriteria ? (

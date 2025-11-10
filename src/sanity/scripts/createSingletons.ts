@@ -1,24 +1,24 @@
 import { getCliClient } from "sanity/cli";
 
 /**
- * WARNING: DANGEROUS SCRIPT - READ CAREFULLY
+ * SAFE SCRIPT - Creates singleton documents for internationalization
  *
- * This script uses createOrReplace() which will DELETE ALL EXISTING CONTENT
- * in the singleton documents and replace them with empty documents.
+ * This script uses create() which will ONLY create documents if they don't exist.
+ * It will automatically abort if any of the target documents already exist.
  *
- * ONLY RUN THIS SCRIPT IF:
- * 1. You are setting up internationalization for the FIRST TIME
- * 2. You have NO existing content in these singletons
- * 3. You have taken a backup of your dataset
+ * SAFETY FEATURES:
+ * - Checks for existing documents before creating
+ * - Aborts if documents already exist (prevents overwriting)
+ * - Uses create() not createOrReplace() (safer)
  *
  * BEFORE RUNNING:
- * 1. BACKUP YOUR DATASET: `npx sanity@latest dataset export`
+ * 1. BACKUP YOUR DATASET: `npx sanity@latest dataset export` (recommended)
  * 2. Uncomment ONLY the singletons you want to create
- * 3. Make sure those singletons do NOT have existing content
- * 4. Run: npx sanity@latest exec ./scripts/createSingletons.ts --with-user-token
+ * 3. Run: npx sanity@latest exec ./scripts/createSingletons.ts --with-user-token
  *
- * If singletons already exist with content, this will DESTROY that content.
- * You have been warned.
+ * The script will create:
+ * - Document for each language (e.g., patternUtilities-en, patternUtilities-es)
+ * - Translation metadata document (e.g., patternUtilities-translation-metadata)
  */
 
 type Singleton = {
@@ -28,9 +28,9 @@ type Singleton = {
 };
 
 // Uncomment ONLY the singletons you want to create
-// If a singleton already has content, DO NOT uncomment it or you will lose that content
+// The script will check if they exist and abort if they do (safe!)
 const SINGLETONS: Singleton[] = [
-	// WARNING: Uncommenting existing singletons will DELETE their content
+	// Existing singletons - DO NOT uncomment unless you want to create new ones
 	// {
 	// 	id: "carrierBag",
 	// 	_type: "carrierBag",
@@ -48,6 +48,12 @@ const SINGLETONS: Singleton[] = [
 	// 	id: "siteSettings",
 	// 	_type: "siteSettings",
 	// 	title: "Site Settings",
+	// },
+	// New singleton: Pattern Utilities
+	// {
+	// 	id: "patternUtilities",
+	// 	_type: "patternUtilities",
+	// 	title: "Pattern Utilities",
 	// },
 ];
 
@@ -87,18 +93,16 @@ async function createSingletons() {
 	const docIds = SINGLETONS.flatMap((s) =>
 		LANGUAGES.map((l) => `${s.id}-${l.id}`),
 	);
-	const existingDocs = await client.fetch(
-		`*[_id in $ids]{_id, _type, "hasContent": count(*[_id == ^._id][0]{*}[0...100]) > 3}`,
-		{ ids: docIds },
-	);
+	const existingDocs = await client.fetch("*[_id in $ids]{_id, _type}", {
+		ids: docIds,
+	});
 
 	if (existingDocs.length > 0) {
 		console.log(
 			"\n[ERROR] The following documents ALREADY EXIST in your dataset:",
 		);
 		for (const doc of existingDocs) {
-			const contentWarning = doc.hasContent ? " [HAS CONTENT]" : "";
-			console.log(`   - ${doc._id} (${doc._type})${contentWarning}`);
+			console.log(`   - ${doc._id} (${doc._type})`);
 		}
 		console.log(
 			"\nCannot create documents that already exist. Use Sanity Studio to manage them.",

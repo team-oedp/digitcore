@@ -14,9 +14,11 @@ import {
 import { type Language, i18n } from "~/i18n/config";
 import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
+import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
 
 type LanguageSelectorProps = {
 	className?: string;
+	headerData?: HEADER_QUERYResult;
 };
 
 type LanguageOption = {
@@ -29,7 +31,10 @@ const LANGUAGE_OPTIONS: LanguageOption[] = i18n.languages.map((language) => ({
 	label: language.title,
 }));
 
-export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
+export function LanguageSelector({
+	className,
+	headerData,
+}: LanguageSelectorProps = {}) {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
@@ -90,6 +95,9 @@ export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
 				<DropdownMenuTrigger asChild>
 					<button
 						type="button"
+						aria-label={
+							headerData?.languageSelectorButtonLabel ?? "Select language"
+						}
 						className={cn(
 							"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear",
 						)}
@@ -108,7 +116,9 @@ export function LanguageSelector({ className }: LanguageSelectorProps = {}) {
 								strokeWidth={1.5}
 							/>
 						</span>
-						<span className="sr-only">Select language</span>
+						<span className="sr-only">
+							{headerData?.languageSelectorButtonLabel ?? "Select language"}
+						</span>
 					</button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end" className="min-w-32">

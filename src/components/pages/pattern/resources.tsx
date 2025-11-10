@@ -1,9 +1,13 @@
+"use client";
+
 import {
 	ArrowRight02Icon,
 	ChartRelationshipIcon,
+	Share04Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
+import Link from "next/link";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { Badge } from "~/components/ui/badge";
 import { ptToPlainText } from "~/lib/portable-text-utils";
@@ -38,7 +42,6 @@ function SolutionBadge({ solution, index }: SolutionBadgeProps) {
 
 	return (
 		<SolutionPreview
-			key={solution._id || index}
 			solutionNumber={String(index + 1)}
 			solutionTitle={title}
 			solutionDescription={description}
@@ -88,11 +91,14 @@ export function Resources({ resources, patternUtilities }: ResourcesProps) {
 
 			<div className="flex flex-col">
 				{resources.map((resource, index) => {
-					const solutions = resource.solutions;
-					const hasSolutions = solutions && solutions.length > 0;
+					const solutions =
+						resource.solutions?.filter(
+							(s) => Boolean(s) && s?._id && s?._type === "solution",
+						) ?? [];
+					const hasSolutions = solutions.length > 0;
 					const isFirst = index === 0;
 					const isLast = index === resources.length - 1;
-					const solutionCount = solutions?.length || 0;
+					const solutionCount = solutions.length;
 
 					return (
 						<div
@@ -117,6 +123,22 @@ export function Resources({ resources, patternUtilities }: ResourcesProps) {
 											data-testid="portable-text"
 										/>
 									)}
+									{resource.mainLink && (
+										<Link
+											href={resource.mainLink}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="inline-flex items-center gap-1.5 text-body-muted transition-colors hover:text-primary"
+										>
+											<span>{resource.title}</span>
+											<HugeiconsIcon
+												icon={Share04Icon}
+												size={16}
+												strokeWidth={1.5}
+												className="shrink-0"
+											/>
+										</Link>
+									)}
 								</div>
 
 								{hasSolutions && (
@@ -137,11 +159,9 @@ export function Resources({ resources, patternUtilities }: ResourcesProps) {
 										</div>
 										<div className="flex flex-wrap gap-1.5 md:gap-2.5">
 											{solutions.map((solution, sIdx) => (
-												<SolutionBadge
-													key={solution._id || sIdx}
-													solution={solution}
-													index={sIdx}
-												/>
+												<div key={solution._id || sIdx}>
+													<SolutionBadge solution={solution} index={sIdx} />
+												</div>
 											))}
 										</div>
 									</div>

@@ -39,7 +39,29 @@ export const PATTERNS_QUERY =
     solutions[]->,
     resources[]->{
       ...,
-      solutions[]->{...},
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
+      solutions[]->{
+        _id,
+        _type,
+        title,
+        description[]{
+          ...,
+          markDefs[]{
+            ...,
+            "page": page->slug.current,
+            "pattern": pattern->slug.current,
+            "glossary": glossary->{_id, title}
+          }
+        }
+      },
     },
   }`);
 
@@ -100,8 +122,21 @@ export const PATTERN_QUERY =
           "glossary": glossary->{_id, title}
         }
       },
-      links,
-      solutions[]->{...},
+      mainLink,
+      solutions[]->{
+        _id,
+        _type,
+        title,
+        description[]{
+          ...,
+          markDefs[]{
+            ...,
+            "page": page->slug.current,
+            "pattern": pattern->slug.current,
+            "glossary": glossary->{_id, title}
+          }
+        }
+      },
     },
   }`);
 
@@ -173,7 +208,7 @@ export const RESOURCES_BY_IDS_QUERY =
         "glossary": glossary->{_id, title}
       }
     },
-    links,
+    mainLink,
     "solutionIds": solutions[]._ref
   }`);
 
@@ -309,7 +344,15 @@ export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
     resources[]->{
       _id,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       solutions[]->{
         _id,
         title
@@ -343,7 +386,29 @@ export const PATTERNS_GROUPED_BY_THEME_QUERY = defineQuery(`
       solutions[]->,
       resources[]->{
         ...,
-        solutions[]->{...},
+        description[]{
+          ...,
+          markDefs[]{
+            ...,
+            "page": page->slug.current,
+            "pattern": pattern->slug.current,
+            "glossary": glossary->{_id, title}
+          }
+        },
+        solutions[]->{
+          _id,
+          _type,
+          title,
+          description[]{
+            ...,
+            markDefs[]{
+              ...,
+              "page": page->slug.current,
+              "pattern": pattern->slug.current,
+              "glossary": glossary->{_id, title}
+            }
+          }
+        },
       },
     }
   }[count(patterns) > 0]
@@ -406,7 +471,15 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
     resources[]->{
       _id,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       solutions[]->{
         _id,
         title
@@ -477,7 +550,15 @@ export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
     resources[]->{
       _id,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       solutions[]->{
         _id,
         title
@@ -581,7 +662,15 @@ export const RESOURCE_SEARCH_QUERY = defineQuery(`
     _score,
     title,
     language,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
+      }
+    },
     links,
     solutions[]->{
       _id,
@@ -670,7 +759,15 @@ export const PATTERN_SIMPLE_SEARCH_QUERY = defineQuery(`
     resources[]->{
       _id,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       solutions[]->{
         _id,
         title
@@ -719,7 +816,15 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
     resources[]->{
       _id,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       solutions[]->{
         _id,
         title
@@ -842,7 +947,27 @@ export const SEARCH_CONFIG_QUERY = defineQuery(`
     audiencePreferencesLabel,
     themePreferencesLabel,
     preferencesConjunction,
-    enhanceHoverDescription,
+    enhanceHoverDescriptionPrefix,
+    enhanceHoverDescriptionSuffix,
+    commandMenuInputPlaceholder,
+    commandMenuLoadingText,
+    commandMenuEmptyState,
+    commandMenuOnThisPageHeading,
+    commandMenuPatternsHeading,
+    commandMenuSolutionsHeading,
+    commandMenuResourcesHeading,
+    commandMenuTagsHeading,
+    commandMenuStatusText,
+    commandMenuNavigationLabel,
+    commandMenuOpenResultLabel,
+    commandMenuInPatternText,
+    commandMenuPatternCountText,
+    commandMenuMatchInTitleTooltip,
+    commandMenuMatchInDescriptionTooltip,
+    commandMenuMatchInTagTooltip,
+    resultsHeaderResultText,
+    resultsHeaderResultsText,
+    resultsHeaderForText,
   }
 `);
 
@@ -961,7 +1086,15 @@ export const PATTERNS_BY_SLUGS_QUERY = defineQuery(`
       _id,
       _type,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       links,
       solutions[]->{ _id, title }
     }
@@ -1368,6 +1501,16 @@ export const HEADER_QUERY = defineQuery(`
         "slug": slug.current
       }
     },
+    languageSelectorButtonLabel,
+    fontToggleButtonLabel,
+    fontToggleSrOnlyLabel,
+    fontSerifLabel,
+    fontSansSerifLabel,
+    modeToggleButtonLabel,
+    modeToggleSrOnlyLabel,
+    themeLightLabel,
+    themeDarkLabel,
+    themeSystemLabel,
   }
 `);
 

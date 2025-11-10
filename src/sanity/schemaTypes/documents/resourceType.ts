@@ -66,10 +66,64 @@ export const resourceType = defineType({
 								title: "Link",
 								fields: [
 									defineField({
+										name: "linkType",
+										title: "Link Type",
+										type: "string",
+										initialValue: "href",
+										options: {
+											list: [
+												{ title: "URL", value: "href" },
+												{ title: "Page", value: "page" },
+												{ title: "Pattern", value: "pattern" },
+												{ title: "Orientation", value: "onboarding" },
+											],
+											layout: "radio",
+										},
+									}),
+									defineField({
 										name: "href",
 										title: "URL",
 										type: "url",
-										validation: (Rule) => Rule.required(),
+										hidden: ({ parent }) =>
+											parent?.linkType !== "href" && parent?.linkType != null,
+										validation: (Rule) =>
+											Rule.custom((value, context) => {
+												const parent = context.parent as { linkType?: string };
+												if (parent?.linkType === "href" && !value) {
+													return "URL is required when Link Type is URL";
+												}
+												return true;
+											}),
+									}),
+									defineField({
+										name: "page",
+										title: "Page",
+										type: "reference",
+										to: [{ type: "page" }],
+										hidden: ({ parent }) => parent?.linkType !== "page",
+										validation: (Rule) =>
+											Rule.custom((value, context) => {
+												const parent = context.parent as { linkType?: string };
+												if (parent?.linkType === "page" && !value) {
+													return "Page reference is required when Link Type is Page";
+												}
+												return true;
+											}),
+									}),
+									defineField({
+										name: "pattern",
+										title: "Pattern",
+										type: "reference",
+										to: [{ type: "pattern" }],
+										hidden: ({ parent }) => parent?.linkType !== "pattern",
+										validation: (Rule) =>
+											Rule.custom((value, context) => {
+												const parent = context.parent as { linkType?: string };
+												if (parent?.linkType === "pattern" && !value) {
+													return "Pattern reference is required when Link Type is a Pattern";
+												}
+												return true;
+											}),
 									}),
 									defineField({
 										name: "openInNewTab",

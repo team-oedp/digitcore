@@ -236,7 +236,7 @@ export function SuggestSolutionModal({
 							</Label>
 							<Input
 								id={`${baseId}-nameAndAffiliation`}
-								className="focus-visible:ring-transparent"
+								className="text-sm focus-visible:ring-transparent"
 								placeholder={nameAndAffiliationPlaceholder}
 								value={formData.nameAndAffiliation}
 								onChange={(e) =>
@@ -255,7 +255,7 @@ export function SuggestSolutionModal({
 							<Input
 								id={`${baseId}-email`}
 								type="email"
-								className="focus-visible:ring-transparent"
+								className="text-sm focus-visible:ring-transparent"
 								placeholder={emailPlaceholder}
 								value={formData.email}
 								onChange={(e) => handleInputChange("email", e.target.value)}
