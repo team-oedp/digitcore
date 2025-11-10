@@ -14,12 +14,8 @@ function createMockSolution(id: string, title: string): SolutionFromQuery {
 	return {
 		_id: id,
 		_type: "solution",
-		_createdAt: "2021-01-01T00:00:00Z",
-		_updatedAt: "2021-01-01T00:00:00Z",
-		_rev: "rev1",
 		title,
-		description: undefined,
-		audiences: undefined,
+		description: null,
 	};
 }
 
@@ -54,7 +50,7 @@ function createMockResource(
 					},
 				]
 			: null,
-		links: null,
+		mainLink: null,
 		solutions: solutions || null,
 	};
 }

@@ -1,9 +1,11 @@
 import {
 	ArrowRight02Icon,
 	ChartRelationshipIcon,
+	Share04Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
+import Link from "next/link";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { Badge } from "~/components/ui/badge";
 import { ptToPlainText } from "~/lib/portable-text-utils";
@@ -88,11 +90,11 @@ export function Resources({ resources, patternUtilities }: ResourcesProps) {
 
 			<div className="flex flex-col">
 				{resources.map((resource, index) => {
-					const solutions = resource.solutions;
-					const hasSolutions = solutions && solutions.length > 0;
+					const solutions = resource.solutions?.filter(Boolean) ?? [];
+					const hasSolutions = solutions.length > 0;
 					const isFirst = index === 0;
 					const isLast = index === resources.length - 1;
-					const solutionCount = solutions?.length || 0;
+					const solutionCount = solutions.length;
 
 					return (
 						<div
@@ -116,6 +118,22 @@ export function Resources({ resources, patternUtilities }: ResourcesProps) {
 											className="text-body-muted"
 											data-testid="portable-text"
 										/>
+									)}
+									{resource.mainLink && (
+										<Link
+											href={resource.mainLink}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="inline-flex items-center gap-1.5 text-body-muted transition-colors hover:text-primary"
+										>
+											<span>{resource.title}</span>
+											<HugeiconsIcon
+												icon={Share04Icon}
+												size={16}
+												strokeWidth={1.5}
+												className="shrink-0"
+											/>
+										</Link>
 									)}
 								</div>
 

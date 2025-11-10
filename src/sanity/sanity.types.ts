@@ -1360,7 +1360,7 @@ export type SITE_SETTINGS_QUERYResult = {
   } | null
 } | null
 // Variable: PATTERNS_QUERY
-// Query: *[_type == "pattern" && defined(slug.current) && language == $language][]{    _id,    _type,    title,    language,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "descriptionPlainText": pt::text(description),    "slug": slug.current,    tags[]->,    audiences[]->,    theme->{      _id,      title,      description    },    solutions[]->,    resources[]->{      ...,      solutions[]->{...},    },  }
+// Query: *[_type == "pattern" && defined(slug.current) && language == $language][]{    _id,    _type,    title,    language,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "descriptionPlainText": pt::text(description),    "slug": slug.current,    tags[]->,    audiences[]->,    theme->{      _id,      title,      description    },    solutions[]->,    resources[]->{      ...,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      solutions[]->{        _id,        _type,        title,        description[]{          ...,          markDefs[]{            ...,            "page": page->slug.current,            "pattern": pattern->slug.current,            "glossary": glossary->{_id, title}          }        }      },    },  }
 export type PATTERNS_QUERYResult = Array<{
   _id: string
   _type: 'pattern'
@@ -1516,7 +1516,7 @@ export type PATTERNS_QUERYResult = Array<{
     _rev: string
     language?: string
     title?: string
-    description?: Array<{
+    description: Array<{
       children?: Array<{
         marks?: Array<string>
         text?: string
@@ -1525,50 +1525,37 @@ export type PATTERNS_QUERYResult = Array<{
       }>
       style?: 'normal'
       listItem?: never
-      markDefs?: Array<
+      markDefs: Array<
         | {
-            glossary?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'glossary'
-            }
+            glossary: {
+              _id: string
+              title: string | null
+            } | null
             _type: 'glossaryTerm'
             _key: string
+            page: null
+            pattern: null
           }
         | {
             linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
-            page?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'page'
-            }
-            pattern?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'pattern'
-            }
+            page: string | null
+            pattern: string | null
             openInNewTab?: boolean
             _type: 'link'
             _key: string
+            glossary: null
           }
-      >
+      > | null
       level?: number
       _type: 'block'
       _key: string
-    }>
+    }> | null
     solutions: Array<{
       _id: string
       _type: 'solution'
-      _createdAt: string
-      _updatedAt: string
-      _rev: string
-      language?: string
-      title?: string
-      description?: Array<{
+      title: string | null
+      description: Array<{
         children?: Array<{
           marks?: Array<string>
           text?: string
@@ -1577,41 +1564,37 @@ export type PATTERNS_QUERYResult = Array<{
         }>
         style?: 'normal'
         listItem?: never
-        markDefs?: Array<
+        markDefs: Array<
           | {
-              glossary?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'glossary'
-              }
+              glossary: {
+                _id: string
+                title: string | null
+              } | null
               _type: 'glossaryTerm'
               _key: string
+              page: null
+              pattern: null
             }
           | {
               href?: string
               openInNewTab?: boolean
               _type: 'link'
               _key: string
+              page: null
+              pattern: null
+              glossary: null
             }
-        >
+        > | null
         level?: number
         _type: 'block'
         _key: string
-      }>
-      audiences?: Array<{
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        _key: string
-        [internalGroqTypeReferenceTo]?: 'audience'
-      }>
+      }> | null
     }> | null
     mainLink?: string
   }> | null
 }>
 // Variable: PATTERN_QUERY
-// Query: *[_type == "pattern" && slug.current == $slug && language == $language][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "descriptionPlainText": pt::text(description),    "slug": slug.current,    tags[]->{...},	    audiences[]->{...},	    theme->{...},    solutions[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      audiences[]->{ _id, title }    },    resources[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      links,      solutions[]->{...},    },  }
+// Query: *[_type == "pattern" && slug.current == $slug && language == $language][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "descriptionPlainText": pt::text(description),    "slug": slug.current,    tags[]->{...},	    audiences[]->{...},	    theme->{...},    solutions[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      audiences[]->{ _id, title }    },    resources[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      mainLink,      solutions[]->{        _id,        _type,        title,        description[]{          ...,          markDefs[]{            ...,            "page": page->slug.current,            "pattern": pattern->slug.current,            "glossary": glossary->{_id, title}          }        }      },    },  }
 export type PATTERN_QUERYResult = {
   _id: string
   _type: 'pattern'
@@ -1808,16 +1791,12 @@ export type PATTERN_QUERYResult = {
       _type: 'block'
       _key: string
     }> | null
-    links: null
+    mainLink: string | null
     solutions: Array<{
       _id: string
       _type: 'solution'
-      _createdAt: string
-      _updatedAt: string
-      _rev: string
-      language?: string
-      title?: string
-      description?: Array<{
+      title: string | null
+      description: Array<{
         children?: Array<{
           marks?: Array<string>
           text?: string
@@ -1826,35 +1805,31 @@ export type PATTERN_QUERYResult = {
         }>
         style?: 'normal'
         listItem?: never
-        markDefs?: Array<
+        markDefs: Array<
           | {
-              glossary?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'glossary'
-              }
+              glossary: {
+                _id: string
+                title: string | null
+              } | null
               _type: 'glossaryTerm'
               _key: string
+              page: null
+              pattern: null
             }
           | {
               href?: string
               openInNewTab?: boolean
               _type: 'link'
               _key: string
+              page: null
+              pattern: null
+              glossary: null
             }
-        >
+        > | null
         level?: number
         _type: 'block'
         _key: string
-      }>
-      audiences?: Array<{
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        _key: string
-        [internalGroqTypeReferenceTo]?: 'audience'
-      }>
+      }> | null
     }> | null
   }> | null
 } | null
@@ -1976,7 +1951,7 @@ export type SOLUTIONS_BY_IDS_QUERYResult = Array<{
   }> | null
 }>
 // Variable: RESOURCES_BY_IDS_QUERY
-// Query: *[_type == "resource" && _id in $ids && language == $language]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    links,    "solutionIds": solutions[]._ref  }
+// Query: *[_type == "resource" && _id in $ids && language == $language]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    mainLink,    "solutionIds": solutions[]._ref  }
 export type RESOURCES_BY_IDS_QUERYResult = Array<{
   _id: string
   _type: 'resource'
@@ -2020,7 +1995,7 @@ export type RESOURCES_BY_IDS_QUERYResult = Array<{
     _type: 'block'
     _key: string
   }> | null
-  links: null
+  mainLink: string | null
   solutionIds: Array<string> | null
 }>
 // Variable: TAGS_BY_IDS_QUERY
@@ -2222,7 +2197,7 @@ export type SEARCH_PAGE_QUERYResult = {
   descriptionPlainText: string
 } | null
 // Variable: PATTERNS_WITH_THEMES_QUERY
-// Query: *[_type == "pattern" && defined(slug.current) && language == $language][]{    _id,    _type,    title,    language,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solutions[]->{        _id,        title      }    },  }
+// Query: *[_type == "pattern" && defined(slug.current) && language == $language][]{    _id,    _type,    title,    language,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      solutions[]->{        _id,        title      }    },  }
 export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
   _id: string
   _type: 'pattern'
@@ -2350,37 +2325,28 @@ export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
       }>
       style?: 'normal'
       listItem?: never
-      markDefs?: Array<
+      markDefs: Array<
         | {
-            glossary?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'glossary'
-            }
+            glossary: {
+              _id: string
+              title: string | null
+            } | null
             _type: 'glossaryTerm'
             _key: string
+            page: null
+            pattern: null
           }
         | {
             linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
-            page?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'page'
-            }
-            pattern?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'pattern'
-            }
+            page: string | null
+            pattern: string | null
             openInNewTab?: boolean
             _type: 'link'
             _key: string
+            glossary: null
           }
-      >
+      > | null
       level?: number
       _type: 'block'
       _key: string
@@ -2392,7 +2358,7 @@ export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
   }> | null
 }>
 // Variable: PATTERNS_GROUPED_BY_THEME_QUERY
-// Query: *[_type == "theme" && defined(_id) && language == $language] | order(title asc) {    _id,    title,    language,    description,    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id) && language == $language] {      _id,      _type,      title,      language,      description,      "slug": slug.current,      tags[]->,      audiences[]->{        _id,        title      },      theme->{        _id,        title,        description      },      solutions[]->,      resources[]->{        ...,        solutions[]->{...},      },    }  }[count(patterns) > 0]
+// Query: *[_type == "theme" && defined(_id) && language == $language] | order(title asc) {    _id,    title,    language,    description,    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id) && language == $language] {      _id,      _type,      title,      language,      description,      "slug": slug.current,      tags[]->,      audiences[]->{        _id,        title      },      theme->{        _id,        title,        description      },      solutions[]->,      resources[]->{        ...,        description[]{          ...,          markDefs[]{            ...,            "page": page->slug.current,            "pattern": pattern->slug.current,            "glossary": glossary->{_id, title}          }        },        solutions[]->{          _id,          _type,          title,          description[]{            ...,            markDefs[]{              ...,              "page": page->slug.current,              "pattern": pattern->slug.current,              "glossary": glossary->{_id, title}            }          }        },      },    }  }[count(patterns) > 0]
 export type PATTERNS_GROUPED_BY_THEME_QUERYResult = Array<{
   _id: string
   title: string | null
@@ -2555,7 +2521,7 @@ export type PATTERNS_GROUPED_BY_THEME_QUERYResult = Array<{
       _rev: string
       language?: string
       title?: string
-      description?: Array<{
+      description: Array<{
         children?: Array<{
           marks?: Array<string>
           text?: string
@@ -2564,50 +2530,37 @@ export type PATTERNS_GROUPED_BY_THEME_QUERYResult = Array<{
         }>
         style?: 'normal'
         listItem?: never
-        markDefs?: Array<
+        markDefs: Array<
           | {
-              glossary?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'glossary'
-              }
+              glossary: {
+                _id: string
+                title: string | null
+              } | null
               _type: 'glossaryTerm'
               _key: string
+              page: null
+              pattern: null
             }
           | {
               linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
               href?: string
-              page?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'page'
-              }
-              pattern?: {
-                _ref: string
-                _type: 'reference'
-                _weak?: boolean
-                [internalGroqTypeReferenceTo]?: 'pattern'
-              }
+              page: string | null
+              pattern: string | null
               openInNewTab?: boolean
               _type: 'link'
               _key: string
+              glossary: null
             }
-        >
+        > | null
         level?: number
         _type: 'block'
         _key: string
-      }>
+      }> | null
       solutions: Array<{
         _id: string
         _type: 'solution'
-        _createdAt: string
-        _updatedAt: string
-        _rev: string
-        language?: string
-        title?: string
-        description?: Array<{
+        title: string | null
+        description: Array<{
           children?: Array<{
             marks?: Array<string>
             text?: string
@@ -2616,45 +2569,41 @@ export type PATTERNS_GROUPED_BY_THEME_QUERYResult = Array<{
           }>
           style?: 'normal'
           listItem?: never
-          markDefs?: Array<
+          markDefs: Array<
             | {
-                glossary?: {
-                  _ref: string
-                  _type: 'reference'
-                  _weak?: boolean
-                  [internalGroqTypeReferenceTo]?: 'glossary'
-                }
+                glossary: {
+                  _id: string
+                  title: string | null
+                } | null
                 _type: 'glossaryTerm'
                 _key: string
+                page: null
+                pattern: null
               }
             | {
                 href?: string
                 openInNewTab?: boolean
                 _type: 'link'
                 _key: string
+                page: null
+                pattern: null
+                glossary: null
               }
-          >
+          > | null
           level?: number
           _type: 'block'
           _key: string
-        }>
-        audiences?: Array<{
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          _key: string
-          [internalGroqTypeReferenceTo]?: 'audience'
-        }>
+        }> | null
       }> | null
       mainLink?: string
     }> | null
   }>
 }>
 // Variable: PATTERN_SEARCH_QUERY
-// Query: *[_type == "pattern" && defined(slug.current) && language == $language    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Enhanced search scoring across relevant fields  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    language,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solutions[]->{        _id,        title      }    }  }
+// Query: *[_type == "pattern" && defined(slug.current) && language == $language    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Enhanced search scoring across relevant fields  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    language,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      solutions[]->{        _id,        title      }    }  }
 export type PATTERN_SEARCH_QUERYResult = Array<never>
 // Variable: PATTERN_SEARCH_WITH_PREFERENCES_QUERY
-// Query: *[_type == "pattern" && defined(slug.current) && language == $language    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Enhanced search scoring across relevant fields WITH preference boosting  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(      count((audiences[]._ref)[@ in $prefAudiences]) desc,      (theme._ref in $prefThemes) desc,      _score desc,      title asc    )  {    _id,    _type,    _score,    title,    language,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solutions[]->{        _id,        title      }    }  }
+// Query: *[_type == "pattern" && defined(slug.current) && language == $language    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided      && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Enhanced search scoring across relevant fields WITH preference boosting  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(      count((audiences[]._ref)[@ in $prefAudiences]) desc,      (theme._ref in $prefThemes) desc,      _score desc,      title asc    )  {    _id,    _type,    _score,    title,    language,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      solutions[]->{        _id,        title      }    }  }
 export type PATTERN_SEARCH_WITH_PREFERENCES_QUERYResult = Array<never>
 // Variable: PATTERN_SUGGESTIONS_WITH_PREFERENCES_QUERY
 // Query: *[    _type == "pattern" &&    defined(slug.current) &&    language == $language &&    (      (defined($prefAudiences) && count($prefAudiences) > 0 && count((audiences[]._ref)[@ in $prefAudiences]) > 0) ||      (defined($prefThemes) && count($prefThemes) > 0 && theme._ref in $prefThemes)    )  ]  | order(      (        (defined($prefAudiences) && count($prefAudiences) > 0 && count((audiences[]._ref)[@ in $prefAudiences]) > 0) &&        (defined($prefThemes) && count($prefThemes) > 0 && theme._ref in $prefThemes)      ) desc,      count((audiences[]._ref)[@ in $prefAudiences]) desc,      (theme._ref in $prefThemes) desc,      title asc    )[0...$limit]{    _id,    _type,    title,    language,    "slug": slug.current,    description,    tags[]->{ _id, title },    audiences[]->{ _id, title },    theme->{ _id, title, description }  }
@@ -2663,16 +2612,16 @@ export type PATTERN_SUGGESTIONS_WITH_PREFERENCES_QUERYResult = Array<never>
 // Query: *[_type == "solution" && language == $language]  | score(      // Exact matches get highest scores      boost(title match $searchTerm, 12),      boost(pt::text(description) match $searchTerm, 10),            // Partial matches      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  [_score > 0]  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    language,    description,    audiences[]->{      _id,      title    },    // Find parent patterns for navigation    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{      _id,      title,      "slug": slug.current    }[0...3]  }
 export type SOLUTION_SEARCH_QUERYResult = Array<never>
 // Variable: RESOURCE_SEARCH_QUERY
-// Query: *[_type == "resource" && language == $language]  | score(      // Exact matches get highest scores      boost(title match $searchTerm, 12),      boost(pt::text(description) match $searchTerm, 10),            // Partial matches      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  [_score > 0]  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    language,    description,    links,    solutions[]->{      _id,      title    },    // Find parent patterns for navigation    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{      _id,      title,      "slug": slug.current    }[0...3]  }
+// Query: *[_type == "resource" && language == $language]  | score(      // Exact matches get highest scores      boost(title match $searchTerm, 12),      boost(pt::text(description) match $searchTerm, 10),            // Partial matches      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  [_score > 0]  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    language,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    links,    solutions[]->{      _id,      title    },    // Find parent patterns for navigation    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{      _id,      title,      "slug": slug.current    }[0...3]  }
 export type RESOURCE_SEARCH_QUERYResult = Array<never>
 // Variable: TAG_SEARCH_QUERY
 // Query: *[_type == "tag" && title match ($searchTerm + "*") && language == $language]  | score(      boost(title match $searchTerm, 15),      boost(title match ($searchTerm + "*"), 10),      title match ($searchTerm + "*")    )  [_score > 0]  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    language,    // Find patterns that use this tag    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{      _id,      title,      "slug": slug.current    }[0...5]  }
 export type TAG_SEARCH_QUERYResult = Array<never>
 // Variable: PATTERN_SIMPLE_SEARCH_QUERY
-// Query: *[_type == "pattern" && defined(slug.current) && language == $language]  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    language,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solutions[]->{        _id,        title      }    }  }
+// Query: *[_type == "pattern" && defined(slug.current) && language == $language]  | score(      // Primary content scoring (highest priority)      boost(title match $searchTerm, 15),      boost(pt::text(description) match $searchTerm, 12),            // Partial/prefix matches (lower scores)      boost(title match ($searchTerm + "*"), 8),      boost(pt::text(description) match ($searchTerm + "*"), 6),            // Basic scoring for any match      title match ($searchTerm + "*"),      pt::text(description) match ($searchTerm + "*")    )  // Filter out results with very low relevance scores  [_score > 0]  // Order by relevance score, then by title  | order(_score desc, title asc)  {    _id,    _type,    _score,    title,    language,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      solutions[]->{        _id,        title      }    }  }
 export type PATTERN_SIMPLE_SEARCH_QUERYResult = Array<never>
 // Variable: PATTERN_FILTER_QUERY
-// Query: *[_type == "pattern" && defined(slug.current) && language == $language    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Order by title (no scoring needed in filter-only mode)  | order(title asc)  {    _id,    _type,    title,    language,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description,      solutions[]->{        _id,        title      }    }  }
+// Query: *[_type == "pattern" && defined(slug.current) && language == $language    // Apply audience filter if provided    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)    // Apply theme filter if provided    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)    // Apply tags filter if provided    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)  ]  // Order by title (no scoring needed in filter-only mode)  | order(title asc)  {    _id,    _type,    title,    language,    description,    "slug": slug.current,    tags[]->{      _id,      title    },    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      title,      description    },    resources[]->{      _id,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      solutions[]->{        _id,        title      }    }  }
 export type PATTERN_FILTER_QUERYResult = Array<{
   _id: string
   _type: 'pattern'
@@ -2800,37 +2749,28 @@ export type PATTERN_FILTER_QUERYResult = Array<{
       }>
       style?: 'normal'
       listItem?: never
-      markDefs?: Array<
+      markDefs: Array<
         | {
-            glossary?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'glossary'
-            }
+            glossary: {
+              _id: string
+              title: string | null
+            } | null
             _type: 'glossaryTerm'
             _key: string
+            page: null
+            pattern: null
           }
         | {
             linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
-            page?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'page'
-            }
-            pattern?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'pattern'
-            }
+            page: string | null
+            pattern: string | null
             openInNewTab?: boolean
             _type: 'link'
             _key: string
+            glossary: null
           }
-      >
+      > | null
       level?: number
       _type: 'block'
       _key: string
@@ -3170,7 +3110,7 @@ export type PATTERN_UTILITIES_QUERYResult = {
   resourcesHeading: string | null
 } | null
 // Variable: PATTERNS_BY_SLUGS_QUERY
-// Query: *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{    ...,    _id,    _type,    title,    language,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "slug": slug.current,    tags[]->,    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      _type,      title,      description,      audiences[]->{ _id, title }    },    resources[]->{      _id,      _type,      title,      description,      links,      solutions[]->{ _id, title }    }  }
+// Query: *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{    ...,    _id,    _type,    title,    language,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "slug": slug.current,    tags[]->,    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      _type,      title,      description,      audiences[]->{ _id, title }    },    resources[]->{      _id,      _type,      title,      description[]{        ...,        markDefs[]{          ...,          "page": page->slug.current,          "pattern": pattern->slug.current,          "glossary": glossary->{_id, title}        }      },      links,      solutions[]->{ _id, title }    }  }
 export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
   _id: string
   _type: 'pattern'
@@ -3309,37 +3249,28 @@ export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
       }>
       style?: 'normal'
       listItem?: never
-      markDefs?: Array<
+      markDefs: Array<
         | {
-            glossary?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'glossary'
-            }
+            glossary: {
+              _id: string
+              title: string | null
+            } | null
             _type: 'glossaryTerm'
             _key: string
+            page: null
+            pattern: null
           }
         | {
             linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
-            page?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'page'
-            }
-            pattern?: {
-              _ref: string
-              _type: 'reference'
-              _weak?: boolean
-              [internalGroqTypeReferenceTo]?: 'pattern'
-            }
+            page: string | null
+            pattern: string | null
             openInNewTab?: boolean
             _type: 'link'
             _key: string
+            glossary: null
           }
-      >
+      > | null
       level?: number
       _type: 'block'
       _key: string
@@ -4808,12 +4739,12 @@ import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "siteSettings"][0]{\n  title,\n  description,\n  url,\n  seoTitle,\n  seoDescription,\n  "seoImage": seoImage.asset->url,\n  keywords,\n  openGraph{ siteName, twitterHandle },\n}': SITE_SETTINGS_QUERYResult
-    '*[_type == "pattern" && defined(slug.current) && language == $language][]{\n    _id,\n    _type,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->,\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->,\n    resources[]->{\n      ...,\n      solutions[]->{...},\n    },\n  }': PATTERNS_QUERYResult
-    '*[_type == "pattern" && slug.current == $slug && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    "slug": slug.current,\n    tags[]->{...},\n\t    audiences[]->{...},\n\t    theme->{...},\n    solutions[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      links,\n      solutions[]->{...},\n    },\n  }': PATTERN_QUERYResult
+    '*[_type == "pattern" && defined(slug.current) && language == $language][]{\n    _id,\n    _type,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->,\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->,\n    resources[]->{\n      ...,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      solutions[]->{\n        _id,\n        _type,\n        title,\n        description[]{\n          ...,\n          markDefs[]{\n            ...,\n            "page": page->slug.current,\n            "pattern": pattern->slug.current,\n            "glossary": glossary->{_id, title}\n          }\n        }\n      },\n    },\n  }': PATTERNS_QUERYResult
+    '*[_type == "pattern" && slug.current == $slug && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    "slug": slug.current,\n    tags[]->{...},\n\t    audiences[]->{...},\n\t    theme->{...},\n    solutions[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      mainLink,\n      solutions[]->{\n        _id,\n        _type,\n        title,\n        description[]{\n          ...,\n          markDefs[]{\n            ...,\n            "page": page->slug.current,\n            "pattern": pattern->slug.current,\n            "glossary": glossary->{_id, title}\n          }\n        }\n      },\n    },\n  }': PATTERN_QUERYResult
     '*[_type == "pattern" && defined(slug.current) && language == $language]{\n    "slug": slug.current\n  }': PATTERN_PAGES_SLUGS_QUERYResult
     '*[_type == "pattern" && slug.current == $slug && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    description,\n    language,\n    "descriptionPlainText": pt::text(description),\n    "slug": slug.current,\n    "tagIds": tags[]._ref,\n    "audienceIds": audiences[]._ref,\n    "themeId": theme._ref,\n    "solutionIds": solutions[]._ref,\n    "resourceIds": resources[]._ref\n  }': PATTERN_BASE_QUERYResult
     '*[_type == "solution" && _id in $ids && language == $language]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    audiences[]->{\n      _id,\n      _type,\n      title\n    }\n  }': SOLUTIONS_BY_IDS_QUERYResult
-    '*[_type == "resource" && _id in $ids && language == $language]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    links,\n    "solutionIds": solutions[]._ref\n  }': RESOURCES_BY_IDS_QUERYResult
+    '*[_type == "resource" && _id in $ids && language == $language]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    mainLink,\n    "solutionIds": solutions[]._ref\n  }': RESOURCES_BY_IDS_QUERYResult
     '*[_type == "tag" && _id in $ids && language == $language]{\n    _id,\n    _type,\n    title,\n    language\n  }': TAGS_BY_IDS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'glossary\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n  }': GLOSSARY_PAGE_QUERYResult
     '\n  *[_type == "glossary" && language == $language] | order(title asc) {\n    _id,\n    title,\n    language,\n    description\n  }': GLOSSARY_TERMS_QUERYResult
@@ -4823,23 +4754,23 @@ declare module '@sanity/client' {
     '*[_type == "page" && defined(slug.current) && language == $language]{\n    "slug": slug.current\n  }': PAGES_SLUGS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == $slug && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n  }': PAGE_BY_SLUG_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'search\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n  }': SEARCH_PAGE_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current) && language == $language][]{\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    },\n  }': PATTERNS_WITH_THEMES_QUERYResult
-    '\n  *[_type == "theme" && defined(_id) && language == $language] | order(title asc) {\n    _id,\n    title,\n    language,\n    description,\n    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id) && language == $language] {\n      _id,\n      _type,\n      title,\n      language,\n      description,\n      "slug": slug.current,\n      tags[]->,\n      audiences[]->{\n        _id,\n        title\n      },\n      theme->{\n        _id,\n        title,\n        description\n      },\n      solutions[]->,\n      resources[]->{\n        ...,\n        solutions[]->{...},\n      },\n    }\n  }[count(patterns) > 0]\n': PATTERNS_GROUPED_BY_THEME_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current) && language == $language\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Enhanced search scoring across relevant fields\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current) && language == $language\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Enhanced search scoring across relevant fields WITH preference boosting\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(\n      count((audiences[]._ref)[@ in $prefAudiences]) desc,\n      (theme._ref in $prefThemes) desc,\n      _score desc,\n      title asc\n    )\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_WITH_PREFERENCES_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current) && language == $language][]{\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      solutions[]->{\n        _id,\n        title\n      }\n    },\n  }': PATTERNS_WITH_THEMES_QUERYResult
+    '\n  *[_type == "theme" && defined(_id) && language == $language] | order(title asc) {\n    _id,\n    title,\n    language,\n    description,\n    "patterns": *[_type == "pattern" && defined(slug.current) && references(^._id) && language == $language] {\n      _id,\n      _type,\n      title,\n      language,\n      description,\n      "slug": slug.current,\n      tags[]->,\n      audiences[]->{\n        _id,\n        title\n      },\n      theme->{\n        _id,\n        title,\n        description\n      },\n      solutions[]->,\n      resources[]->{\n        ...,\n        description[]{\n          ...,\n          markDefs[]{\n            ...,\n            "page": page->slug.current,\n            "pattern": pattern->slug.current,\n            "glossary": glossary->{_id, title}\n          }\n        },\n        solutions[]->{\n          _id,\n          _type,\n          title,\n          description[]{\n            ...,\n            markDefs[]{\n              ...,\n              "page": page->slug.current,\n              "pattern": pattern->slug.current,\n              "glossary": glossary->{_id, title}\n            }\n          }\n        },\n      },\n    }\n  }[count(patterns) > 0]\n': PATTERNS_GROUPED_BY_THEME_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current) && language == $language\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Enhanced search scoring across relevant fields\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current) && language == $language\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided  \n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Enhanced search scoring across relevant fields WITH preference boosting\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(\n      count((audiences[]._ref)[@ in $prefAudiences]) desc,\n      (theme._ref in $prefThemes) desc,\n      _score desc,\n      title asc\n    )\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SEARCH_WITH_PREFERENCES_QUERYResult
     '\n  *[\n    _type == "pattern" &&\n    defined(slug.current) &&\n    language == $language &&\n    (\n      (defined($prefAudiences) && count($prefAudiences) > 0 && count((audiences[]._ref)[@ in $prefAudiences]) > 0) ||\n      (defined($prefThemes) && count($prefThemes) > 0 && theme._ref in $prefThemes)\n    )\n  ]\n  | order(\n      (\n        (defined($prefAudiences) && count($prefAudiences) > 0 && count((audiences[]._ref)[@ in $prefAudiences]) > 0) &&\n        (defined($prefThemes) && count($prefThemes) > 0 && theme._ref in $prefThemes)\n      ) desc,\n      count((audiences[]._ref)[@ in $prefAudiences]) desc,\n      (theme._ref in $prefThemes) desc,\n      title asc\n    )[0...$limit]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    description,\n    tags[]->{ _id, title },\n    audiences[]->{ _id, title },\n    theme->{ _id, title, description }\n  }\n': PATTERN_SUGGESTIONS_WITH_PREFERENCES_QUERYResult
     '\n  *[_type == "solution" && language == $language]\n  | score(\n      // Exact matches get highest scores\n      boost(title match $searchTerm, 12),\n      boost(pt::text(description) match $searchTerm, 10),\n      \n      // Partial matches\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    description,\n    audiences[]->{\n      _id,\n      title\n    },\n    // Find parent patterns for navigation\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...3]\n  }\n': SOLUTION_SEARCH_QUERYResult
-    '\n  *[_type == "resource" && language == $language]\n  | score(\n      // Exact matches get highest scores\n      boost(title match $searchTerm, 12),\n      boost(pt::text(description) match $searchTerm, 10),\n      \n      // Partial matches\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    description,\n    links,\n    solutions[]->{\n      _id,\n      title\n    },\n    // Find parent patterns for navigation\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...3]\n  }\n': RESOURCE_SEARCH_QUERYResult
+    '\n  *[_type == "resource" && language == $language]\n  | score(\n      // Exact matches get highest scores\n      boost(title match $searchTerm, 12),\n      boost(pt::text(description) match $searchTerm, 10),\n      \n      // Partial matches\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    links,\n    solutions[]->{\n      _id,\n      title\n    },\n    // Find parent patterns for navigation\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...3]\n  }\n': RESOURCE_SEARCH_QUERYResult
     '\n  *[_type == "tag" && title match ($searchTerm + "*") && language == $language]\n  | score(\n      boost(title match $searchTerm, 15),\n      boost(title match ($searchTerm + "*"), 10),\n      title match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    // Find patterns that use this tag\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...5]\n  }\n': TAG_SEARCH_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current) && language == $language]\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SIMPLE_SEARCH_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current) && language == $language\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided\n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Order by title (no scoring needed in filter-only mode)\n  | order(title asc)\n  {\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_FILTER_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current) && language == $language]\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SIMPLE_SEARCH_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current) && language == $language\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided\n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Order by title (no scoring needed in filter-only mode)\n  | order(title asc)\n  {\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_FILTER_QUERYResult
     "\n  *[_type == 'onboarding' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    skipLabel,\n    backLabel,\n    footerText,\n    breadcrumbs,\n    slide1{\n      title,\n      body,\n      primaryCtaLabel,\n      secondaryCtaText,\n      returnToCtaText,\n      homePageButtonLabel\n    },\n    slide2{\n      title,\n      body,\n      nextButtonLabel\n    },\n    slide3{\n      title,\n      body,\n      finishButtonLabel\n    }\n  }\n": ONBOARDING_QUERYResult
     '\n  *[_type == "tag" && language == $language] | order(title asc) {\n    _id,\n    title,\n    language,\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current\n    }\n  }[count(patterns) > 0]\n': TAGS_WITH_PATTERNS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'tags\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': TAGS_PAGE_QUERYResult
     "\n  *[_type == 'search' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    searchInputPlaceholder,\n    clearButtonLabel,\n    audiencesFilterLabel,\n    audiencesPlaceholder,\n    audiencesSearchPlaceholder,\n    audiencesEmptyMessage,\n    themesFilterLabel,\n    themesPlaceholder,\n    themesSearchPlaceholder,\n    themesEmptyMessage,\n    tagsFilterLabel,\n    tagsPlaceholder,\n    tagsSearchPlaceholder,\n    tagsEmptyMessage,\n    suggestionsHeading,\n    enhanceLabel,\n    enhanceResultsTitle,\n    audiencePreferencesLabel,\n    themePreferencesLabel,\n    preferencesConjunction,\n    enhanceHoverDescriptionPrefix,\n    enhanceHoverDescriptionSuffix,\n    commandMenuInputPlaceholder,\n    commandMenuLoadingText,\n    commandMenuEmptyState,\n    commandMenuOnThisPageHeading,\n    commandMenuPatternsHeading,\n    commandMenuSolutionsHeading,\n    commandMenuResourcesHeading,\n    commandMenuTagsHeading,\n    commandMenuStatusText,\n    commandMenuNavigationLabel,\n    commandMenuOpenResultLabel,\n    commandMenuInPatternText,\n    commandMenuPatternCountText,\n    commandMenuMatchInTitleTooltip,\n    commandMenuMatchInDescriptionTooltip,\n    commandMenuMatchInTagTooltip,\n    resultsHeaderResultText,\n    resultsHeaderResultsText,\n    resultsHeaderForText,\n  }\n": SEARCH_CONFIG_QUERYResult
     "\n  *[_type == 'carrierBag' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    information,\n    emptyStateMessage,\n    pdfButtonLabel,\n    jsonButtonLabel,\n    removeAllButtonLabel,\n    utilitiesGroupLabel,\n    exportPdfButtonLabel,\n    generateLinkButtonLabel,\n    shareToSocialsButtonLabel,\n    downloadJsonButtonLabel,\n    closeCarrierBagButtonLabel,\n    applicationSectionLabel,\n    filtersLabel,\n    sortTitleAzLabel,\n    sortTitleZaLabel,\n    groupByThemeButtonLabel,\n    groupByThemeButtonLabelActive,\n    filterByTagsPlaceholder,\n    filterByTagsSearchPlaceholder,\n    filterByTagsEmptyMessage,\n    filterByTagsGroupHeading,\n    filterByAudiencesPlaceholder,\n    filterByAudiencesSearchPlaceholder,\n    filterByAudiencesEmptyMessage,\n    filterByAudiencesGroupHeading,\n    clearAllButtonLabel,\n    savedItemsBadgeText,\n    saveToCarrierBagButtonLabel,\n    savedToCarrierBagButtonLabel,\n  }\n": CARRIER_BAG_QUERYResult
     "\n  *[_type == 'patternUtilities' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    knowOfAnotherResourceOrSolution,\n    makeASuggestionButtonLabel,\n    suggestSolutionModalTitle,\n    suggestSolutionModalDescription,\n    patternLabel,\n    newSolutionsLabel,\n    newSolutionsPlaceholder,\n    newResourcesLabel,\n    newResourcesPlaceholder,\n    additionalFeedbackLabel,\n    additionalFeedbackPlaceholder,\n    nameAndAffiliationLabel,\n    nameAndAffiliationPlaceholder,\n    emailLabel,\n    emailPlaceholder,\n    cancelButtonLabel,\n    submitSuggestionButtonLabel,\n    patternSubmittedSuccessfullyMessage,\n    relatedSolutionLabel,\n    relatedSolutionsLabel,\n    visitPatternButtonLabel,\n    solutionsHeading,\n    resourcesHeading,\n  }\n": PATTERN_UTILITIES_QUERYResult
-    '\n  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{\n    ...,\n    _id,\n    _type,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      _type,\n      title,\n      description,\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      title,\n      description,\n      links,\n      solutions[]->{ _id, title }\n    }\n  }\n': PATTERNS_BY_SLUGS_QUERYResult
+    '\n  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{\n    ...,\n    _id,\n    _type,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      _type,\n      title,\n      description,\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      title,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      links,\n      solutions[]->{ _id, title }\n    }\n  }\n': PATTERNS_BY_SLUGS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'values\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For record type\n      name,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': VALUES_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'patterns\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    emptyStateMessage,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': PATTERNS_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'about\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description,\n      }\n    }\n  }\n': ABOUT_PAGE_QUERYResult

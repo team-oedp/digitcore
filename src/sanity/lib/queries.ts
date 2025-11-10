@@ -48,7 +48,20 @@ export const PATTERNS_QUERY =
           "glossary": glossary->{_id, title}
         }
       },
-      solutions[]->{...},
+      solutions[]->{
+        _id,
+        _type,
+        title,
+        description[]{
+          ...,
+          markDefs[]{
+            ...,
+            "page": page->slug.current,
+            "pattern": pattern->slug.current,
+            "glossary": glossary->{_id, title}
+          }
+        }
+      },
     },
   }`);
 
@@ -109,8 +122,21 @@ export const PATTERN_QUERY =
           "glossary": glossary->{_id, title}
         }
       },
-      links,
-      solutions[]->{...},
+      mainLink,
+      solutions[]->{
+        _id,
+        _type,
+        title,
+        description[]{
+          ...,
+          markDefs[]{
+            ...,
+            "page": page->slug.current,
+            "pattern": pattern->slug.current,
+            "glossary": glossary->{_id, title}
+          }
+        }
+      },
     },
   }`);
 
@@ -182,7 +208,7 @@ export const RESOURCES_BY_IDS_QUERY =
         "glossary": glossary->{_id, title}
       }
     },
-    links,
+    mainLink,
     "solutionIds": solutions[]._ref
   }`);
 
@@ -369,7 +395,20 @@ export const PATTERNS_GROUPED_BY_THEME_QUERY = defineQuery(`
             "glossary": glossary->{_id, title}
           }
         },
-        solutions[]->{...},
+        solutions[]->{
+          _id,
+          _type,
+          title,
+          description[]{
+            ...,
+            markDefs[]{
+              ...,
+              "page": page->slug.current,
+              "pattern": pattern->slug.current,
+              "glossary": glossary->{_id, title}
+            }
+          }
+        },
       },
     }
   }[count(patterns) > 0]
