@@ -180,7 +180,7 @@ export const carrierBagType = defineType({
 			type: "string",
 			title: "Saved Items Badge Text",
 			description:
-				"Text template for the saved items badge (use {count} as placeholder for the number)",
+				"Text to display after the count in the saved items badge (e.g., 'saved items'). The count will be automatically prepended.",
 		}),
 	],
 	preview: {

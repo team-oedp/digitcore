@@ -209,10 +209,7 @@ export function CarrierBagContent({
 							className="mt-1 rounded-full"
 						>
 							{carrierBagData?.savedItemsBadgeText
-								? carrierBagData.savedItemsBadgeText.replace(
-										"{count}",
-										items.length.toString(),
-									)
+								? `${items.length} ${carrierBagData.savedItemsBadgeText}`
 								: `${items.length} saved items`}
 						</Badge>
 					</div>
