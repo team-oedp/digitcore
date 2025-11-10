@@ -125,6 +125,12 @@ export const onboardingType = defineType({
 					title: "Body",
 					type: "blockContent",
 				}),
+				defineField({
+					name: "nextButtonLabel",
+					title: "Next button label",
+					type: "string",
+					initialValue: "NEXT",
+				}),
 			],
 		}),
 		// Slide 3
@@ -144,6 +150,12 @@ export const onboardingType = defineType({
 					name: "body",
 					title: "Body",
 					type: "blockContent",
+				}),
+				defineField({
+					name: "finishButtonLabel",
+					title: "Finish button label",
+					type: "string",
+					initialValue: "FINISH",
 				}),
 			],
 		}),
