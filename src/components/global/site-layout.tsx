@@ -12,6 +12,7 @@ import type {
 	CARRIER_BAG_QUERYResult,
 	FOOTER_QUERYResult,
 	HEADER_QUERYResult,
+	SEARCH_CONFIG_QUERYResult,
 } from "~/sanity/sanity.types";
 import { useOrientationStore } from "~/stores/orientation";
 import { SiteFooter } from "./site-footer";
@@ -21,6 +22,7 @@ type SiteLayoutProps = {
 	headerData: HEADER_QUERYResult;
 	footerData: FOOTER_QUERYResult;
 	carrierBagData: CARRIER_BAG_QUERYResult;
+	searchData: SEARCH_CONFIG_QUERYResult;
 	language: Language;
 };
 
@@ -29,6 +31,7 @@ export function SiteLayout({
 	headerData,
 	footerData,
 	carrierBagData,
+	searchData,
 	language,
 }: SiteLayoutProps) {
 	const pathname = usePathname();
@@ -69,7 +72,11 @@ export function SiteLayout({
 			}
 			defaultOpen={false}
 		>
-			<SiteHeader headerData={headerData} language={language} />
+			<SiteHeader
+				headerData={headerData}
+				language={language}
+				searchData={searchData}
+			/>
 			<div className="flex min-h-0 flex-1 flex-row-reverse gap-2 overflow-hidden bg-page-background pt-16 transition-[gap] md:pt-14 md:[&:has([data-slot=sidebar][data-state=collapsed])]:gap-0 md:[&:has([data-slot=sidebar][data-state=collapsed])]:delay-200 md:[&:has([data-slot=sidebar][data-state=collapsed])]:duration-0">
 				<CarrierBagSidebar
 					className="peer"

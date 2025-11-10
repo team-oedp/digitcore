@@ -57,6 +57,66 @@ export const headerType = defineType({
 				},
 			],
 		}),
+		defineField({
+			name: "languageSelectorButtonLabel",
+			title: "Language selector button label",
+			description: "Accessibility label for the language selector button",
+			type: "string",
+		}),
+		defineField({
+			name: "fontToggleButtonLabel",
+			title: "Font toggle button label",
+			description: "Accessibility label for the font toggle button",
+			type: "string",
+		}),
+		defineField({
+			name: "fontToggleSrOnlyLabel",
+			title: "Font toggle screen reader label",
+			description: "Screen reader only label for the font toggle button",
+			type: "string",
+		}),
+		defineField({
+			name: "fontSerifLabel",
+			title: "Serif font label",
+			description: "Label for the serif font option",
+			type: "string",
+		}),
+		defineField({
+			name: "fontSansSerifLabel",
+			title: "Sans-serif font label",
+			description: "Label for the sans-serif font option",
+			type: "string",
+		}),
+		defineField({
+			name: "modeToggleButtonLabel",
+			title: "Theme toggle button label",
+			description: "Accessibility label for the theme toggle button",
+			type: "string",
+		}),
+		defineField({
+			name: "modeToggleSrOnlyLabel",
+			title: "Theme toggle screen reader label",
+			description: "Screen reader only label for the theme toggle button",
+			type: "string",
+		}),
+		defineField({
+			name: "themeLightLabel",
+			title: "Light theme label",
+			description: "Label for the light theme option",
+			type: "string",
+		}),
+		defineField({
+			name: "themeDarkLabel",
+			title: "Dark theme label",
+			description: "Label for the dark theme option",
+			type: "string",
+		}),
+		defineField({
+			name: "themeSystemLabel",
+			title: "System theme label",
+			description: "Label for the system theme option",
+			type: "string",
+		}),
 	],
 	preview: {
 		select: {

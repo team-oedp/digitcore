@@ -11,7 +11,10 @@ import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-s
 import { SiteHeader } from "~/components/global/site-header";
 import { PatternHeading } from "~/components/shared/pattern-heading";
 import { SidebarProvider } from "~/components/ui/sidebar";
-import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
+import type {
+	HEADER_QUERYResult,
+	SEARCH_CONFIG_QUERYResult,
+} from "~/sanity/sanity.types";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { ExploreMenuStoreProvider } from "~/stores/explore-menu";
 import { FontStoreProvider } from "~/stores/font";
@@ -56,6 +59,63 @@ const mockHeaderData: HEADER_QUERYResult = {
 			},
 		},
 	],
+	languageSelectorButtonLabel: null,
+	fontToggleButtonLabel: null,
+	fontToggleSrOnlyLabel: null,
+	fontSerifLabel: null,
+	fontSansSerifLabel: null,
+	modeToggleButtonLabel: null,
+	modeToggleSrOnlyLabel: null,
+	themeLightLabel: null,
+	themeDarkLabel: null,
+	themeSystemLabel: null,
+};
+
+const mockSearchData: SEARCH_CONFIG_QUERYResult = {
+	_id: "test-search",
+	_type: "search",
+	_createdAt: "2024-01-01T00:00:00Z",
+	_updatedAt: "2024-01-01T00:00:00Z",
+	_rev: "test-rev",
+	title: "Test Search",
+	language: "en",
+	searchInputPlaceholder: null,
+	clearButtonLabel: null,
+	audiencesFilterLabel: null,
+	audiencesPlaceholder: null,
+	audiencesSearchPlaceholder: null,
+	audiencesEmptyMessage: null,
+	themesFilterLabel: null,
+	themesPlaceholder: null,
+	themesSearchPlaceholder: null,
+	themesEmptyMessage: null,
+	tagsFilterLabel: null,
+	tagsPlaceholder: null,
+	tagsSearchPlaceholder: null,
+	tagsEmptyMessage: null,
+	suggestionsHeading: null,
+	enhanceLabel: null,
+	enhanceResultsTitle: null,
+	audiencePreferencesLabel: null,
+	themePreferencesLabel: null,
+	preferencesConjunction: null,
+	enhanceHoverDescription: null,
+	commandMenuInputPlaceholder: null,
+	commandMenuLoadingText: null,
+	commandMenuEmptyState: null,
+	commandMenuOnThisPageHeading: null,
+	commandMenuPatternsHeading: null,
+	commandMenuSolutionsHeading: null,
+	commandMenuResourcesHeading: null,
+	commandMenuTagsHeading: null,
+	commandMenuStatusText: null,
+	commandMenuNavigationLabel: null,
+	commandMenuOpenResultLabel: null,
+	commandMenuInPatternText: null,
+	commandMenuPatternCountText: null,
+	commandMenuMatchInTitleTooltip: null,
+	commandMenuMatchInDescriptionTooltip: null,
+	commandMenuMatchInTagTooltip: null,
 };
 
 // Mock the pattern icons utility
@@ -311,7 +371,11 @@ describe("Carrier Bag Sidebar", () => {
 		it("should close sidebar when close button is clicked", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader headerData={mockHeaderData} language="en" />
+					<SiteHeader
+						headerData={mockHeaderData}
+						language="en"
+						searchData={mockSearchData}
+					/>
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
@@ -363,7 +427,11 @@ describe("Carrier Bag Sidebar", () => {
 		it("should close sidebar when header toggle button is clicked", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader headerData={mockHeaderData} language="en" />
+					<SiteHeader
+						headerData={mockHeaderData}
+						language="en"
+						searchData={mockSearchData}
+					/>
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"
@@ -408,7 +476,11 @@ describe("Carrier Bag Sidebar", () => {
 		it("should allow sidebar to reopen after being closed", async () => {
 			render(
 				<TestWrapper>
-					<SiteHeader headerData={mockHeaderData} language="en" />
+					<SiteHeader
+						headerData={mockHeaderData}
+						language="en"
+						searchData={mockSearchData}
+					/>
 					<PatternHeading
 						title="Test Pattern"
 						slug="test-pattern"

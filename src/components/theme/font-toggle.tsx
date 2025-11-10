@@ -6,13 +6,15 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
 import { type FontMode, useFontStore } from "~/stores/font";
 
 type FontToggleProps = {
 	className?: string;
+	headerData?: HEADER_QUERYResult;
 };
 
-export function FontToggle({ className }: FontToggleProps = {}) {
+export function FontToggle({ className, headerData }: FontToggleProps = {}) {
 	const mode = useFontStore((state) => state.mode);
 	const setMode = useFontStore((state) => state.setMode);
 
@@ -26,7 +28,9 @@ export function FontToggle({ className }: FontToggleProps = {}) {
 				<DropdownMenuTrigger asChild>
 					<button
 						type="button"
-						aria-label="Select font style"
+						aria-label={
+							headerData?.fontToggleButtonLabel ?? "Select font style"
+						}
 						className="group relative flex h-7 items-center rounded-md px-2 py-0.5 text-muted-foreground outline-none transition-colors duration-150 ease-linear hover:text-foreground"
 					>
 						{/* Render both Aa text in different typefaces */}
@@ -50,15 +54,21 @@ export function FontToggle({ className }: FontToggleProps = {}) {
 						>
 							Aa
 						</span>
-						<span className="sr-only">Toggle font style</span>
+						<span className="sr-only">
+							{headerData?.fontToggleSrOnlyLabel ?? "Toggle font style"}
+						</span>
 					</button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="min-w-32" align="end">
 					<DropdownMenuItem onClick={() => handleModeChange("serif")}>
-						<span className="font-serif">Serif</span>
+						<span className="font-serif">
+							{headerData?.fontSerifLabel ?? "Serif"}
+						</span>
 					</DropdownMenuItem>
 					<DropdownMenuItem onClick={() => handleModeChange("sans-serif")}>
-						<span className="font-sans">Sans-serif</span>
+						<span className="font-sans">
+							{headerData?.fontSansSerifLabel ?? "Sans-serif"}
+						</span>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>

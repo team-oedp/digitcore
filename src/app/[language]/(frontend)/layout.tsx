@@ -11,6 +11,7 @@ import {
 	CARRIER_BAG_QUERY,
 	FOOTER_QUERY,
 	HEADER_QUERY,
+	SEARCH_CONFIG_QUERY,
 } from "~/sanity/lib/queries";
 import { CarrierBagStoreProvider } from "~/stores/carrier-bag";
 import { ExploreMenuStoreProvider } from "~/stores/explore-menu";
@@ -32,23 +33,29 @@ export default async function Layout({
 }>) {
 	const { language } = await params;
 
-	const [headerData, footerData, carrierBagData] = await Promise.all([
-		sanityFetch({
-			query: HEADER_QUERY,
-			params: { language },
-			revalidate: 60,
-		}),
-		sanityFetch({
-			query: FOOTER_QUERY,
-			params: { language },
-			revalidate: 60,
-		}),
-		sanityFetch({
-			query: CARRIER_BAG_QUERY,
-			params: { language },
-			revalidate: 60,
-		}),
-	]);
+	const [headerData, footerData, carrierBagData, searchData] =
+		await Promise.all([
+			sanityFetch({
+				query: HEADER_QUERY,
+				params: { language },
+				revalidate: 60,
+			}),
+			sanityFetch({
+				query: FOOTER_QUERY,
+				params: { language },
+				revalidate: 60,
+			}),
+			sanityFetch({
+				query: CARRIER_BAG_QUERY,
+				params: { language },
+				revalidate: 60,
+			}),
+			sanityFetch({
+				query: SEARCH_CONFIG_QUERY,
+				params: { language },
+				revalidate: 60,
+			}),
+		]);
 
 	return (
 		<section
@@ -70,6 +77,7 @@ export default async function Layout({
 												headerData={headerData}
 												footerData={footerData}
 												carrierBagData={carrierBagData}
+												searchData={searchData}
 											>
 												{children}
 											</SiteLayout>

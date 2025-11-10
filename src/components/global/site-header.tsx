@@ -14,7 +14,10 @@ import { Button } from "~/components/ui/button";
 import type { Language } from "~/i18n/config";
 import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
-import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
+import type {
+	HEADER_QUERYResult,
+	SEARCH_CONFIG_QUERYResult,
+} from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { useExploreMenuStore } from "~/stores/explore-menu";
 import { Icon } from "../shared/icon";
@@ -27,9 +30,14 @@ import { MobileNavDialog } from "./mobile-nav-dialog";
 type SiteHeaderProps = {
 	headerData: HEADER_QUERYResult;
 	language: Language;
+	searchData: SEARCH_CONFIG_QUERYResult;
 };
 
-export function SiteHeader({ headerData, language }: SiteHeaderProps) {
+export function SiteHeader({
+	headerData,
+	language,
+	searchData,
+}: SiteHeaderProps) {
 	const toggleOpen = useCarrierBagStore((state) => state.toggleOpen);
 	const hasUnseenUpdates = useCarrierBagStore(
 		(state) => state.hasUnseenUpdates,
@@ -210,13 +218,16 @@ export function SiteHeader({ headerData, language }: SiteHeaderProps) {
 					</nav>
 				</div>
 				<Suspense fallback={<div className="h-6 w-6" />}>
-					<LanguageSelector className="hidden md:block" />
+					<LanguageSelector
+						className="hidden md:block"
+						headerData={headerData}
+					/>
 				</Suspense>
-				<FontToggle className="hidden md:block" />
+				<FontToggle className="hidden md:block" headerData={headerData} />
 				<Suspense fallback={<div className="h-6 w-6" />}>
-					<ModeToggle className="hidden md:block" />
+					<ModeToggle className="hidden md:block" headerData={headerData} />
 				</Suspense>
-				<CommandMenu />
+				<CommandMenu searchData={searchData} />
 				<button
 					type="button"
 					className={cn(

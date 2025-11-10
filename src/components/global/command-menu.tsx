@@ -38,10 +38,34 @@ import {
 	truncateWithContext,
 } from "~/lib/search-utils";
 import { cn } from "~/lib/utils";
+import type { SEARCH_CONFIG_QUERYResult } from "~/sanity/sanity.types";
 import type { SearchPattern } from "~/types/search";
 import { Icon } from "../shared/icon";
 
-export function CommandMenu() {
+type CommandMenuProps = {
+	searchData?: SEARCH_CONFIG_QUERYResult;
+};
+
+// Type for command menu string fields only (excluding metadata fields)
+type CommandMenuStringField =
+	| "commandMenuInputPlaceholder"
+	| "commandMenuLoadingText"
+	| "commandMenuEmptyState"
+	| "commandMenuOnThisPageHeading"
+	| "commandMenuPatternsHeading"
+	| "commandMenuSolutionsHeading"
+	| "commandMenuResourcesHeading"
+	| "commandMenuTagsHeading"
+	| "commandMenuStatusText"
+	| "commandMenuNavigationLabel"
+	| "commandMenuOpenResultLabel"
+	| "commandMenuInPatternText"
+	| "commandMenuPatternCountText"
+	| "commandMenuMatchInTitleTooltip"
+	| "commandMenuMatchInDescriptionTooltip"
+	| "commandMenuMatchInTagTooltip";
+
+export function CommandMenu({ searchData }: CommandMenuProps) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const router = useRouter();
@@ -160,6 +184,79 @@ export function CommandMenu() {
 	};
 
 	const currentPage = getCurrentPageTitle();
+
+	// Helper functions for internationalized strings with fallbacks
+	const getText = (key: CommandMenuStringField, fallback: string): string => {
+		if (!searchData) {
+			return fallback;
+		}
+		const value = searchData[key];
+		return value ?? fallback;
+	};
+
+	const getPlaceholder = () =>
+		getText(
+			"commandMenuInputPlaceholder",
+			"Search patterns, solutions, and resources...",
+		);
+	const getLoadingText = () => {
+		const fallback = language === "es" ? "Buscando..." : "Searching...";
+		return getText("commandMenuLoadingText", fallback);
+	};
+	const getEmptyState = () =>
+		getText("commandMenuEmptyState", "No results found.");
+	const getOnThisPageHeading = () => {
+		const fallback = language === "es" ? "En esta página" : "On this page";
+		return getText("commandMenuOnThisPageHeading", fallback);
+	};
+	const getPatternsHeading = () => {
+		const fallback = language === "es" ? "Patrones" : "Patterns";
+		return getText("commandMenuPatternsHeading", fallback);
+	};
+	const getSolutionsHeading = () => {
+		const fallback = language === "es" ? "Soluciones" : "Solutions";
+		return getText("commandMenuSolutionsHeading", fallback);
+	};
+	const getResourcesHeading = () => {
+		const fallback = language === "es" ? "Recursos" : "Resources";
+		return getText("commandMenuResourcesHeading", fallback);
+	};
+	const getTagsHeading = () => getText("commandMenuTagsHeading", "Tags");
+	const getStatusText = (page: string) => {
+		const template = getText(
+			"commandMenuStatusText",
+			"You are on the {page} page",
+		);
+		return template.replace("{page}", page);
+	};
+	const getNavigationLabel = () => {
+		const fallback = language === "es" ? "Navegación" : "Navigation";
+		return getText("commandMenuNavigationLabel", fallback);
+	};
+	const getOpenResultLabel = () => {
+		const fallback = language === "es" ? "Abrir resultado" : "Open result";
+		return getText("commandMenuOpenResultLabel", fallback);
+	};
+	const getInPatternText = (pattern: string) => {
+		const template = getText("commandMenuInPatternText", "in {pattern}");
+		return template.replace("{pattern}", pattern);
+	};
+	const getPatternCountText = (count: number) => {
+		const template = getText(
+			"commandMenuPatternCountText",
+			"{count} pattern{plural}",
+		);
+		const plural = count !== 1 ? "s" : "";
+		return template
+			.replace("{count}", count.toString())
+			.replace("{plural}", plural);
+	};
+	const getMatchInTitleTooltip = () =>
+		getText("commandMenuMatchInTitleTooltip", "Match in title");
+	const getMatchInDescriptionTooltip = () =>
+		getText("commandMenuMatchInDescriptionTooltip", "Match in description");
+	const getMatchInTagTooltip = () =>
+		getText("commandMenuMatchInTagTooltip", "Match in tag name");
 
 	// Helper function to get compact search context for command modal
 	const getCompactMatchContext = (
@@ -280,22 +377,24 @@ export function CommandMenu() {
 					</div>
 				</div>
 				<CommandInput
-					placeholder={"Search patterns, solutions, and resources..."}
+					placeholder={getPlaceholder()}
 					value={query}
 					onValueChange={handleQueryChange}
 				/>
 				<CommandList className="max-h-[400px] min-h-[120px] overflow-y-auto transition-all duration-300 ease-in-out">
 					{isLoading ? (
 						<div className="flex items-center justify-center py-6">
-							<div className="text-muted-foreground text-sm">Searching...</div>
+							<div className="text-muted-foreground text-sm">
+								{getLoadingText()}
+							</div>
 						</div>
 					) : (
 						<>
-							<CommandEmpty>No results found.</CommandEmpty>
+							<CommandEmpty>{getEmptyState()}</CommandEmpty>
 							{/* Page Content Results - Highest priority for current page */}
 							{pageResults.length > 0 && (
 								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
-									<CommandGroup heading="On this page">
+									<CommandGroup heading={getOnThisPageHeading()}>
 										{pageResults.slice(0, 5).map((result) => {
 											const getIcon = () => {
 												switch (result.type) {
@@ -342,7 +441,7 @@ export function CommandMenu() {
 							{/* Patterns - Second priority */}
 							{searchResults.patterns.length > 0 && (
 								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
-									<CommandGroup heading="Patterns">
+									<CommandGroup heading={getPatternsHeading()}>
 										{searchResults.patterns.slice(0, 6).map((result) => {
 											const context = getCompactMatchContext(
 												result.title,
@@ -382,7 +481,7 @@ export function CommandMenu() {
 																{context.matchLocations.includes("title") && (
 																	<div
 																		className="h-1.5 w-1.5 rounded-full bg-blue-500"
-																		title="Match in title"
+																		title={getMatchInTitleTooltip()}
 																	/>
 																)}
 																{context.matchLocations.includes(
@@ -390,7 +489,7 @@ export function CommandMenu() {
 																) && (
 																	<div
 																		className="h-1.5 w-1.5 rounded-full bg-green-500"
-																		title="Match in description"
+																		title={getMatchInDescriptionTooltip()}
 																	/>
 																)}
 															</div>
@@ -405,7 +504,7 @@ export function CommandMenu() {
 							{/* Solutions - Third priority */}
 							{searchResults.solutions.length > 0 && (
 								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
-									<CommandGroup heading="Solutions">
+									<CommandGroup heading={getSolutionsHeading()}>
 										{searchResults.solutions.slice(0, 6).map((sol) => {
 											const context = getSolutionContext(sol, query);
 											return (
@@ -444,7 +543,7 @@ export function CommandMenu() {
 																sol.patterns.length > 0 &&
 																sol.patterns[0]?.title && (
 																	<span className="truncate text-muted-foreground text-xs">
-																		in {sol.patterns[0].title}
+																		{getInPatternText(sol.patterns[0].title)}
 																	</span>
 																)}
 														</div>
@@ -453,7 +552,7 @@ export function CommandMenu() {
 																{context.matchLocations.includes("title") && (
 																	<div
 																		className="h-1.5 w-1.5 rounded-full bg-blue-500"
-																		title="Match in title"
+																		title={getMatchInTitleTooltip()}
 																	/>
 																)}
 																{context.matchLocations.includes(
@@ -461,7 +560,7 @@ export function CommandMenu() {
 																) && (
 																	<div
 																		className="h-1.5 w-1.5 rounded-full bg-green-500"
-																		title="Match in description"
+																		title={getMatchInDescriptionTooltip()}
 																	/>
 																)}
 															</div>
@@ -476,7 +575,7 @@ export function CommandMenu() {
 							{/* Resources - Fourth priority */}
 							{searchResults.resources.length > 0 && (
 								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
-									<CommandGroup heading="Resources">
+									<CommandGroup heading={getResourcesHeading()}>
 										{searchResults.resources.slice(0, 6).map((res) => {
 											const context = getResourceContext(res, query);
 											return (
@@ -515,7 +614,7 @@ export function CommandMenu() {
 																res.patterns.length > 0 &&
 																res.patterns[0]?.title && (
 																	<span className="truncate text-muted-foreground text-xs">
-																		in {res.patterns[0].title}
+																		{getInPatternText(res.patterns[0].title)}
 																	</span>
 																)}
 														</div>
@@ -524,7 +623,7 @@ export function CommandMenu() {
 																{context.matchLocations.includes("title") && (
 																	<div
 																		className="h-1.5 w-1.5 rounded-full bg-blue-500"
-																		title="Match in title"
+																		title={getMatchInTitleTooltip()}
 																	/>
 																)}
 																{context.matchLocations.includes(
@@ -532,7 +631,7 @@ export function CommandMenu() {
 																) && (
 																	<div
 																		className="h-1.5 w-1.5 rounded-full bg-green-500"
-																		title="Match in description"
+																		title={getMatchInDescriptionTooltip()}
 																	/>
 																)}
 															</div>
@@ -547,7 +646,7 @@ export function CommandMenu() {
 							{/* Tags - Fifth priority */}
 							{searchResults.tags.length > 0 && (
 								<div className="fade-in-0 slide-in-from-top-1 animate-in duration-200">
-									<CommandGroup heading="Tags">
+									<CommandGroup heading={getTagsHeading()}>
 										{searchResults.tags.slice(0, 6).map((tag) => {
 											const context = getTagContext(tag, query);
 											return (
@@ -578,8 +677,7 @@ export function CommandMenu() {
 															</span>
 															{tag.patterns && tag.patterns.length > 0 && (
 																<span className="text-muted-foreground text-xs">
-																	{tag.patterns.length} pattern
-																	{tag.patterns.length !== 1 ? "s" : ""}
+																	{getPatternCountText(tag.patterns.length)}
 																</span>
 															)}
 														</div>
@@ -587,7 +685,7 @@ export function CommandMenu() {
 															<div className="flex flex-shrink-0 gap-1">
 																<div
 																	className="h-1.5 w-1.5 rounded-full bg-blue-500"
-																	title="Match in tag name"
+																	title={getMatchInTagTooltip()}
 																/>
 															</div>
 														)}
@@ -603,7 +701,7 @@ export function CommandMenu() {
 				</CommandList>
 				<div className="flex items-center justify-between border-border border-t bg-background px-4 py-3">
 					<div className="text-muted-foreground text-sm">
-						You are on the {currentPage.toLowerCase()} page
+						{getStatusText(currentPage.toLowerCase())}
 					</div>
 					<div className="hidden lg:flex lg:items-center lg:gap-4">
 						<div className="flex items-center gap-2">
@@ -615,13 +713,17 @@ export function CommandMenu() {
 									<ArrowDownIcon size={12} />
 								</div>
 							</div>
-							<span className="text-muted-foreground text-xs">Navigation</span>
+							<span className="text-muted-foreground text-xs">
+								{getNavigationLabel()}
+							</span>
 						</div>
 						<div className="flex items-center gap-2">
 							<div className="rounded bg-neutral-200 p-1 text-neutral-500 dark:bg-neutral-800">
 								<CornerDownLeftIcon size={12} />
 							</div>
-							<span className="text-muted-foreground text-xs">Open result</span>
+							<span className="text-muted-foreground text-xs">
+								{getOpenResultLabel()}
+							</span>
 						</div>
 					</div>
 				</div>

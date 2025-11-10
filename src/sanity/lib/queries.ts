@@ -843,6 +843,22 @@ export const SEARCH_CONFIG_QUERY = defineQuery(`
     themePreferencesLabel,
     preferencesConjunction,
     enhanceHoverDescription,
+    commandMenuInputPlaceholder,
+    commandMenuLoadingText,
+    commandMenuEmptyState,
+    commandMenuOnThisPageHeading,
+    commandMenuPatternsHeading,
+    commandMenuSolutionsHeading,
+    commandMenuResourcesHeading,
+    commandMenuTagsHeading,
+    commandMenuStatusText,
+    commandMenuNavigationLabel,
+    commandMenuOpenResultLabel,
+    commandMenuInPatternText,
+    commandMenuPatternCountText,
+    commandMenuMatchInTitleTooltip,
+    commandMenuMatchInDescriptionTooltip,
+    commandMenuMatchInTagTooltip,
   }
 `);
 
@@ -1368,6 +1384,16 @@ export const HEADER_QUERY = defineQuery(`
         "slug": slug.current
       }
     },
+    languageSelectorButtonLabel,
+    fontToggleButtonLabel,
+    fontToggleSrOnlyLabel,
+    fontSerifLabel,
+    fontSansSerifLabel,
+    modeToggleButtonLabel,
+    modeToggleSrOnlyLabel,
+    themeLightLabel,
+    themeDarkLabel,
+    themeSystemLabel,
   }
 `);
 

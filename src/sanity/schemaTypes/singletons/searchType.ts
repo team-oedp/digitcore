@@ -150,6 +150,114 @@ export const searchType = defineType({
 			description:
 				"Description text for enhance hover card. Use {preferencesText} as placeholder (e.g., 'Results that match your {preferencesText} will be prioritized.')",
 		}),
+		defineField({
+			name: "commandMenuInputPlaceholder",
+			type: "string",
+			title: "Command Menu Input Placeholder",
+			description:
+				"Placeholder text for the command menu search input (e.g., 'Search patterns, solutions, and resources...')",
+		}),
+		defineField({
+			name: "commandMenuLoadingText",
+			type: "string",
+			title: "Command Menu Loading Text",
+			description:
+				"Text shown while searching in command menu (e.g., 'Searching...')",
+		}),
+		defineField({
+			name: "commandMenuEmptyState",
+			type: "string",
+			title: "Command Menu Empty State",
+			description:
+				"Text shown when no results are found in command menu (e.g., 'No results found.')",
+		}),
+		defineField({
+			name: "commandMenuOnThisPageHeading",
+			type: "string",
+			title: "Command Menu 'On This Page' Heading",
+			description:
+				"Heading text for page content results section (e.g., 'On this page')",
+		}),
+		defineField({
+			name: "commandMenuPatternsHeading",
+			type: "string",
+			title: "Command Menu Patterns Heading",
+			description: "Heading text for patterns section (e.g., 'Patterns')",
+		}),
+		defineField({
+			name: "commandMenuSolutionsHeading",
+			type: "string",
+			title: "Command Menu Solutions Heading",
+			description: "Heading text for solutions section (e.g., 'Solutions')",
+		}),
+		defineField({
+			name: "commandMenuResourcesHeading",
+			type: "string",
+			title: "Command Menu Resources Heading",
+			description: "Heading text for resources section (e.g., 'Resources')",
+		}),
+		defineField({
+			name: "commandMenuTagsHeading",
+			type: "string",
+			title: "Command Menu Tags Heading",
+			description: "Heading text for tags section (e.g., 'Tags')",
+		}),
+		defineField({
+			name: "commandMenuStatusText",
+			type: "string",
+			title: "Command Menu Status Text",
+			description:
+				"Status text template showing current page. Use {page} as placeholder (e.g., 'You are on the {page} page')",
+		}),
+		defineField({
+			name: "commandMenuNavigationLabel",
+			type: "string",
+			title: "Command Menu Navigation Label",
+			description:
+				"Label text for navigation keyboard shortcut hint (e.g., 'Navigation')",
+		}),
+		defineField({
+			name: "commandMenuOpenResultLabel",
+			type: "string",
+			title: "Command Menu Open Result Label",
+			description:
+				"Label text for open result keyboard shortcut hint (e.g., 'Open result')",
+		}),
+		defineField({
+			name: "commandMenuInPatternText",
+			type: "string",
+			title: "Command Menu 'In Pattern' Text",
+			description:
+				"Text template showing pattern context. Use {pattern} as placeholder (e.g., 'in {pattern}')",
+		}),
+		defineField({
+			name: "commandMenuPatternCountText",
+			type: "string",
+			title: "Command Menu Pattern Count Text",
+			description:
+				"Text template for pattern count. Use {count} as placeholder (e.g., '{count} pattern' or '{count} patterns')",
+		}),
+		defineField({
+			name: "commandMenuMatchInTitleTooltip",
+			type: "string",
+			title: "Command Menu Match In Title Tooltip",
+			description:
+				"Tooltip text for match indicator in title (e.g., 'Match in title')",
+		}),
+		defineField({
+			name: "commandMenuMatchInDescriptionTooltip",
+			type: "string",
+			title: "Command Menu Match In Description Tooltip",
+			description:
+				"Tooltip text for match indicator in description (e.g., 'Match in description')",
+		}),
+		defineField({
+			name: "commandMenuMatchInTagTooltip",
+			type: "string",
+			title: "Command Menu Match In Tag Tooltip",
+			description:
+				"Tooltip text for match indicator in tag name (e.g., 'Match in tag name')",
+		}),
 	],
 	preview: {
 		select: {

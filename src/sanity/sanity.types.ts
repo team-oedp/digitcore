@@ -42,6 +42,22 @@ export type Search = {
   themePreferencesLabel?: string
   preferencesConjunction?: string
   enhanceHoverDescription?: string
+  commandMenuInputPlaceholder?: string
+  commandMenuLoadingText?: string
+  commandMenuEmptyState?: string
+  commandMenuOnThisPageHeading?: string
+  commandMenuPatternsHeading?: string
+  commandMenuSolutionsHeading?: string
+  commandMenuResourcesHeading?: string
+  commandMenuTagsHeading?: string
+  commandMenuStatusText?: string
+  commandMenuNavigationLabel?: string
+  commandMenuOpenResultLabel?: string
+  commandMenuInPatternText?: string
+  commandMenuPatternCountText?: string
+  commandMenuMatchInTitleTooltip?: string
+  commandMenuMatchInDescriptionTooltip?: string
+  commandMenuMatchInTagTooltip?: string
 }
 
 export type PatternUtilities = {
@@ -587,6 +603,16 @@ export type Header = {
     }
     _key: string
   }>
+  languageSelectorButtonLabel?: string
+  fontToggleButtonLabel?: string
+  fontToggleSrOnlyLabel?: string
+  fontSerifLabel?: string
+  fontSansSerifLabel?: string
+  modeToggleButtonLabel?: string
+  modeToggleSrOnlyLabel?: string
+  themeLightLabel?: string
+  themeDarkLabel?: string
+  themeSystemLabel?: string
 }
 
 export type Onboarding = {
@@ -2947,7 +2973,7 @@ export type TAGS_PAGE_QUERYResult = {
   > | null
 } | null
 // Variable: SEARCH_CONFIG_QUERY
-// Query: *[_type == 'search' && language == $language][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    searchInputPlaceholder,    clearButtonLabel,    audiencesFilterLabel,    audiencesPlaceholder,    audiencesSearchPlaceholder,    audiencesEmptyMessage,    themesFilterLabel,    themesPlaceholder,    themesSearchPlaceholder,    themesEmptyMessage,    tagsFilterLabel,    tagsPlaceholder,    tagsSearchPlaceholder,    tagsEmptyMessage,    suggestionsHeading,    enhanceLabel,    enhanceResultsTitle,    audiencePreferencesLabel,    themePreferencesLabel,    preferencesConjunction,    enhanceHoverDescription,  }
+// Query: *[_type == 'search' && language == $language][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    searchInputPlaceholder,    clearButtonLabel,    audiencesFilterLabel,    audiencesPlaceholder,    audiencesSearchPlaceholder,    audiencesEmptyMessage,    themesFilterLabel,    themesPlaceholder,    themesSearchPlaceholder,    themesEmptyMessage,    tagsFilterLabel,    tagsPlaceholder,    tagsSearchPlaceholder,    tagsEmptyMessage,    suggestionsHeading,    enhanceLabel,    enhanceResultsTitle,    audiencePreferencesLabel,    themePreferencesLabel,    preferencesConjunction,    enhanceHoverDescription,    commandMenuInputPlaceholder,    commandMenuLoadingText,    commandMenuEmptyState,    commandMenuOnThisPageHeading,    commandMenuPatternsHeading,    commandMenuSolutionsHeading,    commandMenuResourcesHeading,    commandMenuTagsHeading,    commandMenuStatusText,    commandMenuNavigationLabel,    commandMenuOpenResultLabel,    commandMenuInPatternText,    commandMenuPatternCountText,    commandMenuMatchInTitleTooltip,    commandMenuMatchInDescriptionTooltip,    commandMenuMatchInTagTooltip,  }
 export type SEARCH_CONFIG_QUERYResult = {
   _id: string
   _type: 'search'
@@ -2977,6 +3003,22 @@ export type SEARCH_CONFIG_QUERYResult = {
   themePreferencesLabel: string | null
   preferencesConjunction: string | null
   enhanceHoverDescription: string | null
+  commandMenuInputPlaceholder: string | null
+  commandMenuLoadingText: string | null
+  commandMenuEmptyState: string | null
+  commandMenuOnThisPageHeading: string | null
+  commandMenuPatternsHeading: string | null
+  commandMenuSolutionsHeading: string | null
+  commandMenuResourcesHeading: string | null
+  commandMenuTagsHeading: string | null
+  commandMenuStatusText: string | null
+  commandMenuNavigationLabel: string | null
+  commandMenuOpenResultLabel: string | null
+  commandMenuInPatternText: string | null
+  commandMenuPatternCountText: string | null
+  commandMenuMatchInTitleTooltip: string | null
+  commandMenuMatchInDescriptionTooltip: string | null
+  commandMenuMatchInTagTooltip: string | null
 } | null
 // Variable: CARRIER_BAG_QUERY
 // Query: *[_type == 'carrierBag' && language == $language][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    information,    emptyStateMessage,    pdfButtonLabel,    jsonButtonLabel,    removeAllButtonLabel,    utilitiesGroupLabel,    exportPdfButtonLabel,    generateLinkButtonLabel,    shareToSocialsButtonLabel,    downloadJsonButtonLabel,    closeCarrierBagButtonLabel,    applicationSectionLabel,    filtersLabel,    sortTitleAzLabel,    sortTitleZaLabel,    groupByThemeButtonLabel,    groupByThemeButtonLabelActive,    filterByTagsPlaceholder,    filterByTagsSearchPlaceholder,    filterByTagsEmptyMessage,    filterByTagsGroupHeading,    filterByAudiencesPlaceholder,    filterByAudiencesSearchPlaceholder,    filterByAudiencesEmptyMessage,    filterByAudiencesGroupHeading,    clearAllButtonLabel,    savedItemsBadgeText,    saveToCarrierBagButtonLabel,    savedToCarrierBagButtonLabel,  }
@@ -4590,7 +4632,7 @@ export type FOOTER_QUERYResult = {
   licenseLink: Link | null
 } | null
 // Variable: HEADER_QUERY
-// Query: *[_type == 'header' && language == $language][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    internalLinks[]{      _key,      label,      page->{        _id,        _type,        title,        "slug": slug.current      }    },  }
+// Query: *[_type == 'header' && language == $language][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    internalLinks[]{      _key,      label,      page->{        _id,        _type,        title,        "slug": slug.current      }    },    languageSelectorButtonLabel,    fontToggleButtonLabel,    fontToggleSrOnlyLabel,    fontSerifLabel,    fontSansSerifLabel,    modeToggleButtonLabel,    modeToggleSrOnlyLabel,    themeLightLabel,    themeDarkLabel,    themeSystemLabel,  }
 export type HEADER_QUERYResult = {
   _id: string
   _type: 'header'
@@ -4609,6 +4651,16 @@ export type HEADER_QUERYResult = {
       slug: string | null
     } | null
   }> | null
+  languageSelectorButtonLabel: string | null
+  fontToggleButtonLabel: string | null
+  fontToggleSrOnlyLabel: string | null
+  fontSerifLabel: string | null
+  fontSansSerifLabel: string | null
+  modeToggleButtonLabel: string | null
+  modeToggleSrOnlyLabel: string | null
+  themeLightLabel: string | null
+  themeDarkLabel: string | null
+  themeSystemLabel: string | null
 } | null
 // Variable: PATTERNS_STALENESS_CHECK_QUERY
 // Query: *[_type == "pattern" && _id in $patternIds && language == $language]{    _id,    _updatedAt  }
@@ -4696,7 +4748,7 @@ declare module '@sanity/client' {
     "\n  *[_type == 'onboarding' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    skipLabel,\n    backLabel,\n    footerText,\n    breadcrumbs,\n    slide1{\n      title,\n      body,\n      primaryCtaLabel,\n      secondaryCtaText,\n      returnToCtaText,\n      homePageButtonLabel\n    },\n    slide2{\n      title,\n      body,\n      nextButtonLabel\n    },\n    slide3{\n      title,\n      body,\n      finishButtonLabel\n    }\n  }\n": ONBOARDING_QUERYResult
     '\n  *[_type == "tag" && language == $language] | order(title asc) {\n    _id,\n    title,\n    language,\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current\n    }\n  }[count(patterns) > 0]\n': TAGS_WITH_PATTERNS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'tags\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': TAGS_PAGE_QUERYResult
-    "\n  *[_type == 'search' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    searchInputPlaceholder,\n    clearButtonLabel,\n    audiencesFilterLabel,\n    audiencesPlaceholder,\n    audiencesSearchPlaceholder,\n    audiencesEmptyMessage,\n    themesFilterLabel,\n    themesPlaceholder,\n    themesSearchPlaceholder,\n    themesEmptyMessage,\n    tagsFilterLabel,\n    tagsPlaceholder,\n    tagsSearchPlaceholder,\n    tagsEmptyMessage,\n    suggestionsHeading,\n    enhanceLabel,\n    enhanceResultsTitle,\n    audiencePreferencesLabel,\n    themePreferencesLabel,\n    preferencesConjunction,\n    enhanceHoverDescription,\n  }\n": SEARCH_CONFIG_QUERYResult
+    "\n  *[_type == 'search' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    searchInputPlaceholder,\n    clearButtonLabel,\n    audiencesFilterLabel,\n    audiencesPlaceholder,\n    audiencesSearchPlaceholder,\n    audiencesEmptyMessage,\n    themesFilterLabel,\n    themesPlaceholder,\n    themesSearchPlaceholder,\n    themesEmptyMessage,\n    tagsFilterLabel,\n    tagsPlaceholder,\n    tagsSearchPlaceholder,\n    tagsEmptyMessage,\n    suggestionsHeading,\n    enhanceLabel,\n    enhanceResultsTitle,\n    audiencePreferencesLabel,\n    themePreferencesLabel,\n    preferencesConjunction,\n    enhanceHoverDescription,\n    commandMenuInputPlaceholder,\n    commandMenuLoadingText,\n    commandMenuEmptyState,\n    commandMenuOnThisPageHeading,\n    commandMenuPatternsHeading,\n    commandMenuSolutionsHeading,\n    commandMenuResourcesHeading,\n    commandMenuTagsHeading,\n    commandMenuStatusText,\n    commandMenuNavigationLabel,\n    commandMenuOpenResultLabel,\n    commandMenuInPatternText,\n    commandMenuPatternCountText,\n    commandMenuMatchInTitleTooltip,\n    commandMenuMatchInDescriptionTooltip,\n    commandMenuMatchInTagTooltip,\n  }\n": SEARCH_CONFIG_QUERYResult
     "\n  *[_type == 'carrierBag' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    information,\n    emptyStateMessage,\n    pdfButtonLabel,\n    jsonButtonLabel,\n    removeAllButtonLabel,\n    utilitiesGroupLabel,\n    exportPdfButtonLabel,\n    generateLinkButtonLabel,\n    shareToSocialsButtonLabel,\n    downloadJsonButtonLabel,\n    closeCarrierBagButtonLabel,\n    applicationSectionLabel,\n    filtersLabel,\n    sortTitleAzLabel,\n    sortTitleZaLabel,\n    groupByThemeButtonLabel,\n    groupByThemeButtonLabelActive,\n    filterByTagsPlaceholder,\n    filterByTagsSearchPlaceholder,\n    filterByTagsEmptyMessage,\n    filterByTagsGroupHeading,\n    filterByAudiencesPlaceholder,\n    filterByAudiencesSearchPlaceholder,\n    filterByAudiencesEmptyMessage,\n    filterByAudiencesGroupHeading,\n    clearAllButtonLabel,\n    savedItemsBadgeText,\n    saveToCarrierBagButtonLabel,\n    savedToCarrierBagButtonLabel,\n  }\n": CARRIER_BAG_QUERYResult
     "\n  *[_type == 'patternUtilities' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    knowOfAnotherResourceOrSolution,\n    makeASuggestionButtonLabel,\n    suggestSolutionModalTitle,\n    suggestSolutionModalDescription,\n    patternLabel,\n    newSolutionsLabel,\n    newSolutionsPlaceholder,\n    newResourcesLabel,\n    newResourcesPlaceholder,\n    additionalFeedbackLabel,\n    additionalFeedbackPlaceholder,\n    nameAndAffiliationLabel,\n    nameAndAffiliationPlaceholder,\n    emailLabel,\n    emailPlaceholder,\n    cancelButtonLabel,\n    submitSuggestionButtonLabel,\n    patternSubmittedSuccessfullyMessage,\n    relatedSolutionLabel,\n    relatedSolutionsLabel,\n    visitPatternButtonLabel,\n    solutionsHeading,\n    resourcesHeading,\n  }\n": PATTERN_UTILITIES_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{\n    ...,\n    _id,\n    _type,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      _type,\n      title,\n      description,\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      title,\n      description,\n      links,\n      solutions[]->{ _id, title }\n    }\n  }\n': PATTERNS_BY_SLUGS_QUERYResult
@@ -4710,7 +4762,7 @@ declare module '@sanity/client' {
     '\n  *[_type == \'page\' && slug.current == \'acknowledgements\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      },\n      name,\n      description\n    }\n  }\n': ACKNOWLEDGEMENTS_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'themes\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': THEMES_PAGE_QUERYResult
     '\n  *[_type == \'footer\' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    externalLinks[]{\n      _key,\n      label,\n      url\n    },\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n    licenseLink\n  }\n': FOOTER_QUERYResult
-    '\n  *[_type == \'header\' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n  }\n': HEADER_QUERYResult
+    '\n  *[_type == \'header\' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    internalLinks[]{\n      _key,\n      label,\n      page->{\n        _id,\n        _type,\n        title,\n        "slug": slug.current\n      }\n    },\n    languageSelectorButtonLabel,\n    fontToggleButtonLabel,\n    fontToggleSrOnlyLabel,\n    fontSerifLabel,\n    fontSansSerifLabel,\n    modeToggleButtonLabel,\n    modeToggleSrOnlyLabel,\n    themeLightLabel,\n    themeDarkLabel,\n    themeSystemLabel,\n  }\n': HEADER_QUERYResult
     '\n  *[_type == "pattern" && _id in $patternIds && language == $language]{\n    _id,\n    _updatedAt\n  }\n': PATTERNS_STALENESS_CHECK_QUERYResult
     '\n  *[_type == "audience" && language == $language] | order(title asc) {\n    _id,\n    title,\n    "value": _id,\n    "label": title\n  }\n': AUDIENCES_QUERYResult
     '\n  *[_type == "theme" && language == $language] | order(title asc) {\n    _id,\n    title,\n    "value": _id,\n    "label": title\n  }\n': THEMES_QUERYResult
