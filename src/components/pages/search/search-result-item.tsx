@@ -14,6 +14,7 @@ import { Icon } from "~/components/shared/icon";
 import { ThemeMiniBadge } from "~/components/shared/theme-mini-badge";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import type { Language } from "~/i18n/config";
 import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import {
@@ -81,12 +82,14 @@ function ResultTitle({
 	showPatternIcon,
 	icon,
 	isPatternsPage = false,
+	language,
 }: {
 	title: string;
 	href: string;
 	showPatternIcon: boolean;
 	icon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 	isPatternsPage?: boolean;
+	language: Language;
 }) {
 	return (
 		<div className="inline-flex w-full items-start justify-between gap-6">
@@ -111,7 +114,9 @@ function ResultTitle({
 				asChild
 				className="text-xs lg:text-sm"
 			>
-				<Link href={href}>Visit pattern</Link>
+				<Link href={href}>
+					{language === "es" ? "Patrón de visitas" : "Visit pattern"}
+				</Link>
 			</Button>
 		</div>
 	);
@@ -261,6 +266,7 @@ export function SearchResultItem({
 				showPatternIcon={showPatternIcon}
 				icon={PatternIconComponent}
 				isPatternsPage={isPatternsPage}
+				language={language}
 			/>
 
 			<ResultDescription
