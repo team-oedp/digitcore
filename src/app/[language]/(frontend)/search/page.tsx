@@ -9,7 +9,7 @@ import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { Skeleton } from "~/components/ui/skeleton";
 import { sanityFetch } from "~/sanity/lib/client";
-import { SEARCH_PAGE_QUERY, SEARCH_QUERY } from "~/sanity/lib/queries";
+import { SEARCH_CONFIG_QUERY, SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
 import type { LanguageSearchPageProps } from "~/types/page-props";
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default async function Page({ params }: LanguageSearchPageProps) {
 			revalidate: 60,
 		}),
 		sanityFetch({
-			query: SEARCH_QUERY,
+			query: SEARCH_CONFIG_QUERY,
 			params: { language },
 			revalidate: 60,
 		}),

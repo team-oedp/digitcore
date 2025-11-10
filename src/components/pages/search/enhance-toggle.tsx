@@ -8,7 +8,7 @@ import {
 } from "~/components/ui/hover-card";
 import { Toggle } from "~/components/ui/toggle";
 import type { Language } from "~/i18n/config";
-import type { SEARCH_QUERYResult } from "~/sanity/sanity.types";
+import type { SEARCH_CONFIG_QUERYResult } from "~/sanity/sanity.types";
 
 type EnhanceToggleProps = {
 	enabled: boolean;
@@ -17,7 +17,7 @@ type EnhanceToggleProps = {
 	audiencePreferences?: string[];
 	themePreferences?: string[];
 	language?: Language;
-	searchData?: SEARCH_QUERYResult;
+	searchData?: SEARCH_CONFIG_QUERYResult;
 };
 
 export function EnhanceToggle({

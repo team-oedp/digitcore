@@ -811,7 +811,7 @@ export const TAGS_PAGE_QUERY = defineQuery(`
   }
 `);
 
-export const SEARCH_QUERY = defineQuery(`
+export const SEARCH_CONFIG_QUERY = defineQuery(`
   *[_type == 'search' && language == $language][0]{
     _id,
     _type,

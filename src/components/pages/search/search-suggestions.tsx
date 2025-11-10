@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { getPatternSuggestionsWithPreferences } from "~/app/actions/search";
 import type { Language } from "~/i18n/config";
-import type { SEARCH_QUERYResult } from "~/sanity/sanity.types";
+import type { SEARCH_CONFIG_QUERYResult } from "~/sanity/sanity.types";
 import { useOrientationStore } from "~/stores/orientation";
 import type { SearchPattern } from "~/types/search";
 import { SearchResultItem } from "./search-result-item";
@@ -12,7 +12,7 @@ import { SearchResultsSkeleton } from "./search-result-skeleton";
 
 type SearchSuggestionsProps = {
 	limit?: number;
-	searchData?: SEARCH_QUERYResult;
+	searchData?: SEARCH_CONFIG_QUERYResult;
 };
 
 export function SearchSuggestions({

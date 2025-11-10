@@ -10,7 +10,7 @@ import {
 import type { Language } from "~/i18n/config";
 import { createLogLocation, logger } from "~/lib/logger";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
-import type { SEARCH_QUERYResult } from "~/sanity/sanity.types";
+import type { SEARCH_CONFIG_QUERYResult } from "~/sanity/sanity.types";
 import { useOrientationStore } from "~/stores/orientation";
 import { SearchResultsSkeleton } from "./search-result-skeleton";
 import { SearchResults } from "./search-results";
@@ -20,7 +20,7 @@ import { SearchSuggestions } from "./search-suggestions";
 type SearchClientWrapperProps = {
 	emptyStateMessage?: string;
 	language: Language;
-	searchData?: SEARCH_QUERYResult;
+	searchData?: SEARCH_CONFIG_QUERYResult;
 };
 
 export function SearchClientWrapper({
