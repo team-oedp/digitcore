@@ -7,17 +7,12 @@ import { PageWrapper } from "~/components/shared/page-wrapper";
 import PatternCombination from "~/components/shared/pattern-combination-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
 import { type Language, i18n } from "~/i18n/config";
-import type { GlossaryTerm } from "~/lib/glossary-utils";
 import {
 	buildAbsoluteUrl,
 	buildDescriptionFromPortableText,
 } from "~/lib/metadata";
 import { sanityFetch } from "~/sanity/lib/client";
-import {
-	GLOSSARY_TERMS_QUERY,
-	HOME_PAGE_QUERY,
-	SITE_SETTINGS_QUERY,
-} from "~/sanity/lib/queries";
+import { HOME_PAGE_QUERY, SITE_SETTINGS_QUERY } from "~/sanity/lib/queries";
 import type { ContentList, Page as PageType } from "~/sanity/sanity.types";
 import type { LanguagePageProps } from "~/types/page-props";
 
@@ -47,7 +42,7 @@ export async function generateMetadata({
 			revalidate: 3600,
 		}),
 	]);
-	const siteUrl = site?.url ?? "https://digitcore.org";
+	const siteUrl = site?.url ?? "https://digitcore.openenvironmentaldata.org";
 	const title = page?.title ? `${page.title}` : "Home";
 	const description =
 		buildDescriptionFromPortableText(
@@ -80,18 +75,11 @@ export async function generateMetadata({
 export default async function Page({ params }: LanguagePageProps) {
 	const { language } = await params;
 
-	const [data, glossaryTerms] = await Promise.all([
-		sanityFetch({
-			query: HOME_PAGE_QUERY,
-			params: { language },
-			revalidate: 60,
-		}) as Promise<PageType | null>,
-		sanityFetch({
-			query: GLOSSARY_TERMS_QUERY,
-			params: { language },
-			revalidate: 60,
-		}) as Promise<GlossaryTerm[]>,
-	]);
+	const data = (await sanityFetch({
+		query: HOME_PAGE_QUERY,
+		params: { language },
+		revalidate: 60,
+	})) as PageType | null;
 
 	if (!data) {
 		notFound();
@@ -147,32 +135,52 @@ export default async function Page({ params }: LanguagePageProps) {
 
 	const sectionGroups = groupSections();
 
+	function getHeroText(
+		lang: Language,
+		heroHeading?: string | null,
+	): string | null {
+		if (heroHeading) return heroHeading;
+
+		if (lang === "en") {
+			return "Welcome to the Digital Toolkit for Collaborative Environmental Research";
+		}
+		if (lang === "es") {
+			return "Bienvenidos al Kit de Herramientas Digitales para la Investigación Colaborativa Ambiental, o DIGITCORE.";
+		}
+
+		return null;
+	}
+
+	const heroHeading = (data as { heroHeading?: string } | null)?.heroHeading;
+	const heroText = getHeroText(language, heroHeading);
+
 	return (
 		<PageWrapper>
 			<div className="pb-44">
-				<HeadingMorph
-					text={
-						(data as { heroHeading?: string } | null)?.heroHeading ??
-						"Welcome to the Digital Toolkit for Collaborative Environmental Research"
-					}
-					transitionText="DIGITCORE"
-					morphDistancePx={{ base: 240, sm: 260, md: 320, lg: 360, xl: 400 }}
-					containerClass="overflow-y-auto"
-					randomizeSelection
-					fadeNonTarget
-					fadeSelectedInPlace
-					uppercasePrefix
-					headerHeightVh={90}
-					scrollLockDistancePx={{ base: 80, md: 120, lg: 140 }}
-					distanceToDisappear={{
-						base: 360,
-						sm: 380,
-						md: 460,
-						lg: 520,
-						xl: 560,
-					}}
-					breakpoints={{ md: 765 }}
-				/>
+				{heroText ? (
+					<HeadingMorph
+						text={heroText}
+						transitionText="DIGITCORE"
+						morphDistancePx={{ base: 240, sm: 260, md: 320, lg: 360, xl: 400 }}
+						containerClass="overflow-y-auto"
+						randomizeSelection
+						fadeNonTarget
+						fadeSelectedInPlace
+						uppercasePrefix
+						headerHeightVh={90}
+						scrollLockDistancePx={{ base: 80, md: 120, lg: 140 }}
+						distanceToDisappear={{
+							base: 360,
+							sm: 380,
+							md: 460,
+							lg: 520,
+							xl: 560,
+						}}
+						breakpoints={{ md: 765 }}
+					/>
+				) : (
+					<h1 className="mb-6 text-page-heading">{data?.title ?? "Home"}</h1>
+				)}
 				<div className="flex flex-col gap-16">
 					{sectionGroups.map((group, groupIndex) => (
 						<section

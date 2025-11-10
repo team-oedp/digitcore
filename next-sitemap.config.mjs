@@ -3,7 +3,8 @@
 
 import { createClient } from "next-sanity";
 
-const siteUrl = process.env.SITE_URL || "https://digitcore.org";
+const siteUrl =
+	process.env.SITE_URL || "https://digitcore.openenvironmentaldata.org";
 
 // Minimal Sanity client to fetch dynamic slugs
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
