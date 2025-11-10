@@ -10,6 +10,7 @@ import {
 	InsertAboveIcon,
 	InsertBelowIcon,
 	PresentationIcon,
+	SearchIcon,
 	SparklesIcon,
 	TagIcon,
 	TranslateIcon,
@@ -32,6 +33,7 @@ const SINGLETONS = [
 		title: "Orientation",
 		icon: PresentationIcon,
 	},
+	{ id: "search", _type: "search", title: "Search", icon: SearchIcon },
 	{ id: "header", _type: "header", title: "Header", icon: InsertAboveIcon },
 	{ id: "footer", _type: "footer", title: "Footer", icon: InsertBelowIcon },
 	{
@@ -347,6 +349,7 @@ export const structure: StructureResolver = (S, context) =>
 						"faqCategory",
 						"carrierBag",
 						"onboarding",
+						"search",
 						"siteSettings",
 						"footer",
 						"header",

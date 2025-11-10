@@ -53,9 +53,25 @@ export function TagsList({
 									</div>
 
 									<p className="mb-4 text-body-muted">
-										Tagged to the following {Math.min(tag.patterns.length, 10)}{" "}
-										{Math.min(tag.patterns.length, 10) === 1 ? "page" : "pages"}
-										.
+										{language === "es" ? (
+											<>
+												Etiquetado en las siguientes{" "}
+												{Math.min(tag.patterns.length, 10)}{" "}
+												{Math.min(tag.patterns.length, 10) === 1
+													? "página"
+													: "páginas"}
+												.
+											</>
+										) : (
+											<>
+												Tagged to the following{" "}
+												{Math.min(tag.patterns.length, 10)}{" "}
+												{Math.min(tag.patterns.length, 10) === 1
+													? "page"
+													: "pages"}
+												.
+											</>
+										)}
 									</p>
 
 									<div className="flex flex-wrap gap-2">

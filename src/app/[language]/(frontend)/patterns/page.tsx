@@ -88,7 +88,9 @@ export default async function Page({ params }: LanguagePageProps) {
 						>
 							<div className="flex flex-col gap-5">
 								<div className="flex flex-col gap-1">
-									<p className="text-neutral-400 text-xxs uppercase">Theme</p>
+									<p className="text-neutral-400 text-xxs uppercase">
+										{language === "es" ? "Tema" : "Theme"}
+									</p>
 									<h2 className="text-section-heading">{theme.title}</h2>
 								</div>
 								<CustomPortableText

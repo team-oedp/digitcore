@@ -49,9 +49,9 @@ export function SiteFooter({ footerData, language }: SiteFooterProps) {
 	// Future enhancement: Could integrate externalLinks data with dynamic icon rendering
 
 	return (
-		<footer className="mx-3 mt-auto h-[300px] rounded-md bg-footer-background md:h-[200px]">
+		<footer className="mx-3 mt-auto h-[300px] rounded-md bg-footer-background md:h-[240px]">
 			<div className="pb-3">
-				<div className="flex h-[300px] flex-col px-4 py-3 md:h-[200px] md:px-8 md:py-6">
+				<div className="flex h-[300px] flex-col px-4 py-3 md:h-[240px] md:px-8 md:py-6">
 					{/* Mobile Layout - Vertical Stack */}
 					<div className="flex h-full flex-col justify-between md:hidden">
 						{/* 1. Logo + Title */}

@@ -13,6 +13,30 @@
  */
 
 // Source: schema.json
+export type Search = {
+  _id: string
+  _type: 'search'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  language?: string
+  title?: string
+  searchInputPlaceholder?: string
+  clearButtonLabel?: string
+  audiencesFilterLabel?: string
+  audiencesPlaceholder?: string
+  audiencesSearchPlaceholder?: string
+  audiencesEmptyMessage?: string
+  themesFilterLabel?: string
+  themesPlaceholder?: string
+  themesSearchPlaceholder?: string
+  themesEmptyMessage?: string
+  tagsFilterLabel?: string
+  tagsPlaceholder?: string
+  tagsSearchPlaceholder?: string
+  tagsEmptyMessage?: string
+}
+
 export type Suggestion = {
   _id: string
   _type: 'suggestion'
@@ -427,6 +451,31 @@ export type CarrierBag = {
   title?: string
   information?: BlockContent
   emptyStateMessage?: string
+  pdfButtonLabel?: string
+  jsonButtonLabel?: string
+  removeAllButtonLabel?: string
+  utilitiesGroupLabel?: string
+  exportPdfButtonLabel?: string
+  generateLinkButtonLabel?: string
+  shareToSocialsButtonLabel?: string
+  downloadJsonButtonLabel?: string
+  closeCarrierBagButtonLabel?: string
+  applicationSectionLabel?: string
+  filtersLabel?: string
+  sortTitleAzLabel?: string
+  sortTitleZaLabel?: string
+  groupByThemeButtonLabel?: string
+  groupByThemeButtonLabelActive?: string
+  filterByTagsPlaceholder?: string
+  filterByTagsSearchPlaceholder?: string
+  filterByTagsEmptyMessage?: string
+  filterByTagsGroupHeading?: string
+  filterByAudiencesPlaceholder?: string
+  filterByAudiencesSearchPlaceholder?: string
+  filterByAudiencesEmptyMessage?: string
+  filterByAudiencesGroupHeading?: string
+  clearAllButtonLabel?: string
+  savedItemsBadgeText?: string
 }
 
 export type Footer = {
@@ -525,10 +574,12 @@ export type Onboarding = {
   slide2?: {
     title?: string
     body?: BlockContent
+    nextButtonLabel?: string
   }
   slide3?: {
     title?: string
     body?: BlockContent
+    finishButtonLabel?: string
   }
 }
 
@@ -1154,6 +1205,7 @@ export type SanityAssetSourceData = {
 }
 
 export type AllSanitySchemaTypes =
+  | Search
   | Suggestion
   | ContentList
   | Record
@@ -2648,7 +2700,7 @@ export type PATTERN_FILTER_QUERYResult = Array<{
   }> | null
 }>
 // Variable: ONBOARDING_QUERY
-// Query: *[_type == 'onboarding' && language == $language][0]{    _id,    _type,    title,    language,    description,    skipLabel,    backLabel,    footerText,    breadcrumbs,    slide1{      title,      body,      primaryCtaLabel,      secondaryCtaText    },    slide2{      title,      body    },    slide3{      title,      body    }  }
+// Query: *[_type == 'onboarding' && language == $language][0]{    _id,    _type,    title,    language,    description,    skipLabel,    backLabel,    footerText,    breadcrumbs,    slide1{      title,      body,      primaryCtaLabel,      secondaryCtaText    },    slide2{      title,      body,      nextButtonLabel    },    slide3{      title,      body,      finishButtonLabel    }  }
 export type ONBOARDING_QUERYResult = {
   _id: string
   _type: 'onboarding'
@@ -2672,10 +2724,12 @@ export type ONBOARDING_QUERYResult = {
   slide2: {
     title: string | null
     body: BlockContent | null
+    nextButtonLabel: string | null
   } | null
   slide3: {
     title: string | null
     body: BlockContent | null
+    finishButtonLabel: string | null
   } | null
 } | null
 // Variable: TAGS_WITH_PATTERNS_QUERY
@@ -2845,8 +2899,33 @@ export type TAGS_PAGE_QUERYResult = {
       }
   > | null
 } | null
+// Variable: SEARCH_QUERY
+// Query: *[_type == 'search' && language == $language][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    searchInputPlaceholder,    clearButtonLabel,    audiencesFilterLabel,    audiencesPlaceholder,    audiencesSearchPlaceholder,    audiencesEmptyMessage,    themesFilterLabel,    themesPlaceholder,    themesSearchPlaceholder,    themesEmptyMessage,    tagsFilterLabel,    tagsPlaceholder,    tagsSearchPlaceholder,    tagsEmptyMessage,  }
+export type SEARCH_QUERYResult = {
+  _id: string
+  _type: 'search'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string | null
+  language: string | null
+  searchInputPlaceholder: string | null
+  clearButtonLabel: string | null
+  audiencesFilterLabel: string | null
+  audiencesPlaceholder: string | null
+  audiencesSearchPlaceholder: string | null
+  audiencesEmptyMessage: string | null
+  themesFilterLabel: string | null
+  themesPlaceholder: string | null
+  themesSearchPlaceholder: string | null
+  themesEmptyMessage: string | null
+  tagsFilterLabel: string | null
+  tagsPlaceholder: string | null
+  tagsSearchPlaceholder: string | null
+  tagsEmptyMessage: string | null
+} | null
 // Variable: CARRIER_BAG_QUERY
-// Query: *[_type == 'carrierBag' && language == $language][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    information,    emptyStateMessage,  }
+// Query: *[_type == 'carrierBag' && language == $language][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    information,    emptyStateMessage,    pdfButtonLabel,    jsonButtonLabel,    removeAllButtonLabel,    utilitiesGroupLabel,    exportPdfButtonLabel,    generateLinkButtonLabel,    shareToSocialsButtonLabel,    downloadJsonButtonLabel,    closeCarrierBagButtonLabel,    applicationSectionLabel,    filtersLabel,    sortTitleAzLabel,    sortTitleZaLabel,    groupByThemeButtonLabel,    groupByThemeButtonLabelActive,    filterByTagsPlaceholder,    filterByTagsSearchPlaceholder,    filterByTagsEmptyMessage,    filterByTagsGroupHeading,    filterByAudiencesPlaceholder,    filterByAudiencesSearchPlaceholder,    filterByAudiencesEmptyMessage,    filterByAudiencesGroupHeading,    clearAllButtonLabel,    savedItemsBadgeText,  }
 export type CARRIER_BAG_QUERYResult = {
   _id: string
   _type: 'carrierBag'
@@ -2857,6 +2936,31 @@ export type CARRIER_BAG_QUERYResult = {
   language: string | null
   information: BlockContent | null
   emptyStateMessage: string | null
+  pdfButtonLabel: string | null
+  jsonButtonLabel: string | null
+  removeAllButtonLabel: string | null
+  utilitiesGroupLabel: string | null
+  exportPdfButtonLabel: string | null
+  generateLinkButtonLabel: string | null
+  shareToSocialsButtonLabel: string | null
+  downloadJsonButtonLabel: string | null
+  closeCarrierBagButtonLabel: string | null
+  applicationSectionLabel: string | null
+  filtersLabel: string | null
+  sortTitleAzLabel: string | null
+  sortTitleZaLabel: string | null
+  groupByThemeButtonLabel: string | null
+  groupByThemeButtonLabelActive: string | null
+  filterByTagsPlaceholder: string | null
+  filterByTagsSearchPlaceholder: string | null
+  filterByTagsEmptyMessage: string | null
+  filterByTagsGroupHeading: string | null
+  filterByAudiencesPlaceholder: string | null
+  filterByAudiencesSearchPlaceholder: string | null
+  filterByAudiencesEmptyMessage: string | null
+  filterByAudiencesGroupHeading: string | null
+  clearAllButtonLabel: string | null
+  savedItemsBadgeText: string | null
 } | null
 // Variable: PATTERNS_BY_SLUGS_QUERY
 // Query: *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{    ...,    _id,    _type,    title,    language,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "slug": slug.current,    tags[]->,    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      _type,      title,      description,      audiences[]->{ _id, title }    },    resources[]->{      _id,      _type,      title,      description,      links,      solutions[]->{ _id, title }    }  }
@@ -4499,10 +4603,11 @@ declare module '@sanity/client' {
     '\n  *[_type == "tag" && title match ($searchTerm + "*") && language == $language]\n  | score(\n      boost(title match $searchTerm, 15),\n      boost(title match ($searchTerm + "*"), 10),\n      title match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    // Find patterns that use this tag\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...5]\n  }\n': TAG_SEARCH_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current) && language == $language]\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SIMPLE_SEARCH_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current) && language == $language\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided\n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Order by title (no scoring needed in filter-only mode)\n  | order(title asc)\n  {\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_FILTER_QUERYResult
-    "\n  *[_type == 'onboarding' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    skipLabel,\n    backLabel,\n    footerText,\n    breadcrumbs,\n    slide1{\n      title,\n      body,\n      primaryCtaLabel,\n      secondaryCtaText\n    },\n    slide2{\n      title,\n      body\n    },\n    slide3{\n      title,\n      body\n    }\n  }\n": ONBOARDING_QUERYResult
+    "\n  *[_type == 'onboarding' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    skipLabel,\n    backLabel,\n    footerText,\n    breadcrumbs,\n    slide1{\n      title,\n      body,\n      primaryCtaLabel,\n      secondaryCtaText\n    },\n    slide2{\n      title,\n      body,\n      nextButtonLabel\n    },\n    slide3{\n      title,\n      body,\n      finishButtonLabel\n    }\n  }\n": ONBOARDING_QUERYResult
     '\n  *[_type == "tag" && language == $language] | order(title asc) {\n    _id,\n    title,\n    language,\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current\n    }\n  }[count(patterns) > 0]\n': TAGS_WITH_PATTERNS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'tags\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': TAGS_PAGE_QUERYResult
-    "\n  *[_type == 'carrierBag' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    information,\n    emptyStateMessage,\n  }\n": CARRIER_BAG_QUERYResult
+    "\n  *[_type == 'search' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    searchInputPlaceholder,\n    clearButtonLabel,\n    audiencesFilterLabel,\n    audiencesPlaceholder,\n    audiencesSearchPlaceholder,\n    audiencesEmptyMessage,\n    themesFilterLabel,\n    themesPlaceholder,\n    themesSearchPlaceholder,\n    themesEmptyMessage,\n    tagsFilterLabel,\n    tagsPlaceholder,\n    tagsSearchPlaceholder,\n    tagsEmptyMessage,\n  }\n": SEARCH_QUERYResult
+    "\n  *[_type == 'carrierBag' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    information,\n    emptyStateMessage,\n    pdfButtonLabel,\n    jsonButtonLabel,\n    removeAllButtonLabel,\n    utilitiesGroupLabel,\n    exportPdfButtonLabel,\n    generateLinkButtonLabel,\n    shareToSocialsButtonLabel,\n    downloadJsonButtonLabel,\n    closeCarrierBagButtonLabel,\n    applicationSectionLabel,\n    filtersLabel,\n    sortTitleAzLabel,\n    sortTitleZaLabel,\n    groupByThemeButtonLabel,\n    groupByThemeButtonLabelActive,\n    filterByTagsPlaceholder,\n    filterByTagsSearchPlaceholder,\n    filterByTagsEmptyMessage,\n    filterByTagsGroupHeading,\n    filterByAudiencesPlaceholder,\n    filterByAudiencesSearchPlaceholder,\n    filterByAudiencesEmptyMessage,\n    filterByAudiencesGroupHeading,\n    clearAllButtonLabel,\n    savedItemsBadgeText,\n  }\n": CARRIER_BAG_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{\n    ...,\n    _id,\n    _type,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      _type,\n      title,\n      description,\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      title,\n      description,\n      links,\n      solutions[]->{ _id, title }\n    }\n  }\n': PATTERNS_BY_SLUGS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'values\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For record type\n      name,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': VALUES_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'patterns\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    emptyStateMessage,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': PATTERNS_PAGE_QUERYResult

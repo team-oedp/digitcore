@@ -19,6 +19,7 @@ import {
 	searchParamsSchema,
 	serializeSearchParams,
 } from "~/lib/search";
+import type { SEARCH_QUERYResult } from "~/sanity/sanity.types";
 import { useOrientationStore } from "~/stores/orientation";
 import { EnhanceToggle } from "./enhance-toggle";
 
@@ -31,12 +32,14 @@ type SearchInterfaceProps = {
 	audienceOptions?: FilterOption[];
 	themeOptions?: FilterOption[];
 	tagOptions?: FilterOption[];
+	searchData?: SEARCH_QUERYResult;
 };
 
 export function SearchInterface({
 	audienceOptions = [],
 	themeOptions = [],
 	tagOptions = [],
+	searchData,
 }: SearchInterfaceProps) {
 	const location = createLogLocation("search-interface.tsx", "SearchInterface");
 	const [componentId] = useState(() => Math.random().toString(36).substring(7));
@@ -274,7 +277,10 @@ export function SearchInterface({
 							value={searchTerm}
 							onChange={(e) => handleSearchChange(e.target.value)}
 							onKeyDown={handleKeyDown}
-							placeholder="Search patterns, solutions, resources..."
+							placeholder={
+								searchData?.searchInputPlaceholder ||
+								"Search patterns, solutions, resources..."
+							}
 							className="h-8 rounded-none border-0 border-neutral-300 border-b bg-transparent px-0 py-1 pr-16 text-foreground text-sm shadow-none placeholder:text-muted-foreground focus-visible:border-neutral-400 focus-visible:ring-0 focus-visible:ring-offset-0 dark:border-neutral-700 dark:bg-transparent dark:focus-visible:border-neutral-500"
 						/>
 						{searchTerm && (
@@ -284,7 +290,7 @@ export function SearchInterface({
 								className="absolute right-0 cursor-pointer text-muted-foreground text-sm transition-colors hover:text-foreground"
 								title="Clear search"
 							>
-								Clear
+								{searchData?.clearButtonLabel || "Clear"}
 							</button>
 						)}
 					</div>
@@ -308,21 +314,28 @@ export function SearchInterface({
 			<div className="flex w-full max-w-4xl flex-col gap-3 p-0.5 md:flex-row">
 				{/* Audience Multiselect */}
 				<div className="min-w-0 flex-1">
-					<div className="mb-1 text-primary text-xs">Audiences</div>
+					<div className="mb-1 text-primary text-xs">
+						{searchData?.audiencesFilterLabel || "Audiences"}
+					</div>
 					<MultiSelect
 						values={optimisticAudiences}
 						onValuesChange={handleAudienceChange}
 					>
 						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg bg-transparent text-[14px] text-primary shadow-none hover:bg-transparent dark:bg-transparent dark:hover:bg-transparent">
 							<MultiSelectValue
-								placeholder="Select audiences"
+								placeholder={
+									searchData?.audiencesPlaceholder || "Select audiences"
+								}
 								overflowBehavior="cutoff"
 							/>
 						</MultiSelectTrigger>
 						<MultiSelectContent
 							search={{
-								placeholder: "Search audiences...",
-								emptyMessage: "No audiences found.",
+								placeholder:
+									searchData?.audiencesSearchPlaceholder ||
+									"Search audiences...",
+								emptyMessage:
+									searchData?.audiencesEmptyMessage || "No audiences found.",
 							}}
 						>
 							<MultiSelectGroup>
@@ -338,21 +351,25 @@ export function SearchInterface({
 
 				{/* Theme Multiselect */}
 				<div className="min-w-0 flex-1">
-					<div className="mb-1 text-primary text-xs">Themes</div>
+					<div className="mb-1 text-primary text-xs">
+						{searchData?.themesFilterLabel || "Themes"}
+					</div>
 					<MultiSelect
 						values={optimisticThemes}
 						onValuesChange={handleThemeChange}
 					>
 						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg bg-transparent text-[14px] text-primary shadow-none hover:bg-transparent dark:bg-transparent dark:hover:bg-transparent">
 							<MultiSelectValue
-								placeholder="Select themes"
+								placeholder={searchData?.themesPlaceholder || "Select themes"}
 								overflowBehavior="cutoff"
 							/>
 						</MultiSelectTrigger>
 						<MultiSelectContent
 							search={{
-								placeholder: "Search themes...",
-								emptyMessage: "No themes found.",
+								placeholder:
+									searchData?.themesSearchPlaceholder || "Search themes...",
+								emptyMessage:
+									searchData?.themesEmptyMessage || "No themes found.",
 							}}
 						>
 							<MultiSelectGroup>
@@ -368,21 +385,24 @@ export function SearchInterface({
 
 				{/* Tags Multiselect */}
 				<div className="min-w-0 flex-1">
-					<div className="mb-1 text-primary text-xs">Tags</div>
+					<div className="mb-1 text-primary text-xs">
+						{searchData?.tagsFilterLabel || "Tags"}
+					</div>
 					<MultiSelect
 						values={optimisticTags}
 						onValuesChange={handleTagsChange}
 					>
 						<MultiSelectTrigger className="h-[34px] w-full gap-2 rounded-lg bg-transparent text-[14px] text-primary shadow-none hover:bg-transparent dark:bg-transparent dark:hover:bg-transparent">
 							<MultiSelectValue
-								placeholder="Select tags"
+								placeholder={searchData?.tagsPlaceholder || "Select tags"}
 								overflowBehavior="cutoff"
 							/>
 						</MultiSelectTrigger>
 						<MultiSelectContent
 							search={{
-								placeholder: "Search tags...",
-								emptyMessage: "No tags found.",
+								placeholder:
+									searchData?.tagsSearchPlaceholder || "Search tags...",
+								emptyMessage: searchData?.tagsEmptyMessage || "No tags found.",
 							}}
 						>
 							<MultiSelectGroup>

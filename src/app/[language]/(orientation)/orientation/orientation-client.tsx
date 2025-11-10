@@ -1,10 +1,12 @@
 "use client";
 
 import {
+	Globe02Icon,
 	Home09Icon,
 	SearchList02Icon,
 	Share02Icon,
 } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "next-sanity";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -29,6 +31,13 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { i18n } from "~/i18n/config";
 import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
 import type { Onboarding } from "~/sanity/sanity.types";
@@ -226,9 +235,122 @@ export function OrientationClient({
 	const goToSlide2 = () => goToSlide(2);
 	const goToSlide3 = () => goToSlide(3);
 
+	const pathname = usePathname();
+	const { language: currentLanguage } = useMemo(
+		() => parseLocalePath(pathname),
+		[pathname],
+	);
+
+	const orientationSearchSuffix = useMemo(() => {
+		if (!searchParams) {
+			return "";
+		}
+
+		const params = new URLSearchParams(searchParams.toString());
+		const orientationParams = ["step", "pattern", "returnTo", "via"];
+
+		const filteredParams = new URLSearchParams();
+		for (const key of orientationParams) {
+			const value = params.get(key);
+			if (value) {
+				filteredParams.set(key, value);
+			}
+		}
+
+		const query = filteredParams.toString();
+		return query ? `?${query}` : "";
+	}, [searchParams]);
+
+	const languageOptions = useMemo(
+		() =>
+			i18n.languages.map((language) => ({
+				code: language.id,
+				label: language.title,
+			})),
+		[],
+	);
+
 	return (
 		<div className="m-2 rounded-md bg-neutral-200 dark:bg-neutral-800">
 			<div className="relative h-[calc(100vh-1rem)] overflow-clip rounded-md bg-primary-foreground p-2 dark:bg-neutral-900">
+				<div className="absolute top-4 right-4 z-10">
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<button
+								type="button"
+								className={cn(
+									"group relative flex h-7 items-center rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear hover:bg-neutral-200 dark:hover:bg-neutral-800",
+								)}
+								suppressHydrationWarning
+							>
+								<span
+									className={cn(
+										"flex items-center gap-0.5 text-neutral-600 text-sm transition-colors group-hover:text-neutral-900 dark:text-neutral-400 dark:group-hover:text-neutral-100",
+									)}
+								>
+									<HugeiconsIcon
+										icon={Globe02Icon}
+										size={14}
+										color="currentColor"
+										strokeWidth={1.5}
+									/>
+								</span>
+								<span className="sr-only">Select language</span>
+							</button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end" className="min-w-32">
+							{languageOptions.map((languageOption) => {
+								const isActive = languageOption.code === currentLanguage;
+								const href = buildLocaleHref(
+									languageOption.code,
+									`/orientation${orientationSearchSuffix}`,
+								);
+
+								return (
+									<DropdownMenuItem
+										key={languageOption.code}
+										asChild
+										className="p-0"
+									>
+										<Link
+											href={href}
+											className={cn(
+												"flex w-full items-center gap-3 px-3 py-2 text-sm outline-none transition-colors",
+												isActive
+													? "font-medium text-foreground"
+													: "text-muted-foreground hover:text-foreground",
+											)}
+											aria-label={`Switch to ${languageOption.label}`}
+											prefetch={true}
+										>
+											<span
+												className={cn(
+													"min-w-[24px] font-medium text-xs",
+													isActive
+														? "text-foreground"
+														: "text-muted-foreground",
+												)}
+											>
+												{languageOption.code.toUpperCase()}
+											</span>
+											<span
+												className={cn(
+													"text-sm",
+													isActive
+														? "font-medium text-foreground"
+														: "text-muted-foreground",
+												)}
+											>
+												{languageOption.label}
+											</span>
+											<span className="sr-only">{languageOption.label}</span>
+										</Link>
+									</DropdownMenuItem>
+								);
+							})}
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
 				<div
 					className={cn(
 						"h-full w-full transition-opacity duration-300",
@@ -243,6 +365,7 @@ export function OrientationClient({
 							returnToPath={returnToPath}
 							goToSlide2={goToSlide2}
 							onNavigateSlide={goToSlide}
+							language={currentLanguage}
 						/>
 					)}
 					{currentSlide === 2 && (
@@ -252,6 +375,7 @@ export function OrientationClient({
 							onNavigateSlide={goToSlide}
 							audienceOptions={audienceOptions}
 							onboarding={onboarding}
+							language={currentLanguage}
 						/>
 					)}
 					{currentSlide === 3 && (
@@ -260,6 +384,7 @@ export function OrientationClient({
 							onNavigateSlide={goToSlide}
 							themeOptions={themeOptions}
 							onboarding={onboarding}
+							language={currentLanguage}
 						/>
 					)}
 				</div>
@@ -272,6 +397,7 @@ function OrientationBreadcrumb({
 	currentSlide,
 	onNavigateSlide,
 	breadcrumbs,
+	language,
 }: {
 	currentSlide: 1 | 2 | 3;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
@@ -280,60 +406,74 @@ function OrientationBreadcrumb({
 		slide2?: string;
 		slide3?: string;
 	};
+	language?: string;
 }) {
+	const getBreadcrumbLabel = (
+		slide: "slide1" | "slide2" | "slide3",
+	): string => {
+		if (breadcrumbs?.[slide]) {
+			return breadcrumbs[slide];
+		}
+
+		if (language === "es") {
+			const spanishFallbacks = {
+				slide1: "Introducción",
+				slide2: "Audiencias",
+				slide3: "Intereses",
+			};
+			return spanishFallbacks[slide];
+		}
+
+		return "";
+	};
+
 	return (
 		<Breadcrumb className="mb-8">
 			<BreadcrumbList>
 				<BreadcrumbItem>
 					{currentSlide === 1 ? (
-						<BreadcrumbPage>
-							{breadcrumbs?.slide1 || "Introduction"}
-						</BreadcrumbPage>
+						<BreadcrumbPage>{getBreadcrumbLabel("slide1")}</BreadcrumbPage>
 					) : onNavigateSlide ? (
 						<BreadcrumbLink asChild>
 							<button type="button" onClick={() => onNavigateSlide(1)}>
-								{breadcrumbs?.slide1 || "Introduction"}
+								{getBreadcrumbLabel("slide1")}
 							</button>
 						</BreadcrumbLink>
 					) : (
 						<BreadcrumbLink href="#">
-							{breadcrumbs?.slide1 || "Introduction"}
+							{getBreadcrumbLabel("slide1")}
 						</BreadcrumbLink>
 					)}
 				</BreadcrumbItem>
 				<BreadcrumbSeparator />
 				<BreadcrumbItem>
 					{currentSlide === 2 ? (
-						<BreadcrumbPage>
-							{breadcrumbs?.slide2 || "Audiences"}
-						</BreadcrumbPage>
+						<BreadcrumbPage>{getBreadcrumbLabel("slide2")}</BreadcrumbPage>
 					) : onNavigateSlide ? (
 						<BreadcrumbLink asChild>
 							<button type="button" onClick={() => onNavigateSlide(2)}>
-								{breadcrumbs?.slide2 || "Audiences"}
+								{getBreadcrumbLabel("slide2")}
 							</button>
 						</BreadcrumbLink>
 					) : (
 						<BreadcrumbLink href="#">
-							{breadcrumbs?.slide2 || "Audiences"}
+							{getBreadcrumbLabel("slide2")}
 						</BreadcrumbLink>
 					)}
 				</BreadcrumbItem>
 				<BreadcrumbSeparator />
 				<BreadcrumbItem>
 					{currentSlide === 3 ? (
-						<BreadcrumbPage>
-							{breadcrumbs?.slide3 || "Interests"}
-						</BreadcrumbPage>
+						<BreadcrumbPage>{getBreadcrumbLabel("slide3")}</BreadcrumbPage>
 					) : onNavigateSlide ? (
 						<BreadcrumbLink asChild>
 							<button type="button" onClick={() => onNavigateSlide(3)}>
-								{breadcrumbs?.slide3 || "Interests"}
+								{getBreadcrumbLabel("slide3")}
 							</button>
 						</BreadcrumbLink>
 					) : (
 						<BreadcrumbLink href="#">
-							{breadcrumbs?.slide3 || "Interests"}
+							{getBreadcrumbLabel("slide3")}
 						</BreadcrumbLink>
 					)}
 				</BreadcrumbItem>
@@ -350,6 +490,7 @@ function Slide({
 	breadcrumbs,
 	footerText,
 	onboarding,
+	language,
 }: {
 	currentSlide: 1 | 2 | 3;
 	children: React.ReactNode;
@@ -362,6 +503,7 @@ function Slide({
 	};
 	footerText?: string;
 	onboarding?: Onboarding;
+	language?: string;
 }) {
 	const router = useRouter();
 	const setSkipped = useOrientationStore((s) => s.setSkipped);
@@ -372,6 +514,7 @@ function Slide({
 					currentSlide={currentSlide}
 					onNavigateSlide={onNavigateSlide}
 					breadcrumbs={breadcrumbs}
+					language={language}
 				/>
 				<div className="min-h-0 flex-1">{children}</div>
 				<footer className="hidden pt-4 text-left text-body-muted lg:block lg:pt-8">
@@ -394,6 +537,7 @@ function Slide1({
 	goToSlide2,
 	onboarding,
 	onNavigateSlide,
+	language: languageProp,
 }: {
 	patternSlug: string | undefined;
 	patternTitle?: string;
@@ -401,11 +545,16 @@ function Slide1({
 	goToSlide2: () => void;
 	onboarding?: Onboarding;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
+	language?: string;
 }) {
 	const setSkipped = useOrientationStore((s) => s.setSkipped);
 	const router = useRouter();
 	const pathname = usePathname();
-	const { language } = useMemo(() => parseLocalePath(pathname), [pathname]);
+	const { language: languageFromPath } = useMemo(
+		() => parseLocalePath(pathname),
+		[pathname],
+	);
+	const language = languageProp ?? languageFromPath;
 
 	const handleSkip = () => {
 		setSkipped(true);
@@ -482,6 +631,7 @@ function Slide1({
 			breadcrumbs={onboarding?.breadcrumbs}
 			footerText={onboarding?.footerText}
 			onboarding={onboarding}
+			language={language}
 		>
 			<div className="space-y-4 lg:space-y-8">
 				{onboarding?.slide1?.title && (
@@ -563,13 +713,21 @@ function Slide2({
 	onNavigateSlide,
 	audienceOptions,
 	onboarding,
+	language: languageProp,
 }: {
 	goToSlide1: () => void;
 	goToSlide3: () => void;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
 	audienceOptions: FilterOption[];
 	onboarding?: Onboarding;
+	language?: string;
 }) {
+	const pathname = usePathname();
+	const { language: languageFromPath } = useMemo(
+		() => parseLocalePath(pathname),
+		[pathname],
+	);
+	const language = languageProp ?? languageFromPath;
 	const selectedAudienceIds = useOrientationStore((s) => s.selectedAudienceIds);
 	const setSelectedAudiences = useOrientationStore(
 		(s) => s.setSelectedAudiences,
@@ -635,6 +793,7 @@ function Slide2({
 			breadcrumbs={onboarding?.breadcrumbs}
 			footerText={onboarding?.footerText}
 			onboarding={onboarding}
+			language={language}
 		>
 			<div className="space-y-6">
 				{onboarding?.slide2?.title && (
@@ -689,7 +848,8 @@ function Slide2({
 									onClick={goToSlide3}
 									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 lg:px-3 lg:py-2 lg:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 								>
-									NEXT
+									{onboarding?.slide2?.nextButtonLabel ||
+										(language === "es" ? "SIGUIENTE" : "NEXT")}
 									<DashedBorder />
 								</button>
 								<span className="text-body-large">to continue.</span>
@@ -720,18 +880,24 @@ function Slide3({
 	onNavigateSlide,
 	themeOptions,
 	onboarding,
+	language: languageProp,
 }: {
 	goToSlide2: () => void;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
 	themeOptions: FilterOption[];
 	onboarding?: Onboarding;
+	language?: string;
 }) {
 	const selectedThemeIds = useOrientationStore((s) => s.selectedThemeIds);
 	const selectedAudienceIds = useOrientationStore((s) => s.selectedAudienceIds);
 	const setSelectedThemes = useOrientationStore((s) => s.setSelectedThemes);
 	const setCompleted = useOrientationStore((s) => s.setCompleted);
 	const pathname = usePathname();
-	const { language } = useMemo(() => parseLocalePath(pathname), [pathname]);
+	const { language: languageFromPath } = useMemo(
+		() => parseLocalePath(pathname),
+		[pathname],
+	);
+	const language = languageProp ?? languageFromPath;
 
 	const toggleTheme = (themeId: string) => {
 		setSelectedThemes(
@@ -793,6 +959,7 @@ function Slide3({
 			breadcrumbs={onboarding?.breadcrumbs}
 			footerText={onboarding?.footerText}
 			onboarding={onboarding}
+			language={language}
 		>
 			<div className="space-y-4 lg:space-y-8">
 				{onboarding?.slide3?.title && (
@@ -851,7 +1018,8 @@ function Slide3({
 									}}
 									className="relative overflow-hidden rounded-lg border-2 border-transparent bg-primary-foreground px-2 py-1.5 font-light text-foreground text-xs uppercase transition-colors hover:bg-neutral-200 lg:px-3 lg:py-2 lg:text-lg dark:bg-neutral-800 dark:hover:bg-neutral-700"
 								>
-									FINISH
+									{onboarding?.slide3?.finishButtonLabel ||
+										(language === "es" ? "TERMINAR" : "FINISH")}
 									<DashedBorder />
 								</Link>
 								<span className="text-body-large">
