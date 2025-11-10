@@ -12,6 +12,7 @@ import {
 	MultiSelectTrigger,
 	MultiSelectValue,
 } from "~/components/ui/multi-select";
+import type { Language } from "~/i18n/config";
 import { createLogLocation, logger } from "~/lib/logger";
 import {
 	type ParsedSearchParams,
@@ -33,6 +34,7 @@ type SearchInterfaceProps = {
 	themeOptions?: FilterOption[];
 	tagOptions?: FilterOption[];
 	searchData?: SEARCH_QUERYResult;
+	language?: Language;
 };
 
 export function SearchInterface({
@@ -40,6 +42,7 @@ export function SearchInterface({
 	themeOptions = [],
 	tagOptions = [],
 	searchData,
+	language = "en",
 }: SearchInterfaceProps) {
 	const location = createLogLocation("search-interface.tsx", "SearchInterface");
 	const [componentId] = useState(() => Math.random().toString(36).substring(7));
@@ -308,6 +311,7 @@ export function SearchInterface({
 				themePreferences={getThemeLabels(
 					orientationPreferences.selectedThemeIds,
 				)}
+				language={language}
 			/>
 
 			{/* Filter Tools */}

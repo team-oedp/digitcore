@@ -807,7 +807,7 @@ function Slide2({
 					/>
 				)}
 
-				<div className="space-y-4 text-body">
+				<div className="space-y-4">
 					{/* Audience buttons embedded in the text flow */}
 					<div className="flex flex-wrap items-center gap-2">
 						{audienceOptions.map((opt, _idx) => (

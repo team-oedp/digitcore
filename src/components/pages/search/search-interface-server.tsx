@@ -25,6 +25,7 @@ export async function SearchInterfaceServer({
 			themeOptions={themes as FilterOption[]}
 			tagOptions={tags as FilterOption[]}
 			searchData={searchData}
+			language={language}
 		/>
 	);
 }

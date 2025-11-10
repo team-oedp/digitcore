@@ -63,9 +63,16 @@ export function SearchSuggestions({ limit = 5 }: { limit?: number }) {
 
 	if (!isEligible) return null;
 
+	const isSpanish = language === "es";
+	const suggestionsHeading = isSpanish
+		? "Sugerencias para ti"
+		: "Suggestions for you";
+
 	return (
 		<div className="w-full">
-			<h3 className="mb-3 font-medium text-base">Suggestions for you</h3>
+			<h3 className="mb-3 font-normal text-base text-muted-foreground">
+				{suggestionsHeading}
+			</h3>
 			{isLoading ? (
 				<SearchResultsSkeleton count={limit} />
 			) : !patterns || patterns.length === 0 ? null : (
