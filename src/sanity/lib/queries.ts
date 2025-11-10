@@ -39,6 +39,15 @@ export const PATTERNS_QUERY =
     solutions[]->,
     resources[]->{
       ...,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       solutions[]->{...},
     },
   }`);
@@ -309,7 +318,15 @@ export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
     resources[]->{
       _id,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       solutions[]->{
         _id,
         title
@@ -343,6 +360,15 @@ export const PATTERNS_GROUPED_BY_THEME_QUERY = defineQuery(`
       solutions[]->,
       resources[]->{
         ...,
+        description[]{
+          ...,
+          markDefs[]{
+            ...,
+            "page": page->slug.current,
+            "pattern": pattern->slug.current,
+            "glossary": glossary->{_id, title}
+          }
+        },
         solutions[]->{...},
       },
     }
@@ -406,7 +432,15 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
     resources[]->{
       _id,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       solutions[]->{
         _id,
         title
@@ -477,7 +511,15 @@ export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
     resources[]->{
       _id,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       solutions[]->{
         _id,
         title
@@ -581,7 +623,15 @@ export const RESOURCE_SEARCH_QUERY = defineQuery(`
     _score,
     title,
     language,
-    description,
+    description[]{
+      ...,
+      markDefs[]{
+        ...,
+        "page": page->slug.current,
+        "pattern": pattern->slug.current,
+        "glossary": glossary->{_id, title}
+      }
+    },
     links,
     solutions[]->{
       _id,
@@ -670,7 +720,15 @@ export const PATTERN_SIMPLE_SEARCH_QUERY = defineQuery(`
     resources[]->{
       _id,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       solutions[]->{
         _id,
         title
@@ -719,7 +777,15 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
     resources[]->{
       _id,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       solutions[]->{
         _id,
         title
@@ -981,7 +1047,15 @@ export const PATTERNS_BY_SLUGS_QUERY = defineQuery(`
       _id,
       _type,
       title,
-      description,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
       links,
       solutions[]->{ _id, title }
     }

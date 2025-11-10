@@ -4495,10 +4495,95 @@
                       {
                         "type": "object",
                         "attributes": {
+                          "linkType": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "union",
+                              "of": [
+                                {
+                                  "type": "string",
+                                  "value": "href"
+                                },
+                                {
+                                  "type": "string",
+                                  "value": "page"
+                                },
+                                {
+                                  "type": "string",
+                                  "value": "pattern"
+                                },
+                                {
+                                  "type": "string",
+                                  "value": "onboarding"
+                                }
+                              ]
+                            },
+                            "optional": true
+                          },
                           "href": {
                             "type": "objectAttribute",
                             "value": {
                               "type": "string"
+                            },
+                            "optional": true
+                          },
+                          "page": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "object",
+                              "attributes": {
+                                "_ref": {
+                                  "type": "objectAttribute",
+                                  "value": {
+                                    "type": "string"
+                                  }
+                                },
+                                "_type": {
+                                  "type": "objectAttribute",
+                                  "value": {
+                                    "type": "string",
+                                    "value": "reference"
+                                  }
+                                },
+                                "_weak": {
+                                  "type": "objectAttribute",
+                                  "value": {
+                                    "type": "boolean"
+                                  },
+                                  "optional": true
+                                }
+                              },
+                              "dereferencesTo": "page"
+                            },
+                            "optional": true
+                          },
+                          "pattern": {
+                            "type": "objectAttribute",
+                            "value": {
+                              "type": "object",
+                              "attributes": {
+                                "_ref": {
+                                  "type": "objectAttribute",
+                                  "value": {
+                                    "type": "string"
+                                  }
+                                },
+                                "_type": {
+                                  "type": "objectAttribute",
+                                  "value": {
+                                    "type": "string",
+                                    "value": "reference"
+                                  }
+                                },
+                                "_weak": {
+                                  "type": "objectAttribute",
+                                  "value": {
+                                    "type": "boolean"
+                                  },
+                                  "optional": true
+                                }
+                              },
+                              "dereferencesTo": "pattern"
                             },
                             "optional": true
                           },

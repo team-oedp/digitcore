@@ -742,7 +742,20 @@ export type Resource = {
           _key: string
         }
       | {
+          linkType?: 'href' | 'page' | 'pattern' | 'onboarding'
           href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          pattern?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'pattern'
+          }
           openInNewTab?: boolean
           _type: 'link'
           _key: string
@@ -1524,7 +1537,20 @@ export type PATTERNS_QUERYResult = Array<{
             _key: string
           }
         | {
+            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
             openInNewTab?: boolean
             _type: 'link'
             _key: string
@@ -1768,12 +1794,13 @@ export type PATTERN_QUERYResult = {
             pattern: null
           }
         | {
+            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
+            page: string | null
+            pattern: string | null
             openInNewTab?: boolean
             _type: 'link'
             _key: string
-            page: null
-            pattern: null
             glossary: null
           }
       > | null
@@ -1979,12 +2006,13 @@ export type RESOURCES_BY_IDS_QUERYResult = Array<{
           pattern: null
         }
       | {
+          linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
           href?: string
+          page: string | null
+          pattern: string | null
           openInNewTab?: boolean
           _type: 'link'
           _key: string
-          page: null
-          pattern: null
           glossary: null
         }
     > | null
@@ -2334,7 +2362,20 @@ export type PATTERNS_WITH_THEMES_QUERYResult = Array<{
             _key: string
           }
         | {
+            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
             openInNewTab?: boolean
             _type: 'link'
             _key: string
@@ -2535,7 +2576,20 @@ export type PATTERNS_GROUPED_BY_THEME_QUERYResult = Array<{
               _key: string
             }
           | {
+              linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
               href?: string
+              page?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'page'
+              }
+              pattern?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'pattern'
+              }
               openInNewTab?: boolean
               _type: 'link'
               _key: string
@@ -2758,7 +2812,20 @@ export type PATTERN_FILTER_QUERYResult = Array<{
             _key: string
           }
         | {
+            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
             openInNewTab?: boolean
             _type: 'link'
             _key: string
@@ -3254,7 +3321,20 @@ export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
             _key: string
           }
         | {
+            linkType?: 'href' | 'onboarding' | 'page' | 'pattern'
             href?: string
+            page?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'page'
+            }
+            pattern?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'pattern'
+            }
             openInNewTab?: boolean
             _type: 'link'
             _key: string
