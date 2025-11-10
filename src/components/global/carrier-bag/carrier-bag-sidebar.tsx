@@ -295,7 +295,7 @@ export function CarrierBagSidebar({
 								className="text-muted-foreground transition-colors group-hover/pdf:text-foreground"
 							/>
 							<span className="hidden font-normal text-muted-foreground text-sm capitalize transition-colors group-hover/pdf:text-foreground md:inline">
-								PDF
+								{carrierBagData?.pdfButtonLabel || "PDF"}
 							</span>
 						</button>
 					</PDFPreviewModal>
@@ -312,7 +312,7 @@ export function CarrierBagSidebar({
 							className="text-muted-foreground transition-colors group-hover/json:text-foreground"
 						/>
 						<span className="hidden font-normal text-muted-foreground text-sm capitalize transition-colors group-hover/json:text-foreground md:inline">
-							JSON
+							{carrierBagData?.jsonButtonLabel || "JSON"}
 						</span>
 					</button>
 					<button
@@ -328,7 +328,7 @@ export function CarrierBagSidebar({
 							className="text-muted-foreground transition-colors group-hover/delete:text-foreground"
 						/>
 						<span className="hidden font-normal text-muted-foreground text-sm capitalize transition-colors group-hover/delete:text-foreground md:inline">
-							Remove all
+							{carrierBagData?.removeAllButtonLabel || "Remove all"}
 						</span>
 					</button>
 				</div>

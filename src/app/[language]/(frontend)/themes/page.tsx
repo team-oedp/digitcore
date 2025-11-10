@@ -7,6 +7,7 @@ import { PageWrapper } from "~/components/shared/page-wrapper";
 import { SectionHeading } from "~/components/shared/section-heading";
 import { sanityFetch } from "~/sanity/lib/client";
 import { THEMES_PAGE_QUERY } from "~/sanity/lib/queries";
+import type { THEMES_PAGE_QUERYResult } from "~/sanity/sanity.types";
 import type { LanguagePageProps } from "~/types/page-props";
 
 export const metadata: Metadata = {
@@ -38,19 +39,25 @@ export default async function Page({ params }: LanguagePageProps) {
 					/>
 				)}
 				<div className="flex flex-col gap-8 pt-20 lg:pt-60">
-					{pageData.content?.map((section) => (
-						<section key={section._key} className="flex flex-col gap-5">
-							{section._type === "content" && section.heading && (
-								<SectionHeading heading={section.heading} />
-							)}
-							{section._type === "content" && section.body && (
-								<CustomPortableText
-									value={section.body as PortableTextBlock[]}
-									className="prose"
-								/>
-							)}
-						</section>
-					))}
+					{pageData.content?.map(
+						(
+							section: NonNullable<
+								NonNullable<THEMES_PAGE_QUERYResult>["content"]
+							>[number],
+						) => (
+							<section key={section._key} className="flex flex-col gap-5">
+								{section._type === "content" && section.heading && (
+									<SectionHeading heading={section.heading} />
+								)}
+								{section._type === "content" && section.body && (
+									<CustomPortableText
+										value={section.body as PortableTextBlock[]}
+										className="prose"
+									/>
+								)}
+							</section>
+						),
+					)}
 				</div>
 			</div>
 		</PageWrapper>

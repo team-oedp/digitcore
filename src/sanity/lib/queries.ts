@@ -809,6 +809,32 @@ export const TAGS_PAGE_QUERY = defineQuery(`
   }
 `);
 
+export const SEARCH_QUERY = defineQuery(`
+  *[_type == 'search' && language == $language][0]{
+    _id,
+    _type,
+    _createdAt,
+    _updatedAt,
+    _rev,
+    title,
+    language,
+    searchInputPlaceholder,
+    clearButtonLabel,
+    audiencesFilterLabel,
+    audiencesPlaceholder,
+    audiencesSearchPlaceholder,
+    audiencesEmptyMessage,
+    themesFilterLabel,
+    themesPlaceholder,
+    themesSearchPlaceholder,
+    themesEmptyMessage,
+    tagsFilterLabel,
+    tagsPlaceholder,
+    tagsSearchPlaceholder,
+    tagsEmptyMessage,
+  }
+`);
+
 export const CARRIER_BAG_QUERY = defineQuery(`
   *[_type == 'carrierBag' && language == $language][0]{
     _id,
@@ -820,6 +846,31 @@ export const CARRIER_BAG_QUERY = defineQuery(`
     language,
     information,
     emptyStateMessage,
+    pdfButtonLabel,
+    jsonButtonLabel,
+    removeAllButtonLabel,
+    utilitiesGroupLabel,
+    exportPdfButtonLabel,
+    generateLinkButtonLabel,
+    shareToSocialsButtonLabel,
+    downloadJsonButtonLabel,
+    closeCarrierBagButtonLabel,
+    applicationSectionLabel,
+    filtersLabel,
+    sortTitleAzLabel,
+    sortTitleZaLabel,
+    groupByThemeButtonLabel,
+    groupByThemeButtonLabelActive,
+    filterByTagsPlaceholder,
+    filterByTagsSearchPlaceholder,
+    filterByTagsEmptyMessage,
+    filterByTagsGroupHeading,
+    filterByAudiencesPlaceholder,
+    filterByAudiencesSearchPlaceholder,
+    filterByAudiencesEmptyMessage,
+    filterByAudiencesGroupHeading,
+    clearAllButtonLabel,
+    savedItemsBadgeText,
   }
 `);
 
