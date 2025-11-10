@@ -9,8 +9,12 @@ import { sanityFetch } from "~/sanity/lib/client";
 import {
 	PATTERNS_PAGE_QUERY,
 	PATTERNS_WITH_THEMES_QUERY,
+	PATTERN_UTILITIES_QUERY,
 } from "~/sanity/lib/queries";
-import type { PATTERNS_WITH_THEMES_QUERYResult } from "~/sanity/sanity.types";
+import type {
+	PATTERNS_WITH_THEMES_QUERYResult,
+	PATTERN_UTILITIES_QUERYResult,
+} from "~/sanity/sanity.types";
 import type { LanguagePageProps } from "~/types/page-props";
 
 type PatternWithTheme = PATTERNS_WITH_THEMES_QUERYResult[0];
@@ -28,7 +32,7 @@ export const metadata: Metadata = {
 export default async function Page({ params }: LanguagePageProps) {
 	const { language } = await params;
 
-	const [pageData, allPatterns] = await Promise.all([
+	const [pageData, allPatterns, patternUtilities] = await Promise.all([
 		sanityFetch({
 			query: PATTERNS_PAGE_QUERY,
 			params: { language },
@@ -39,6 +43,11 @@ export default async function Page({ params }: LanguagePageProps) {
 			params: { language },
 			revalidate: 60,
 		}) as Promise<PATTERNS_WITH_THEMES_QUERYResult>,
+		sanityFetch({
+			query: PATTERN_UTILITIES_QUERY,
+			params: { language },
+			revalidate: 60,
+		}) as Promise<PATTERN_UTILITIES_QUERYResult | null>,
 	]);
 
 	// Group patterns by theme
@@ -105,6 +114,7 @@ export default async function Page({ params }: LanguagePageProps) {
 										<SearchResultItem
 											showPatternIcon={true}
 											pattern={pattern}
+											patternUtilities={patternUtilities}
 										/>
 									</div>
 								))}

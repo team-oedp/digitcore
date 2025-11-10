@@ -3,7 +3,10 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { Badge } from "~/components/ui/badge";
-import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
+import type {
+	PATTERN_QUERYResult,
+	PATTERN_UTILITIES_QUERYResult,
+} from "~/sanity/sanity.types";
 import { ClickableBadge } from "./clickable-badge";
 import { SuggestSolutionButton } from "./suggest-solution-button";
 
@@ -15,12 +18,14 @@ type SolutionsProps = {
 	solutions?: SolutionItem[] | null;
 	patternName?: string;
 	patternSlug?: string;
+	patternUtilities?: PATTERN_UTILITIES_QUERYResult | null;
 };
 
 export function Solutions({
 	solutions,
 	patternName,
 	patternSlug,
+	patternUtilities,
 }: SolutionsProps) {
 	// Generate numbering for solutions (1., 2., 3., etc.)
 	const getSolutionNumber = (index: number): string => {
@@ -104,6 +109,7 @@ export function Solutions({
 					<SuggestSolutionButton
 						patternName={patternName}
 						patternSlug={patternSlug}
+						patternUtilities={patternUtilities}
 					/>
 				</div>
 			)}
