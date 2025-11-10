@@ -887,6 +887,41 @@ export const CARRIER_BAG_QUERY = defineQuery(`
   }
 `);
 
+export const PATTERN_UTILITIES_QUERY = defineQuery(`
+  *[_type == 'patternUtilities' && language == $language][0]{
+    _id,
+    _type,
+    _createdAt,
+    _updatedAt,
+    _rev,
+    title,
+    language,
+    knowOfAnotherResourceOrSolution,
+    makeASuggestionButtonLabel,
+    suggestSolutionModalTitle,
+    suggestSolutionModalDescription,
+    patternLabel,
+    newSolutionsLabel,
+    newSolutionsPlaceholder,
+    newResourcesLabel,
+    newResourcesPlaceholder,
+    additionalFeedbackLabel,
+    additionalFeedbackPlaceholder,
+    nameAndAffiliationLabel,
+    nameAndAffiliationPlaceholder,
+    emailLabel,
+    emailPlaceholder,
+    cancelButtonLabel,
+    submitSuggestionButtonLabel,
+    patternSubmittedSuccessfullyMessage,
+    relatedSolutionLabel,
+    relatedSolutionsLabel,
+    visitPatternButtonLabel,
+    solutionsHeading,
+    resourcesHeading,
+  }
+`);
+
 // Fetch patterns by an array of slugs with references needed for carrier bag
 export const PATTERNS_BY_SLUGS_QUERY = defineQuery(`
   *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{

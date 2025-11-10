@@ -23,6 +23,7 @@ import {
 	processDescriptionForDisplay,
 } from "~/lib/search-utils";
 import { cn } from "~/lib/utils";
+import type { PATTERN_UTILITIES_QUERYResult } from "~/sanity/sanity.types";
 import type { SearchPattern } from "~/types/search";
 
 type BadgeConfig = {
@@ -36,6 +37,7 @@ type SearchResultItemProps = {
 	pattern: SearchPattern;
 	searchTerm?: string;
 	showPatternIcon?: boolean;
+	patternUtilities?: PATTERN_UTILITIES_QUERYResult | null;
 };
 
 function PatternIcon({
@@ -83,6 +85,7 @@ function ResultTitle({
 	icon,
 	isPatternsPage = false,
 	language,
+	visitPatternButtonLabel,
 }: {
 	title: string;
 	href: string;
@@ -90,7 +93,12 @@ function ResultTitle({
 	icon?: React.ComponentType<React.ComponentPropsWithoutRef<"svg">>;
 	isPatternsPage?: boolean;
 	language: Language;
+	visitPatternButtonLabel?: string | null;
 }) {
+	const buttonText =
+		visitPatternButtonLabel ??
+		(language === "es" ? "Patrón de visitas" : "Visit pattern");
+
 	return (
 		<div className="inline-flex w-full items-start justify-between gap-6">
 			<div className="inline-flex flex-1 items-baseline justify-start gap-4">
@@ -114,9 +122,7 @@ function ResultTitle({
 				asChild
 				className="text-xs lg:text-sm"
 			>
-				<Link href={href}>
-					{language === "es" ? "Patrón de visitas" : "Visit pattern"}
-				</Link>
+				<Link href={href}>{buttonText}</Link>
 			</Button>
 		</div>
 	);
@@ -210,6 +216,7 @@ export function SearchResultItem({
 	pattern,
 	searchTerm = "",
 	showPatternIcon = false,
+	patternUtilities,
 }: SearchResultItemProps) {
 	const pathname = usePathname();
 	const { normalizedPath, language } = parseLocalePath(pathname);
@@ -267,6 +274,7 @@ export function SearchResultItem({
 				icon={PatternIconComponent}
 				isPatternsPage={isPatternsPage}
 				language={language}
+				visitPatternButtonLabel={patternUtilities?.visitPatternButtonLabel}
 			/>
 
 			<ResultDescription

@@ -44,6 +44,39 @@ export type Search = {
   enhanceHoverDescription?: string
 }
 
+export type PatternUtilities = {
+  _id: string
+  _type: 'patternUtilities'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  language?: string
+  title?: string
+  knowOfAnotherResourceOrSolution?: string
+  makeASuggestionButtonLabel?: string
+  suggestSolutionModalTitle?: string
+  suggestSolutionModalDescription?: string
+  patternLabel?: string
+  newSolutionsLabel?: string
+  newSolutionsPlaceholder?: string
+  newResourcesLabel?: string
+  newResourcesPlaceholder?: string
+  additionalFeedbackLabel?: string
+  additionalFeedbackPlaceholder?: string
+  nameAndAffiliationLabel?: string
+  nameAndAffiliationPlaceholder?: string
+  emailLabel?: string
+  emailPlaceholder?: string
+  cancelButtonLabel?: string
+  submitSuggestionButtonLabel?: string
+  patternSubmittedSuccessfullyMessage?: string
+  relatedSolutionLabel?: string
+  relatedSolutionsLabel?: string
+  visitPatternButtonLabel?: string
+  solutionsHeading?: string
+  resourcesHeading?: string
+}
+
 export type Suggestion = {
   _id: string
   _type: 'suggestion'
@@ -1217,6 +1250,7 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes =
   | Search
+  | PatternUtilities
   | Suggestion
   | ContentList
   | Record
@@ -2984,6 +3018,40 @@ export type CARRIER_BAG_QUERYResult = {
   saveToCarrierBagButtonLabel: string | null
   savedToCarrierBagButtonLabel: string | null
 } | null
+// Variable: PATTERN_UTILITIES_QUERY
+// Query: *[_type == 'patternUtilities' && language == $language][0]{    _id,    _type,    _createdAt,    _updatedAt,    _rev,    title,    language,    knowOfAnotherResourceOrSolution,    makeASuggestionButtonLabel,    suggestSolutionModalTitle,    suggestSolutionModalDescription,    patternLabel,    newSolutionsLabel,    newSolutionsPlaceholder,    newResourcesLabel,    newResourcesPlaceholder,    additionalFeedbackLabel,    additionalFeedbackPlaceholder,    nameAndAffiliationLabel,    nameAndAffiliationPlaceholder,    emailLabel,    emailPlaceholder,    cancelButtonLabel,    submitSuggestionButtonLabel,    patternSubmittedSuccessfullyMessage,    relatedSolutionLabel,    relatedSolutionsLabel,    visitPatternButtonLabel,    solutionsHeading,    resourcesHeading,  }
+export type PATTERN_UTILITIES_QUERYResult = {
+  _id: string
+  _type: 'patternUtilities'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string | null
+  language: string | null
+  knowOfAnotherResourceOrSolution: string | null
+  makeASuggestionButtonLabel: string | null
+  suggestSolutionModalTitle: string | null
+  suggestSolutionModalDescription: string | null
+  patternLabel: string | null
+  newSolutionsLabel: string | null
+  newSolutionsPlaceholder: string | null
+  newResourcesLabel: string | null
+  newResourcesPlaceholder: string | null
+  additionalFeedbackLabel: string | null
+  additionalFeedbackPlaceholder: string | null
+  nameAndAffiliationLabel: string | null
+  nameAndAffiliationPlaceholder: string | null
+  emailLabel: string | null
+  emailPlaceholder: string | null
+  cancelButtonLabel: string | null
+  submitSuggestionButtonLabel: string | null
+  patternSubmittedSuccessfullyMessage: string | null
+  relatedSolutionLabel: string | null
+  relatedSolutionsLabel: string | null
+  visitPatternButtonLabel: string | null
+  solutionsHeading: string | null
+  resourcesHeading: string | null
+} | null
 // Variable: PATTERNS_BY_SLUGS_QUERY
 // Query: *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{    ...,    _id,    _type,    title,    language,    description[]{      ...,      markDefs[]{        ...,        "page": page->slug.current,        "pattern": pattern->slug.current,        "glossary": glossary->{_id, title}      }    },    "slug": slug.current,    tags[]->,    audiences[]->{      _id,      title    },    theme->{      _id,      title,      description    },    solutions[]->{      _id,      _type,      title,      description,      audiences[]->{ _id, title }    },    resources[]->{      _id,      _type,      title,      description,      links,      solutions[]->{ _id, title }    }  }
 export type PATTERNS_BY_SLUGS_QUERYResult = Array<{
@@ -4630,6 +4698,7 @@ declare module '@sanity/client' {
     '\n  *[_type == \'page\' && slug.current == \'tags\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': TAGS_PAGE_QUERYResult
     "\n  *[_type == 'search' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    searchInputPlaceholder,\n    clearButtonLabel,\n    audiencesFilterLabel,\n    audiencesPlaceholder,\n    audiencesSearchPlaceholder,\n    audiencesEmptyMessage,\n    themesFilterLabel,\n    themesPlaceholder,\n    themesSearchPlaceholder,\n    themesEmptyMessage,\n    tagsFilterLabel,\n    tagsPlaceholder,\n    tagsSearchPlaceholder,\n    tagsEmptyMessage,\n    suggestionsHeading,\n    enhanceLabel,\n    enhanceResultsTitle,\n    audiencePreferencesLabel,\n    themePreferencesLabel,\n    preferencesConjunction,\n    enhanceHoverDescription,\n  }\n": SEARCH_CONFIG_QUERYResult
     "\n  *[_type == 'carrierBag' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    information,\n    emptyStateMessage,\n    pdfButtonLabel,\n    jsonButtonLabel,\n    removeAllButtonLabel,\n    utilitiesGroupLabel,\n    exportPdfButtonLabel,\n    generateLinkButtonLabel,\n    shareToSocialsButtonLabel,\n    downloadJsonButtonLabel,\n    closeCarrierBagButtonLabel,\n    applicationSectionLabel,\n    filtersLabel,\n    sortTitleAzLabel,\n    sortTitleZaLabel,\n    groupByThemeButtonLabel,\n    groupByThemeButtonLabelActive,\n    filterByTagsPlaceholder,\n    filterByTagsSearchPlaceholder,\n    filterByTagsEmptyMessage,\n    filterByTagsGroupHeading,\n    filterByAudiencesPlaceholder,\n    filterByAudiencesSearchPlaceholder,\n    filterByAudiencesEmptyMessage,\n    filterByAudiencesGroupHeading,\n    clearAllButtonLabel,\n    savedItemsBadgeText,\n    saveToCarrierBagButtonLabel,\n    savedToCarrierBagButtonLabel,\n  }\n": CARRIER_BAG_QUERYResult
+    "\n  *[_type == 'patternUtilities' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    knowOfAnotherResourceOrSolution,\n    makeASuggestionButtonLabel,\n    suggestSolutionModalTitle,\n    suggestSolutionModalDescription,\n    patternLabel,\n    newSolutionsLabel,\n    newSolutionsPlaceholder,\n    newResourcesLabel,\n    newResourcesPlaceholder,\n    additionalFeedbackLabel,\n    additionalFeedbackPlaceholder,\n    nameAndAffiliationLabel,\n    nameAndAffiliationPlaceholder,\n    emailLabel,\n    emailPlaceholder,\n    cancelButtonLabel,\n    submitSuggestionButtonLabel,\n    patternSubmittedSuccessfullyMessage,\n    relatedSolutionLabel,\n    relatedSolutionsLabel,\n    visitPatternButtonLabel,\n    solutionsHeading,\n    resourcesHeading,\n  }\n": PATTERN_UTILITIES_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current) && slug.current in $slugs && language == $language]{\n    ...,\n    _id,\n    _type,\n    title,\n    language,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "slug": slug.current,\n    tags[]->,\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      _type,\n      title,\n      description,\n      audiences[]->{ _id, title }\n    },\n    resources[]->{\n      _id,\n      _type,\n      title,\n      description,\n      links,\n      solutions[]->{ _id, title }\n    }\n  }\n': PATTERNS_BY_SLUGS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'values\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For record type\n      name,\n      description[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': VALUES_PAGE_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'patterns\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current,\n        "glossary": glossary->{_id, title}\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    emptyStateMessage,\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current,\n          "glossary": glossary->{_id, title}\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': PATTERNS_PAGE_QUERYResult

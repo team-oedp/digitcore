@@ -1,24 +1,34 @@
 import { DashboardSquareEditIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import type { PATTERN_UTILITIES_QUERYResult } from "~/sanity/sanity.types";
 import { SuggestSolutionModal } from "./suggest-solution-modal";
 
 type SuggestSolutionButtonProps = {
 	patternName: string;
 	patternSlug: string;
+	patternUtilities?: PATTERN_UTILITIES_QUERYResult | null;
 };
 
 export function SuggestSolutionButton({
 	patternName,
 	patternSlug,
+	patternUtilities,
 }: SuggestSolutionButtonProps) {
+	const knowOfAnotherText =
+		patternUtilities?.knowOfAnotherResourceOrSolution ??
+		"Know of another resource or solution?";
+	const makeASuggestionText =
+		patternUtilities?.makeASuggestionButtonLabel ?? "Make a suggestion";
+
 	return (
 		<div className="flex flex-col gap-2 md:gap-2.5">
 			<p className="font-normal text-primary text-xs md:text-sm">
-				Know of another resource or solution?
+				{knowOfAnotherText}
 			</p>
 			<SuggestSolutionModal
 				patternName={patternName}
 				patternSlug={patternSlug}
+				patternUtilities={patternUtilities}
 				trigger={
 					<button
 						type="button"
@@ -32,7 +42,7 @@ export function SuggestSolutionButton({
 							className="mt-[1px] text-neutral-500 md:mt-[3px] dark:text-neutral-400"
 						/>
 						<span className="text-left font-normal text-primary text-xs uppercase md:text-sm">
-							Make a suggestion
+							{makeASuggestionText}
 						</span>
 					</button>
 				}

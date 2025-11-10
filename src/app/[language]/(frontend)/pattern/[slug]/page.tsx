@@ -17,12 +17,14 @@ import {
 	CARRIER_BAG_QUERY,
 	PATTERN_PAGES_SLUGS_QUERY,
 	PATTERN_QUERY,
+	PATTERN_UTILITIES_QUERY,
 	SITE_SETTINGS_QUERY,
 } from "~/sanity/lib/queries";
 import type {
 	CARRIER_BAG_QUERYResult,
 	PATTERN_PAGES_SLUGS_QUERYResult,
 	PATTERN_QUERYResult,
+	PATTERN_UTILITIES_QUERYResult,
 } from "~/sanity/sanity.types";
 
 type PatternPageProps = {
@@ -122,7 +124,7 @@ export default async function Page(props: PatternPageProps) {
 		return notFound();
 	}
 
-	const [pattern, carrierBagData] = await Promise.all([
+	const [pattern, carrierBagData, patternUtilities] = await Promise.all([
 		sanityFetch({
 			query: PATTERN_QUERY,
 			params: { slug: normalizedSlug, language },
@@ -139,6 +141,11 @@ export default async function Page(props: PatternPageProps) {
 			params: { language },
 			revalidate: 60,
 		}) as Promise<CARRIER_BAG_QUERYResult | null>,
+		sanityFetch({
+			query: PATTERN_UTILITIES_QUERY,
+			params: { language },
+			revalidate: 60,
+		}) as Promise<PATTERN_UTILITIES_QUERYResult | null>,
 	]);
 
 	if (!pattern) {
@@ -172,8 +179,12 @@ export default async function Page(props: PatternPageProps) {
 						solutions={pattern.solutions}
 						patternName={pattern.title ?? ""}
 						patternSlug={normalizedSlug}
+						patternUtilities={patternUtilities}
 					/>
-					<Resources resources={pattern.resources ?? []} />
+					<Resources
+						resources={pattern.resources ?? []}
+						patternUtilities={patternUtilities}
+					/>
 				</div>
 				<div className="h-10 md:h-20" />
 			</PageWrapper>
