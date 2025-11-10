@@ -9,7 +9,7 @@ import { PageHeading } from "~/components/shared/page-heading";
 import { PageWrapper } from "~/components/shared/page-wrapper";
 import { Skeleton } from "~/components/ui/skeleton";
 import { sanityFetch } from "~/sanity/lib/client";
-import { SEARCH_PAGE_QUERY } from "~/sanity/lib/queries";
+import { SEARCH_PAGE_QUERY, SEARCH_QUERY } from "~/sanity/lib/queries";
 import type { LanguageSearchPageProps } from "~/types/page-props";
 
 export const metadata: Metadata = {
@@ -19,11 +19,18 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: LanguageSearchPageProps) {
 	const { language } = await params;
-	const pageData = await sanityFetch({
-		query: SEARCH_PAGE_QUERY,
-		params: { language },
-		revalidate: 60,
-	});
+	const [pageData, searchData] = await Promise.all([
+		sanityFetch({
+			query: SEARCH_PAGE_QUERY,
+			params: { language },
+			revalidate: 60,
+		}),
+		sanityFetch({
+			query: SEARCH_QUERY,
+			params: { language },
+			revalidate: 60,
+		}),
+	]);
 
 	return (
 		<PageWrapper>
@@ -43,6 +50,7 @@ export default async function Page({ params }: LanguageSearchPageProps) {
 						<SearchClientWrapper
 							language={language}
 							emptyStateMessage={pageData?.emptyStateMessage ?? undefined}
+							searchData={searchData}
 						/>
 					</Suspense>
 				</div>

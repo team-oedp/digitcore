@@ -8,6 +8,7 @@ import {
 } from "~/components/ui/hover-card";
 import { Toggle } from "~/components/ui/toggle";
 import type { Language } from "~/i18n/config";
+import type { SEARCH_QUERYResult } from "~/sanity/sanity.types";
 
 type EnhanceToggleProps = {
 	enabled: boolean;
@@ -16,6 +17,7 @@ type EnhanceToggleProps = {
 	audiencePreferences?: string[];
 	themePreferences?: string[];
 	language?: Language;
+	searchData?: SEARCH_QUERYResult;
 };
 
 export function EnhanceToggle({
@@ -25,6 +27,7 @@ export function EnhanceToggle({
 	audiencePreferences = [],
 	themePreferences = [],
 	language = "en",
+	searchData,
 }: EnhanceToggleProps) {
 	const hasPreferences =
 		hasCompletedOnboarding &&
@@ -32,36 +35,41 @@ export function EnhanceToggle({
 
 	const isSpanish = language === "es";
 
-	const enhanceLabel = isSpanish ? "Mejorar" : "Enhance";
-	const enhanceResultsTitle = isSpanish
-		? "Mejorar Resultados"
-		: "Enhance Results";
+	const enhanceLabel =
+		searchData?.enhanceLabel ?? (isSpanish ? "Mejorar" : "Enhance");
+	const enhanceResultsTitle =
+		searchData?.enhanceResultsTitle ??
+		(isSpanish ? "Mejorar Resultados" : "Enhance Results");
 
 	const generateHoverText = () => {
 		const parts: string[] = [];
 
+		const audienceLabel =
+			searchData?.audiencePreferencesLabel ??
+			(isSpanish ? "preferencias de audiencia" : "audience preferences");
+		const themeLabel =
+			searchData?.themePreferencesLabel ??
+			(isSpanish ? "preferencias de temas" : "theme preferences");
+		const conjunction =
+			searchData?.preferencesConjunction ?? (isSpanish ? " y " : " and ");
+
 		if (audiencePreferences.length > 0) {
-			if (isSpanish) {
-				parts.push(
-					`preferencias de audiencia (${audiencePreferences.join(", ")})`,
-				);
-			} else {
-				parts.push(`audience preferences (${audiencePreferences.join(", ")})`);
-			}
+			parts.push(`${audienceLabel} (${audiencePreferences.join(", ")})`);
 		}
 
 		if (themePreferences.length > 0) {
-			if (isSpanish) {
-				parts.push(`preferencias de temas (${themePreferences.join(", ")})`);
-			} else {
-				parts.push(`theme preferences (${themePreferences.join(", ")})`);
-			}
+			parts.push(`${themeLabel} (${themePreferences.join(", ")})`);
 		}
 
-		const preferencesText = parts.join(isSpanish ? " y " : " and ");
-		return isSpanish
-			? `Los resultados que coincidan con sus ${preferencesText} serán priorizados.`
-			: `Results that match your ${preferencesText} will be prioritized.`;
+		const preferencesText = parts.join(conjunction);
+
+		const descriptionTemplate =
+			searchData?.enhanceHoverDescription ??
+			(isSpanish
+				? "Los resultados que coincidan con sus {preferencesText} serán priorizados."
+				: "Results that match your {preferencesText} will be prioritized.");
+
+		return descriptionTemplate.replace("{preferencesText}", preferencesText);
 	};
 
 	// If user has preferences, show the enhance toggle

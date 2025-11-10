@@ -834,6 +834,13 @@ export const SEARCH_QUERY = defineQuery(`
     tagsPlaceholder,
     tagsSearchPlaceholder,
     tagsEmptyMessage,
+    suggestionsHeading,
+    enhanceLabel,
+    enhanceResultsTitle,
+    audiencePreferencesLabel,
+    themePreferencesLabel,
+    preferencesConjunction,
+    enhanceHoverDescription,
   }
 `);
 

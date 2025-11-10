@@ -103,6 +103,53 @@ export const searchType = defineType({
 			title: "Tags Empty Message",
 			description: "Empty state message when no tags are found",
 		}),
+		defineField({
+			name: "suggestionsHeading",
+			type: "string",
+			title: "Suggestions Heading",
+			description:
+				"Heading text for the suggestions section (e.g., 'Suggestions for you')",
+		}),
+		defineField({
+			name: "enhanceLabel",
+			type: "string",
+			title: "Enhance Label",
+			description: "Label text for the enhance toggle button (e.g., 'Enhance')",
+		}),
+		defineField({
+			name: "enhanceResultsTitle",
+			type: "string",
+			title: "Enhance Results Title",
+			description:
+				"Title text for the enhance hover card (e.g., 'Enhance Results')",
+		}),
+		defineField({
+			name: "audiencePreferencesLabel",
+			type: "string",
+			title: "Audience Preferences Label",
+			description:
+				"Label text for audience preferences in enhance hover (e.g., 'audience preferences')",
+		}),
+		defineField({
+			name: "themePreferencesLabel",
+			type: "string",
+			title: "Theme Preferences Label",
+			description:
+				"Label text for theme preferences in enhance hover (e.g., 'theme preferences')",
+		}),
+		defineField({
+			name: "preferencesConjunction",
+			type: "string",
+			title: "Preferences Conjunction",
+			description: "Conjunction word to join preferences (e.g., 'and' or 'y')",
+		}),
+		defineField({
+			name: "enhanceHoverDescription",
+			type: "string",
+			title: "Enhance Hover Description",
+			description:
+				"Description text for enhance hover card. Use {preferencesText} as placeholder (e.g., 'Results that match your {preferencesText} will be prioritized.')",
+		}),
 	],
 	preview: {
 		select: {

@@ -4,12 +4,21 @@ import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { getPatternSuggestionsWithPreferences } from "~/app/actions/search";
 import type { Language } from "~/i18n/config";
+import type { SEARCH_QUERYResult } from "~/sanity/sanity.types";
 import { useOrientationStore } from "~/stores/orientation";
 import type { SearchPattern } from "~/types/search";
 import { SearchResultItem } from "./search-result-item";
 import { SearchResultsSkeleton } from "./search-result-skeleton";
 
-export function SearchSuggestions({ limit = 5 }: { limit?: number }) {
+type SearchSuggestionsProps = {
+	limit?: number;
+	searchData?: SEARCH_QUERYResult;
+};
+
+export function SearchSuggestions({
+	limit = 5,
+	searchData,
+}: SearchSuggestionsProps) {
 	const params = useParams<{ language: string }>();
 	const language = (params?.language as Language) || ("en" as Language);
 	const hasCompletedOrientation = useOrientationStore(
@@ -63,10 +72,8 @@ export function SearchSuggestions({ limit = 5 }: { limit?: number }) {
 
 	if (!isEligible) return null;
 
-	const isSpanish = language === "es";
-	const suggestionsHeading = isSpanish
-		? "Sugerencias para ti"
-		: "Suggestions for you";
+	const suggestionsHeading =
+		searchData?.suggestionsHeading ?? "Suggestions for you";
 
 	return (
 		<div className="w-full">

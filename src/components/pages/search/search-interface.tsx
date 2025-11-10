@@ -312,6 +312,7 @@ export function SearchInterface({
 					orientationPreferences.selectedThemeIds,
 				)}
 				language={language}
+				searchData={searchData}
 			/>
 
 			{/* Filter Tools */}
