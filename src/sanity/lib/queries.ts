@@ -811,7 +811,7 @@ export const TAGS_PAGE_QUERY = defineQuery(`
   }
 `);
 
-export const SEARCH_QUERY = defineQuery(`
+export const SEARCH_CONFIG_QUERY = defineQuery(`
   *[_type == 'search' && language == $language][0]{
     _id,
     _type,
@@ -834,6 +834,13 @@ export const SEARCH_QUERY = defineQuery(`
     tagsPlaceholder,
     tagsSearchPlaceholder,
     tagsEmptyMessage,
+    suggestionsHeading,
+    enhanceLabel,
+    enhanceResultsTitle,
+    audiencePreferencesLabel,
+    themePreferencesLabel,
+    preferencesConjunction,
+    enhanceHoverDescription,
   }
 `);
 

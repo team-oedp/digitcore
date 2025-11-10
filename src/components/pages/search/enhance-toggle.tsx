@@ -7,6 +7,8 @@ import {
 	HoverCardTrigger,
 } from "~/components/ui/hover-card";
 import { Toggle } from "~/components/ui/toggle";
+import type { Language } from "~/i18n/config";
+import type { SEARCH_CONFIG_QUERYResult } from "~/sanity/sanity.types";
 
 type EnhanceToggleProps = {
 	enabled: boolean;
@@ -14,6 +16,8 @@ type EnhanceToggleProps = {
 	hasCompletedOnboarding?: boolean;
 	audiencePreferences?: string[];
 	themePreferences?: string[];
+	language?: Language;
+	searchData?: SEARCH_CONFIG_QUERYResult;
 };
 
 export function EnhanceToggle({
@@ -22,24 +26,50 @@ export function EnhanceToggle({
 	hasCompletedOnboarding = false,
 	audiencePreferences = [],
 	themePreferences = [],
+	language = "en",
+	searchData,
 }: EnhanceToggleProps) {
 	const hasPreferences =
 		hasCompletedOnboarding &&
 		(audiencePreferences.length > 0 || themePreferences.length > 0);
 
+	const isSpanish = language === "es";
+
+	const enhanceLabel =
+		searchData?.enhanceLabel ?? (isSpanish ? "Mejorar" : "Enhance");
+	const enhanceResultsTitle =
+		searchData?.enhanceResultsTitle ??
+		(isSpanish ? "Mejorar Resultados" : "Enhance Results");
+
 	const generateHoverText = () => {
 		const parts: string[] = [];
 
+		const audienceLabel =
+			searchData?.audiencePreferencesLabel ??
+			(isSpanish ? "preferencias de audiencia" : "audience preferences");
+		const themeLabel =
+			searchData?.themePreferencesLabel ??
+			(isSpanish ? "preferencias de temas" : "theme preferences");
+		const conjunction =
+			searchData?.preferencesConjunction ?? (isSpanish ? " y " : " and ");
+
 		if (audiencePreferences.length > 0) {
-			parts.push(`audience preferences (${audiencePreferences.join(", ")})`);
+			parts.push(`${audienceLabel} (${audiencePreferences.join(", ")})`);
 		}
 
 		if (themePreferences.length > 0) {
-			parts.push(`theme preferences (${themePreferences.join(", ")})`);
+			parts.push(`${themeLabel} (${themePreferences.join(", ")})`);
 		}
 
-		const preferencesText = parts.join(" and ");
-		return `Results that match your ${preferencesText} will be prioritized.`;
+		const preferencesText = parts.join(conjunction);
+
+		const descriptionTemplate =
+			searchData?.enhanceHoverDescription ??
+			(isSpanish
+				? "Los resultados que coincidan con sus {preferencesText} serán priorizados."
+				: "Results that match your {preferencesText} will be prioritized.");
+
+		return descriptionTemplate.replace("{preferencesText}", preferencesText);
 	};
 
 	// If user has preferences, show the enhance toggle
@@ -53,10 +83,10 @@ export function EnhanceToggle({
 							onPressedChange={onToggle}
 							variant="outline"
 							size="sm"
-							className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+							className="font-normal text-muted-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
 						>
 							<Sparkles className="h-3 w-3" />
-							<span className="text-xs">Enhance</span>
+							<span className="text-xs">{enhanceLabel}</span>
 						</Toggle>
 					</HoverCardTrigger>
 					<HoverCardContent
@@ -65,7 +95,7 @@ export function EnhanceToggle({
 						collisionPadding={16}
 					>
 						<div className="space-y-2">
-							<h4 className="font-normal text-sm">Enhance Results</h4>
+							<h4 className="font-normal text-sm">{enhanceResultsTitle}</h4>
 							<p className="text-muted-foreground text-sm">
 								{generateHoverText()}
 							</p>
