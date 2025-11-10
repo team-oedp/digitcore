@@ -235,14 +235,14 @@ export const searchType = defineType({
 			type: "string",
 			title: "Command Menu 'In Pattern' Text",
 			description:
-				"Text template showing pattern context. The pattern name will be automatically inserted (e.g., 'in')",
+				"Text template used to indicate which pattern a solution or resource belongs to in the command menu search results. This text appears before the pattern name. The pattern name is automatically appended after this text. Typically this is a preposition like 'in' (e.g., 'in Enhance frontline communities' agency'). If left empty, defaults to 'in'.",
 		}),
 		defineField({
 			name: "commandMenuPatternCountText",
 			type: "string",
 			title: "Command Menu Pattern Count Text",
 			description:
-				"Text template for pattern count. The count number and plural form will be automatically inserted (e.g., 'pattern' or 'patterns')",
+				"Text template used to display how many patterns a tag appears in within the command menu search results. This is the base word for 'pattern' (singular form). The count number is automatically prepended, and 's' is automatically appended for pluralization. For example, with 'pattern' as the template: '1 pattern' or '3 patterns'. If left empty, defaults to 'pattern'.",
 		}),
 		defineField({
 			name: "commandMenuMatchInTitleTooltip",
