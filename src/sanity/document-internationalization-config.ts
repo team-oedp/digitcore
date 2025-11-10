@@ -12,7 +12,7 @@ type StaticDocumentInternationalizationConfig = Omit<
 
 export const supportedLanguages: SanityLanguage[] = [
 	{ id: "en", title: "English" },
-	{ id: "es", title: "Spanish" },
+	{ id: "es", title: "Español" },
 ];
 
 export const defaultLanguageId: SanityLanguage["id"] = "en";
