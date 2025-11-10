@@ -19,6 +19,9 @@ type OrientationState = {
 	selectedAudienceIds: string[];
 	selectedThemeIds: string[];
 
+	// Navigation tracking
+	previousRoute?: string;
+
 	// Actions
 	setHasHydrated: (hydrated: boolean) => void;
 	setSeen: (seen: boolean) => void;
@@ -26,6 +29,7 @@ type OrientationState = {
 	setSkipped: (skipped: boolean) => void;
 	setSelectedAudiences: (ids: string[]) => void;
 	setSelectedThemes: (ids: string[]) => void;
+	setPreviousRoute: (route: string | undefined) => void;
 	shouldShowOrientation: () => boolean;
 	checkAndResetExpiredSkip: () => boolean;
 	canSkipExpire: () => boolean;
@@ -53,6 +57,9 @@ export const createOrientationStore = () =>
 				selectedAudienceIds: [],
 				selectedThemeIds: [],
 
+				// Navigation tracking
+				previousRoute: undefined,
+
 				setHasHydrated: (hydrated: boolean) => set({ hasHydrated: hydrated }),
 				setSeen: (seen: boolean) => set({ hasSeenOrientation: seen }),
 
@@ -74,6 +81,9 @@ export const createOrientationStore = () =>
 					set({ selectedAudienceIds: ids }),
 
 				setSelectedThemes: (ids: string[]) => set({ selectedThemeIds: ids }),
+
+				setPreviousRoute: (route: string | undefined) =>
+					set({ previousRoute: route }),
 
 				checkAndResetExpiredSkip: () => {
 					const state = get();
@@ -158,6 +168,7 @@ export const createOrientationStore = () =>
 					// Persist user preferences
 					selectedAudienceIds: state.selectedAudienceIds,
 					selectedThemeIds: state.selectedThemeIds,
+					// Don't persist previousRoute - it's session-specific
 				}),
 				onRehydrateStorage: () => (state) => {
 					// Mark as hydrated once the store is restored from localStorage
