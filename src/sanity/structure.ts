@@ -42,6 +42,12 @@ const SINGLETONS = [
 		title: "Site Settings",
 		icon: CogIcon,
 	},
+	{
+		id: "patternUtilities",
+		_type: "patternUtilities",
+		title: "Pattern Utilities",
+		icon: WrenchIcon,
+	},
 ];
 const LANGUAGES = [
 	{ id: "en", title: "English" },
@@ -353,9 +359,11 @@ export const structure: StructureResolver = (S, context) =>
 						"siteSettings",
 						"footer",
 						"header",
+						"patternUtilities",
 						"icon",
 						"suggestion",
 						"translation.metadata",
+						"aiContext",
 					].includes(item.getId() ?? ""),
 			),
 		]);
