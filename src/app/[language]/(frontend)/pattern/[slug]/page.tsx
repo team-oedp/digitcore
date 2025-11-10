@@ -14,11 +14,13 @@ import { buildAbsoluteUrl } from "~/lib/metadata";
 import { type RouteSlug, normalizeSlug } from "~/lib/slug-utils";
 import { sanityFetch } from "~/sanity/lib/client";
 import {
+	CARRIER_BAG_QUERY,
 	PATTERN_PAGES_SLUGS_QUERY,
 	PATTERN_QUERY,
 	SITE_SETTINGS_QUERY,
 } from "~/sanity/lib/queries";
 import type {
+	CARRIER_BAG_QUERYResult,
 	PATTERN_PAGES_SLUGS_QUERYResult,
 	PATTERN_QUERYResult,
 } from "~/sanity/sanity.types";
@@ -120,17 +122,24 @@ export default async function Page(props: PatternPageProps) {
 		return notFound();
 	}
 
-	const pattern = (await sanityFetch({
-		query: PATTERN_QUERY,
-		params: { slug: normalizedSlug, language },
-		tags: [
-			`pattern:${normalizedSlug}`,
-			"solution",
-			"resource",
-			"audience",
-			"tag",
-		],
-	})) as PATTERN_QUERYResult | null;
+	const [pattern, carrierBagData] = await Promise.all([
+		sanityFetch({
+			query: PATTERN_QUERY,
+			params: { slug: normalizedSlug, language },
+			tags: [
+				`pattern:${normalizedSlug}`,
+				"solution",
+				"resource",
+				"audience",
+				"tag",
+			],
+		}) as Promise<PATTERN_QUERYResult | null>,
+		sanityFetch({
+			query: CARRIER_BAG_QUERY,
+			params: { language },
+			revalidate: 60,
+		}) as Promise<CARRIER_BAG_QUERYResult | null>,
+	]);
 
 	if (!pattern) {
 		return notFound();
@@ -143,6 +152,7 @@ export default async function Page(props: PatternPageProps) {
 					title={pattern.title}
 					slug={pattern.slug}
 					pattern={pattern}
+					carrierBagData={carrierBagData}
 				/>
 				<div className="space-y-8 md:space-y-12">
 					<div>

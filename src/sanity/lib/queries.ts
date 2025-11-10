@@ -880,6 +880,8 @@ export const CARRIER_BAG_QUERY = defineQuery(`
     filterByAudiencesGroupHeading,
     clearAllButtonLabel,
     savedItemsBadgeText,
+    saveToCarrierBagButtonLabel,
+    savedToCarrierBagButtonLabel,
   }
 `);
 
