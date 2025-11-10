@@ -180,7 +180,21 @@ export const carrierBagType = defineType({
 			type: "string",
 			title: "Saved Items Badge Text",
 			description:
-				"Text template for the saved items badge (use {count} as placeholder for the number)",
+				"Text to display after the count in the saved items badge (e.g., 'saved items'). The count will be automatically prepended.",
+		}),
+		defineField({
+			name: "saveToCarrierBagButtonLabel",
+			type: "string",
+			title: "Save To Carrier Bag Button Label",
+			description:
+				"Label text for the save to carrier bag button on pattern pages",
+		}),
+		defineField({
+			name: "savedToCarrierBagButtonLabel",
+			type: "string",
+			title: "Saved To Carrier Bag Button Label",
+			description:
+				"Label text for the saved to carrier bag button on pattern pages (when item is already saved)",
 		}),
 	],
 	preview: {

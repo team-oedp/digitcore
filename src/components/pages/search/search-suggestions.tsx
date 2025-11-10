@@ -4,12 +4,21 @@ import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { getPatternSuggestionsWithPreferences } from "~/app/actions/search";
 import type { Language } from "~/i18n/config";
+import type { SEARCH_CONFIG_QUERYResult } from "~/sanity/sanity.types";
 import { useOrientationStore } from "~/stores/orientation";
 import type { SearchPattern } from "~/types/search";
 import { SearchResultItem } from "./search-result-item";
 import { SearchResultsSkeleton } from "./search-result-skeleton";
 
-export function SearchSuggestions({ limit = 5 }: { limit?: number }) {
+type SearchSuggestionsProps = {
+	limit?: number;
+	searchData?: SEARCH_CONFIG_QUERYResult;
+};
+
+export function SearchSuggestions({
+	limit = 5,
+	searchData,
+}: SearchSuggestionsProps) {
 	const params = useParams<{ language: string }>();
 	const language = (params?.language as Language) || ("en" as Language);
 	const hasCompletedOrientation = useOrientationStore(
@@ -63,9 +72,14 @@ export function SearchSuggestions({ limit = 5 }: { limit?: number }) {
 
 	if (!isEligible) return null;
 
+	const suggestionsHeading =
+		searchData?.suggestionsHeading ?? "Suggestions for you";
+
 	return (
 		<div className="w-full">
-			<h3 className="mb-3 font-medium text-base">Suggestions for you</h3>
+			<h3 className="mb-3 font-normal text-base text-muted-foreground">
+				{suggestionsHeading}
+			</h3>
 			{isLoading ? (
 				<SearchResultsSkeleton count={limit} />
 			) : !patterns || patterns.length === 0 ? null : (

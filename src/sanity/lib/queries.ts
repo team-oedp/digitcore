@@ -743,7 +743,9 @@ export const ONBOARDING_QUERY = defineQuery(`
       title,
       body,
       primaryCtaLabel,
-      secondaryCtaText
+      secondaryCtaText,
+      returnToCtaText,
+      homePageButtonLabel
     },
     slide2{
       title,
@@ -811,7 +813,7 @@ export const TAGS_PAGE_QUERY = defineQuery(`
   }
 `);
 
-export const SEARCH_QUERY = defineQuery(`
+export const SEARCH_CONFIG_QUERY = defineQuery(`
   *[_type == 'search' && language == $language][0]{
     _id,
     _type,
@@ -834,6 +836,13 @@ export const SEARCH_QUERY = defineQuery(`
     tagsPlaceholder,
     tagsSearchPlaceholder,
     tagsEmptyMessage,
+    suggestionsHeading,
+    enhanceLabel,
+    enhanceResultsTitle,
+    audiencePreferencesLabel,
+    themePreferencesLabel,
+    preferencesConjunction,
+    enhanceHoverDescription,
   }
 `);
 
@@ -873,6 +882,43 @@ export const CARRIER_BAG_QUERY = defineQuery(`
     filterByAudiencesGroupHeading,
     clearAllButtonLabel,
     savedItemsBadgeText,
+    saveToCarrierBagButtonLabel,
+    savedToCarrierBagButtonLabel,
+  }
+`);
+
+export const PATTERN_UTILITIES_QUERY = defineQuery(`
+  *[_type == 'patternUtilities' && language == $language][0]{
+    _id,
+    _type,
+    _createdAt,
+    _updatedAt,
+    _rev,
+    title,
+    language,
+    knowOfAnotherResourceOrSolution,
+    makeASuggestionButtonLabel,
+    suggestSolutionModalTitle,
+    suggestSolutionModalDescription,
+    patternLabel,
+    newSolutionsLabel,
+    newSolutionsPlaceholder,
+    newResourcesLabel,
+    newResourcesPlaceholder,
+    additionalFeedbackLabel,
+    additionalFeedbackPlaceholder,
+    nameAndAffiliationLabel,
+    nameAndAffiliationPlaceholder,
+    emailLabel,
+    emailPlaceholder,
+    cancelButtonLabel,
+    submitSuggestionButtonLabel,
+    patternSubmittedSuccessfullyMessage,
+    relatedSolutionLabel,
+    relatedSolutionsLabel,
+    visitPatternButtonLabel,
+    solutionsHeading,
+    resourcesHeading,
   }
 `);
 

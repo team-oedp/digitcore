@@ -182,12 +182,14 @@ export function OrientationClient({
 	onboarding,
 	patternTitle,
 	returnToPath,
+	pageTitle,
 	audienceOptions,
 	themeOptions,
 }: {
 	onboarding?: Onboarding;
 	patternTitle?: string;
 	returnToPath?: string;
+	pageTitle?: string;
 	audienceOptions: FilterOption[];
 	themeOptions: FilterOption[];
 }) {
@@ -363,6 +365,7 @@ export function OrientationClient({
 							patternSlug={patternSlug}
 							patternTitle={patternTitle}
 							returnToPath={returnToPath}
+							pageTitle={pageTitle}
 							goToSlide2={goToSlide2}
 							onNavigateSlide={goToSlide}
 							language={currentLanguage}
@@ -534,6 +537,7 @@ function Slide1({
 	patternSlug,
 	patternTitle,
 	returnToPath,
+	pageTitle,
 	goToSlide2,
 	onboarding,
 	onNavigateSlide,
@@ -542,12 +546,14 @@ function Slide1({
 	patternSlug: string | undefined;
 	patternTitle?: string;
 	returnToPath?: string;
+	pageTitle?: string;
 	goToSlide2: () => void;
 	onboarding?: Onboarding;
 	onNavigateSlide?: (n: 1 | 2 | 3) => void;
 	language?: string;
 }) {
 	const setSkipped = useOrientationStore((s) => s.setSkipped);
+	const previousRoute = useOrientationStore((s) => s.previousRoute);
 	const router = useRouter();
 	const pathname = usePathname();
 	const { language: languageFromPath } = useMemo(
@@ -556,15 +562,15 @@ function Slide1({
 	);
 	const language = languageProp ?? languageFromPath;
 
+	// Use tracked route as fallback if returnToPath is not provided
+	const effectiveReturnToPath = returnToPath || previousRoute;
+
 	const handleSkip = () => {
 		setSkipped(true);
 
-		// If there's a returnToPath, use it; otherwise go to home
-		if (returnToPath) {
-			// Decode the URL parameter (handles %2F -> /)
-			const decodedPath = decodeURIComponent(returnToPath);
-			const safePath = getSafePath(decodedPath);
-			router.push(buildLocaleHref(language, safePath));
+		// If there's an effective returnToPath, go back in history; otherwise go to home
+		if (effectiveReturnToPath) {
+			router.back();
 		} else {
 			// No returnTo means user came from home page, redirect to home
 			router.push(buildLocaleHref(language, "/"));
@@ -662,8 +668,10 @@ function Slide1({
 
 					<div>
 						<p className="mb-2 font-light text-body">
-							{onboarding?.slide1?.secondaryCtaText ||
-								"Or skip orientation, go directly to:"}
+							{effectiveReturnToPath && !patternSlug
+								? onboarding?.slide1?.returnToCtaText || "Or return to"
+								: onboarding?.slide1?.secondaryCtaText ||
+									"Or skip orientation, go directly to:"}
 						</p>
 						{patternSlug ? (
 							<ActionButton
@@ -684,12 +692,20 @@ function Slide1({
 									strokeWidth={1.5}
 								/>
 							</ActionButton>
+						) : effectiveReturnToPath ? (
+							<ActionButton onClick={handleSkip} asButton={true}>
+								<span>
+									{pageTitle ||
+										friendlyLabelFromPath(
+											decodeURIComponent(effectiveReturnToPath),
+										)}
+								</span>
+							</ActionButton>
 						) : (
 							<ActionButton onClick={handleSkip} asButton={true}>
 								<span>
-									{friendlyLabelFromPath(
-										returnToPath ? decodeURIComponent(returnToPath) : "/",
-									)}
+									{onboarding?.slide1?.homePageButtonLabel ||
+										friendlyLabelFromPath("/")}
 								</span>
 								<Icon
 									icon={Home09Icon}
@@ -807,7 +823,7 @@ function Slide2({
 					/>
 				)}
 
-				<div className="space-y-4 text-body">
+				<div className="space-y-4">
 					{/* Audience buttons embedded in the text flow */}
 					<div className="flex flex-wrap items-center gap-2">
 						{audienceOptions.map((opt, _idx) => (

@@ -1,4 +1,4 @@
-import type { Link } from "~/sanity/sanity.types";
+import type { Link } from "../sanity.types";
 
 /**
  * Resolves a Link object to its corresponding URL path or external href.
@@ -15,7 +15,7 @@ import type { Link } from "~/sanity/sanity.types";
  * linkResolver({ linkType: 'page', page: 'about' }) // '/about'
  *
  * // Pattern page
- * linkResolver({ linkType: 'pattern', pattern: 'hero-section' }) // '/patterns/hero-section'
+ * linkResolver({ linkType: 'pattern', pattern: 'hero-section' }) // '/pattern/hero-section'
  * ```
  */
 export function linkResolver(link: Link | undefined) {
@@ -42,7 +42,7 @@ export function linkResolver(link: Link | undefined) {
 			if (pageSlug) return `/${pageSlug}`;
 			return null;
 		case "pattern":
-			if (patternSlug) return `/patterns/${patternSlug}`;
+			if (patternSlug) return `/pattern/${patternSlug}`;
 			return null;
 		case "orientation":
 			return "/orientation";

@@ -8,7 +8,10 @@ import { CustomPortableText } from "~/components/sanity/custom-portable-text";
 import { Badge } from "~/components/ui/badge";
 import { ptToPlainText } from "~/lib/portable-text-utils";
 import { cn } from "~/lib/utils";
-import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
+import type {
+	PATTERN_QUERYResult,
+	PATTERN_UTILITIES_QUERYResult,
+} from "~/sanity/sanity.types";
 import { SolutionPreview } from "./solution-preview";
 
 type ResourceFromQuery = NonNullable<
@@ -19,6 +22,7 @@ type SolutionFromQuery = NonNullable<ResourceFromQuery["solutions"]>[number];
 
 type ResourcesProps = {
 	resources: ResourceFromQuery[];
+	patternUtilities?: PATTERN_UTILITIES_QUERYResult | null;
 };
 
 type SolutionBadgeProps = {
@@ -60,8 +64,15 @@ function SolutionBadge({ solution, index }: SolutionBadgeProps) {
 	);
 }
 
-export function Resources({ resources }: ResourcesProps) {
+export function Resources({ resources, patternUtilities }: ResourcesProps) {
 	if (!resources.length) return null;
+
+	const relatedSolutionText =
+		patternUtilities?.relatedSolutionLabel ?? "Related solution";
+	const relatedSolutionsText =
+		patternUtilities?.relatedSolutionsLabel ?? "Related solutions";
+	const resourcesHeadingText =
+		patternUtilities?.resourcesHeading ?? "Resources";
 
 	return (
 		<section
@@ -71,7 +82,7 @@ export function Resources({ resources }: ResourcesProps) {
 		>
 			<header className="flex flex-row items-center gap-2 md:gap-2.5">
 				<h2 className="font-light text-[24px] text-primary md:text-[32px]">
-					Resources
+					{resourcesHeadingText}
 				</h2>
 			</header>
 
@@ -112,7 +123,9 @@ export function Resources({ resources }: ResourcesProps) {
 									<div className="flex flex-col items-start gap-2 md:flex-row md:items-start md:gap-2.5">
 										<div className="flex flex-row items-center gap-2 md:gap-2.5">
 											<span className="whitespace-nowrap font-normal text-[#c4c4c8] text-[12px] tracking-[-0.14px] md:text-[14px]">
-												Related {solutionCount > 1 ? "solutions" : "solution"}
+												{solutionCount > 1
+													? relatedSolutionsText
+													: relatedSolutionText}
 											</span>
 											<HugeiconsIcon
 												icon={ArrowRight02Icon}

@@ -16,18 +16,57 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
+import type { PATTERN_UTILITIES_QUERYResult } from "~/sanity/sanity.types";
 
 type SuggestSolutionModalProps = {
 	patternName: string;
 	patternSlug: string;
+	patternUtilities?: PATTERN_UTILITIES_QUERYResult | null;
 	trigger: React.ReactNode;
 };
 
 export function SuggestSolutionModal({
 	patternName,
 	patternSlug,
+	patternUtilities,
 	trigger,
 }: SuggestSolutionModalProps) {
+	const modalTitle =
+		patternUtilities?.suggestSolutionModalTitle ?? "Suggest Solution";
+	const modalDescription =
+		patternUtilities?.suggestSolutionModalDescription ??
+		"Help us improve the Digital Toolkit for Collaborative Environmental Research by suggesting new solutions and resources.";
+	const patternLabel = patternUtilities?.patternLabel ?? "Pattern";
+	const newSolutionsLabel =
+		patternUtilities?.newSolutionsLabel ?? "New Solution(s)";
+	const newSolutionsPlaceholder =
+		patternUtilities?.newSolutionsPlaceholder ??
+		"What new solution(s) would you like to add for this pattern?";
+	const newResourcesLabel =
+		patternUtilities?.newResourcesLabel ?? "New Resource(s)";
+	const newResourcesPlaceholder =
+		patternUtilities?.newResourcesPlaceholder ??
+		"What new resource(s) would you like to add for this pattern? Please reference a solution and provide a URL if applicable.";
+	const additionalFeedbackLabel =
+		patternUtilities?.additionalFeedbackLabel ?? "Additional Feedback";
+	const additionalFeedbackPlaceholder =
+		patternUtilities?.additionalFeedbackPlaceholder ??
+		"Do you have any additional feedback on the Pattern or Toolkit?";
+	const nameAndAffiliationLabel =
+		patternUtilities?.nameAndAffiliationLabel ?? "Name and Affiliation";
+	const nameAndAffiliationPlaceholder =
+		patternUtilities?.nameAndAffiliationPlaceholder ??
+		"Would you like your name and affiliation to be listed on the website?";
+	const emailLabel = patternUtilities?.emailLabel ?? "Email";
+	const emailPlaceholder =
+		patternUtilities?.emailPlaceholder ??
+		"Please supply an email where we can contact you.";
+	const cancelButtonLabel = patternUtilities?.cancelButtonLabel ?? "Cancel";
+	const submitSuggestionButtonLabel =
+		patternUtilities?.submitSuggestionButtonLabel ?? "Submit Suggestion";
+	const successMessage =
+		patternUtilities?.patternSubmittedSuccessfullyMessage ??
+		"Pattern submitted successfully!";
 	const [isOpen, setIsOpen] = useState(false);
 	const baseId = useId();
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -102,11 +141,8 @@ export function SuggestSolutionModal({
 			>
 				{!isSuccess && (
 					<DialogHeader>
-						<DialogTitle>Suggest Solution</DialogTitle>
-						<DialogDescription>
-							Help us improve the Digital Toolkit for Collaborative
-							Environmental Research by suggesting new solutions and resources.
-						</DialogDescription>
+						<DialogTitle>{modalTitle}</DialogTitle>
+						<DialogDescription>{modalDescription}</DialogDescription>
 					</DialogHeader>
 				)}
 
@@ -125,13 +161,15 @@ export function SuggestSolutionModal({
 							<path d="M20 6L9 17l-5-5" />
 						</svg>
 						<p className="font-normal text-foreground text-lg">
-							Pattern submitted successfully!
+							{successMessage}
 						</p>
 					</div>
 				) : (
 					<form onSubmit={handleSubmit} className="space-y-6">
 						<div className="space-y-3">
-							<Label className="block font-normal text-xs">Pattern</Label>
+							<Label className="block font-normal text-xs">
+								{patternLabel}
+							</Label>
 							<Badge variant="secondary">{patternName}</Badge>
 						</div>
 
@@ -140,12 +178,12 @@ export function SuggestSolutionModal({
 								htmlFor={`${baseId}-newSolutions`}
 								className="mb-2 block font-normal text-xs"
 							>
-								New Solution(s)
+								{newSolutionsLabel}
 							</Label>
 							<textarea
 								id={`${baseId}-newSolutions`}
 								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-transparent focus-visible:ring-offset-transparent disabled:cursor-not-allowed disabled:opacity-50"
-								placeholder="What new solution(s) would you like to add for this pattern?"
+								placeholder={newSolutionsPlaceholder}
 								value={formData.newSolutions}
 								onChange={(e) =>
 									handleInputChange("newSolutions", e.target.value)
@@ -158,12 +196,12 @@ export function SuggestSolutionModal({
 								htmlFor={`${baseId}-newResources`}
 								className="mb-2 block font-normal text-xs"
 							>
-								New Resource(s)
+								{newResourcesLabel}
 							</Label>
 							<textarea
 								id={`${baseId}-newResources`}
 								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-transparent focus-visible:ring-offset-transparent disabled:cursor-not-allowed disabled:opacity-50"
-								placeholder="What new resource(s) would you like to add for this pattern? Please reference a solution and provide a URL if applicable."
+								placeholder={newResourcesPlaceholder}
 								value={formData.newResources}
 								onChange={(e) =>
 									handleInputChange("newResources", e.target.value)
@@ -176,12 +214,12 @@ export function SuggestSolutionModal({
 								htmlFor={`${baseId}-additionalFeedback`}
 								className="mb-2 block font-normal text-xs"
 							>
-								Additional Feedback
+								{additionalFeedbackLabel}
 							</Label>
 							<textarea
 								id={`${baseId}-additionalFeedback`}
 								className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-transparent focus-visible:ring-offset-transparent disabled:cursor-not-allowed disabled:opacity-50"
-								placeholder="Do you have any additional feedback on the Pattern or Toolkit?"
+								placeholder={additionalFeedbackPlaceholder}
 								value={formData.additionalFeedback}
 								onChange={(e) =>
 									handleInputChange("additionalFeedback", e.target.value)
@@ -194,12 +232,12 @@ export function SuggestSolutionModal({
 								htmlFor={`${baseId}-nameAndAffiliation`}
 								className="mb-2 block font-normal text-xs"
 							>
-								Name and Affiliation
+								{nameAndAffiliationLabel}
 							</Label>
 							<Input
 								id={`${baseId}-nameAndAffiliation`}
 								className="focus-visible:ring-transparent"
-								placeholder="Would you like your name and affiliation to be listed on the website?"
+								placeholder={nameAndAffiliationPlaceholder}
 								value={formData.nameAndAffiliation}
 								onChange={(e) =>
 									handleInputChange("nameAndAffiliation", e.target.value)
@@ -212,13 +250,13 @@ export function SuggestSolutionModal({
 								htmlFor={`${baseId}-email`}
 								className="mb-2 block font-normal text-xs"
 							>
-								Email <span className="text-red-500">*</span>
+								{emailLabel} <span className="text-red-500">*</span>
 							</Label>
 							<Input
 								id={`${baseId}-email`}
 								type="email"
 								className="focus-visible:ring-transparent"
-								placeholder="Please supply an email where we can contact you."
+								placeholder={emailPlaceholder}
 								value={formData.email}
 								onChange={(e) => handleInputChange("email", e.target.value)}
 								required
@@ -233,7 +271,7 @@ export function SuggestSolutionModal({
 								onClick={() => setIsOpen(false)}
 								disabled={isSubmitting}
 							>
-								Cancel
+								{cancelButtonLabel}
 							</Button>
 							<Button type="submit" className="flex-1" disabled={isSubmitting}>
 								{isSubmitting && (
@@ -259,7 +297,7 @@ export function SuggestSolutionModal({
 									</svg>
 								)}
 								<span className={isSubmitting ? "sr-only" : undefined}>
-									Submit Suggestion
+									{submitSuggestionButtonLabel}
 								</span>
 							</Button>
 						</DialogFooter>

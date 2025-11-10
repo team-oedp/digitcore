@@ -4,18 +4,25 @@ import { Backpack03Icon } from "@hugeicons/core-free-icons";
 import { useEffect, useId, useState } from "react";
 import { getPatternIconWithMapping } from "~/lib/pattern-icons";
 import { cn } from "~/lib/utils";
-import type { PATTERN_QUERYResult } from "~/sanity/sanity.types";
+import type {
+	CARRIER_BAG_QUERYResult,
+	PATTERN_QUERYResult,
+} from "~/sanity/sanity.types";
 import { useCarrierBagStore } from "~/stores/carrier-bag";
 import { Icon } from "./icon";
 
 type SaveToCarrierBagButtonProps = {
 	isInBag: boolean;
 	onClick: () => void;
+	saveLabel: string;
+	savedLabel: string;
 };
 
 function SaveToCarrierBagButton({
 	isInBag,
 	onClick,
+	saveLabel,
+	savedLabel,
 }: SaveToCarrierBagButtonProps) {
 	return (
 		<button
@@ -45,7 +52,7 @@ function SaveToCarrierBagButton({
 					isInBag ? "text-green-600 dark:text-green-400" : "text-primary",
 				)}
 			>
-				{isInBag ? "Saved to Carrier Bag" : "Save to Carrier Bag"}
+				{isInBag ? savedLabel : saveLabel}
 			</span>
 		</button>
 	);
@@ -55,9 +62,15 @@ type PatternHeadingProps = {
 	title: string | null;
 	slug: string | null;
 	pattern?: NonNullable<PATTERN_QUERYResult>;
+	carrierBagData?: CARRIER_BAG_QUERYResult | null;
 };
 
-export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
+export function PatternHeading({
+	title,
+	slug,
+	pattern,
+	carrierBagData,
+}: PatternHeadingProps) {
 	const PatternIcon = getPatternIconWithMapping(slug || "");
 
 	const addPatternToBag = useCarrierBagStore((s) => s.addPattern);
@@ -81,6 +94,11 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 		addPatternToBag(pattern);
 	}
 
+	const saveLabel =
+		carrierBagData?.saveToCarrierBagButtonLabel || "Save to Carrier Bag";
+	const savedLabel =
+		carrierBagData?.savedToCarrierBagButtonLabel || "Saved to Carrier Bag";
+
 	const headingId = useId();
 	return (
 		<header id={headingId} className="relative max-w-4xl pt-5">
@@ -98,6 +116,8 @@ export function PatternHeading({ title, slug, pattern }: PatternHeadingProps) {
 						<SaveToCarrierBagButton
 							isInBag={isInBag}
 							onClick={handleSaveToCarrierBag}
+							saveLabel={saveLabel}
+							savedLabel={savedLabel}
 						/>
 					)}
 				</div>

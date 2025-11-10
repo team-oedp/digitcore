@@ -10,6 +10,7 @@ import {
 import type { Language } from "~/i18n/config";
 import { createLogLocation, logger } from "~/lib/logger";
 import { parseSearchParams, searchParamsSchema } from "~/lib/search";
+import type { SEARCH_CONFIG_QUERYResult } from "~/sanity/sanity.types";
 import { useOrientationStore } from "~/stores/orientation";
 import { SearchResultsSkeleton } from "./search-result-skeleton";
 import { SearchResults } from "./search-results";
@@ -19,11 +20,13 @@ import { SearchSuggestions } from "./search-suggestions";
 type SearchClientWrapperProps = {
 	emptyStateMessage?: string;
 	language: Language;
+	searchData?: SEARCH_CONFIG_QUERYResult;
 };
 
 export function SearchClientWrapper({
 	emptyStateMessage,
 	language,
+	searchData,
 }: SearchClientWrapperProps) {
 	const location = createLogLocation(
 		"search-client-wrapper.tsx",
@@ -306,7 +309,7 @@ export function SearchClientWrapper({
 			{!hasSearchCriteria ? (
 				// No search criteria - show suggestions (if eligible)
 				<div className="py-12">
-					<SearchSuggestions />
+					<SearchSuggestions searchData={searchData} />
 				</div>
 			) : isLoading ? (
 				<SearchResultsSkeleton count={6} />
@@ -331,7 +334,7 @@ export function SearchClientWrapper({
 						</p>
 					)}
 					<div className="mt-6">
-						<SearchSuggestions />
+						<SearchSuggestions searchData={searchData} />
 					</div>
 				</div>
 			) : searchResult ? (
