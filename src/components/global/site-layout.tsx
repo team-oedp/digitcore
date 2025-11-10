@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { CarrierBagSidebar } from "~/components/global/carrier-bag/carrier-bag-sidebar";
 import { SiteHeader } from "~/components/global/site-header";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
@@ -13,6 +13,7 @@ import type {
 	FOOTER_QUERYResult,
 	HEADER_QUERYResult,
 } from "~/sanity/sanity.types";
+import { useOrientationStore } from "~/stores/orientation";
 import { SiteFooter } from "./site-footer";
 
 type SiteLayoutProps = {
@@ -37,6 +38,27 @@ export function SiteLayout({
 	);
 	const isCarrierBagRoute = normalizedPath === "/carrier-bag";
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
+	const setPreviousRoute = useOrientationStore((s) => s.setPreviousRoute);
+	const previousRouteRef = useRef<string | undefined>(undefined);
+
+	// Track navigation - store current route as previous before it changes
+	useEffect(() => {
+		// Skip on initial mount
+		if (previousRouteRef.current === undefined) {
+			previousRouteRef.current = pathname;
+			return;
+		}
+
+		// Only track if route actually changed and it's not orientation page
+		if (
+			previousRouteRef.current !== pathname &&
+			normalizedPath !== "/orientation"
+		) {
+			// Store the previous route before updating
+			setPreviousRoute(previousRouteRef.current);
+			previousRouteRef.current = pathname;
+		}
+	}, [pathname, normalizedPath, setPreviousRoute]);
 	return (
 		<SidebarProvider
 			className="flex h-full min-h-0 w-full flex-col gap-2"

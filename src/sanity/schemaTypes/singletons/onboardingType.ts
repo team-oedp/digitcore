@@ -107,6 +107,22 @@ export const onboardingType = defineType({
 					type: "string",
 					initialValue: "Or, go directly to the pattern:",
 				}),
+				defineField({
+					name: "returnToCtaText",
+					title: "Return to CTA helper text",
+					type: "string",
+					initialValue: "Or return to",
+					description:
+						"Text displayed above the return-to button when user has a returnToPath (different from pattern link)",
+				}),
+				defineField({
+					name: "homePageButtonLabel",
+					title: "Home page button label",
+					type: "string",
+					initialValue: "DIGITCORE Home Page",
+					description:
+						"Label for the button that links to the home page when skipping orientation",
+				}),
 			],
 		}),
 		// Slide 2

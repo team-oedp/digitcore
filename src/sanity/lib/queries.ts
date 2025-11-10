@@ -743,7 +743,9 @@ export const ONBOARDING_QUERY = defineQuery(`
       title,
       body,
       primaryCtaLabel,
-      secondaryCtaText
+      secondaryCtaText,
+      returnToCtaText,
+      homePageButtonLabel
     },
     slide2{
       title,

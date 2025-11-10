@@ -3463,6 +3463,20 @@
                 "type": "string"
               },
               "optional": true
+            },
+            "returnToCtaText": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "homePageButtonLabel": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
             }
           }
         },
