@@ -31,11 +31,12 @@ export const PATTERNS_QUERY =
     "slug": slug.current,
     tags[]->,
     audiences[]->,
-    theme->{
+    "theme": select(defined(theme) && theme->language == $language => theme->{
       _id,
       title,
-      description
-    },
+      description,
+      language
+    }),
     solutions[]->,
     resources[]->{
       ...,
@@ -87,7 +88,7 @@ export const PATTERN_QUERY =
     "slug": slug.current,
     tags[]->{...},
 	    audiences[]->{...},
-	    theme->{...},
+	    "theme": select(defined(theme) && theme->language == $language => theme->{...}),
     solutions[]->{
       _id,
       _type,
@@ -331,11 +332,12 @@ export const PATTERNS_WITH_THEMES_QUERY = defineQuery(`
       _id,
       title
     },
-    theme->{
+    "theme": select(defined(theme) && theme->language == $language => theme->{
       _id,
       title,
-      description
-    },
+      description,
+      language
+    }),
     solutions[]->{
       _id,
       title,
@@ -378,11 +380,12 @@ export const PATTERNS_GROUPED_BY_THEME_QUERY = defineQuery(`
         _id,
         title
       },
-      theme->{
+      "theme": select(defined(theme) && theme->language == $language => theme->{
         _id,
         title,
-        description
-      },
+        description,
+        language
+      }),
       solutions[]->,
       resources[]->{
         ...,
@@ -458,11 +461,12 @@ export const PATTERN_SEARCH_QUERY = defineQuery(`
       _id,
       title
     },
-    theme->{
+    "theme": select(defined(theme) && theme->language == $language => theme->{
       _id,
       title,
-      description
-    },
+      description,
+      language
+    }),
     solutions[]->{
       _id,
       title,
@@ -537,11 +541,12 @@ export const PATTERN_SEARCH_WITH_PREFERENCES_QUERY = defineQuery(`
       _id,
       title
     },
-    theme->{
+    "theme": select(defined(theme) && theme->language == $language => theme->{
       _id,
       title,
-      description
-    },
+      description,
+      language
+    }),
     solutions[]->{
       _id,
       title,
@@ -596,7 +601,12 @@ export const PATTERN_SUGGESTIONS_WITH_PREFERENCES_QUERY = defineQuery(`
     description,
     tags[]->{ _id, title },
     audiences[]->{ _id, title },
-    theme->{ _id, title, description }
+    "theme": *[_type == "theme" && _id == theme._ref && language == $language][0]{
+      _id,
+      title,
+      description,
+      language
+    }
   }
 `);
 
@@ -746,11 +756,12 @@ export const PATTERN_SIMPLE_SEARCH_QUERY = defineQuery(`
       _id,
       title
     },
-    theme->{
+    "theme": select(defined(theme) && theme->language == $language => theme->{
       _id,
       title,
-      description
-    },
+      description,
+      language
+    }),
     solutions[]->{
       _id,
       title,
@@ -803,11 +814,12 @@ export const PATTERN_FILTER_QUERY = defineQuery(`
       _id,
       title
     },
-    theme->{
+    "theme": select(defined(theme) && theme->language == $language => theme->{
       _id,
       title,
-      description
-    },
+      description,
+      language
+    }),
     solutions[]->{
       _id,
       title,
@@ -1070,11 +1082,12 @@ export const PATTERNS_BY_SLUGS_QUERY = defineQuery(`
       _id,
       title
     },
-    theme->{
+    "theme": select(defined(theme) && theme->language == $language => theme->{
       _id,
       title,
-      description
-    },
+      description,
+      language
+    }),
     solutions[]->{
       _id,
       _type,

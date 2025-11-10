@@ -109,7 +109,7 @@ export default async function Page({ params }: LanguagePageProps) {
 							</div>
 
 							<div className="space-y-0 pt-8">
-								{patterns.map((pattern, index) => (
+								{patterns.map((pattern) => (
 									<div key={pattern._id}>
 										<SearchResultItem
 											showPatternIcon={true}
