@@ -36,6 +36,9 @@ export function Solutions({
 		return null;
 	}
 
+	const solutionsHeadingText =
+		patternUtilities?.solutionsHeading ?? "Solutions";
+
 	return (
 		<section
 			id="solutions"
@@ -44,7 +47,7 @@ export function Solutions({
 		>
 			<header className="flex flex-row items-center gap-2 md:gap-2.5">
 				<h2 className="font-light text-[24px] text-primary md:text-[32px]">
-					Solutions
+					{solutionsHeadingText}
 				</h2>
 			</header>
 

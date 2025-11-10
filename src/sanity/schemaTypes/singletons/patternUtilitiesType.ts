@@ -155,6 +155,18 @@ export const patternUtilitiesType = defineType({
 			description:
 				"Label text for the 'Visit pattern' button (e.g., 'Visit pattern')",
 		}),
+		defineField({
+			name: "solutionsHeading",
+			type: "string",
+			title: "Solutions Heading",
+			description: "Heading text for the Solutions section (e.g., 'Solutions')",
+		}),
+		defineField({
+			name: "resourcesHeading",
+			type: "string",
+			title: "Resources Heading",
+			description: "Heading text for the Resources section (e.g., 'Resources')",
+		}),
 	],
 	preview: {
 		select: {

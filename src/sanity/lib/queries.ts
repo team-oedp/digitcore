@@ -917,6 +917,8 @@ export const PATTERN_UTILITIES_QUERY = defineQuery(`
     relatedSolutionLabel,
     relatedSolutionsLabel,
     visitPatternButtonLabel,
+    solutionsHeading,
+    resourcesHeading,
   }
 `);
 

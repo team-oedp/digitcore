@@ -71,6 +71,8 @@ export function Resources({ resources, patternUtilities }: ResourcesProps) {
 		patternUtilities?.relatedSolutionLabel ?? "Related solution";
 	const relatedSolutionsText =
 		patternUtilities?.relatedSolutionsLabel ?? "Related solutions";
+	const resourcesHeadingText =
+		patternUtilities?.resourcesHeading ?? "Resources";
 
 	return (
 		<section
@@ -80,7 +82,7 @@ export function Resources({ resources, patternUtilities }: ResourcesProps) {
 		>
 			<header className="flex flex-row items-center gap-2 md:gap-2.5">
 				<h2 className="font-light text-[24px] text-primary md:text-[32px]">
-					Resources
+					{resourcesHeadingText}
 				</h2>
 			</header>
 
