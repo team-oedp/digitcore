@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	ArrowRight02Icon,
 	ChartRelationshipIcon,
@@ -40,7 +42,6 @@ function SolutionBadge({ solution, index }: SolutionBadgeProps) {
 
 	return (
 		<SolutionPreview
-			key={solution._id || index}
 			solutionNumber={String(index + 1)}
 			solutionTitle={title}
 			solutionDescription={description}
@@ -90,7 +91,10 @@ export function Resources({ resources, patternUtilities }: ResourcesProps) {
 
 			<div className="flex flex-col">
 				{resources.map((resource, index) => {
-					const solutions = resource.solutions?.filter(Boolean) ?? [];
+					const solutions =
+						resource.solutions?.filter(
+							(s) => Boolean(s) && s?._id && s?._type === "solution",
+						) ?? [];
 					const hasSolutions = solutions.length > 0;
 					const isFirst = index === 0;
 					const isLast = index === resources.length - 1;
@@ -155,11 +159,9 @@ export function Resources({ resources, patternUtilities }: ResourcesProps) {
 										</div>
 										<div className="flex flex-wrap gap-1.5 md:gap-2.5">
 											{solutions.map((solution, sIdx) => (
-												<SolutionBadge
-													key={solution._id || sIdx}
-													solution={solution}
-													index={sIdx}
-												/>
+												<div key={solution._id || sIdx}>
+													<SolutionBadge solution={solution} index={sIdx} />
+												</div>
 											))}
 										</div>
 									</div>
