@@ -3424,6 +3424,13 @@
                 "name": "blockContent"
               },
               "optional": true
+            },
+            "nextButtonLabel": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
             }
           }
         },
@@ -3446,6 +3453,13 @@
               "value": {
                 "type": "inline",
                 "name": "blockContent"
+              },
+              "optional": true
+            },
+            "finishButtonLabel": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
               },
               "optional": true
             }

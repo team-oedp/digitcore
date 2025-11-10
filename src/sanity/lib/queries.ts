@@ -747,11 +747,13 @@ export const ONBOARDING_QUERY = defineQuery(`
     },
     slide2{
       title,
-      body
+      body,
+      nextButtonLabel
     },
     slide3{
       title,
-      body
+      body,
+      finishButtonLabel
     }
   }
 `);

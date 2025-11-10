@@ -574,10 +574,12 @@ export type Onboarding = {
   slide2?: {
     title?: string
     body?: BlockContent
+    nextButtonLabel?: string
   }
   slide3?: {
     title?: string
     body?: BlockContent
+    finishButtonLabel?: string
   }
 }
 
@@ -2698,7 +2700,7 @@ export type PATTERN_FILTER_QUERYResult = Array<{
   }> | null
 }>
 // Variable: ONBOARDING_QUERY
-// Query: *[_type == 'onboarding' && language == $language][0]{    _id,    _type,    title,    language,    description,    skipLabel,    backLabel,    footerText,    breadcrumbs,    slide1{      title,      body,      primaryCtaLabel,      secondaryCtaText    },    slide2{      title,      body    },    slide3{      title,      body    }  }
+// Query: *[_type == 'onboarding' && language == $language][0]{    _id,    _type,    title,    language,    description,    skipLabel,    backLabel,    footerText,    breadcrumbs,    slide1{      title,      body,      primaryCtaLabel,      secondaryCtaText    },    slide2{      title,      body,      nextButtonLabel    },    slide3{      title,      body,      finishButtonLabel    }  }
 export type ONBOARDING_QUERYResult = {
   _id: string
   _type: 'onboarding'
@@ -2722,10 +2724,12 @@ export type ONBOARDING_QUERYResult = {
   slide2: {
     title: string | null
     body: BlockContent | null
+    nextButtonLabel: string | null
   } | null
   slide3: {
     title: string | null
     body: BlockContent | null
+    finishButtonLabel: string | null
   } | null
 } | null
 // Variable: TAGS_WITH_PATTERNS_QUERY
@@ -4599,7 +4603,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "tag" && title match ($searchTerm + "*") && language == $language]\n  | score(\n      boost(title match $searchTerm, 15),\n      boost(title match ($searchTerm + "*"), 10),\n      title match ($searchTerm + "*")\n    )\n  [_score > 0]\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    // Find patterns that use this tag\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language]{\n      _id,\n      title,\n      "slug": slug.current\n    }[0...5]\n  }\n': TAG_SEARCH_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current) && language == $language]\n  | score(\n      // Primary content scoring (highest priority)\n      boost(title match $searchTerm, 15),\n      boost(pt::text(description) match $searchTerm, 12),\n      \n      // Partial/prefix matches (lower scores)\n      boost(title match ($searchTerm + "*"), 8),\n      boost(pt::text(description) match ($searchTerm + "*"), 6),\n      \n      // Basic scoring for any match\n      title match ($searchTerm + "*"),\n      pt::text(description) match ($searchTerm + "*")\n    )\n  // Filter out results with very low relevance scores\n  [_score > 0]\n  // Order by relevance score, then by title\n  | order(_score desc, title asc)\n  {\n    _id,\n    _type,\n    _score,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_SIMPLE_SEARCH_QUERYResult
     '\n  *[_type == "pattern" && defined(slug.current) && language == $language\n    // Apply audience filter if provided\n    && (!defined($audiences) || count($audiences) == 0 || count((audiences[]._ref)[@ in $audiences]) > 0)\n    // Apply theme filter if provided\n    && (!defined($themes) || count($themes) == 0 || theme._ref in $themes)\n    // Apply tags filter if provided\n    && (!defined($tags) || count($tags) == 0 || count((tags[]._ref)[@ in $tags]) > 0)\n  ]\n  // Order by title (no scoring needed in filter-only mode)\n  | order(title asc)\n  {\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    "slug": slug.current,\n    tags[]->{\n      _id,\n      title\n    },\n    audiences[]->{\n      _id,\n      title\n    },\n    theme->{\n      _id,\n      title,\n      description\n    },\n    solutions[]->{\n      _id,\n      title,\n      description\n    },\n    resources[]->{\n      _id,\n      title,\n      description,\n      solutions[]->{\n        _id,\n        title\n      }\n    }\n  }\n': PATTERN_FILTER_QUERYResult
-    "\n  *[_type == 'onboarding' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    skipLabel,\n    backLabel,\n    footerText,\n    breadcrumbs,\n    slide1{\n      title,\n      body,\n      primaryCtaLabel,\n      secondaryCtaText\n    },\n    slide2{\n      title,\n      body\n    },\n    slide3{\n      title,\n      body\n    }\n  }\n": ONBOARDING_QUERYResult
+    "\n  *[_type == 'onboarding' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    description,\n    skipLabel,\n    backLabel,\n    footerText,\n    breadcrumbs,\n    slide1{\n      title,\n      body,\n      primaryCtaLabel,\n      secondaryCtaText\n    },\n    slide2{\n      title,\n      body,\n      nextButtonLabel\n    },\n    slide3{\n      title,\n      body,\n      finishButtonLabel\n    }\n  }\n": ONBOARDING_QUERYResult
     '\n  *[_type == "tag" && language == $language] | order(title asc) {\n    _id,\n    title,\n    language,\n    "patterns": *[_type == "pattern" && references(^._id) && defined(slug.current) && language == $language] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current\n    }\n  }[count(patterns) > 0]\n': TAGS_WITH_PATTERNS_QUERYResult
     '\n  *[_type == \'page\' && slug.current == \'tags\' && language == $language][0]{\n    _id,\n    _type,\n    title,\n    language,\n    "slug": slug.current,\n    emptyStateMessage,\n    description[]{\n      ...,\n      markDefs[]{\n        ...,\n        "page": page->slug.current,\n        "pattern": pattern->slug.current\n      }\n    },\n    "descriptionPlainText": pt::text(description),\n    content[]{\n      _key,\n      _type,\n      heading,\n      body[]{\n        ...,\n        markDefs[]{\n          ...,\n          "page": page->slug.current,\n          "pattern": pattern->slug.current\n        }\n      },\n      // For contentList type\n      title,\n      items[]{\n        _key,\n        title,\n        description\n      }\n    }\n  }\n': TAGS_PAGE_QUERYResult
     "\n  *[_type == 'search' && language == $language][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    language,\n    searchInputPlaceholder,\n    clearButtonLabel,\n    audiencesFilterLabel,\n    audiencesPlaceholder,\n    audiencesSearchPlaceholder,\n    audiencesEmptyMessage,\n    themesFilterLabel,\n    themesPlaceholder,\n    themesSearchPlaceholder,\n    themesEmptyMessage,\n    tagsFilterLabel,\n    tagsPlaceholder,\n    tagsSearchPlaceholder,\n    tagsEmptyMessage,\n  }\n": SEARCH_QUERYResult
