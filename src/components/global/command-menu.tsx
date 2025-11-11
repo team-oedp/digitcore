@@ -170,16 +170,35 @@ export function CommandMenu({ searchData }: CommandMenuProps) {
 	}, [isOpen, clearPageSearch]);
 
 	const getCurrentPageTitle = () => {
+		// Singleton routes (fixed)
 		if (normalizedPath === "/") return "Home";
-		if (normalizedPath === "/faq") return "FAQ";
 		if (normalizedPath === "/search") return "Search";
+		if (normalizedPath === "/orientation") return "Orientation";
+		if (normalizedPath === "/carrier-bag") return "Carrier Bag";
+		
+		// Pattern routes (dynamic)
+		if (normalizedPath.startsWith("/pattern/")) return "Pattern";
+		
+		// Dynamic page routes - extract slug and use as fallback
+		// The actual page title will be shown in the page itself
+		if (normalizedPath.startsWith("/page/")) {
+			const slug = normalizedPath.split("/page/")[1];
+			return slug
+				?.split("/")
+				.pop()
+				?.replace(/-/g, " ")
+				.replace(/\b\w/g, (l) => l.toUpperCase()) || "Page";
+		}
+		
+		// Legacy hardcoded routes (for backwards compatibility during migration)
+		// These will be removed once all routes are migrated to /page/[slug]
+		if (normalizedPath === "/faq") return "FAQ";
 		if (normalizedPath === "/patterns") return "Patterns";
 		if (normalizedPath === "/tags") return "Tags";
 		if (normalizedPath === "/values") return "Values";
 		if (normalizedPath === "/glossary") return "Glossary";
-		if (normalizedPath === "/orientation") return "Orientation";
-		if (normalizedPath === "/carrier-bag") return "Carrier Bag";
-		if (normalizedPath.startsWith("/pattern/")) return "Pattern";
+		
+		// Fallback: try to extract from path
 		return normalizedPath.split("/").pop()?.replace(/-/g, " ") || "Unknown";
 	};
 

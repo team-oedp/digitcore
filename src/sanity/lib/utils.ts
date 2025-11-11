@@ -39,7 +39,12 @@ export function linkResolver(link: Link | undefined) {
 		case "href":
 			return link.href || null;
 		case "page":
-			if (pageSlug) return `/${pageSlug}`;
+			if (pageSlug) {
+				// Home page uses root route
+				if (pageSlug === "/") return "/";
+				// All other pages use /page/[slug] route structure
+				return `/page/${pageSlug}`;
+			}
 			return null;
 		case "pattern":
 			if (patternSlug) return `/pattern/${patternSlug}`;

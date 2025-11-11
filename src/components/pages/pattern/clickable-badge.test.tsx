@@ -10,7 +10,7 @@ vi.mock("next/navigation", () => ({
 // Mock the badge-navigation module
 vi.mock("~/lib/badge-navigation", () => ({
 	getTagNavigationUrl: vi.fn(
-		(title: string) => `/tags#letter-${title?.[0]?.toUpperCase() || ""}`,
+		(title: string) => `/page/tags#letter-${title?.[0]?.toUpperCase() || ""}`,
 	),
 	getAudienceNavigationUrl: vi.fn((id: string) => `/search?audiences=${id}`),
 	getThemeNavigationUrl: vi.fn((id: string) => `/search?themes=${id}`),
@@ -45,7 +45,7 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("href", "/en/tags#letter-A");
+			expect(link).toHaveAttribute("href", "/en/page/tags#letter-A");
 			expect(link).toHaveAttribute(
 				"aria-label",
 				"Navigate to tag: accessibility",
@@ -61,7 +61,7 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("href", "/en/tags");
+			expect(link).toHaveAttribute("href", "/en/page/tags");
 			expect(link).toHaveAttribute("aria-label", "Navigate to tag: tag-123");
 		});
 
@@ -188,7 +188,7 @@ describe("ClickableBadge Component", () => {
 			);
 
 			const link = screen.getByRole("link");
-			expect(link).toHaveAttribute("href", "/en/tags#letter-T");
+			expect(link).toHaveAttribute("href", "/en/page/tags#letter-T");
 			expect(link).toHaveAttribute(
 				"aria-label",
 				"Navigate to tag: Tag & Title with <special> chars",

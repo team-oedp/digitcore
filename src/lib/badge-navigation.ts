@@ -17,7 +17,8 @@ export function getTagNavigationUrl(tagTitle: string): string {
 	);
 
 	// Return URL with letter section and specific tag anchor
-	return `/tags#letter-${firstLetter}`;
+	// Uses /page/tags route structure (slug may vary by language, but pageId is "tags")
+	return `/page/tags#letter-${firstLetter}`;
 }
 
 /**
@@ -62,7 +63,7 @@ export function getBadgeNavigationUrl(
 			// Handle empty string as a valid (though unusual) case
 			if (title === undefined || title === null) {
 				console.warn("Tag title required for navigation");
-				return "/tags";
+				return "/page/tags";
 			}
 			return getTagNavigationUrl(title);
 		case "audience":

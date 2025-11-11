@@ -14,6 +14,7 @@ import { Button } from "~/components/ui/button";
 import type { Language } from "~/i18n/config";
 import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
+import { linkResolver } from "~/sanity/lib/utils";
 import type {
 	HEADER_QUERYResult,
 	SEARCH_CONFIG_QUERYResult,
@@ -135,9 +136,11 @@ export function SiteHeader({
 							{mainMenuLinks.map((link) => {
 								const slug = link.page?.slug;
 								if (!slug) return null;
-								const href = `/${slug}`;
-								const isActive = normalizedPath === href;
-								const localizedHref = buildLocaleHref(language, href);
+								// Use linkResolver to get the correct href (handles /page/[slug] structure)
+								const resolvedHref = linkResolver(link);
+								if (!resolvedHref) return null;
+								const isActive = normalizedPath === resolvedHref;
+								const localizedHref = buildLocaleHref(language, resolvedHref);
 
 								return (
 									<motion.li

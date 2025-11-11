@@ -83,7 +83,7 @@ export function ErrorHeader() {
 									asChild
 									className={cn(
 										"h-auto px-3 py-2 text-link capitalize",
-										normalizedPath === "/about"
+										normalizedPath === "/about" || normalizedPath === "/page/about"
 											? "text-foreground"
 											: "text-muted-foreground",
 									)}
@@ -131,7 +131,7 @@ export function ErrorHeader() {
 													asChild
 													className={cn(
 														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-														normalizedPath === "/patterns"
+														normalizedPath === "/patterns" || normalizedPath === "/page/patterns"
 															? "text-foreground"
 															: "text-muted-foreground",
 													)}
@@ -145,7 +145,7 @@ export function ErrorHeader() {
 													asChild
 													className={cn(
 														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-														normalizedPath === "/tags"
+														normalizedPath === "/tags" || normalizedPath === "/page/tags"
 															? "text-foreground"
 															: "text-muted-foreground",
 													)}
@@ -159,7 +159,7 @@ export function ErrorHeader() {
 													asChild
 													className={cn(
 														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-														normalizedPath === "/values"
+														normalizedPath === "/values" || normalizedPath === "/page/values"
 															? "text-foreground"
 															: "text-muted-foreground",
 													)}
@@ -173,7 +173,7 @@ export function ErrorHeader() {
 													asChild
 													className={cn(
 														"h-auto whitespace-nowrap px-3 py-2 text-sm capitalize",
-														normalizedPath === "/themes"
+														normalizedPath === "/themes" || normalizedPath === "/page/themes"
 															? "text-foreground"
 															: "text-muted-foreground",
 													)}

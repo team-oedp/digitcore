@@ -87,14 +87,22 @@ export default async function Page(props: LanguageSearchPageProps) {
 			// Decode the URL-encoded path (handles %2F -> /)
 			const decodedPath = decodeURIComponent(returnToPath);
 			const { normalizedPath } = parseLocalePath(decodedPath);
-			// Check if it's a page route (not home, not pattern routes, not carrier-bag)
+			// Check if it's a page route (not home, not pattern routes, not carrier-bag, not singletons)
 			const isPageRoute =
 				normalizedPath !== "/" &&
 				!normalizedPath.startsWith("/pattern/") &&
-				normalizedPath !== "/carrier-bag";
+				normalizedPath !== "/carrier-bag" &&
+				normalizedPath !== "/search" &&
+				normalizedPath !== "/orientation";
 
 			if (isPageRoute) {
-				const pageSlug = normalizedPath.slice(1); // Remove leading slash
+				// Handle both /page/[slug] and legacy /[slug] routes
+				let pageSlug: string;
+				if (normalizedPath.startsWith("/page/")) {
+					pageSlug = normalizedPath.slice(6); // Remove leading "/page/"
+				} else {
+					pageSlug = normalizedPath.slice(1); // Remove leading slash
+				}
 				const page = await sanityFetch({
 					query: PAGE_BY_SLUG_QUERY,
 					params: { slug: pageSlug, language },

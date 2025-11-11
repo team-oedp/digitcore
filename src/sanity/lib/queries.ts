@@ -283,6 +283,7 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
     title,
     language,
     "slug": slug.current,
+    pageId,
     emptyStateMessage,
     description[]{
       ...,
@@ -294,6 +295,45 @@ export const PAGE_BY_SLUG_QUERY = defineQuery(`
       }
     },
     "descriptionPlainText": pt::text(description),
+    content[]{
+      _key,
+      _type,
+      heading,
+      body[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
+      // For record type
+      name,
+      description[]{
+        ...,
+        markDefs[]{
+          ...,
+          "page": page->slug.current,
+          "pattern": pattern->slug.current,
+          "glossary": glossary->{_id, title}
+        }
+      },
+      // For contentList type
+      title,
+      items[]{
+        _key,
+        title,
+        description
+      }
+    }
+  }`);
+
+export const PAGES_BY_PAGE_ID_QUERY = defineQuery(`
+  *[_type == 'page' && pageId == $pageId]{
+    _id,
+    language,
+    "slug": slug.current,
   }`);
 
 export const SEARCH_PAGE_QUERY = defineQuery(`
@@ -1260,6 +1300,7 @@ export const HOME_PAGE_QUERY = defineQuery(`
     heroHeading,
     language,
     "slug": slug.current,
+    pageId,
     emptyStateMessage,
     description[]{
       ...,

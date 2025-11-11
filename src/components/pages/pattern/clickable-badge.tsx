@@ -35,7 +35,7 @@ export const ClickableBadge = forwardRef<
 	const getNavigationUrl = (): string => {
 		switch (type) {
 			case "tag":
-				return title ? getTagNavigationUrl(title) : "/tags";
+				return title ? getTagNavigationUrl(title) : "/page/tags";
 			case "audience":
 				return getAudienceNavigationUrl(id);
 			case "theme":

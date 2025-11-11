@@ -32,6 +32,27 @@ export const pageType = defineType({
 			},
 		}),
 		defineField({
+			name: "pageId",
+			title: "Page ID",
+			type: "string",
+			description:
+				"Canonical identifier (e.g., 'glossary', 'about') - same across all languages",
+			validation: (Rule) => Rule.required(),
+			options: {
+				list: [
+					{ title: "Glossary", value: "glossary" },
+					{ title: "About", value: "about" },
+					{ title: "Tags", value: "tags" },
+					{ title: "Values", value: "values" },
+					{ title: "Themes", value: "themes" },
+					{ title: "FAQ", value: "faq" },
+					{ title: "Acknowledgements", value: "acknowledgements" },
+					{ title: "Patterns", value: "patterns" },
+					{ title: "Home", value: "home" },
+				],
+			},
+		}),
+		defineField({
 			name: "description",
 			title: "Description",
 			type: "blockContent",

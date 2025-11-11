@@ -18,27 +18,27 @@ describe("Badge Navigation Helper Functions", () => {
 	describe("getTagNavigationUrl", () => {
 		it("should generate correct URL for tags with lowercase titles", () => {
 			const url = getTagNavigationUrl("accessibility");
-			expect(url).toBe("/tags#letter-A");
+			expect(url).toBe("/page/tags#letter-A");
 		});
 
 		it("should generate correct URL for tags with uppercase titles", () => {
 			const url = getTagNavigationUrl("Blockchain");
-			expect(url).toBe("/tags#letter-B");
+			expect(url).toBe("/page/tags#letter-B");
 		});
 
 		it("should generate correct URL for tags with mixed case titles", () => {
 			const url = getTagNavigationUrl("Open Source");
-			expect(url).toBe("/tags#letter-O");
+			expect(url).toBe("/page/tags#letter-O");
 		});
 
 		it("should handle tags starting with numbers", () => {
 			const url = getTagNavigationUrl("3D printing");
-			expect(url).toBe("/tags#letter-3");
+			expect(url).toBe("/page/tags#letter-3");
 		});
 
 		it("should handle empty string", () => {
 			const url = getTagNavigationUrl("");
-			expect(url).toBe("/tags#letter-");
+			expect(url).toBe("/page/tags#letter-");
 		});
 	});
 
@@ -80,17 +80,17 @@ describe("Badge Navigation Helper Functions", () => {
 		describe("tag type", () => {
 			it("should generate correct URL for tag with title", () => {
 				const url = getBadgeNavigationUrl("tag", "tag-123", "Web Development");
-				expect(url).toBe("/tags#letter-W");
+				expect(url).toBe("/page/tags#letter-W");
 			});
 
-			it("should fallback to /tags when tag title is missing", () => {
+			it("should fallback to /page/tags when tag title is missing", () => {
 				const url = getBadgeNavigationUrl("tag", "tag-123");
-				expect(url).toBe("/tags");
+				expect(url).toBe("/page/tags");
 			});
 
 			it("should handle empty tag title", () => {
 				const url = getBadgeNavigationUrl("tag", "tag-123", "");
-				expect(url).toBe("/tags#letter-");
+				expect(url).toBe("/page/tags#letter-");
 			});
 		});
 

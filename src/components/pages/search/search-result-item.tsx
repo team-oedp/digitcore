@@ -220,7 +220,8 @@ export function SearchResultItem({
 }: SearchResultItemProps) {
 	const pathname = usePathname();
 	const { normalizedPath, language } = parseLocalePath(pathname);
-	const isPatternsPage = normalizedPath === "/patterns";
+	const isPatternsPage =
+		normalizedPath === "/patterns" || normalizedPath === "/page/patterns";
 	const title = pattern.title || "Untitled Pattern";
 	const rawDescription = pattern.description || [];
 	const slug = pattern.slug || "";

@@ -18,6 +18,7 @@ import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { type Language, i18n } from "~/i18n/config";
 import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { cn } from "~/lib/utils";
+import { linkResolver } from "~/sanity/lib/utils";
 import type { HEADER_QUERYResult } from "~/sanity/sanity.types";
 
 const LANGUAGE_OPTIONS = i18n.languages.map((language) => ({
@@ -148,8 +149,10 @@ export function MobileNavDialog({
 									const slug = link.page?.slug;
 									if (!slug) return null;
 
-									const href = `/${slug}`;
-									const isActive = normalizedPath === href;
+									// Use linkResolver to get the correct href (handles /page/[slug] structure)
+									const resolvedHref = linkResolver(link);
+									if (!resolvedHref) return null;
+									const isActive = normalizedPath === resolvedHref;
 
 									return (
 										<li key={link._key}>
@@ -164,7 +167,7 @@ export function MobileNavDialog({
 												)}
 												onClick={() => setOpen(false)}
 											>
-												<Link href={buildLocaleHref(currentLanguage, href)}>
+												<Link href={buildLocaleHref(currentLanguage, resolvedHref)}>
 													{link.label}
 												</Link>
 											</Button>
