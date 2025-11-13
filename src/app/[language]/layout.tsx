@@ -8,8 +8,8 @@ import { sanityFetch } from "~/sanity/lib/client";
 import { SITE_SETTINGS_QUERY } from "~/sanity/lib/queries";
 import { OrientationStoreProvider } from "~/stores/orientation";
 import "~/styles/globals.css";
-import { sans, signifier } from "./fonts";
 import { Analytics } from "@vercel/analytics/next";
+import { sans, signifier } from "./fonts";
 
 export function generateStaticParams() {
 	return i18n.languages.map((language) => ({ language: language.id }));

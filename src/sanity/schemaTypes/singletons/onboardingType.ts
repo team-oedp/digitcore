@@ -237,6 +237,22 @@ export const onboardingType = defineType({
 					description:
 						"Text that appears after the BACK button in the sentence 'Or, go [BACK] to the previous step.' This is the suffix text for the back navigation instruction on Slide 3 (Themes/Interests).",
 				}),
+				defineField({
+					name: "selectPrefix",
+					title: "Select instruction prefix text",
+					type: "string",
+					initialValue: "Select",
+					description:
+						"Text that appears before the THEMES button in the sentence 'Select [THEMES] that interest you to continue.' This is the prefix text shown when no themes are selected on Slide 3 (Themes/Interests). This text appears before the highlighted THEMES button.",
+				}),
+				defineField({
+					name: "selectSuffix",
+					title: "Select instruction suffix text",
+					type: "string",
+					initialValue: "that interest you to continue.",
+					description:
+						"Text that appears after the THEMES button in the sentence 'Select [THEMES] that interest you to continue.' This is the suffix text shown when no themes are selected on Slide 3 (Themes/Interests). This text appears after the highlighted THEMES button.",
+				}),
 			],
 		}),
 	],

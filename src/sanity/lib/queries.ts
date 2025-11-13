@@ -880,7 +880,9 @@ export const ONBOARDING_QUERY = defineQuery(`
       finishButtonPrefix,
       finishButtonSuffix,
       backButtonPrefix,
-      backButtonSuffix
+      backButtonSuffix,
+      selectPrefix,
+      selectSuffix
     }
   }
 `);

@@ -83,7 +83,10 @@ export default async function Page(props: LanguageSearchPageProps) {
 	// Filter out orientation from returnToPath - never allow it as a return path
 	if (returnToPath) {
 		const { normalizedPath } = parseLocalePath(returnToPath);
-		if (normalizedPath === "/orientation" || normalizedPath.startsWith("/orientation/")) {
+		if (
+			normalizedPath === "/orientation" ||
+			normalizedPath.startsWith("/orientation/")
+		) {
 			returnToPath = undefined;
 		}
 	}

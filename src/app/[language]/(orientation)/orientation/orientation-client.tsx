@@ -572,7 +572,10 @@ function Slide1({
 		if (!path) return undefined;
 		const { normalizedPath } = parseLocalePath(path);
 		// Never allow orientation as a return path
-		if (normalizedPath === "/orientation" || normalizedPath.startsWith("/orientation/")) {
+		if (
+			normalizedPath === "/orientation" ||
+			normalizedPath.startsWith("/orientation/")
+		) {
 			return undefined;
 		}
 		return path;
@@ -1038,13 +1041,16 @@ function Slide3({
 					<div className="flex items-center gap-2">
 						{selectedThemeIds.length === 0 ? (
 							<>
-								<span className="text-body-large">Select</span>
+								<span className="text-body-large">
+									{onboarding?.slide3?.selectPrefix || "Select"}
+								</span>
 								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light text-foreground text-xs uppercase lg:px-3 lg:py-2 lg:text-lg dark:bg-neutral-600">
-									Themes
+									{language === "es" ? "Temas" : "Themes"}
 									<DashedBorder />
 								</span>
 								<span className="text-body-large">
-									that interest you to continue.
+									{onboarding?.slide3?.selectSuffix ||
+										"that interest you to continue."}
 								</span>
 							</>
 						) : (
