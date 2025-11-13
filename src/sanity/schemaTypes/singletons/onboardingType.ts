@@ -147,6 +147,38 @@ export const onboardingType = defineType({
 					type: "string",
 					initialValue: "NEXT",
 				}),
+				defineField({
+					name: "nextButtonPrefix",
+					title: "Next button prefix text",
+					type: "string",
+					initialValue: "Click",
+					description:
+						"Text that appears before the NEXT button in the sentence 'Click [NEXT] to continue.' This is the prefix text shown when audiences are selected on Slide 2 (Audiences).",
+				}),
+				defineField({
+					name: "nextButtonSuffix",
+					title: "Next button suffix text",
+					type: "string",
+					initialValue: "to continue.",
+					description:
+						"Text that appears after the NEXT button in the sentence 'Click [NEXT] to continue.' This is the suffix text shown when audiences are selected on Slide 2 (Audiences).",
+				}),
+				defineField({
+					name: "backButtonPrefix",
+					title: "Back button prefix text",
+					type: "string",
+					initialValue: "Or, go",
+					description:
+						"Text that appears before the BACK button in the sentence 'Or, go [BACK] to the previous step.' This is the prefix text for the back navigation instruction on Slide 2 (Audiences).",
+				}),
+				defineField({
+					name: "backButtonSuffix",
+					title: "Back button suffix text",
+					type: "string",
+					initialValue: "to the previous step.",
+					description:
+						"Text that appears after the BACK button in the sentence 'Or, go [BACK] to the previous step.' This is the suffix text for the back navigation instruction on Slide 2 (Audiences).",
+				}),
 			],
 		}),
 		// Slide 3
@@ -172,6 +204,38 @@ export const onboardingType = defineType({
 					title: "Finish button label",
 					type: "string",
 					initialValue: "FINISH",
+				}),
+				defineField({
+					name: "finishButtonPrefix",
+					title: "Finish button prefix text",
+					type: "string",
+					initialValue: "click",
+					description:
+						"Text that appears before the FINISH button in the sentence 'click [FINISH] to continue to the toolkit.' This is the prefix text shown when themes are selected on Slide 3 (Themes/Interests).",
+				}),
+				defineField({
+					name: "finishButtonSuffix",
+					title: "Finish button suffix text",
+					type: "string",
+					initialValue: "to continue to the toolkit.",
+					description:
+						"Text that appears after the FINISH button in the sentence 'click [FINISH] to continue to the toolkit.' This is the suffix text shown when themes are selected on Slide 3 (Themes/Interests).",
+				}),
+				defineField({
+					name: "backButtonPrefix",
+					title: "Back button prefix text",
+					type: "string",
+					initialValue: "Or, go",
+					description:
+						"Text that appears before the BACK button in the sentence 'Or, go [BACK] to the previous step.' This is the prefix text for the back navigation instruction on Slide 3 (Themes/Interests).",
+				}),
+				defineField({
+					name: "backButtonSuffix",
+					title: "Back button suffix text",
+					type: "string",
+					initialValue: "to the previous step.",
+					description:
+						"Text that appears after the BACK button in the sentence 'Or, go [BACK] to the previous step.' This is the suffix text for the back navigation instruction on Slide 3 (Themes/Interests).",
 				}),
 			],
 		}),

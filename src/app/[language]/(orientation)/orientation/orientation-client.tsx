@@ -858,7 +858,9 @@ function Slide2({
 							</>
 						) : (
 							<>
-								<span className="text-body-large capitalize">Click</span>
+								<span className="text-body-large capitalize">
+									{onboarding?.slide2?.nextButtonPrefix || "Click"}
+								</span>
 								<button
 									type="button"
 									onClick={goToSlide3}
@@ -868,13 +870,17 @@ function Slide2({
 										(language === "es" ? "SIGUIENTE" : "NEXT")}
 									<DashedBorder />
 								</button>
-								<span className="text-body-large">to continue.</span>
+								<span className="text-body-large">
+									{onboarding?.slide2?.nextButtonSuffix || "to continue."}
+								</span>
 							</>
 						)}
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="text-body-large">Or, go</span>
+						<span className="text-body-large">
+							{onboarding?.slide2?.backButtonPrefix || "Or, go"}
+						</span>
 						<button
 							type="button"
 							onClick={goToSlide1}
@@ -883,7 +889,9 @@ function Slide2({
 							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
 						</button>
-						<span className="text-body-large">to the previous step.</span>
+						<span className="text-body-large">
+							{onboarding?.slide2?.backButtonSuffix || "to the previous step."}
+						</span>
 					</div>
 				</div>
 			</div>
@@ -1024,7 +1032,9 @@ function Slide3({
 							</>
 						) : (
 							<>
-								<span className="text-body-large capitalize">click</span>
+								<span className="text-body-large capitalize">
+									{onboarding?.slide3?.finishButtonPrefix || "click"}
+								</span>
 								<Link
 									href={buildLocaleHref(language, "/search")}
 									onClick={() => {
@@ -1039,14 +1049,17 @@ function Slide3({
 									<DashedBorder />
 								</Link>
 								<span className="text-body-large">
-									to continue to the toolkit.
+									{onboarding?.slide3?.finishButtonSuffix ||
+										"to continue to the toolkit."}
 								</span>
 							</>
 						)}
 					</div>
 
 					<div className="flex items-center gap-2">
-						<span className="text-body-large">Or, go</span>
+						<span className="text-body-large">
+							{onboarding?.slide3?.backButtonPrefix || "Or, go"}
+						</span>
 						<button
 							type="button"
 							onClick={goToSlide2}
@@ -1055,7 +1068,9 @@ function Slide3({
 							{onboarding?.backLabel || "BACK"}
 							<DashedBorder />
 						</button>
-						<span className="text-body-large">to the previous step.</span>
+						<span className="text-body-large">
+							{onboarding?.slide3?.backButtonSuffix || "to the previous step."}
+						</span>
 					</div>
 				</div>
 			</div>
