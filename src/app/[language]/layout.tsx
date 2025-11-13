@@ -9,6 +9,7 @@ import { SITE_SETTINGS_QUERY } from "~/sanity/lib/queries";
 import { OrientationStoreProvider } from "~/stores/orientation";
 import "~/styles/globals.css";
 import { sans, signifier } from "./fonts";
+import { Analytics } from "@vercel/analytics/next";
 
 export function generateStaticParams() {
 	return i18n.languages.map((language) => ({ language: language.id }));
@@ -86,6 +87,7 @@ export default async function RootLayout({
 						}}
 					/>
 				</ThemeProvider>
+				<Analytics mode="production" />
 			</body>
 		</html>
 	);
