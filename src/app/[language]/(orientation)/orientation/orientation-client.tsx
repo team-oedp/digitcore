@@ -52,6 +52,11 @@ function getSafePath(path?: string) {
 		const cleaned = (path.split("#")[0] || "/").split("?")[0] || "/";
 		const safePath = cleaned.startsWith("/") ? cleaned || "/" : "/";
 
+		// Never allow orientation as a return path
+		if (safePath === "/orientation" || safePath.startsWith("/orientation/")) {
+			return "/";
+		}
+
 		// Validate that the path is a known route in our application
 		const validRoutes = [
 			"/",
@@ -562,8 +567,20 @@ function Slide1({
 	);
 	const language = languageProp ?? languageFromPath;
 
-	// Use tracked route as fallback if returnToPath is not provided
-	const effectiveReturnToPath = returnToPath || previousRoute;
+	// Filter out orientation from return paths and use tracked route as fallback
+	const getValidReturnPath = (path?: string): string | undefined => {
+		if (!path) return undefined;
+		const { normalizedPath } = parseLocalePath(path);
+		// Never allow orientation as a return path
+		if (normalizedPath === "/orientation" || normalizedPath.startsWith("/orientation/")) {
+			return undefined;
+		}
+		return path;
+	};
+
+	const validReturnToPath = getValidReturnPath(returnToPath);
+	const validPreviousRoute = getValidReturnPath(previousRoute);
+	const effectiveReturnToPath = validReturnToPath || validPreviousRoute;
 
 	const handleSkip = () => {
 		setSkipped(true);

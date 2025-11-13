@@ -80,6 +80,14 @@ export default async function Page(props: LanguageSearchPageProps) {
 		}
 	}
 
+	// Filter out orientation from returnToPath - never allow it as a return path
+	if (returnToPath) {
+		const { normalizedPath } = parseLocalePath(returnToPath);
+		if (normalizedPath === "/orientation" || normalizedPath.startsWith("/orientation/")) {
+			returnToPath = undefined;
+		}
+	}
+
 	// Resolve page title if returnToPath points to a page route
 	let pageTitle: string | undefined;
 	if (returnToPath) {
