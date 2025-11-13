@@ -166,7 +166,7 @@ export function SiteHeader({
 											onClick={() => setIsExploreOpen(!isExploreOpen)}
 											className="relative z-10 flex h-auto items-center gap-1.5 px-3 py-2 text-link text-muted-foreground capitalize"
 										>
-											Explore
+											{headerData?.exploreButtonLabel ?? "Explore"}
 											<Icon
 												icon={isExploreOpen ? MoveLeftIcon : MoveRightIcon}
 												size={12}

@@ -57,8 +57,17 @@ export function SiteLayout({
 			previousRouteRef.current !== pathname &&
 			normalizedPath !== "/orientation"
 		) {
-			// Store the previous route before updating
-			setPreviousRoute(previousRouteRef.current);
+			// Check if the previous route is orientation - don't store it
+			const { normalizedPath: prevNormalizedPath } = parseLocalePath(
+				previousRouteRef.current,
+			);
+			if (
+				prevNormalizedPath !== "/orientation" &&
+				!prevNormalizedPath.startsWith("/orientation/")
+			) {
+				// Store the previous route before updating
+				setPreviousRoute(previousRouteRef.current);
+			}
 			previousRouteRef.current = pathname;
 		}
 	}, [pathname, normalizedPath, setPreviousRoute]);
