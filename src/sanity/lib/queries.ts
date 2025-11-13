@@ -1524,6 +1524,7 @@ export const HEADER_QUERY = defineQuery(`
     themeLightLabel,
     themeDarkLabel,
     themeSystemLabel,
+    exploreButtonLabel,
   }
 `);
 
