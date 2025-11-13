@@ -867,12 +867,20 @@ export const ONBOARDING_QUERY = defineQuery(`
     slide2{
       title,
       body,
-      nextButtonLabel
+      nextButtonLabel,
+      nextButtonPrefix,
+      nextButtonSuffix,
+      backButtonPrefix,
+      backButtonSuffix
     },
     slide3{
       title,
       body,
-      finishButtonLabel
+      finishButtonLabel,
+      finishButtonPrefix,
+      finishButtonSuffix,
+      backButtonPrefix,
+      backButtonSuffix
     }
   }
 `);
@@ -1524,6 +1532,7 @@ export const HEADER_QUERY = defineQuery(`
     themeLightLabel,
     themeDarkLabel,
     themeSystemLabel,
+    exploreButtonLabel,
   }
 `);
 

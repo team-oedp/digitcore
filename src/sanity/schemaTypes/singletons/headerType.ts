@@ -117,6 +117,12 @@ export const headerType = defineType({
 			description: "Label for the system theme option",
 			type: "string",
 		}),
+		defineField({
+			name: "exploreButtonLabel",
+			title: "Explore button label",
+			description: "Label for the explore menu button",
+			type: "string",
+		}),
 	],
 	preview: {
 		select: {

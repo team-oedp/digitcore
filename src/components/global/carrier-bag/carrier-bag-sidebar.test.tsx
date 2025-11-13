@@ -69,6 +69,7 @@ const mockHeaderData: HEADER_QUERYResult = {
 	themeLightLabel: null,
 	themeDarkLabel: null,
 	themeSystemLabel: null,
+	exploreButtonLabel: null,
 };
 
 const mockSearchData: SEARCH_CONFIG_QUERYResult = {
