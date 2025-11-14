@@ -106,6 +106,13 @@ export function CarrierBagContent({
 	const pathname = usePathname();
 	const { language } = parseLocalePath(pathname);
 
+	// Filter items by language first
+	const filteredItems = useMemo(() => {
+		return items.filter(
+			(item) => item.pattern.language === language || !item.pattern.language,
+		);
+	}, [items, language]);
+
 	// UI state
 	const [sortBy, setSortBy] = useState<"az" | "za">("az");
 	const [groupByTheme, setGroupByTheme] = useState<boolean>(false);
@@ -115,21 +122,21 @@ export function CarrierBagContent({
 	const [manualOrderActive, setManualOrderActive] = useState<boolean>(false);
 
 	const availableTags = useMemo(
-		() => extractUniqueFilterOptions(items, (p) => p.tags ?? []),
-		[items],
+		() => extractUniqueFilterOptions(filteredItems, (p) => p.tags ?? []),
+		[filteredItems],
 	);
 
 	const availableAudiences = useMemo(
-		() => extractUniqueFilterOptions(items, (p) => p.audiences ?? []),
-		[items],
+		() => extractUniqueFilterOptions(filteredItems, (p) => p.audiences ?? []),
+		[filteredItems],
 	);
 
 	// Derived list after filtering and sorting
 	const processed = useMemo(() => {
 		if (manualOrderActive) {
-			return { groups: null, flat: items };
+			return { groups: null, flat: filteredItems };
 		}
-		const filtered = items.filter((item) => {
+		const filtered = filteredItems.filter((item) => {
 			const p = item.pattern as PatternWithFlexibleRefs;
 			// Tags filter
 			if (selectedTagIds.length > 0) {
@@ -171,7 +178,7 @@ export function CarrierBagContent({
 			.map(([title, groupItems]) => ({ title, items: groupItems }));
 		return { groups, flat: [] };
 	}, [
-		items,
+		filteredItems,
 		selectedTagIds,
 		selectedAudienceIds,
 		sortBy,
@@ -211,8 +218,8 @@ export function CarrierBagContent({
 							className="mt-1 rounded-full"
 						>
 							{carrierBagData?.savedItemsBadgeText
-								? `${items.length} ${carrierBagData.savedItemsBadgeText}`
-								: `${items.length} saved items`}
+								? `${filteredItems.length} ${carrierBagData.savedItemsBadgeText}`
+								: `${filteredItems.length} saved items`}
 						</Badge>
 					</div>
 					{mobileTrigger && mobileTrigger}
@@ -350,7 +357,7 @@ export function CarrierBagContent({
 
 			<div className="mb-4 flex h-full min-h-0 flex-col gap-2">
 				<div className="flex h-full flex-col gap-2 overflow-y-auto rounded-xl border border-border border-dashed bg-container-background p-2">
-					{items.length === 0 ? (
+					{filteredItems.length === 0 ? (
 						<div className="flex h-full flex-col items-start justify-start px-4 py-8 text-left">
 							<p className="font-normal text-muted-foreground text-sm">
 								{emptyStateMessage ||
@@ -399,7 +406,7 @@ export function CarrierBagContent({
 					) : (
 						<Reorder.Group
 							axis="y"
-							values={items}
+							values={processed.flat}
 							onReorder={(newOrder) => {
 								setItems(newOrder);
 								// Activate manual order when items are actually reordered
