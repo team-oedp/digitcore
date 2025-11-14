@@ -10,7 +10,7 @@ import {
 	Tick02Icon,
 } from "@hugeicons/core-free-icons";
 import type { PortableTextBlock } from "next-sanity";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { BlueskyIcon } from "~/components/icons/logos/bluesky-icon";
 import { InstagramIcon } from "~/components/icons/logos/instagram-icon";
@@ -42,6 +42,7 @@ import {
 	type CarrierBagDocumentData,
 	useCarrierBagDocument,
 } from "~/hooks/use-pattern-content";
+import { parseLocalePath } from "~/lib/locale-path";
 import { client } from "~/sanity/lib/client";
 import { PATTERNS_BY_SLUGS_QUERY } from "~/sanity/lib/queries";
 import type {
@@ -313,17 +314,26 @@ function CloseCarrierBagButton({
 }
 
 export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
+	const pathname = usePathname();
+	const { language } = parseLocalePath(pathname);
 	const items = useCarrierBagStore((state) => state.items);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const addPattern = useCarrierBagStore((state) => state.addPattern);
-	const documentData = useCarrierBagDocument(items);
+
+	const filteredItems = useMemo(() => {
+		return items.filter(
+			(item) => item.pattern.language === language || !item.pattern.language,
+		);
+	}, [items, language]);
+
+	const documentData = useCarrierBagDocument(filteredItems);
 
 	const [shareOpen, setShareOpen] = useState(false);
 	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
 	const bagSlugs = useMemo(() => {
-		return items.map((i) => i.pattern.slug).filter(Boolean) as string[];
-	}, [items]);
+		return filteredItems.map((i) => i.pattern.slug).filter(Boolean) as string[];
+	}, [filteredItems]);
 
 	const shareUrl = useMemo(() => {
 		if (typeof window === "undefined") return "";
@@ -376,8 +386,8 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 	const handleDownloadJson = () => {
 		const payload = {
 			generatedAt: new Date().toISOString(),
-			count: items.length,
-			patterns: items.map((i) => ({
+			count: filteredItems.length,
+			patterns: filteredItems.map((i) => ({
 				id: i.pattern._id,
 				title: i.pattern.title,
 				slug: i.pattern.slug,
@@ -433,7 +443,7 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 				<SidebarContentComponent
 					data={data}
 					documentData={documentData}
-					itemsCount={items.length}
+					itemsCount={filteredItems.length}
 					shareOpen={shareOpen}
 					setShareOpen={setShareOpen}
 					shareUrl={shareUrl}
@@ -472,7 +482,7 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 											<SidebarContentComponent
 												data={data}
 												documentData={documentData}
-												itemsCount={items.length}
+												itemsCount={filteredItems.length}
 												shareOpen={shareOpen}
 												setShareOpen={setShareOpen}
 												shareUrl={shareUrl}
