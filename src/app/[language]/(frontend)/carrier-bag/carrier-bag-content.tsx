@@ -108,9 +108,18 @@ export function CarrierBagContent({
 
 	// Filter items by language first
 	const filteredItems = useMemo(() => {
-		return items.filter(
-			(item) => item.pattern.language === language || !item.pattern.language,
+		const languageFiltered = items.filter(
+			(item) => item.pattern.language === language,
 		);
+		const seenIds = new Set<string>();
+		return languageFiltered.filter((item) => {
+			const id = item.pattern._id;
+			if (seenIds.has(id)) {
+				return false;
+			}
+			seenIds.add(id);
+			return true;
+		});
 	}, [items, language]);
 
 	// UI state
@@ -371,7 +380,7 @@ export function CarrierBagContent({
 									{title}
 								</h4>
 								<div className="flex flex-col gap-2">
-									{groupItems.map((item) => {
+									{groupItems.map((item, index) => {
 										type RefTheme = { _ref: string };
 										type PopulatedTheme = { title?: string | null };
 										type PatternMaybePopulatedTheme = PatternForCarrierBag & {
@@ -391,9 +400,10 @@ export function CarrierBagContent({
 											isUpdating: isPatternUpdating(pattern._id),
 											isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
 										};
+										const uniqueKey = `${pattern._id}-${pattern.language ?? "unknown"}-${index}`;
 										return (
 											<CarrierBagItemComponent
-												key={pattern._id}
+												key={uniqueKey}
 												item={itemData}
 												onRemove={() => handleRemoveItem(pattern._id)}
 												onVisit={() => handleVisitItem(getSlugString(pattern))}
@@ -426,7 +436,7 @@ export function CarrierBagContent({
 								gap: "0.5rem",
 							}}
 						>
-							{processed.flat.map((item) => {
+							{processed.flat.map((item, index) => {
 								type RefTheme = { _ref: string };
 								type PopulatedTheme = { title?: string | null };
 								type PatternMaybePopulatedTheme = PatternForCarrierBag & {
@@ -446,15 +456,15 @@ export function CarrierBagContent({
 									isUpdating: isPatternUpdating(pattern._id),
 									isRecentlyUpdated: isPatternRecentlyUpdated(pattern._id),
 								};
+								const uniqueKey = `${pattern._id}-${pattern.language ?? "unknown"}-${index}`;
 								return (
 									<Reorder.Item
 										as="div"
-										key={pattern._id}
+										key={uniqueKey}
 										value={item}
 										style={{ position: "relative" }}
 									>
 										<CarrierBagItemComponent
-											key={pattern._id}
 											item={itemData}
 											onRemove={() => handleRemoveItem(pattern._id)}
 											onVisit={() => handleVisitItem(getSlugString(pattern))}

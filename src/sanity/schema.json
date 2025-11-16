@@ -546,6 +546,13 @@
           "type": "string"
         },
         "optional": true
+      },
+      "themeMiniBadgeLabel": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
       }
     }
   },

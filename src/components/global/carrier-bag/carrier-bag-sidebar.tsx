@@ -68,9 +68,18 @@ export function CarrierBagSidebar({
 		(state) => state.hideClearConfirmationPane,
 	);
 	const filteredItems = useMemo(() => {
-		return items.filter(
-			(item) => item.pattern.language === language || !item.pattern.language,
+		const languageFiltered = items.filter(
+			(item) => item.pattern.language === language,
 		);
+		const seenIds = new Set<string>();
+		return languageFiltered.filter((item) => {
+			const id = item.pattern._id;
+			if (seenIds.has(id)) {
+				return false;
+			}
+			seenIds.add(id);
+			return true;
+		});
 	}, [items, language]);
 
 	const documentData = useCarrierBagDocument(filteredItems);
@@ -254,7 +263,7 @@ export function CarrierBagSidebar({
 										overflowY: "auto",
 									}}
 								>
-									{filteredItems.map((item) => {
+									{filteredItems.map((item, index) => {
 										const itemData: CarrierBagItemData = {
 											id: item.pattern._id,
 											title: item.pattern.title || "Untitled Pattern",
@@ -265,10 +274,11 @@ export function CarrierBagSidebar({
 												item.pattern._id,
 											),
 										};
+										const uniqueKey = `${item.pattern._id}-${item.pattern.language ?? "unknown"}-${index}`;
 										return (
 											<Reorder.Item
 												as="div"
-												key={item.pattern._id}
+												key={uniqueKey}
 												value={item}
 												style={{ position: "relative" }}
 											>

@@ -1066,6 +1066,7 @@ export const PATTERN_UTILITIES_QUERY = defineQuery(`
     visitPatternButtonLabel,
     solutionsHeading,
     resourcesHeading,
+    themeMiniBadgeLabel,
   }
 `);
 

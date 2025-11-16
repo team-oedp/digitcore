@@ -321,9 +321,18 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 	const addPattern = useCarrierBagStore((state) => state.addPattern);
 
 	const filteredItems = useMemo(() => {
-		return items.filter(
-			(item) => item.pattern.language === language || !item.pattern.language,
+		const languageFiltered = items.filter(
+			(item) => item.pattern.language === language,
 		);
+		const seenIds = new Set<string>();
+		return languageFiltered.filter((item) => {
+			const id = item.pattern._id;
+			if (seenIds.has(id)) {
+				return false;
+			}
+			seenIds.add(id);
+			return true;
+		});
 	}, [items, language]);
 
 	const documentData = useCarrierBagDocument(filteredItems);
