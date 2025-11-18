@@ -38,7 +38,9 @@ const FALLBACK_SOCIAL_LINKS = [
 ];
 
 export function SiteFooter({ footerData, language }: SiteFooterProps) {
-	const title = footerData?.title?.trim() || "Digital Toolkit for Open Environmental Research";
+	const title =
+		footerData?.title?.trim() ||
+		"Digital Toolkit for Open Environmental Research";
 	const internalLinks = footerData?.internalLinks || [];
 	const externalLinks = footerData?.externalLinks || [];
 	const license = footerData?.licenseLink;
