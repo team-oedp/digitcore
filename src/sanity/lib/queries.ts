@@ -871,7 +871,10 @@ export const ONBOARDING_QUERY = defineQuery(`
       nextButtonPrefix,
       nextButtonSuffix,
       backButtonPrefix,
-      backButtonSuffix
+      backButtonSuffix,
+      selectPrefix,
+      selectSuffix,
+      audienceTypeLabel
     },
     slide3{
       title,
@@ -1066,6 +1069,8 @@ export const PATTERN_UTILITIES_QUERY = defineQuery(`
     visitPatternButtonLabel,
     solutionsHeading,
     resourcesHeading,
+    solutionLabel,
+    themeMiniBadgeLabel,
   }
 `);
 

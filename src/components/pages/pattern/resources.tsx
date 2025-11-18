@@ -32,19 +32,26 @@ type ResourcesProps = {
 type SolutionBadgeProps = {
 	solution: SolutionFromQuery;
 	index: number;
+	patternUtilities?: PATTERN_UTILITIES_QUERYResult | null;
 };
 
-function SolutionBadge({ solution, index }: SolutionBadgeProps) {
+function SolutionBadge({
+	solution,
+	index,
+	patternUtilities,
+}: SolutionBadgeProps) {
 	const title = solution.title || `Solution ${index + 1}`;
 	const description =
 		ptToPlainText(solution.description as PortableTextBlock[]) ||
 		"No description available";
+	const solutionLabel = patternUtilities?.solutionLabel ?? "Solution";
 
 	return (
 		<SolutionPreview
 			solutionNumber={String(index + 1)}
 			solutionTitle={title}
 			solutionDescription={description}
+			solutionLabel={solutionLabel}
 		>
 			<Badge
 				variant="solution"
@@ -160,7 +167,11 @@ export function Resources({ resources, patternUtilities }: ResourcesProps) {
 										<div className="flex flex-wrap gap-1.5 md:gap-2.5">
 											{solutions.map((solution, sIdx) => (
 												<div key={solution._id || sIdx}>
-													<SolutionBadge solution={solution} index={sIdx} />
+													<SolutionBadge
+														solution={solution}
+														index={sIdx}
+														patternUtilities={patternUtilities}
+													/>
 												</div>
 											))}
 										</div>
