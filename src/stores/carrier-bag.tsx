@@ -72,7 +72,13 @@ export const createCarrierBagStore = () =>
 				addPattern: (pattern: PatternForCarrierBag, notes?: string) => {
 					const { items } = get();
 
-					if (items.some((item) => item.pattern._id === pattern._id)) {
+					if (
+						items.some(
+							(item) =>
+								item.pattern._id === pattern._id &&
+								item.pattern.language === pattern.language,
+						)
+					) {
 						return;
 					}
 

@@ -77,6 +77,7 @@ const mockItems = [
 			_createdAt: "2024-01-01",
 			_updatedAt: "2024-01-01",
 			_rev: "rev-1",
+			language: "en",
 			title: "Pattern One",
 			slug: { current: "pattern-one", _type: "slug" as const },
 			theme: { _ref: "theme-1", _type: "reference" as const },
@@ -96,6 +97,7 @@ const mockItems = [
 			_createdAt: "2024-01-02",
 			_updatedAt: "2024-01-02",
 			_rev: "rev-2",
+			language: "en",
 			title: "Pattern Two",
 			slug: { current: "pattern-two", _type: "slug" as const },
 			theme: {
@@ -116,6 +118,7 @@ const mockItems = [
 			_createdAt: "2024-01-03",
 			_updatedAt: "2024-01-03",
 			_rev: "rev-3",
+			language: "en",
 			title: "Pattern Without Slug",
 			// No slug property
 		},
@@ -236,6 +239,7 @@ describe("CarrierBagContent Navigation", () => {
 				_createdAt: "2024-01-04",
 				_updatedAt: "2024-01-04",
 				_rev: "rev-4",
+				language: "en",
 				title: "Pattern With String Slug",
 				slug: "pattern-string-slug", // Direct string instead of object
 			},
@@ -306,111 +310,115 @@ describe("CarrierBagContent Navigation", () => {
 });
 
 describe("CarrierBagContent Filtering and Ordering", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-		// Mock items with populated theme data for grouping tests
-		const mockItemsWithThemes = [
-			{
-				pattern: {
-					_id: "pattern-1",
-					_type: "pattern" as const,
+	// Mock items with populated theme data for grouping tests
+	const mockItemsWithThemes = [
+		{
+			pattern: {
+				_id: "pattern-1",
+				_type: "pattern" as const,
+				_createdAt: "2024-01-01",
+				_updatedAt: "2024-01-01",
+				_rev: "rev-1",
+				language: "en",
+				title: "Alpha Pattern",
+				slug: { current: "alpha-pattern", _type: "slug" as const },
+				theme: {
+					_id: "theme-1",
+					_type: "theme" as const,
 					_createdAt: "2024-01-01",
 					_updatedAt: "2024-01-01",
 					_rev: "rev-1",
-					title: "Alpha Pattern",
-					slug: { current: "alpha-pattern", _type: "slug" as const },
-					theme: {
-						_id: "theme-1",
-						_type: "theme" as const,
+					title: "Design Theme",
+				},
+				tags: [
+					{
+						_id: "tag-1",
+						_type: "tag" as const,
 						_createdAt: "2024-01-01",
 						_updatedAt: "2024-01-01",
 						_rev: "rev-1",
-						title: "Design Theme",
+						title: "UX",
 					},
-					tags: [
-						{
-							_id: "tag-1",
-							_type: "tag" as const,
-							_createdAt: "2024-01-01",
-							_updatedAt: "2024-01-01",
-							_rev: "rev-1",
-							title: "UX",
-						},
-					],
-					audiences: [
-						{
-							_id: "audience-1",
-							_type: "audience" as const,
-							_createdAt: "2024-01-01",
-							_updatedAt: "2024-01-01",
-							_rev: "rev-1",
-							title: "Designers",
-						},
-					],
-				},
-				dateAdded: "2024-01-01",
-			},
-			{
-				pattern: {
-					_id: "pattern-2",
-					_type: "pattern" as const,
-					_createdAt: "2024-01-02",
-					_updatedAt: "2024-01-02",
-					_rev: "rev-2",
-					title: "Beta Pattern",
-					slug: { current: "beta-pattern", _type: "slug" as const },
-					theme: {
-						_id: "theme-2",
-						_type: "theme" as const,
+				],
+				audiences: [
+					{
+						_id: "audience-1",
+						_type: "audience" as const,
 						_createdAt: "2024-01-01",
 						_updatedAt: "2024-01-01",
 						_rev: "rev-1",
-						title: "Tech Theme",
+						title: "Designers",
 					},
-					tags: [
-						{
-							_id: "tag-2",
-							_type: "tag" as const,
-							_createdAt: "2024-01-01",
-							_updatedAt: "2024-01-01",
-							_rev: "rev-1",
-							title: "Development",
-						},
-					],
-					audiences: [
-						{
-							_id: "audience-2",
-							_type: "audience" as const,
-							_createdAt: "2024-01-01",
-							_updatedAt: "2024-01-01",
-							_rev: "rev-1",
-							title: "Developers",
-						},
-					],
-				},
-				dateAdded: "2024-01-02",
+				],
 			},
-			{
-				pattern: {
-					_id: "pattern-3",
-					_type: "pattern" as const,
-					_createdAt: "2024-01-03",
-					_updatedAt: "2024-01-03",
-					_rev: "rev-3",
-					title: "Gamma Pattern",
-					slug: { current: "gamma-pattern", _type: "slug" as const },
-					theme: {
-						_id: "theme-1",
-						_type: "theme" as const,
+			dateAdded: "2024-01-01",
+		},
+		{
+			pattern: {
+				_id: "pattern-2",
+				_type: "pattern" as const,
+				_createdAt: "2024-01-02",
+				_updatedAt: "2024-01-02",
+				_rev: "rev-2",
+				language: "en",
+				title: "Beta Pattern",
+				slug: { current: "beta-pattern", _type: "slug" as const },
+				theme: {
+					_id: "theme-2",
+					_type: "theme" as const,
+					_createdAt: "2024-01-01",
+					_updatedAt: "2024-01-01",
+					_rev: "rev-1",
+					title: "Tech Theme",
+				},
+				tags: [
+					{
+						_id: "tag-2",
+						_type: "tag" as const,
 						_createdAt: "2024-01-01",
 						_updatedAt: "2024-01-01",
 						_rev: "rev-1",
-						title: "Design Theme",
+						title: "Development",
 					},
-				},
-				dateAdded: "2024-01-03",
+				],
+				audiences: [
+					{
+						_id: "audience-2",
+						_type: "audience" as const,
+						_createdAt: "2024-01-01",
+						_updatedAt: "2024-01-01",
+						_rev: "rev-1",
+						title: "Developers",
+					},
+				],
 			},
-		];
+			dateAdded: "2024-01-02",
+		},
+		{
+			pattern: {
+				_id: "pattern-3",
+				_type: "pattern" as const,
+				_createdAt: "2024-01-03",
+				_updatedAt: "2024-01-03",
+				_rev: "rev-3",
+				language: "en",
+				title: "Gamma Pattern",
+				slug: { current: "gamma-pattern", _type: "slug" as const },
+				theme: {
+					_id: "theme-1",
+					_type: "theme" as const,
+					_createdAt: "2024-01-01",
+					_updatedAt: "2024-01-01",
+					_rev: "rev-1",
+					title: "Design Theme",
+				},
+			},
+			dateAdded: "2024-01-03",
+		},
+	];
+
+	beforeEach(() => {
+		vi.clearAllMocks();
 
 		(useCarrierBagStore as ReturnType<typeof vi.fn>).mockImplementation(
 			(selector: (state: unknown) => unknown) => {
@@ -456,7 +464,11 @@ describe("CarrierBagContent Filtering and Ordering", () => {
 		render(<CarrierBagContent />);
 
 		// Simulate drag reordering by calling setItems
-		const reorderedItems = [mockItems[2], mockItems[0], mockItems[1]];
+		const reorderedItems = [
+			mockItemsWithThemes[2],
+			mockItemsWithThemes[0],
+			mockItemsWithThemes[1],
+		];
 		mockSetItems(reorderedItems);
 
 		// Now click the group by theme toggle
@@ -480,15 +492,21 @@ describe("CarrierBagContent Filtering and Ordering", () => {
 		const sortTrigger = screen.getByRole("combobox", { name: /Sort by/i });
 
 		// Simulate that manual order was active
-		const reorderedItems = [mockItems[2], mockItems[0], mockItems[1]];
+		const reorderedItems = [
+			mockItemsWithThemes[2],
+			mockItemsWithThemes[0],
+			mockItemsWithThemes[1],
+		];
 		mockSetItems(reorderedItems);
 
-		// Change sort order
+		// Change sort order - open the select first
 		fireEvent.click(sortTrigger);
-		await waitFor(() => {
-			const zaOption = screen.getByRole("option", { name: /Title \(Z–A\)/i });
-			fireEvent.click(zaOption);
+
+		// Wait for the option to appear and click it
+		const zaOption = await screen.findByRole("option", {
+			name: /Title \(Z–A\)/i,
 		});
+		fireEvent.click(zaOption);
 
 		// Items should be sorted Z-A now
 		await waitFor(() => {

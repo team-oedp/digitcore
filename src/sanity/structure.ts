@@ -4,6 +4,7 @@ import {
 	BookIcon,
 	BulbOutlineIcon,
 	CogIcon,
+	ComponentIcon,
 	DesktopIcon,
 	DocumentTextIcon,
 	FeedbackIcon,
@@ -46,7 +47,7 @@ const SINGLETONS = [
 		id: "patternUtilities",
 		_type: "patternUtilities",
 		title: "Pattern Utilities",
-		icon: WrenchIcon,
+		icon: ComponentIcon,
 	},
 ];
 const LANGUAGES = [
