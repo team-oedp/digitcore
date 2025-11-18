@@ -12,6 +12,7 @@ type SolutionPreviewProps = {
 	solutionNumber: string;
 	solutionTitle: string;
 	solutionDescription: string;
+	solutionLabel?: string;
 };
 
 export function SolutionPreview({
@@ -19,6 +20,7 @@ export function SolutionPreview({
 	solutionNumber,
 	solutionTitle,
 	solutionDescription,
+	solutionLabel = "Solution",
 }: SolutionPreviewProps) {
 	return (
 		<HoverCard openDelay={100}>
@@ -30,7 +32,7 @@ export function SolutionPreview({
 							{solutionTitle}
 						</h3>
 						<span className="w-fit rounded-md bg-muted px-2 py-1 text-muted-foreground text-xs">
-							Solution {solutionNumber}
+							{solutionLabel} {solutionNumber}
 						</span>
 					</div>
 					<p className="font-normal text-muted-foreground text-sm leading-normal">
