@@ -6,19 +6,26 @@ import {
 } from "~/components/shared/badge-group";
 import { ThemeMiniBadge } from "~/components/shared/theme-mini-badge";
 import { Badge } from "~/components/ui/badge";
-import type { Audience, Tag, Theme } from "~/sanity/sanity.types";
+import type {
+	Audience,
+	PATTERN_UTILITIES_QUERYResult,
+	Tag,
+	Theme,
+} from "~/sanity/sanity.types";
 import { ClickableBadge } from "./clickable-badge";
 
 type PatternConnectionsProps = {
 	audiences?: Audience[];
 	tags?: Tag[];
 	theme?: Theme;
+	patternUtilities?: PATTERN_UTILITIES_QUERYResult | null;
 };
 
 export function PatternConnections({
 	audiences,
 	tags,
 	theme,
+	patternUtilities,
 }: PatternConnectionsProps) {
 	// Only render if there are any connections
 	if (!audiences?.length && !tags?.length && !theme) {
@@ -35,7 +42,9 @@ export function PatternConnections({
 							type="theme"
 							id={theme._id}
 							title={theme.title || undefined}
-							icon={<ThemeMiniBadge />}
+							icon={
+								<ThemeMiniBadge label={patternUtilities?.themeMiniBadgeLabel} />
+							}
 						>
 							<span className="text-nowrap">{theme.title}</span>
 						</ClickableBadge>

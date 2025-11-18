@@ -173,6 +173,7 @@ export default async function Page(props: PatternPageProps) {
 							tags={pattern.tags ?? undefined}
 							audiences={pattern.audiences ?? undefined}
 							theme={pattern.theme ?? undefined}
+							patternUtilities={patternUtilities}
 						/>
 					</div>
 					<Solutions

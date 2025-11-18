@@ -245,7 +245,9 @@ export function SearchResultItem({
 			type: "theme",
 			items: pattern.theme ? [pattern.theme] : [],
 			variant: "theme",
-			getIcon: () => <ThemeMiniBadge />,
+			getIcon: () => (
+				<ThemeMiniBadge label={patternUtilities?.themeMiniBadgeLabel} />
+			),
 		},
 		{
 			type: "audience",

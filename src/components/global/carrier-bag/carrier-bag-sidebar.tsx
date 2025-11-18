@@ -12,7 +12,7 @@ import {
 import { Reorder } from "motion/react";
 import Link from "next/link";
 import type * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { PDFPreviewModal } from "~/components/pdf/pdf-preview-modal";
 import { Icon } from "~/components/shared/icon";
 import { Button } from "~/components/ui/button";
@@ -67,7 +67,22 @@ export function CarrierBagSidebar({
 	const hideClearConfirmationPane = useCarrierBagStore(
 		(state) => state.hideClearConfirmationPane,
 	);
-	const documentData = useCarrierBagDocument(items);
+	const filteredItems = useMemo(() => {
+		const languageFiltered = items.filter(
+			(item) => item.pattern.language === language,
+		);
+		const seenIds = new Set<string>();
+		return languageFiltered.filter((item) => {
+			const id = item.pattern._id;
+			if (seenIds.has(id)) {
+				return false;
+			}
+			seenIds.add(id);
+			return true;
+		});
+	}, [items, language]);
+
+	const documentData = useCarrierBagDocument(filteredItems);
 	const { setOpen: setSidebarOpen, setOpenMobile, isMobile } = useSidebar();
 
 	// Sync Zustand store state to Sidebar component state
@@ -89,8 +104,8 @@ export function CarrierBagSidebar({
 	const handleDownloadJson = () => {
 		const payload = {
 			generatedAt: new Date().toISOString(),
-			count: items.length,
-			patterns: items.map((i) => ({
+			count: filteredItems.length,
+			patterns: filteredItems.map((i) => ({
 				id: i.pattern._id,
 				title: i.pattern.title,
 				slug: i.pattern.slug ?? undefined,
@@ -192,9 +207,9 @@ export function CarrierBagSidebar({
 									Remove all items?
 								</h3>
 								<p className="text-muted-foreground text-prose text-sm">
-									This will remove all {items.length} pattern
-									{items.length !== 1 ? "s" : ""} from your carrier bag. This
-									action cannot be undone.
+									This will remove all {filteredItems.length} pattern
+									{filteredItems.length !== 1 ? "s" : ""} from your carrier bag.
+									This action cannot be undone.
 								</p>
 							</div>
 							<div className="flex w-full gap-3 pt-2">
@@ -227,7 +242,7 @@ export function CarrierBagSidebar({
 										Loading...
 									</p>
 								</div>
-							) : items.length === 0 ? (
+							) : filteredItems.length === 0 ? (
 								<div className="flex flex-1 flex-col items-start justify-start px-4 py-8">
 									<p className="text-left font-normal text-muted-foreground text-sm">
 										{carrierBagData?.emptyStateMessage ||
@@ -237,7 +252,7 @@ export function CarrierBagSidebar({
 							) : (
 								<Reorder.Group
 									axis="y"
-									values={items}
+									values={filteredItems}
 									onReorder={(newOrder) => setItems(newOrder)}
 									layoutScroll
 									as="div"
@@ -248,7 +263,7 @@ export function CarrierBagSidebar({
 										overflowY: "auto",
 									}}
 								>
-									{items.map((item) => {
+									{filteredItems.map((item, index) => {
 										const itemData: CarrierBagItemData = {
 											id: item.pattern._id,
 											title: item.pattern.title || "Untitled Pattern",
@@ -259,10 +274,11 @@ export function CarrierBagSidebar({
 												item.pattern._id,
 											),
 										};
+										const uniqueKey = `${item.pattern._id}-${item.pattern.language ?? "unknown"}-${index}`;
 										return (
 											<Reorder.Item
 												as="div"
-												key={item.pattern._id}
+												key={uniqueKey}
 												value={item}
 												style={{ position: "relative" }}
 											>
@@ -283,12 +299,12 @@ export function CarrierBagSidebar({
 				<div className="flex flex-row items-center gap-2 p-2">
 					<PDFPreviewModal
 						documentData={documentData}
-						disabled={items.length === 0}
+						disabled={filteredItems.length === 0}
 					>
 						<button
 							type="button"
 							className="group/pdf flex h-7 items-center gap-2 rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear disabled:cursor-not-allowed disabled:opacity-50"
-							disabled={items.length === 0}
+							disabled={filteredItems.length === 0}
 							aria-label="PDF"
 						>
 							<Icon
@@ -305,7 +321,7 @@ export function CarrierBagSidebar({
 						type="button"
 						className="group/json flex h-7 items-center gap-2 rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear disabled:cursor-not-allowed disabled:opacity-50"
 						onClick={handleDownloadJson}
-						disabled={items.length === 0}
+						disabled={filteredItems.length === 0}
 						aria-label="Download list as JSON"
 					>
 						<Icon
@@ -321,7 +337,7 @@ export function CarrierBagSidebar({
 						type="button"
 						className="group/delete flex h-7 items-center gap-2 rounded-md px-2 py-0.5 outline-none transition-colors duration-150 ease-linear disabled:cursor-not-allowed disabled:opacity-50"
 						onClick={showClearConfirmationPane}
-						disabled={items.length === 0}
+						disabled={filteredItems.length === 0}
 						aria-label="Remove all items"
 					>
 						<Icon
