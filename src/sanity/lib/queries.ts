@@ -871,7 +871,10 @@ export const ONBOARDING_QUERY = defineQuery(`
       nextButtonPrefix,
       nextButtonSuffix,
       backButtonPrefix,
-      backButtonSuffix
+      backButtonSuffix,
+      selectPrefix,
+      selectSuffix,
+      audienceTypeLabel
     },
     slide3{
       title,

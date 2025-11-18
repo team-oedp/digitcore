@@ -871,12 +871,16 @@ function Slide2({
 					<div className="flex items-center gap-2">
 						{selectedAudienceIds.length === 0 ? (
 							<>
-								<span className="text-body-large">Select your</span>
+								<span className="text-body-large">
+									{onboarding?.slide2?.selectPrefix || "Select your"}
+								</span>
 								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light text-foreground text-xs uppercase lg:px-3 lg:py-2 lg:text-lg dark:bg-neutral-600">
-									AUDIENCE TYPE
+									{onboarding?.slide2?.audienceTypeLabel || "AUDIENCE TYPE"}
 									<DashedBorder />
 								</span>
-								<span className="text-body-large">to continue.</span>
+								<span className="text-body-large">
+									{onboarding?.slide2?.selectSuffix || "to continue."}
+								</span>
 							</>
 						) : (
 							<>
