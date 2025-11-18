@@ -35,8 +35,8 @@ const SINGLETONS = [
 		icon: PresentationIcon,
 	},
 	{ id: "search", _type: "search", title: "Search", icon: SearchIcon },
-	{ id: "header", _type: "header", title: "Header", icon: InsertAboveIcon },
-	{ id: "footer", _type: "footer", title: "Footer", icon: InsertBelowIcon },
+	{ id: "header", _type: "header", title: "Header", icon: InsertBelowIcon },
+	{ id: "footer", _type: "footer", title: "Footer", icon: InsertAboveIcon },
 	{
 		id: "siteSettings",
 		_type: "siteSettings",
@@ -340,31 +340,31 @@ export const structure: StructureResolver = (S, context) =>
 			// 		S.document().schemaType("siteSettings").documentId("siteSettings"),
 			// 	)
 			// 	.icon(CogIcon),
-			...S.documentTypeListItems().filter(
-				(item) =>
-					item.getId() &&
-					![
-						"pattern",
-						"tag",
-						"audience",
-						"theme",
-						"resource",
-						"solution",
-						"page",
-						"glossary",
-						"faq",
-						"faqCategory",
-						"carrierBag",
-						"onboarding",
-						"search",
-						"siteSettings",
-						"footer",
-						"header",
-						"patternUtilities",
-						"icon",
-						"suggestion",
-						"translation.metadata",
-						"aiContext",
-					].includes(item.getId() ?? ""),
-			),
+			...S.documentTypeListItems().filter((item) => {
+				const id = item.getId() ?? "";
+				const excludedTypes = [
+					"pattern",
+					"tag",
+					"audience",
+					"theme",
+					"resource",
+					"solution",
+					"page",
+					"glossary",
+					"faq",
+					"faqCategory",
+					"carrierBag",
+					"onboarding",
+					"search",
+					"siteSettings",
+					"footer",
+					"header",
+					"patternUtilities",
+					"icon",
+					"suggestion",
+					"translation.metadata",
+					"aiContext",
+				];
+				return id && !excludedTypes.includes(id);
+			}),
 		]);

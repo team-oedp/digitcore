@@ -168,6 +168,13 @@ export const patternUtilitiesType = defineType({
 			description: "Heading text for the Resources section (e.g., 'Resources')",
 		}),
 		defineField({
+			name: "solutionLabel",
+			type: "string",
+			title: "Solution Label",
+			description:
+				"Label text for solution badge in hover card (e.g., 'Solution')",
+		}),
+		defineField({
 			name: "themeMiniBadgeLabel",
 			type: "string",
 			title: "Theme Mini Badge Label",

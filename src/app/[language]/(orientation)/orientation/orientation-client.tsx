@@ -525,9 +525,11 @@ function Slide({
 					language={language}
 				/>
 				<div className="min-h-0 flex-1">{children}</div>
-				<footer className="hidden pt-4 text-left text-body-muted lg:block lg:pt-8">
-					{footerText || "Open Environmental Data Project"}
-				</footer>
+				{footerText && (
+					<footer className="hidden pt-4 text-left text-body-muted lg:block lg:pt-8">
+						{footerText}
+					</footer>
+				)}
 			</div>
 			<div className="relative w-full flex-1 rounded-md bg-icon/20 p-2 lg:h-full lg:w-1/2 lg:flex-none lg:pl-2 dark:bg-icon/10">
 				{asset || (
@@ -869,12 +871,16 @@ function Slide2({
 					<div className="flex items-center gap-2">
 						{selectedAudienceIds.length === 0 ? (
 							<>
-								<span className="text-body-large">Select your</span>
+								<span className="text-body-large">
+									{onboarding?.slide2?.selectPrefix || "Select your"}
+								</span>
 								<span className="relative cursor-default select-none overflow-hidden rounded-lg border-2 border-transparent bg-neutral-300 px-2 py-1.5 font-light text-foreground text-xs uppercase lg:px-3 lg:py-2 lg:text-lg dark:bg-neutral-600">
-									AUDIENCE TYPE
+									{onboarding?.slide2?.audienceTypeLabel || "AUDIENCE TYPE"}
 									<DashedBorder />
 								</span>
-								<span className="text-body-large">to continue.</span>
+								<span className="text-body-large">
+									{onboarding?.slide2?.selectSuffix || "to continue."}
+								</span>
 							</>
 						) : (
 							<>

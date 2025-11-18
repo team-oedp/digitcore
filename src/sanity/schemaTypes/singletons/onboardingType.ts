@@ -179,6 +179,30 @@ export const onboardingType = defineType({
 					description:
 						"Text that appears after the BACK button in the sentence 'Or, go [BACK] to the previous step.' This is the suffix text for the back navigation instruction on Slide 2 (Audiences).",
 				}),
+				defineField({
+					name: "selectPrefix",
+					title: "Select instruction prefix text",
+					type: "string",
+					initialValue: "Select your",
+					description:
+						"Text that appears before the AUDIENCE TYPE button in the sentence 'Select your [AUDIENCE TYPE] to continue.' This is the prefix text shown when no audiences are selected on Slide 2 (Audiences). This text appears before the highlighted AUDIENCE TYPE button.",
+				}),
+				defineField({
+					name: "selectSuffix",
+					title: "Select instruction suffix text",
+					type: "string",
+					initialValue: "to continue.",
+					description:
+						"Text that appears after the AUDIENCE TYPE button in the sentence 'Select your [AUDIENCE TYPE] to continue.' This is the suffix text shown when no audiences are selected on Slide 2 (Audiences). This text appears after the highlighted AUDIENCE TYPE button.",
+				}),
+				defineField({
+					name: "audienceTypeLabel",
+					title: "Audience type button label",
+					type: "string",
+					initialValue: "AUDIENCE TYPE",
+					description:
+						"Label for the highlighted button shown when no audiences are selected on Slide 2 (Audiences). This appears in the sentence 'Select your [AUDIENCE TYPE] to continue.'",
+				}),
 			],
 		}),
 		// Slide 3
