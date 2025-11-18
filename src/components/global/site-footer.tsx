@@ -38,9 +38,7 @@ const FALLBACK_SOCIAL_LINKS = [
 ];
 
 export function SiteFooter({ footerData, language }: SiteFooterProps) {
-	// Use Sanity data if available, otherwise fall back to hardcoded data
-	const title =
-		footerData?.title || "Digital Toolkit for Open Environmental Research";
+	const title = footerData?.title?.trim() || "Digital Toolkit for Open Environmental Research";
 	const internalLinks = footerData?.internalLinks || [];
 	const externalLinks = footerData?.externalLinks || [];
 	const license = footerData?.licenseLink;
@@ -65,7 +63,7 @@ export function SiteFooter({ footerData, language }: SiteFooterProps) {
 								style={{ height: "auto" }}
 								priority
 							/>
-							<h2 className="text-balance font-normal text-md">DIGITCORE</h2>
+							<h2 className="text-balance font-normal text-md">{title}</h2>
 						</div>
 
 						{/* 2. Internal Links */}
@@ -182,12 +180,7 @@ export function SiteFooter({ footerData, language }: SiteFooterProps) {
 										style={{ height: "auto" }}
 										priority
 									/>
-									<h2 className="text-balance font-normal text-lg lg:hidden">
-										DIGITCORE
-									</h2>
-									<h2 className="hidden text-balance font-normal text-lg lg:block">
-										{title}
-									</h2>
+									<h2 className="text-balance font-normal text-lg">{title}</h2>
 								</div>
 							</div>
 

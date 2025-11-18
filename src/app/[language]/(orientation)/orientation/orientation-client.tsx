@@ -525,9 +525,11 @@ function Slide({
 					language={language}
 				/>
 				<div className="min-h-0 flex-1">{children}</div>
-				<footer className="hidden pt-4 text-left text-body-muted lg:block lg:pt-8">
-					{footerText || "Open Environmental Data Project"}
-				</footer>
+				{footerText && (
+					<footer className="hidden pt-4 text-left text-body-muted lg:block lg:pt-8">
+						{footerText}
+					</footer>
+				)}
 			</div>
 			<div className="relative w-full flex-1 rounded-md bg-icon/20 p-2 lg:h-full lg:w-1/2 lg:flex-none lg:pl-2 dark:bg-icon/10">
 				{asset || (
