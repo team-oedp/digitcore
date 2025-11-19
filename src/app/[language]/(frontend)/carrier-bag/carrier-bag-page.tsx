@@ -373,7 +373,7 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 			try {
 				const patterns = await client.fetch<PATTERNS_BY_SLUGS_QUERYResult>(
 					PATTERNS_BY_SLUGS_QUERY,
-					{ slugs },
+					{ slugs, language },
 				);
 				// Preserve incoming slug order when adding
 				const patternsBySlug = new Map(patterns.map((p) => [p.slug ?? "", p]));
