@@ -195,7 +195,7 @@ describe("CarrierBagPage - share/import flow", () => {
 		// Wait for URL cleanup and persistence
 		await waitFor(
 			() => {
-				expect(window.location.pathname).toBe("/carrier-bag");
+				expect(window.location.pathname).toBe("/en/carrier-bag");
 				expect(window.location.search).toBe("");
 			},
 			{ timeout: 3000 },
@@ -231,7 +231,7 @@ describe("CarrierBagPage - share/import flow", () => {
 
 		await waitFor(
 			() => {
-				expect(window.location.pathname).toBe("/carrier-bag");
+				expect(window.location.pathname).toBe("/en/carrier-bag");
 				expect(window.location.search).toBe("");
 			},
 			{ timeout: 3000 },

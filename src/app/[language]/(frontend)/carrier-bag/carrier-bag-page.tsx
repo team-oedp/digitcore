@@ -42,7 +42,7 @@ import {
 	type CarrierBagDocumentData,
 	useCarrierBagDocument,
 } from "~/hooks/use-pattern-content";
-import { parseLocalePath } from "~/lib/locale-path";
+import { buildLocaleHref, parseLocalePath } from "~/lib/locale-path";
 import { client } from "~/sanity/lib/client";
 import { PATTERNS_BY_SLUGS_QUERY } from "~/sanity/lib/queries";
 import type {
@@ -319,6 +319,7 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 	const items = useCarrierBagStore((state) => state.items);
 	const clearBag = useCarrierBagStore((state) => state.clearBag);
 	const addPattern = useCarrierBagStore((state) => state.addPattern);
+	const setOpen = useCarrierBagStore((state) => state.setOpen);
 
 	const filteredItems = useMemo(() => {
 		const languageFiltered = items.filter(
@@ -346,13 +347,14 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 
 	const shareUrl = useMemo(() => {
 		if (typeof window === "undefined") return "";
-		const url = new URL(`${window.location.origin}/carrier-bag`);
+		const basePath = buildLocaleHref(language, "/carrier-bag");
+		const url = new URL(basePath, window.location.origin);
 		if (bagSlugs.length > 0) {
 			url.searchParams.set("slugs", bagSlugs.join(","));
 		}
 		url.searchParams.set("mode", "replace");
 		return url.toString();
-	}, [bagSlugs]);
+	}, [bagSlugs, language]);
 
 	useEffect(() => {
 		const { search } = window.location;
@@ -367,11 +369,12 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 			.filter(Boolean);
 		if (slugs.length === 0) return;
 		(async () => {
-			const cleanUrl = `${window.location.origin}/carrier-bag`;
+			const basePath = buildLocaleHref(language, "/carrier-bag");
+			const cleanUrl = new URL(basePath, window.location.origin).toString();
 			try {
 				const patterns = await client.fetch<PATTERNS_BY_SLUGS_QUERYResult>(
 					PATTERNS_BY_SLUGS_QUERY,
-					{ slugs },
+					{ slugs, language },
 				);
 				// Preserve incoming slug order when adding
 				const patternsBySlug = new Map(patterns.map((p) => [p.slug ?? "", p]));
@@ -384,13 +387,20 @@ export function CarrierBagPage({ data }: { data?: CARRIER_BAG_QUERYResult }) {
 				for (const p of ordered) {
 					addPattern(p);
 				}
+				// Close sidebar after loading patterns (addPattern opens it by default)
+				setOpen(false);
 				window.history.replaceState({}, "", cleanUrl);
 			} catch (error) {
 				console.error("Failed to load carrier bag from URL", error);
 				window.history.replaceState({}, "", cleanUrl);
 			}
 		})();
-	}, [addPattern, clearBag]);
+	}, [addPattern, clearBag, language, setOpen]);
+
+	// Ensure sidebar is closed when on the carrier bag page
+	useEffect(() => {
+		setOpen(false);
+	}, [setOpen]);
 
 	const handleDownloadJson = () => {
 		const payload = {
