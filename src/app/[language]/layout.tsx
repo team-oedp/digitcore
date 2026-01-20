@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
 		tags: ["siteSettings"],
 	});
 
-	const siteUrl = site?.url ?? "https://digitcore.org";
+	const siteUrl = site?.url ?? "https://digitcore.openenvironmentaldata.org";
 	const titleDefault = site?.seoTitle ?? site?.title ?? "DIGITCORE";
 	const descriptionDefault =
 		site?.seoDescription ??
