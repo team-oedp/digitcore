@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
+import { AgentationProvider } from "~/components/dev/agentation-provider";
 import { StructuredData } from "~/components/global/structured-data";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { type Language, i18n, supportedLanguageIds } from "~/i18n/config";
@@ -87,6 +88,7 @@ export default async function RootLayout({
 						}}
 					/>
 				</ThemeProvider>
+				<AgentationProvider />
 				<Analytics mode="production" />
 			</body>
 		</html>
