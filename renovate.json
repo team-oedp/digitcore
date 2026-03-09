@@ -1,0 +1,156 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "timezone": "UTC",
+  "schedule": ["before 10am on Monday"],
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 4,
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "deps",
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "ignorePaths": [
+    "node_modules/**",
+    "src/sanity/node_modules/**",
+    ".next/**",
+    "src/sanity/dist/**"
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "dependencies"],
+    "automerge": false,
+    "schedule": ["at any time"],
+    "prPriority": 10
+  },
+  "osvVulnerabilityAlerts": true,
+  "npm": {
+    "lockFileMaintenance": {
+      "enabled": true,
+      "schedule": ["before 10am on the first day of the month"]
+    }
+  },
+  "packageRules": [
+    {
+      "description": "Radix UI — group all packages, release together",
+      "matchPackagePatterns": ["^@radix-ui/", "^radix-ui$"],
+      "groupName": "Radix UI",
+      "groupSlug": "radix-ui",
+      "labels": ["dependencies", "radix-ui"]
+    },
+    {
+      "description": "Sanity ecosystem — coordinated monorepo releases",
+      "matchPackagePatterns": ["^@sanity/", "^sanity$", "^next-sanity$"],
+      "groupName": "Sanity",
+      "groupSlug": "sanity",
+      "labels": ["dependencies", "sanity"],
+      "automerge": false
+    },
+    {
+      "description": "tRPC — always released together",
+      "matchPackagePatterns": ["^@trpc/"],
+      "groupName": "tRPC",
+      "groupSlug": "trpc",
+      "labels": ["dependencies", "trpc"]
+    },
+    {
+      "description": "TanStack — React Query etc, coordinated releases",
+      "matchPackagePatterns": ["^@tanstack/"],
+      "groupName": "TanStack",
+      "groupSlug": "tanstack",
+      "labels": ["dependencies", "tanstack"]
+    },
+    {
+      "description": "Testing toolchain",
+      "matchPackageNames": [
+        "vitest",
+        "cypress",
+        "jsdom",
+        "vite",
+        "vite-tsconfig-paths",
+        "start-server-and-test"
+      ],
+      "matchPackagePatterns": ["^@testing-library/", "^@vitest/", "^@vitejs/"],
+      "groupName": "Testing",
+      "groupSlug": "testing",
+      "labels": ["dependencies", "testing"]
+    },
+    {
+      "description": "Tailwind CSS toolchain",
+      "matchPackageNames": [
+        "tailwindcss",
+        "tailwind-merge",
+        "tw-animate-css",
+        "postcss"
+      ],
+      "matchPackagePatterns": ["^@tailwindcss/"],
+      "groupName": "Tailwind CSS",
+      "groupSlug": "tailwind",
+      "labels": ["dependencies", "tailwind"]
+    },
+    {
+      "description": "TypeScript type packages — auto-merge patch and minor",
+      "matchPackagePatterns": ["^@types/"],
+      "groupName": "TypeScript types",
+      "groupSlug": "types",
+      "labels": ["dependencies", "types"],
+      "automerge": true,
+      "automergeType": "pr",
+      "matchUpdateTypes": ["patch", "minor"]
+    },
+    {
+      "description": "Biome — pinned exact version, never auto-merge (formatting rule changes need code review)",
+      "matchPackageNames": ["@biomejs/biome"],
+      "groupName": "Biome",
+      "labels": ["dependencies", "tooling"],
+      "automerge": false
+    },
+    {
+      "description": "Next.js — NEVER auto-merge. Major version bumps disabled (Next 16 is cutting-edge).",
+      "matchPackageNames": ["next"],
+      "automerge": false,
+      "labels": ["dependencies", "next"]
+    },
+    {
+      "description": "Next.js major versions — disabled, must be handled manually",
+      "matchPackageNames": ["next"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "React and React DOM — never auto-merge",
+      "matchPackageNames": ["react", "react-dom"],
+      "groupName": "React",
+      "automerge": false,
+      "labels": ["dependencies", "react"]
+    },
+    {
+      "description": "Vercel packages",
+      "matchPackagePatterns": ["^@vercel/"],
+      "groupName": "Vercel",
+      "groupSlug": "vercel",
+      "labels": ["dependencies", "vercel"]
+    },
+    {
+      "description": "HugeIcons packages",
+      "matchPackagePatterns": ["^@hugeicons/"],
+      "groupName": "HugeIcons",
+      "groupSlug": "hugeicons",
+      "labels": ["dependencies", "icons"]
+    },
+    {
+      "description": "Auto-merge safe patch updates for general dependencies (excludes Next, React, Sanity)",
+      "matchUpdateTypes": ["patch"],
+      "matchDepTypes": ["dependencies"],
+      "automerge": true,
+      "automergeType": "pr",
+      "excludePackagePatterns": [
+        "^next$",
+        "^react$",
+        "^react-dom$",
+        "^sanity$",
+        "^@sanity/"
+      ]
+    }
+  ]
+}

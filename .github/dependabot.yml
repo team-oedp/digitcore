@@ -1,0 +1,18 @@
+version: 2
+
+updates:
+  # GitHub Actions only — npm updates are handled by Renovate Bot (renovate.json)
+  # to enable grouping, auto-merge policies, and batched Sanity/Radix updates.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(actions)"

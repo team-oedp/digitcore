@@ -90,3 +90,59 @@ The project now has two separate Sanity configurations:
 Both configurations share the same schemas but use different environment variable prefixes:
 - Frontend: `NEXT_PUBLIC_SANITY_*`
 - Studio: `SANITY_*`
+
+## Code Quality
+
+```bash
+npm run typecheck       # TypeScript type checking
+npm run check           # Biome lint + format check
+npm run check:write     # Biome with auto-fix
+npm run precheck        # Full quality gate (typecheck + format + build)
+```
+
+## Security & Dependency Management
+
+This project uses a layered approach to dependency security:
+
+| Tool | Role |
+|---|---|
+| **Dependabot** | Auto-PRs for GitHub Actions updates |
+| **Renovate Bot** | Auto-PRs for npm updates, grouped by ecosystem |
+| **npm audit** | CVE scanning in CI on every push/PR + weekly cron |
+| **Trivy** | Broader CVE scanning (OSV + NVD) + secret detection in CI |
+| **TypeScript** | Type regression checks when deps update |
+
+### CI Workflows
+
+The `security` workflow (`.github/workflows/security.yml`) runs on:
+- Every push and PR to `main` and `staging`
+- Every Monday at 09:00 UTC (scheduled audit)
+- Manually via GitHub Actions → Run workflow
+
+### Renovate Bot
+
+Renovate groups related packages into single PRs:
+- **Radix UI** — all `@radix-ui/*` packages together
+- **Sanity** — `sanity`, `@sanity/*`, `next-sanity` together
+- **tRPC** — all `@trpc/*` together
+- **TanStack** — all `@tanstack/*` together
+- **Testing** — Vitest, Cypress, Testing Library together
+- **Tailwind** — Tailwind, PostCSS, plugins together
+- `@types/*` patches/minors are auto-merged
+- `next`, `react`, `react-dom`, and `sanity` are never auto-merged
+
+### Running Audits Locally
+
+```bash
+# Root dependencies
+npm audit
+
+# Sanity Studio dependencies
+cd src/sanity && npm audit
+
+# Auto-fix safe vulnerabilities
+npm audit fix
+cd src/sanity && npm audit fix
+```
+
+> See `instructions/security-setup.md` for full setup instructions including GitHub and Vercel configuration steps.

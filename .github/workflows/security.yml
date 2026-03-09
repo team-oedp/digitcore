@@ -1,0 +1,95 @@
+name: Security
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main, staging]
+  schedule:
+    # Weekly audit every Monday at 09:00 UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: npm audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Audit root dependencies
+        run: npm audit --audit-level=critical
+        # TODO: Tighten to --audit-level=high once existing advisories are resolved.
+        # Current state: 20 high, 1 critical in root (mostly webpack/valibot transitive deps).
+        # Run `npm audit fix` locally to clear auto-fixable issues first.
+
+      - name: Install Sanity Studio dependencies
+        working-directory: src/sanity
+        run: npm ci
+
+      - name: Audit Sanity Studio dependencies
+        working-directory: src/sanity
+        run: npm audit --audit-level=critical
+        # TODO: Tighten to --audit-level=high once existing advisories are resolved.
+        # Current state: 9 high in src/sanity workspace.
+
+  trivy:
+    name: Trivy scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+          # Scans package-lock.json (root + src/sanity), source files for secrets,
+          # and config files for misconfigurations.
+          # Uses OSV + NVD + GitHub Advisory DB — broader coverage than npm audit alone.
+
+      - name: Run Trivy secret scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'secret'
+          exit-code: '1'
+          # Catches accidentally committed API keys, tokens, and credentials.
+
+  typecheck:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+        # Catches type regressions introduced by dependency updates.
+        # e.g. a Radix UI or Sanity major bump changing prop/schema types.
